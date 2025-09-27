@@ -1,0 +1,80 @@
+import 'package:mainland/common/chat/model/chat_model.dart';
+import 'package:mainland/common/chat/model/chat_user_info.dart';
+import 'package:mainland/common/chat/repository/chat_repository.dart';
+import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
+import 'package:mainland/core/config/bloc/safe_cubit.dart';
+import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'chat_state.dart';
+
+class ChatCubit extends SafeCubit<ChatState> {
+  ChatCubit(this.chatId) : super(const ChatState());
+  final String chatId;
+
+  final ChatRepository _repository = getIt();
+  final FilePicker _picker = FilePicker.platform;
+
+  int? _getPageNo(List responce) => responce.isNotEmpty ? state.pageNo + 1 : null;
+
+  Future<void> fetch() async {
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true, chats: [], pageNo: 0));
+    final responce = await _repository.fetchChat(page: 0, chatId: chatId);
+    emit(state.copyWith(chats: responce.data, isLoading: false, pageNo: _getPageNo(responce.data)));
+  }
+
+  Future<void> loadMore() async {
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final responce = await _repository.fetchChat(page: state.pageNo, chatId: chatId);
+    AppLogger.debug(responce.data.toString());
+    emit(
+      state.copyWith(
+        isLoading: false,
+        chats: [...state.chats, ...responce.data],
+        pageNo: _getPageNo(responce.data),
+      ),
+    );
+  }
+
+  Future<void> send() async {
+    emit(state.copyWith(isLoading: true));
+    final response = await _repository.sendMessage(
+      message: state.message,
+      chatId: chatId,
+      file: state.filePath,
+      userId: 'userId',
+    );
+    final chat = ChatModel(
+      chatId: chatId,
+      chatType: ChatType.message,
+      content: state.message,
+      files: state.filePath.map((e) => e.xFile.path).toList(),
+      userInfo: ChatUserInfo(userId: '', name: '', image: ''),
+      createdAt: DateTime.now(),
+    );
+    emit(
+      state.copyWith(chats: [...state.chats, chat], message: '', filePath: [], isLoading: false),
+    );
+  }
+
+  Future<void> onMessageChange({required String message}) async {
+    emit(state.copyWith(message: message));
+  }
+
+  Future<void> pickImage() async {
+    await const PermissionHandlerHelper(permission: Permission.storage).getStatus();
+    final pickedFile = await _picker.pickFiles(allowMultiple: true);
+
+    emit(state.copyWith(filePath: pickedFile?.files ?? []));
+  }
+
+  Future<void> removeFile(int index) async {
+    final updatedList = List.of(state.filePath);
+    updatedList.removeAt(index);
+    emit(state.copyWith(filePath: updatedList));
+  }
+}
