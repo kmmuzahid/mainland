@@ -19,7 +19,7 @@ import 'package:mainland/common/auth/screen/sign_up_screen.dart' as _i12;
 import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i16;
 import 'package:mainland/common/chat/screens/chat_list_screen.dart' as _i1;
 import 'package:mainland/common/chat/screens/chat_screen.dart' as _i2;
-import 'package:mainland/common/home/home_screen.dart' as _i4;
+import 'package:mainland/common/home/screens/home_screen.dart' as _i4;
 import 'package:mainland/common/notifications/screen/notifications_screen.dart'
     as _i5;
 import 'package:mainland/common/onboarding_screen/onboarding_screen.dart'
@@ -300,18 +300,67 @@ class SettingRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i11.SignInScreen]
-class SignInRoute extends _i15.PageRouteInfo<void> {
-  const SignInRoute({List<_i15.PageRouteInfo>? children})
-    : super(SignInRoute.name, initialChildren: children);
+class SignInRoute extends _i15.PageRouteInfo<SignInRouteArgs> {
+  SignInRoute({
+    required _i17.TextEditingController ctrUsername,
+    required _i17.TextEditingController ctrPassword,
+    _i17.Key? key,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
+         SignInRoute.name,
+         args: SignInRouteArgs(
+           ctrUsername: ctrUsername,
+           ctrPassword: ctrPassword,
+           key: key,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'SignInRoute';
 
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
-      return const _i11.SignInScreen();
+      final args = data.argsAs<SignInRouteArgs>();
+      return _i11.SignInScreen(
+        ctrUsername: args.ctrUsername,
+        ctrPassword: args.ctrPassword,
+        key: args.key,
+      );
     },
   );
+}
+
+class SignInRouteArgs {
+  const SignInRouteArgs({
+    required this.ctrUsername,
+    required this.ctrPassword,
+    this.key,
+  });
+
+  final _i17.TextEditingController ctrUsername;
+
+  final _i17.TextEditingController ctrPassword;
+
+  final _i17.Key? key;
+
+  @override
+  String toString() {
+    return 'SignInRouteArgs{ctrUsername: $ctrUsername, ctrPassword: $ctrPassword, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SignInRouteArgs) return false;
+    return ctrUsername == other.ctrUsername &&
+        ctrPassword == other.ctrPassword &&
+        key == other.key;
+  }
+
+  @override
+  int get hashCode =>
+      ctrUsername.hashCode ^ ctrPassword.hashCode ^ key.hashCode;
 }
 
 /// generated route for

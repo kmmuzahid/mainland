@@ -7,6 +7,7 @@ import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -16,19 +17,21 @@ import '../widgets/do_not_have_account_widget.dart';
 
 @RoutePage()
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  const SignInScreen({required this.ctrUsername, required this.ctrPassword, super.key});
+
+  final TextEditingController ctrUsername;
+  final TextEditingController ctrPassword;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       /// App Bar Sections Starts here
       appBar: AppBar(),
-
       /// Body Sections Starts here
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 58.w, vertical: 24.h),
-        child: Form(
-          child: Column(
+        child: CustomForm(
+          builder:(BuildContext context, GlobalKey<FormState> formKey)=> Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// Log In Instruction here
@@ -44,6 +47,7 @@ class SignInScreen extends StatelessWidget {
                 // textStyle: theme.textTheme.bodyMedium,
                 hintText: AppString.phoneNumber,
                 validationType: ValidationType.validatePhone,
+                controller: ctrUsername,
               ),
 
               /// Account Password Input here
@@ -52,6 +56,7 @@ class SignInScreen extends StatelessWidget {
                 // prefixIcon: const Icon(Icons.lock),
                 validationType: ValidationType.validatePassword,
                 hintText: AppString.password,
+                controller: ctrPassword,
               ),
 
               /// Forget Password Button here
@@ -76,7 +81,7 @@ class SignInScreen extends StatelessWidget {
                     // if (formKey.currentState?.validate() == true) {
                     //   formKey.currentState?.save();
                     // }
-                    // context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
+                    context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
                   },
                   buttonWidth: 132,
                   buttonHeight: 40,

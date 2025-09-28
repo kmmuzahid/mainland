@@ -22,7 +22,12 @@ class AlreadyAccountRichText extends StatelessWidget {
             text: ' ${AppString.signIn}',
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                appRouter.popUntilRouteWithName(SignInRoute.name);
+                appRouter.replace(
+                  SignInRoute(
+                    ctrUsername: TextEditingController(),
+                    ctrPassword: TextEditingController(),
+                  ),
+                );
               },
             style: GoogleFonts.dmSans(
               color: getTheme.colorScheme.primary,

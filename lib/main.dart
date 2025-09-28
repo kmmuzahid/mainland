@@ -49,7 +49,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await init.tryCatch();
+  await init();
   await getIt.isReady<StorageService>();
   await Firebase.initializeApp();
   await FirebaseNotificationHandler.instance.init();

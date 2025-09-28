@@ -72,3 +72,14 @@ flutter:
     - assets/images/
     - assets/icon/
     - .env
+
+  fonts:
+    - family: Selawik
+      fonts:
+        - asset: assets/fonts/Selawik-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Selawik-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Selawik-Bold.ttf
+          weight: 700
+

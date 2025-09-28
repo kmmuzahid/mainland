@@ -24,7 +24,7 @@ class ChatListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: CommonAppBar(title: AppString.drawerMessage),
+    appBar: CommonAppBar(title: AppString.message),
     body: Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: BlocProvider(

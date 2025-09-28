@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       ensureScreenSize: true,
       minTextAdapt: true,
       splitScreenMode: true,
-      designSize: const Size(375, 812), // ✅ Use the size your UI was designed for
+      designSize: const Size(428, 926), // ✅ Use the size your UI was designed for
       // designSize: const Size(428, 926),
       builder: (context, child) => MultiBlocProvider(
         providers: [

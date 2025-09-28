@@ -10,10 +10,8 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: AppString.agentInformation, actions: const []),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SignUpAllField(formKey: GlobalKey<FormState>()),
+      appBar: CommonAppBar(title: AppString.organizer, actions: const []),
+      body: const Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: SignUpAllField(),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mainland/common/notifications/repository/notification_repository.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -25,7 +26,9 @@ class CoreDependency {
 
       return DioService.create(
         onLogout: () {
-          appRouter.push(const SignInRoute());
+          appRouter.push(
+            SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+          );
         },
       );
     });

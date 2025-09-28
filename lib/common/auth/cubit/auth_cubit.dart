@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
@@ -79,14 +80,18 @@ class AuthCubit extends SafeCubit<AuthState> {
       await _saveUserInfo(response.data);
     } else {
       await _storageService.deleteAll();
-      appRouter.replaceAll([const SignInRoute()]);
+      appRouter.replaceAll([
+        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+      ]);
     }
   }
 
   Future<void> forgetPassword(String username, String otp) async {}
 
   Future<void> changePassword(String newPassword) async {
-    appRouter.replace(const SignInRoute());
+    appRouter.replace(
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+    );
   }
 
   Future<void> updateToken({required String? accessToken, required String? refreshToken}) async {
@@ -98,7 +103,10 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> logout() async {
     await _repository.signOut();
     await _storageService.deleteAll();
-    appRouter.replaceAll([const SignInRoute()]);
+    appRouter.replaceAll([
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+    ]);
     emit(const AuthState());
   }
+  
 }

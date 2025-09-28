@@ -1,19 +1,21 @@
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+// Using bundled font family 'Selawik' configured in pubspec.yaml
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
+  fontFamily: 'Selawik',
 
+  // Color scheme aligned with AppColors
   colorScheme: const ColorScheme(
     brightness: Brightness.light,
 
-    primary: Color(0xFF0A6F77), // 🟦 Primary: Buttons, active tabs
+    primary: AppColors.primaryColor, // 🟦 Primary: Buttons, active tabs
     onPrimary: Color(0xFFFFFFFF), // 🔳 Text/icons on primary
 
-    secondary: Color(0xFF008000), // 🟢 Secondary: Chips, toggles
+    secondary: AppColors.primaryButton, // 🟢 Secondary: Chips, toggles
     onSecondary: Color(0xFFFFFFFF), // ⚪ Text/icons on secondary
 
     error: Color(0xFFE53935), // 🔴 Error containers
@@ -40,7 +42,7 @@ final ThemeData lightTheme = ThemeData(
 
     shadow: Color(0x1F000000), // 🧱 Shadows for elevation
     scrim: Color(0x80000000), // 🚪 Overlays, modals
-    surfaceTint: Color(0xFF0A6F77), // 🎨 Tint applied on elevated surfaces
+    surfaceTint: AppColors.primaryColor, // 🎨 Tint applied on elevated surfaces
   ),
 
   scaffoldBackgroundColor: Colors.white, // 📱 Screen background
@@ -52,44 +54,98 @@ final ThemeData lightTheme = ThemeData(
     elevation: 0,
   ),
 
+  // Typography mapped to provided scale (Selawik)
   textTheme: TextTheme(
-    bodyLarge: TextStyle(
+    // Headings
+    headlineLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
-      fontSize: 16.sp,
+      fontSize: 32.sp, // H3 32/38
+      height: 38 / 32,
       fontWeight: FontWeight.w600,
-    ), // 📝 Primary body text, font size 16
-    bodyMedium: GoogleFonts.dmSans(
-      textStyle: TextStyle(
-        overflow: TextOverflow.fade,
-        color: const Color(0xFF333333),
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w400,
-      ),
-    ), // 📝 Secondary body text font size 14
-    bodySmall: GoogleFonts.dmSans(
-      textStyle: TextStyle(
-        overflow: TextOverflow.fade,
-        color: const Color(0xFF858585),
-        fontSize: 10.sp,
-        fontWeight: FontWeight.w400,
-      ),
-    ), //font size 12
+    ),
+    headlineMedium: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 28.sp, // H4 28/34
+      height: 34 / 28,
+      fontWeight: FontWeight.w600,
+    ),
+    headlineSmall: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 24.sp, // H5 24/28
+      height: 28 / 24,
+      fontWeight: FontWeight.w600,
+    ),
 
+    // Subtitles
     titleLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
-      fontWeight: FontWeight.bold,
-      fontSize: 16.sp,
-    ), // 🏷 Headings / Titles
+      fontSize: 18.sp, // S1 18/28
+      height: 28 / 18,
+      fontWeight: FontWeight.w600,
+    ),
+    titleMedium: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 16.sp, // S2 16/24
+      height: 24 / 16,
+      fontWeight: FontWeight.w600,
+    ),
 
-    titleSmall: GoogleFonts.dmSans(
-      textStyle: TextStyle(
-        overflow: TextOverflow.fade,
-        color: const Color(0xFF333333),
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w700,
-      ),
+    // Body
+    bodyLarge: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 16.sp, // B1 16/24
+      height: 24 / 16,
+      fontWeight: FontWeight.w500,
+    ),
+    bodyMedium: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 16.sp, // B2 16/24
+      height: 24 / 16,
+      fontWeight: FontWeight.w400,
+    ),
+    bodySmall: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF858585),
+      fontSize: 14.sp, // B3 14/20
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+    ),
+    titleSmall: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFF333333),
+      fontSize: 14.sp, // B4 14/20
+      height: 20 / 14,
+      fontWeight: FontWeight.w500,
+    ),
+
+    // Buttons (label* in M3)
+    labelLarge: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFFFFFFFF),
+      fontSize: 18.sp, // Giant 18/24
+      height: 24 / 18,
+      fontWeight: FontWeight.w700,
+    ),
+    labelMedium: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFFFFFFFF),
+      fontSize: 14.sp, // Medium 14/16
+      height: 16 / 14,
+      fontWeight: FontWeight.w600,
+    ),
+    labelSmall: TextStyle(
+      overflow: TextOverflow.fade,
+      color: const Color(0xFFFFFFFF),
+      fontSize: 12.sp, // Tiny 10/12
+      height: 14 / 12,
+      fontWeight: FontWeight.w600,
     ),
   ),
 
@@ -97,10 +153,10 @@ final ThemeData lightTheme = ThemeData(
 
   dividerColor: const Color(0xFFCCCCCC), // ➖ Dividers
 
-  textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: Color(0xFF0A6F77),
-    selectionColor: Color.fromARGB(85, 44, 153, 153),
-    selectionHandleColor: Color.fromARGB(255, 10, 119, 119),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: AppColors.primaryColor,
+    selectionColor: AppColors.primaryColor.withOpacity(0.33),
+    selectionHandleColor: AppColors.primaryColor,
   ),
 
   inputDecorationTheme: InputDecorationTheme(
@@ -111,8 +167,8 @@ final ThemeData lightTheme = ThemeData(
     focusedBorder: _buildBorder(color: AppColors.primaryColor),
     disabledBorder: _buildBorder(color: AppColors.disable),
     errorBorder: _buildBorder(color: AppColors.error),
-    hintStyle: GoogleFonts.dmSans(fontSize: 14, color: const Color(0xFF979797)),
-    labelStyle: GoogleFonts.dmSans(fontSize: 14, color: const Color(0xffBFBFBF)),
+    hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF979797)),
+    labelStyle: const TextStyle(fontSize: 14, color: Color(0xffBFBFBF)),
   ),
 );
 
