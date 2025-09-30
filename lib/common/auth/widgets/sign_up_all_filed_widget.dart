@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/core/component/button/common_button.dart';
@@ -9,6 +10,7 @@ import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
@@ -36,21 +38,23 @@ class SignUpAllField extends StatelessWidget {
             /// User Name here
             CommonText(text: AppString.fullName, bottom: 8, top: 12),
             CommonTextField(
+              prefixIcon: _requiredIcon(),
               hintText: AppString.fullName,
               validationType: ValidationType.validateFullName,
             ),
 
-            /// User Phone here
-            CommonText(text: AppString.phoneNumber, bottom: 8, top: 12),
+            /// User Email here
+            10.height,
             CommonTextField(
-              isReadOnly: true,
-              hintText: AppString.phoneNumber,
-              validationType: ValidationType.validatePhone,
+              prefixIcon: _requiredIcon(),
+              hintText: AppString.emailAddress,
+              validationType: ValidationType.validateEmail,
             ),
+            /// User Phone here
+            CommonDateInputTextField(onSave: (date) {}),
 
             ///Date of Birth here
             CommonText(text: AppString.dateOfBirth, bottom: 8, top: 12),
-            CommonDateInputTextField(onSave: (date) {}),
 
             /// User Password here
             CommonText(text: AppString.newPassword, bottom: 8, top: 12),
@@ -93,4 +97,6 @@ class SignUpAllField extends StatelessWidget {
       ),
     );
   }
+
+  Icon _requiredIcon() => Icon(Icons.star, size: 15.w, color: AppColors.warning);
 }

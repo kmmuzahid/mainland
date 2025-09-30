@@ -10,7 +10,7 @@ class OtherHelper {
       builder: (context, child) => Theme(
         data: Theme.of(
           context,
-        ).copyWith(colorScheme: const ColorScheme.light(primary: AppColors.primaryColor)),
+        ).copyWith(colorScheme: ColorScheme.light(primary: AppColors.primaryColor)),
         child: child!,
       ),
       context: appRouter.navigatorKey.currentState!.context,

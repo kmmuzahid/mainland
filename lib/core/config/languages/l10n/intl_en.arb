@@ -40,7 +40,7 @@
   "changePassword": "Change Password",
   "phoneNumber": "Phone Number",
   "password": "Password",
-  "forgotThePassword": "Forgot the Password",
+  "forgotThePassword": "Forgot the Password?",
   "currentPassword": "Current Password",
   "fullName": "Full Name",
   "dateOfBirth": "Date of Birth",
@@ -57,11 +57,13 @@
   "privacyPolicy": "Privacy Notice",
   "termsCondition": "Terms of Use",
   "account": "Account",
+  "codeHasBeenSentTo": "Code has been sent to {email}",
   "yes": "Yes",
   "noDetailsAvailableForThisNotification": "No details available for this notification",
   "no": "No",
-
-
+  
+  
+  "emailAddress": "Email Address",
   "buySellKeepFavoriteTickets": "Buy, Sell, and Keep your Favorite Tickets",
   "copyright": "©2025 Essence Software. All rights reserved.",
   "letsSignYouIn": "Let’s sign you in",
@@ -69,5 +71,6 @@
   "youHaveBeenMissed": "You have been missed!",
   "pleaseSelectARoleBeforeContinuing": "Please select a role before continuing",
   "attendee": "Attendee",
-  "organizer": "Organizer"
+  "organizer": "Organizer",
+  "resetPassword": "Reset Password"
 }

@@ -144,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get forgotThePassword => 'Forgot the Password';
+  String get forgotThePassword => 'Forgot the Password?';
 
   @override
   String get currentPassword => 'Current Password';
@@ -196,6 +196,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get account => 'Account';
 
   @override
+  String codeHasBeenSentTo(Object email) {
+    return 'Code has been sent to $email';
+  }
+
+  @override
   String get yes => 'Yes';
 
   @override
@@ -204,6 +209,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no => 'No';
+
+  @override
+  String get emailAddress => 'Email Address';
 
   @override
   String get buySellKeepFavoriteTickets =>
@@ -230,4 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get organizer => 'Organizer';
+
+  @override
+  String get resetPassword => 'Reset Password';
 }

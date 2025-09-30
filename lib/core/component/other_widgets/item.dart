@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mainland/core/utils/constants/app_colors.dart';
 import '../image/common_image.dart';
 import '../text/common_text.dart';
 
@@ -12,7 +11,7 @@ class Item extends StatelessWidget {
     this.image = '',
     this.disableDivider = false,
     this.onTap,
-    this.color = AppColors.primaryText,
+    this.color = const Color(0xFF333333),
     this.vertical = 4,
     this.horizontal = 24,
     this.disableIcon = false,

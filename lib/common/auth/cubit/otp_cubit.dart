@@ -19,6 +19,10 @@ class OtpCubit extends SafeCubit<OtpState> {
     emit(const OtpState());
   }
 
+  void changeState(OtpState state) {
+    emit(state);
+  }
+
   Future<void> sendOtp(String username) async {
     if (_timer?.isActive == true || state.isLoading) {
       showSnackBar('${AppString.resendCodeIn} ${state.count} ${AppString.seconds}');
@@ -34,10 +38,11 @@ class OtpCubit extends SafeCubit<OtpState> {
     _startTimer();
   }
 
-  Future<void> verifyOtp(String otp) async {
+  Future<void> verifyOtp({required String otp, required Function onSuccess}) async {
     if (state.isLoading || state.verificationId.isEmpty) return;
     final isVerified = await _repository.verifyOtp(verificationId: state.verificationId, otp: otp);
     emit(state.copyWith(isVerified: isVerified.data));
+    onSuccess(); // successfully verified
   }
 
   void _startTimer() {

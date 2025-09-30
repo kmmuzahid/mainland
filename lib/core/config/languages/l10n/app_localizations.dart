@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @forgotThePassword.
   ///
   /// In en, this message translates to:
-  /// **'Forgot the Password'**
+  /// **'Forgot the Password?'**
   String get forgotThePassword;
 
   /// No description provided for @currentPassword.
@@ -442,6 +442,12 @@ abstract class AppLocalizations {
   /// **'Account'**
   String get account;
 
+  /// No description provided for @codeHasBeenSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Code has been sent to {email}'**
+  String codeHasBeenSentTo(Object email);
+
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:
@@ -459,6 +465,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get no;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailAddress;
 
   /// No description provided for @buySellKeepFavoriteTickets.
   ///
@@ -507,6 +519,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Organizer'**
   String get organizer;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
 }
 
 class _AppLocalizationsDelegate

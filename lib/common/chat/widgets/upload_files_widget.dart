@@ -23,7 +23,7 @@ class UploadFilesWidget extends StatelessWidget {
           topLeft: Radius.circular(10.r),
           topRight: Radius.circular(10.r),
         ),
-        boxShadow: const [BoxShadow(color: AppColors.disable, blurRadius: 1)],
+        boxShadow: [BoxShadow(color: AppColors.disable, blurRadius: 1)],
       ),
       child: GridView.builder(
         shrinkWrap: true,

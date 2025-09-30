@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import '../other_widgets/common_loader.dart';
 import '../text/common_text.dart';
 
@@ -83,7 +84,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
         width: buttonWidth, // Dynamically calculated width
         height: widget.buttonHeight.h,
         decoration: BoxDecoration(
-          color: widget.buttonColor ?? Theme.of(context).primaryColor,
+          color: widget.buttonColor ?? AppColors.primaryButton,
           borderRadius: BorderRadius.circular(widget.buttonRadius.r),
           border: Border.all(
             color: widget.borderColor ?? widget.buttonColor ?? Theme.of(context).scaffoldBackgroundColor,
@@ -115,7 +116,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           fontSize: widget.titleSize.sp,
-                          color: widget.titleColor ?? Theme.of(context).colorScheme.onSecondary,
+                            color: widget.titleColor ?? AppColors.onPrimaryColor,
                           fontWeight: widget.titleWeight,
                         ),
                   ],

@@ -10,10 +10,11 @@ import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/languages/cubit/language_state.dart';
 import 'package:mainland/core/config/languages/l10n/app_localizations.dart';
 import 'package:mainland/core/config/route/app_router.dart';
-import 'dart:io';
 
 import 'package:mainland/core/config/theme/cubit/theme_cubit.dart';
 import 'package:mainland/core/config/theme/cubit/theme_state.dart';
+import 'package:mainland/core/config/theme/dark_theme.dart';
+import 'package:mainland/core/config/theme/system_theme_listener.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -53,22 +54,24 @@ class MyApp extends StatelessWidget {
 
             return BlocBuilder<LanguageCubit, LanguageState>(
               builder: (context, languageState) {
-                return MaterialApp.router(
-                  scrollBehavior: CustomScrollBehavior(),
-                  debugShowCheckedModeBanner: false,
-                  routerConfig: appRouter.config(),
-                  theme: themeState.themeData,
-                  supportedLocales: const [
-                    Locale('en'), // English
-                  ],
-                  localizationsDelegates: const [
-                    ...GlobalMaterialLocalizations.delegates,
-                    GlobalWidgetsLocalizations.delegate,
-                    // Localization delegate for auto-generated messages
-                    AppLocalizations.delegate, // Initialize with the locale
-                  ],
+                return SystemThemeListener(
+                  child: MaterialApp.router(
+                    scrollBehavior: CustomScrollBehavior(),
+                    debugShowCheckedModeBanner: false,
+                    routerConfig: appRouter.config(),
+                    theme: themeState.themeData,
+                    supportedLocales: const [
+                      Locale('en'), // English
+                    ],
+                    localizationsDelegates: const [
+                      ...GlobalMaterialLocalizations.delegates,
+                      GlobalWidgetsLocalizations.delegate,
+                      // Localization delegate for auto-generated messages
+                      AppLocalizations.delegate, // Initialize with the locale
+                    ],
 
-                  locale: languageState.locale,
+                    locale: languageState.locale,
+                  ),
                 );
               },
             );

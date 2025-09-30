@@ -1,4 +1,3 @@
-import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Using bundled font family 'Selawik' configured in pubspec.yaml
@@ -12,16 +11,16 @@ final ThemeData lightTheme = ThemeData(
   colorScheme: const ColorScheme(
     brightness: Brightness.light,
 
-    primary: AppColors.primaryColor, // 🟦 Primary: Buttons, active tabs
+    primary: Color(0xFF00B050), // 🟦 Primary: Buttons, active tabs
     onPrimary: Color(0xFFFFFFFF), // 🔳 Text/icons on primary
 
-    secondary: AppColors.primaryButton, // 🟢 Secondary: Chips, toggles
+    secondary: Color(0xFF00B050), // 🟢 Secondary: Chips, toggles
     onSecondary: Color(0xFFFFFFFF), // ⚪ Text/icons on secondary
 
     error: Color(0xFFE53935), // 🔴 Error containers
     onError: Color(0xFFFFFFFF), // ⚪ Text/icons on error
 
-    surface: Color(0xFFE6F1F1), // 🔲 Base surface: cards, modals
+    surface: Color.fromARGB(255, 255, 255, 255), // 🔲 Base surface: cards, modals
     onSurface: Color(0xFF333333), // 🔳 Text/icons on surface
 
     surfaceContainerLowest: Color(0xFFF9F9F9), // 🪵 Scaffold background / lowest elevation
@@ -38,11 +37,11 @@ final ThemeData lightTheme = ThemeData(
     inversePrimary: Color(0xFF4DB8BF), // 🔄 For contrast on dark background
 
     outline: Color(0xFFCCCCCC), // 📏 Borders, outlines
-    outlineVariant: Color(0xFFE6F1F1), // 📏 Lower emphasis outlines
+    outlineVariant: Color(0xFFF4F4F4), // 📏 Lower emphasis outlines
 
     shadow: Color(0x1F000000), // 🧱 Shadows for elevation
     scrim: Color(0x80000000), // 🚪 Overlays, modals
-    surfaceTint: AppColors.primaryColor, // 🎨 Tint applied on elevated surfaces
+    surfaceTint: Color(0xFF00B050), // 🎨 Tint applied on elevated surfaces
   ),
 
   scaffoldBackgroundColor: Colors.white, // 📱 Screen background
@@ -57,6 +56,7 @@ final ThemeData lightTheme = ThemeData(
   // Typography mapped to provided scale (Selawik)
   textTheme: TextTheme(
     // Headings
+    /// headlineLarge — size: 32.sp, weight: w600, color: #333333
     headlineLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -64,6 +64,7 @@ final ThemeData lightTheme = ThemeData(
       height: 38 / 32,
       fontWeight: FontWeight.w600,
     ),
+    /// headlineMedium — size: 28.sp, weight: w600, color: #333333
     headlineMedium: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -71,6 +72,7 @@ final ThemeData lightTheme = ThemeData(
       height: 34 / 28,
       fontWeight: FontWeight.w600,
     ),
+    /// headlineSmall — size: 24.sp, weight: w600, color: #333333
     headlineSmall: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -80,6 +82,7 @@ final ThemeData lightTheme = ThemeData(
     ),
 
     // Subtitles
+    /// titleLarge — size: 18.sp, weight: w600, color: #333333
     titleLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -87,6 +90,7 @@ final ThemeData lightTheme = ThemeData(
       height: 28 / 18,
       fontWeight: FontWeight.w600,
     ),
+    /// titleMedium — size: 16.sp, weight: w600, color: #333333
     titleMedium: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -96,6 +100,7 @@ final ThemeData lightTheme = ThemeData(
     ),
 
     // Body
+    /// bodyLarge — size: 16.sp, weight: w500, color: #333333
     bodyLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -103,6 +108,7 @@ final ThemeData lightTheme = ThemeData(
       height: 24 / 16,
       fontWeight: FontWeight.w500,
     ),
+    /// bodyMedium — size: 16.sp, weight: w400, color: #333333
     bodyMedium: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -110,6 +116,7 @@ final ThemeData lightTheme = ThemeData(
       height: 24 / 16,
       fontWeight: FontWeight.w400,
     ),
+    /// bodySmall — size: 14.sp, weight: w400, color: #858585
     bodySmall: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF858585),
@@ -117,6 +124,7 @@ final ThemeData lightTheme = ThemeData(
       height: 20 / 14,
       fontWeight: FontWeight.w400,
     ),
+    /// titleSmall — size: 14.sp, weight: w500, color: #333333
     titleSmall: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFF333333),
@@ -126,6 +134,7 @@ final ThemeData lightTheme = ThemeData(
     ),
 
     // Buttons (label* in M3)
+    /// labelLarge — size: 18.sp, weight: w700, color: #FFFFFF
     labelLarge: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFFFFFFFF),
@@ -133,6 +142,7 @@ final ThemeData lightTheme = ThemeData(
       height: 24 / 18,
       fontWeight: FontWeight.w700,
     ),
+    /// labelMedium — size: 14.sp, weight: w600, color: #FFFFFF
     labelMedium: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFFFFFFFF),
@@ -140,6 +150,7 @@ final ThemeData lightTheme = ThemeData(
       height: 16 / 14,
       fontWeight: FontWeight.w600,
     ),
+    /// labelSmall — size: 12.sp, weight: w600, color: #FFFFFF
     labelSmall: TextStyle(
       overflow: TextOverflow.fade,
       color: const Color(0xFFFFFFFF),
@@ -154,19 +165,19 @@ final ThemeData lightTheme = ThemeData(
   dividerColor: const Color(0xFFCCCCCC), // ➖ Dividers
 
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: AppColors.primaryColor,
-    selectionColor: AppColors.primaryColor.withOpacity(0.33),
-    selectionHandleColor: AppColors.primaryColor,
+    cursorColor: const Color(0xFF00B050),
+    selectionColor: const Color(0xFF00B050).withOpacity(0.33),
+    selectionHandleColor: const Color(0xFF00B050),
   ),
 
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.transparent, // 🧾 TextField background
-    border: _buildBorder(color: AppColors.disable),
-    enabledBorder: _buildBorder(color: AppColors.disable),
-    focusedBorder: _buildBorder(color: AppColors.primaryColor),
-    disabledBorder: _buildBorder(color: AppColors.disable),
-    errorBorder: _buildBorder(color: AppColors.error),
+    border: _buildBorder(color: const Color(0xFFC2C2C2)),
+    enabledBorder: _buildBorder(color: const Color(0xFFC2C2C2)),
+    focusedBorder: _buildBorder(color: const Color(0xFF00B050)),
+    disabledBorder: _buildBorder(color: const Color(0xFFC2C2C2)),
+    errorBorder: _buildBorder(color: const Color(0xFFE53935)),
     hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF979797)),
     labelStyle: const TextStyle(fontSize: 14, color: Color(0xffBFBFBF)),
   ),
@@ -174,7 +185,7 @@ final ThemeData lightTheme = ThemeData(
 
 OutlineInputBorder _buildBorder({required Color color}) {
   return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5),
+    borderRadius: BorderRadius.circular(12),
     borderSide: BorderSide(color: color),
   );
 }

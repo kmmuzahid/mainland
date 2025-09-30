@@ -11,6 +11,7 @@ import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
 @RoutePage()
@@ -22,60 +23,41 @@ class OtpScreen extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
     body: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: BlocProvider(
         create: (context) => OtpCubit(),
         child: BlocBuilder<OtpCubit, OtpState>(
           builder: (context, state) {
             return Column(
               children: [
-                const Spacer(),
                 const CommonLogo().center,
-                50.height,
-                if (!(state.verificationId.isNotEmpty || state.isLoading))
-                  CommonText(
-                    text: AppString.otpTitleSignup,
-                    style: getTheme.textTheme.bodyLarge,
-                    alignment: MainAxisAlignment.center,
-                  ),
-                if (state.verificationId.isNotEmpty || state.isLoading) ...[
-                  CommonText(
-                    text: AppString.enterVerifyCode,
-                    style: getTheme.textTheme.bodyLarge,
-                    alignment: MainAxisAlignment.center,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CommonText(
-                        text: AppString.otpEntrySubtitle(state.username),
-                        style: getTheme.textTheme.bodyMedium,
-                        alignment: MainAxisAlignment.center,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          context.read<OtpCubit>().resetState();
-                        },
-                        icon: const Icon(Icons.edit_note_outlined, color: AppColors.primaryColor),
-                      ),
-                    ],
-                  ),
-                ],
-                20.height,
-                AnimatedCrossFade(
-                  firstChild: const OtpSend(),
-                  secondChild: OtpVerifyWidget(onSuccess: onSuccess, state: state),
-                  crossFadeState: state.verificationId.isNotEmpty || state.isLoading
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: const Duration(milliseconds: 300), // Increase the duration
+                CommonText(
+                  text: AppString.appName,
+                  style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),
                 ),
+                CommonText(
+                  text: AppString.buySellKeepFavoriteTickets,
+                  style: getTheme.textTheme.bodyLarge,
+                  alignment: MainAxisAlignment.center,
+                ),
+                30.height,
+                CommonText(
+                  text: AppString.forgotThePassword.replaceFirst('?', ''),
+                  style: AppTextStyles.titleLarge,
+                  alignment: MainAxisAlignment.center,
+                ).start,
+                5.height,
+                const OtpSend(),
+                80.height
 
-                const Spacer(),
-
-                ///  Sign In Instruction here
-                const AlreadyAccountRichText(),
-                85.height,
+                // AnimatedCrossFade(
+                //   firstChild: const OtpSend(),
+                //   secondChild: OtpVerifyWidget(onSuccess: onSuccess, state: state),
+                //   crossFadeState: state.verificationId.isNotEmpty || state.isLoading
+                //       ? CrossFadeState.showSecond
+                //       : CrossFadeState.showFirst,
+                //   duration: const Duration(milliseconds: 300), // Increase the duration
+                // ),
               ],
             );
           },

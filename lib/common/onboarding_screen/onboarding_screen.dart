@@ -55,13 +55,7 @@ class OnboardingScreen extends StatelessWidget {
                   titleText: AppString.signUp,
                   buttonWidth: 100,
                   onTap: () {
-                    appRouter.push(
-                      OtpRoute(
-                        onSuccess: () {
-                          appRouter.push(const SignUpRoute());
-                        },
-                      ),
-                    );
+                    appRouter.push(const SignUpRoute());
                   },
                 ),
                 100.height,

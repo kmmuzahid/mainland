@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/otp_cubit.dart';
+import 'package:mainland/common/auth/cubit/otp_state.dart';
+import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
-import 'package:mainland/core/component/text_field/common_phone_number_text_filed.dart';
+import 'package:mainland/core/component/other_widgets/common_dialog.dart';
+import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
 class OtpSend extends StatefulWidget {
@@ -20,37 +27,51 @@ class _OtpSendState extends State<OtpSend> {
   @override
   void initState() {
     controller = TextEditingController();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 24.h),
       child: Form(
         key: formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: CommonPhoneNumberTextFiled(controller: controller, countryChange: (value) {}),
-            ),
-            12.height,
-
-            CommonButton(
-              titleText: AppString.otpSendButton,
-              isLoading: false,
-              buttonWidth: 160,
-              buttonHeight: 40.h,
-              titleSize: 12,
-              titleWeight: FontWeight.w500,
-              onTap: () {
-                if (formKey.currentState?.validate() == true) {
-                  context.read<OtpCubit>().sendOtp(controller.text);
-                }
-              },
-            ),
-          ],
+        child: BlocBuilder<OtpCubit, OtpState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                CommonTextField(
+                  controller: controller,
+                  backgroundColor: AppColors.disable,
+                  borderColor: AppColors.disable,
+                  hintText: AppString.emailAddress,
+                  validationType: ValidationType.validateEmail,
+                ),
+                25.height,
+                CommonButton(
+                  titleText: AppString.otpSendButton,
+                  isLoading: false,
+                  buttonWidth: 160,
+                  onTap: () {
+                    // if (formKey.currentState?.validate() == true) {
+                    // }
+                    commonDialog(
+                      context: context,
+                      child: OtpVerifyWidget(
+                        email: controller.text,
+                        onSuccess: () {
+                          appRouter.pop();
+                          appRouter.push(
+                            ForgetPasswordRoute(newPasswordController: TextEditingController()),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -58,7 +79,9 @@ class _OtpSendState extends State<OtpSend> {
 
   @override
   void dispose() {
-    controller.dispose();
+    try {
+      controller.dispose();
+    } catch (e) {}
     super.dispose();
   }
 }

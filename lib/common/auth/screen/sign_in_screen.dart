@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
@@ -12,6 +13,8 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import '../widgets/do_not_have_account_widget.dart';
 
@@ -29,48 +32,79 @@ class SignInScreen extends StatelessWidget {
       appBar: AppBar(),
       /// Body Sections Starts here
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 58.w, vertical: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: CustomForm(
           builder:(BuildContext context, GlobalKey<FormState> formKey)=> Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// Log In Instruction here
-              60.height,
-              const CommonLogo().center,
-              50.height,
-
-              /// Account Email Input here
-              CommonText(text: AppString.phoneNumber, bottom: 8),
+              40.height,
+              CommonText(
+                text: AppString.letsSignYouIn,
+                style: AppTextStyles.headlineLarge?.copyWith(color: AppColors.primaryColor),
+              ),
+              CommonText(
+                textAlign: TextAlign.start,
+                text: '${AppString.welcomeBack}\n${AppString.youHaveBeenMissed}',
+                style: getTheme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w400,
+                  height: 1,
+                ),
+              ),
+              20.height,
+              CommonText(
+                text: AppString.pleaseSelectARoleBeforeContinuing,
+                style: getTheme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.secondaryText,
+                ),
+              ),
+              15.height,
+              CommonRadioGroup(
+                options: {'attendee': AppString.attendee, 'organizer': AppString.organizer},
+                onChanged: print,
+                initialKey: 'attendee',
+                iconSize: 25.w,
+                textStyle: AppTextStyles.headlineSmall,
+              ),
+              20.height,
 
               CommonTextField(
-                // prefixIcon: const Icon(Icons.mail),
-                // textStyle: theme.textTheme.bodyMedium,
-                hintText: AppString.phoneNumber,
-                validationType: ValidationType.validatePhone,
+                backgroundColor: AppColors.disable,
+                borderColor: AppColors.disable,
+                hintText: AppString.emailAddress,
+                validationType: ValidationType.validateEmail,
+                controller: ctrUsername,
+              ),
+              10.height,
+              CommonTextField(
+                backgroundColor: AppColors.disable,
+                borderColor: AppColors.disable,
+                hintText: AppString.password,
+                validationType: ValidationType.validatePassword,
                 controller: ctrUsername,
               ),
 
-              /// Account Password Input here
-              CommonText(text: AppString.password, bottom: 8, top: 24),
-              CommonTextField(
-                // prefixIcon: const Icon(Icons.lock),
-                validationType: ValidationType.validatePassword,
-                hintText: AppString.password,
-                controller: ctrPassword,
-              ),
-
+            
               /// Forget Password Button here
               GestureDetector(
                 onTap: () {
                   appRouter.push(
                     OtpRoute(
                       onSuccess: () {
-                        appRouter.push(ForgetPasswordRoute(formKey: GlobalKey()));
+                        appRouter.push(
+                          ForgetPasswordRoute(newPasswordController: TextEditingController()),
+                        );
                       },
                     ),
                   );
                 },
-                child: CommonText(text: AppString.forgotThePassword, top: 10, bottom: 30),
+                child: CommonText(
+                  text: AppString.forgotThePassword,
+                  style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
+                  top: 10,
+                  bottom: 30,
+                ),
               ).end,
 
               /// Submit Button here
@@ -84,7 +118,6 @@ class SignInScreen extends StatelessWidget {
                     context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
                   },
                   buttonWidth: 132,
-                  buttonHeight: 40,
                   isLoading: false,
                 ),
               ),

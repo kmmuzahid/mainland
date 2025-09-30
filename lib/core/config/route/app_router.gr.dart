@@ -112,12 +112,15 @@ class ChatRouteArgs {
 /// [_i3.ForgetPasswordScreen]
 class ForgetPasswordRoute extends _i15.PageRouteInfo<ForgetPasswordRouteArgs> {
   ForgetPasswordRoute({
-    required _i17.GlobalKey<_i17.FormState> formKey,
+    required _i17.TextEditingController newPasswordController,
     _i17.Key? key,
     List<_i15.PageRouteInfo>? children,
   }) : super(
          ForgetPasswordRoute.name,
-         args: ForgetPasswordRouteArgs(formKey: formKey, key: key),
+         args: ForgetPasswordRouteArgs(
+           newPasswordController: newPasswordController,
+           key: key,
+         ),
          initialChildren: children,
        );
 
@@ -127,32 +130,39 @@ class ForgetPasswordRoute extends _i15.PageRouteInfo<ForgetPasswordRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ForgetPasswordRouteArgs>();
-      return _i3.ForgetPasswordScreen(formKey: args.formKey, key: args.key);
+      return _i3.ForgetPasswordScreen(
+        newPasswordController: args.newPasswordController,
+        key: args.key,
+      );
     },
   );
 }
 
 class ForgetPasswordRouteArgs {
-  const ForgetPasswordRouteArgs({required this.formKey, this.key});
+  const ForgetPasswordRouteArgs({
+    required this.newPasswordController,
+    this.key,
+  });
 
-  final _i17.GlobalKey<_i17.FormState> formKey;
+  final _i17.TextEditingController newPasswordController;
 
   final _i17.Key? key;
 
   @override
   String toString() {
-    return 'ForgetPasswordRouteArgs{formKey: $formKey, key: $key}';
+    return 'ForgetPasswordRouteArgs{newPasswordController: $newPasswordController, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! ForgetPasswordRouteArgs) return false;
-    return formKey == other.formKey && key == other.key;
+    return newPasswordController == other.newPasswordController &&
+        key == other.key;
   }
 
   @override
-  int get hashCode => formKey.hashCode ^ key.hashCode;
+  int get hashCode => newPasswordController.hashCode ^ key.hashCode;
 }
 
 /// generated route for

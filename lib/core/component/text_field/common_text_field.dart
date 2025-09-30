@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../text/common_text.dart';
@@ -17,7 +18,7 @@ class CommonTextField extends StatefulWidget {
     this.prefixText,
     this.paddingHorizontal = 16,
     this.paddingVertical = 14,
-    this.borderRadius = 10,
+    this.borderRadius = 12,
     this.onSaved,
     this.borderColor,
     this.onTap,
@@ -27,6 +28,7 @@ class CommonTextField extends StatefulWidget {
     this.showActionButton = false,
     this.actionButtonIcon,
     this.originalPassword,
+    this.backgroundColor,
   });
 
   final Function(String value, TextEditingController controller)? onSaved;
@@ -49,6 +51,7 @@ class CommonTextField extends StatefulWidget {
   final Widget? actionButtonIcon;
   final ValidationType validationType;
   final String? originalPassword;
+  final Color? backgroundColor;
 
   @override
   State<CommonTextField> createState() => _CommonTextFieldState();
@@ -83,10 +86,14 @@ class _CommonTextFieldState extends State<CommonTextField> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
-    // if (!_hasController) {
-    _controller.dispose();
-    // }
+    try {
+      _focusNode.dispose();
+      // if (!_hasController) {
+      _controller.dispose();
+      // }
+    } catch (e) {
+      print(e);
+    }
     super.dispose();
   }
 
@@ -140,7 +147,8 @@ class _CommonTextFieldState extends State<CommonTextField> {
           filled: true,
           counterText: '',
           errorMaxLines: 2,
-          hintStyle: TextStyle(fontSize: 14.sp),
+          fillColor: widget.backgroundColor,
+          hintStyle: TextStyle(fontSize: 16.sp),
           prefixIcon: widget.prefixText?.isNotEmpty == true
               ? Padding(
                   padding: const EdgeInsets.only(
@@ -166,6 +174,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
               : widget.suffixIcon,
           prefixIconColor: _iconColor(),
           suffixIconColor: _iconColor(),
+          
           enabledBorder: widget.borderColor != null
               ? getTheme.inputDecorationTheme.enabledBorder?.copyWith(
                   borderSide:

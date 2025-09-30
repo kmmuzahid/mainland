@@ -37,7 +37,7 @@ class CommonAlert {
               titleText: cancelButtonTittle ?? AppString.no,
               buttonWidth: 70,
               buttonHeight: 35,
-              buttonColor: AppColors.primaryColor3,
+              buttonColor: getTheme.colorScheme.error,
               titleColor: AppColors.textWhite,
               onTap: appRouter.pop,
             ),
