@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/otp_cubit.dart';
 import 'package:mainland/common/auth/cubit/otp_state.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';

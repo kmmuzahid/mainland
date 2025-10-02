@@ -26,6 +26,11 @@ class AuthCubit extends SafeCubit<AuthState> {
     _storageService.write(_loginInfo, userInfo.toJson());
   }
 
+  Future<void> onChangeSignUpModel(SignUpModel? signUpModel) async {
+    if (signUpModel == null) return;
+    emit(state.copyWith(signUpModel: signUpModel));
+  }
+
   Future<void> init() async {
     try {
       final String? data = await _storageService.read(_loginInfo);
@@ -64,7 +69,7 @@ class AuthCubit extends SafeCubit<AuthState> {
     final responce = await _repository.signUp(signUpModel: signUpModel);
     if (responce.statusCode == 200) {
       emit(const AuthState());
-      signIn(signUpModel.username, signUpModel.password);
+      signIn(signUpModel.email, signUpModel.password);
     } else {
       showSnackBar(responce.message ?? '');
     }
@@ -108,5 +113,4 @@ class AuthCubit extends SafeCubit<AuthState> {
     ]);
     emit(const AuthState());
   }
-  
 }

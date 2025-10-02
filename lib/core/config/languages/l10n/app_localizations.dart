@@ -525,6 +525,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset Password'**
   String get resetPassword;
+
+  /// No description provided for @state.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get state;
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
 }
 
 class _AppLocalizationsDelegate

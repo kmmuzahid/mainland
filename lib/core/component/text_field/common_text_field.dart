@@ -20,6 +20,7 @@ class CommonTextField extends StatefulWidget {
     this.paddingVertical = 14,
     this.borderRadius = 12,
     this.onSaved,
+    this.onChanged,
     this.borderColor,
     this.onTap,
     this.suffixIcon,
@@ -28,10 +29,12 @@ class CommonTextField extends StatefulWidget {
     this.showActionButton = false,
     this.actionButtonIcon,
     this.originalPassword,
+    this.validation,
     this.backgroundColor,
   });
 
   final Function(String value, TextEditingController controller)? onSaved;
+  final Function(String value)? onChanged;
   final String? initialText;
   final bool isReadOnly;
   final String? hintText;
@@ -50,8 +53,10 @@ class CommonTextField extends StatefulWidget {
   final bool showActionButton;
   final Widget? actionButtonIcon;
   final ValidationType validationType;
-  final String? originalPassword;
+  final String Function()? originalPassword;
   final Color? backgroundColor;
+  
+  final String? Function(String? value)? validation;
 
   @override
   State<CommonTextField> createState() => _CommonTextFieldState();
@@ -128,6 +133,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
         focusNode: _focusNode,
         obscureText: _obscureText,
         readOnly: widget.isReadOnly,
+        onChanged: widget.onChanged,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         keyboardType: InputHelper.getKeyboardType(widget.validationType),
         textInputAction: widget.textInputAction,
@@ -136,10 +142,12 @@ class _CommonTextFieldState extends State<CommonTextField> {
         inputFormatters: InputHelper.getInputFormatters(widget.validationType),
         onFieldSubmitted: _onSave,
         onTap: widget.onTap,
-        validator: (value) => InputHelper.validate(
+        validator:
+            widget.validation ??
+            (value) => InputHelper.validate(
           widget.validationType,
           value,
-          originalPassword: widget.originalPassword,
+              originalPassword: widget.originalPassword?.call(),
         ),
 
         style: getTheme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500, fontSize: 16.sp),
@@ -174,7 +182,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
               : widget.suffixIcon,
           prefixIconColor: _iconColor(),
           suffixIconColor: _iconColor(),
-          
+
           enabledBorder: widget.borderColor != null
               ? getTheme.inputDecorationTheme.enabledBorder?.copyWith(
                   borderSide:

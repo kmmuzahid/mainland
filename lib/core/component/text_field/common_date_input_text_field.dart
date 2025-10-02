@@ -6,14 +6,26 @@ class CommonDateInputTextField extends StatefulWidget {
   const CommonDateInputTextField({
     super.key,
     this.onSave,
+    this.prefixIcon,
     this.paddingHorizontal = 16,
     this.paddingVertical = 14,
     this.borderRadius = 10,
-  });
+    this.onChanged,
+    this.suffix,
+    this.validation,
+    this.borderColor,
+    this.backgroundColor,
+});
   final double paddingHorizontal;
   final double paddingVertical;
   final double borderRadius;
   final Function(String date)? onSave;
+  final Widget? suffix;
+  final Function(String date)? onChanged;
+  final String? Function(String? value)? validation;
+  final Color? borderColor;
+  final Color? backgroundColor;
+  final Widget? prefixIcon;
 
   @override
   State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
@@ -47,6 +59,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
       paddingHorizontal: widget.paddingHorizontal,
       paddingVertical: widget.paddingVertical,
       borderRadius: widget.borderRadius,
+      onChanged: widget.onChanged,
       hintText: 'YYYY-MM-DD',
       onSaved: (value, _) {
         if (widget.onSave == null) return;
@@ -56,9 +69,13 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
         onTap: () {
           _openDatePicker(context);
         },
-        child: const Icon(Icons.calendar_month_outlined),
+        child: widget.suffix ?? const Icon(Icons.calendar_month_outlined),
       ),
       validationType: ValidationType.validateDate,
+      prefixIcon: widget.prefixIcon,
+      validation: widget.validation,
+      borderColor: widget.borderColor,
+      backgroundColor: widget.backgroundColor,
     );
   }
 }

@@ -72,5 +72,7 @@
   "pleaseSelectARoleBeforeContinuing": "Please select a role before continuing",
   "attendee": "Attendee",
   "organizer": "Organizer",
-  "resetPassword": "Reset Password"
+  "resetPassword": "Reset Password",
+  "state": "State",
+  "city": "City"
 }

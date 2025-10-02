@@ -81,7 +81,7 @@ class ProfileInfoScreen extends StatelessWidget {
         CommonTextField(
           hintText: AppString.confirmPassword,
           validationType: ValidationType.validateConfirmPassword,
-          originalPassword: '',
+          originalPassword: () => '',
           prefixIcon: Icon(Icons.lock, size: 20.sp),
         ),
         20.height,

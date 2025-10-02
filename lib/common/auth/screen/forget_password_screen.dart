@@ -55,7 +55,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               controller: newPasswordController,
               hintText: AppString.confirmPassword,
               validationType: ValidationType.validateConfirmPassword,
-              originalPassword: newPasswordController.text,
+              originalPassword: () => newPasswordController.text,
             ),
             20.height,
 
