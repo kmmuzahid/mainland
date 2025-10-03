@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 
@@ -24,14 +25,14 @@ class OnboardingScreen extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(),
-            CommonImage(imageSrc: Assets.icon.icon.path, width: 208, height: 142).center,
+            const CommonLogo(width: 208, height: 142).center,
             CommonText(
               text: AppString.appName,
               style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),
             ).center,
             CommonText(
               text: AppString.buySellKeepFavoriteTickets,
-              style: getTheme.textTheme.bodyMedium,
+              style: getTheme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
             ).center,
             50.height,
             const Spacer(),

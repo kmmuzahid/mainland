@@ -9,5 +9,5 @@ class TermsConditionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Scaffold(appBar: CommonAppBar(title: AppString.termsCondition));
+      Scaffold(appBar: CommonAppBar(title: AppString.termsOfuse));
 }

@@ -62,8 +62,7 @@ class ForgetPasswordScreen extends StatelessWidget {
             /// Submit Button here
             CommonButton(
               titleText: AppString.resetPassword,
-              buttonWidth: 132,
-              buttonHeight: 40,
+              buttonWidth: 100,
               onTap: () {
                 if (formKey.currentState!.validate()) {}
                 appRouter.popUntilRouteWithName(SignInRoute.name);

@@ -277,7 +277,7 @@ abstract class AppLocalizations {
   /// No description provided for @resendCodeIn.
   ///
   /// In en, this message translates to:
-  /// **'Resend code in'**
+  /// **'Resend in'**
   String get resendCodeIn;
 
   /// No description provided for @newPassword.
@@ -289,7 +289,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmPassword.
   ///
   /// In en, this message translates to:
-  /// **'Confirm Password'**
+  /// **'Confirm New Password'**
   String get confirmPassword;
 
   /// No description provided for @save.
@@ -301,7 +301,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterVerifyCode.
   ///
   /// In en, this message translates to:
-  /// **'Enter Verify Code'**
+  /// **'Verify Code'**
   String get enterVerifyCode;
 
   /// No description provided for @otpTitleSignup.
@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @forgotThePassword.
   ///
   /// In en, this message translates to:
-  /// **'Forgot the Password?'**
+  /// **'Forgot Password?'**
   String get forgotThePassword;
 
   /// No description provided for @currentPassword.
@@ -367,7 +367,7 @@ abstract class AppLocalizations {
   /// No description provided for @doNotHaveAccount.
   ///
   /// In en, this message translates to:
-  /// **'Do not have an account?'**
+  /// **'Don’t have an account?'**
   String get doNotHaveAccount;
 
   /// No description provided for @accountDeleteMessage.
@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @otpSendButton.
   ///
   /// In en, this message translates to:
-  /// **'Send OTP'**
+  /// **'Send Code'**
   String get otpSendButton;
 
   /// No description provided for @didntReciveCode.
@@ -424,17 +424,17 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notifications;
 
-  /// No description provided for @privacyPolicy.
+  /// No description provided for @privacyNotice.
   ///
   /// In en, this message translates to:
   /// **'Privacy Notice'**
-  String get privacyPolicy;
+  String get privacyNotice;
 
-  /// No description provided for @termsCondition.
+  /// No description provided for @termsOfuse.
   ///
   /// In en, this message translates to:
   /// **'Terms of Use'**
-  String get termsCondition;
+  String get termsOfuse;
 
   /// No description provided for @account.
   ///
@@ -445,8 +445,8 @@ abstract class AppLocalizations {
   /// No description provided for @codeHasBeenSentTo.
   ///
   /// In en, this message translates to:
-  /// **'Code has been sent to {email}'**
-  String codeHasBeenSentTo(Object email);
+  /// **'A Code has been sent to your Email Address'**
+  String get codeHasBeenSentTo;
 
   /// No description provided for @yes.
   ///
@@ -537,6 +537,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'City'**
   String get city;
+
+  /// No description provided for @confim.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confim;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
 }
 
 class _AppLocalizationsDelegate

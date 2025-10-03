@@ -50,7 +50,7 @@ class _OtpSendState extends State<OtpSend> {
                 CommonButton(
                   titleText: AppString.otpSendButton,
                   isLoading: false,
-                  buttonWidth: 160,
+                  buttonWidth: 100,
                   onTap: () {
                     // if (formKey.currentState?.validate() == true) {
                     // }

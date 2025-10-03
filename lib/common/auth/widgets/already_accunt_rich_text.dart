@@ -15,7 +15,7 @@ class AlreadyAccountRichText extends StatelessWidget {
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: AppString.doNotHaveAccount, style: getTheme.textTheme.titleSmall),
+          TextSpan(text: AppString.alreadyHaveAccount, style: getTheme.textTheme.titleSmall),
 
           /// Sign Up Button here
           TextSpan(

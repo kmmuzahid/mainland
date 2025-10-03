@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 class OtpState extends Equatable {
   const OtpState({
     this.otp = '',
-    this.count = 10,
+    this.count = 0,
     this.verificationId = '',
     this.isVerified = false,
     this.isLoading = false,
@@ -14,7 +14,7 @@ class OtpState extends Equatable {
   final String verificationId;
   final bool isVerified;
   final String username;
-  final maxCount = 10;
+  final maxCount = 180;
   final bool isLoading;
   final int count;
 

@@ -9,5 +9,5 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Scaffold(appBar: CommonAppBar(title: AppString.privacyPolicy));
+      Scaffold(appBar: CommonAppBar(title: AppString.privacyNotice));
 }

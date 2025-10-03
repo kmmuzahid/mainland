@@ -111,19 +111,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get resendCodeIn => 'Resend code in';
+  String get resendCodeIn => 'Resend in';
 
   @override
   String get newPassword => 'New Password';
 
   @override
-  String get confirmPassword => 'Confirm Password';
+  String get confirmPassword => 'Confirm New Password';
 
   @override
   String get save => 'Save';
 
   @override
-  String get enterVerifyCode => 'Enter Verify Code';
+  String get enterVerifyCode => 'Verify Code';
 
   @override
   String get otpTitleSignup => 'OTP Verification';
@@ -144,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get forgotThePassword => 'Forgot the Password?';
+  String get forgotThePassword => 'Forgot Password?';
 
   @override
   String get currentPassword => 'Current Password';
@@ -156,14 +156,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dateOfBirth => 'Date of Birth';
 
   @override
-  String get doNotHaveAccount => 'Do not have an account?';
+  String get doNotHaveAccount => 'Don’t have an account?';
 
   @override
   String get accountDeleteMessage =>
       'Are you sure you want to delete your account?';
 
   @override
-  String get otpSendButton => 'Send OTP';
+  String get otpSendButton => 'Send Code';
 
   @override
   String get didntReciveCode => 'Didn\'t receive code?';
@@ -187,18 +187,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get privacyPolicy => 'Privacy Notice';
+  String get privacyNotice => 'Privacy Notice';
 
   @override
-  String get termsCondition => 'Terms of Use';
+  String get termsOfuse => 'Terms of Use';
 
   @override
   String get account => 'Account';
 
   @override
-  String codeHasBeenSentTo(Object email) {
-    return 'Code has been sent to $email';
-  }
+  String get codeHasBeenSentTo => 'A Code has been sent to your Email Address';
 
   @override
   String get yes => 'Yes';
@@ -247,4 +245,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get city => 'City';
+
+  @override
+  String get confim => 'Confirm';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
 }

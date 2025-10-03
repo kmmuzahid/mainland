@@ -33,11 +33,11 @@ class OtpScreen extends StatelessWidget {
                 const CommonLogo().center,
                 CommonText(
                   text: AppString.appName,
-                  style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),
+                  style: getTheme.textTheme.headlineSmall?.copyWith(color: AppColors.primaryColor),
                 ),
                 CommonText(
                   text: AppString.buySellKeepFavoriteTickets,
-                  style: getTheme.textTheme.bodyLarge,
+                  style: getTheme.textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
                   alignment: MainAxisAlignment.center,
                 ),
                 30.height,

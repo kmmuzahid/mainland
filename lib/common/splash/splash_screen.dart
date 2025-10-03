@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ).center,
           CommonText(
             text: AppString.buySellKeepFavoriteTickets,
-            style: getTheme.textTheme.bodyMedium,
+            style: getTheme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
           ).center,
           const Spacer(),
           CommonText(

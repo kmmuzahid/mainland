@@ -50,8 +50,7 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
         ).start,
         Form(key: formKey, child: _otpBuilder(context)),
         CommonText(
-          text: AppString.codeHasBeenSentTo(widget.email),
-          style: AppTextStyles.bodyMedium,
+          text: AppString.codeHasBeenSentTo, style: AppTextStyles.bodySmall,
         ),
         BlocSelector<OtpCubit, OtpState, int>(
           selector: (otpState) => otpState.count,
@@ -65,9 +64,10 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
         BlocSelector<OtpCubit, OtpState, bool>(
           selector: (otpState) => otpState.isLoading,
           builder: (context, state) => CommonButton(
-            titleText: AppString.verify,
+            titleText: AppString.confim,
             isLoading: state,
-            buttonWidth: 160,
+            buttonRadius: 12.w,
+            buttonWidth: 100,
             titleWeight: FontWeight.w500,
             onTap: () {
               // if (formKey.currentState?.validate() == true) {

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,13 +6,14 @@ import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
 
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
+import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
-import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
+import 'package:mainland/core/component/text_field/common_phone_number_text_filed.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -23,8 +23,6 @@ import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
-import 'package:mainland/gen/assets.gen.dart';
 
 class SignUpAllField extends StatelessWidget {
   const SignUpAllField({super.key});
@@ -40,19 +38,14 @@ class SignUpAllField extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //upload image
-                CommonImage(
-                  width: 150,
-                  height: 150,
-                  borderRadius: 150,
-                  imageSrc: Assets.icon.icon.path,
-                ).center,
+                const CommonLogo().center,
                 CommonText(
                   text: AppString.appName,
-                  style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),
+                  style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
                 ).center,
                 CommonText(
                   text: AppString.buySellKeepFavoriteTickets,
-                  style: getTheme.textTheme.bodyLarge,
+                  style: AppTextStyles.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
                   alignment: MainAxisAlignment.center,
                 ).center,
                 20.height,
@@ -180,35 +173,18 @@ class SignUpAllField extends StatelessWidget {
                   },
                 ),
                 10.height,
-                BlocSelector<AuthCubit, AuthState, String>(
-                  selector: (state) => state.signUpModel.password,
-                  builder: (context, password) {
-                    AppLogger.debug(password, tag: 'password');
-                    final cubit = context.read<AuthCubit>();
-                    return CommonTextField(
-                      prefixIcon: _requiredIcon(),
-                      borderColor: AppColors.disable,
-                      backgroundColor: AppColors.disable,
-                      hintText: AppString.confirmPassword,
-                      validationType: ValidationType.validateConfirmPassword,
-                      originalPassword: () {
-                        return cubit.state.signUpModel.password;
-                      },
-                    );
-                  },
-                ),
-                10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),
                   borderColor: AppColors.disable,
                   backgroundColor: AppColors.disable,
                   hintText: 'United States',
-                  initialText: 'United States',
                   isReadOnly: true,
                   validationType: ValidationType.notRequired,
                   onSaved: (value, controller) {
                     final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(country: value));
+                    cubit.onChangeSignUpModel(
+                      cubit.state.signUpModel.copyWith(country: 'United States'),
+                    );
                   },
                 ),
                 10.height,
@@ -236,6 +212,18 @@ class SignUpAllField extends StatelessWidget {
                   },
                 ),
                 // All Text Filed here
+                10.height,
+                CommonTextField(
+                  prefixIcon: _requiredIcon(),
+                  borderColor: AppColors.disable,
+                  backgroundColor: AppColors.disable,
+                  hintText: AppString.city,
+                  validationType: ValidationType.validatePhone,
+                  onSaved: (value, controller) {
+                    final cubit = context.read<AuthCubit>();
+                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(phone: value));
+                  },
+                ),
                 30.height,
 
                 // Submit Button Here
@@ -254,8 +242,8 @@ class SignUpAllField extends StatelessWidget {
                       ),
                     );
                   },
-                  buttonWidth: 132,
                 ).center,
+                
                 30.height,
 
                 ///  Sign In Instruction here
@@ -279,5 +267,6 @@ class SignUpAllField extends StatelessWidget {
     return '$years';
   }
 
-  Icon _requiredIcon() => Icon(Icons.star_border, size: 15.w, color: AppColors.warning);
+  Widget _requiredIcon() =>
+      const CommonText(text: '*', color: AppColors.warning, fontSize: 20, top: 10);
 }

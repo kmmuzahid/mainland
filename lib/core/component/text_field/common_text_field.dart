@@ -110,7 +110,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
 
   Color _iconColor() {
     return _focusNode.hasFocus
-        ? (widget.borderColor ?? getTheme.primaryColor)
+        ? getTheme.primaryColor
         : getTheme.colorScheme.outline;
   }
 
@@ -177,8 +177,10 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   },
                   child: widget.actionButtonIcon ?? const Icon(Icons.search),
                 )
-              : _obscureText
+              : widget.validationType == ValidationType.validatePassword
+              ? (_obscureText 
               ? _buildPasswordSuffixIcon()
+              : _buildPasswordSuffixIcon())
               : widget.suffixIcon,
           prefixIconColor: _iconColor(),
           suffixIconColor: _iconColor(),

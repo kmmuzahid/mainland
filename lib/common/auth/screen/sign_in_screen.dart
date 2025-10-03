@@ -82,7 +82,7 @@ class SignInScreen extends StatelessWidget {
                 borderColor: AppColors.disable,
                 hintText: AppString.password,
                 validationType: ValidationType.validatePassword,
-                controller: ctrUsername,
+                controller: ctrPassword,
               ),
 
             
@@ -117,11 +117,11 @@ class SignInScreen extends StatelessWidget {
                     // }
                     context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
                   },
-                  buttonWidth: 132,
+                  buttonWidth: 100,
                   isLoading: false,
                 ),
               ),
-              100.height,
+              24.height,
 
               /// Account Creating Instruction here
               const Align(alignment: Alignment.bottomCenter, child: DoNotHaveAccount()),
