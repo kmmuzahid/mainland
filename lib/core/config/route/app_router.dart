@@ -59,5 +59,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ChatListRoute.page),
     AutoRoute(page: NotificationRoute.page),
     AutoRoute(page: HomeRoute.page),
+    AutoRoute(page: ShowInfoRoute.page),
+    AutoRoute(page: PreferenceRoute.page),
   ];
 }

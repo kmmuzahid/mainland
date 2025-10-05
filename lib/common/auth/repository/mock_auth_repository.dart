@@ -15,6 +15,7 @@ class MockAuthRepository implements AuthRepository {
       id: '',
       name: 'Km M Islam',
       image: Assets.images.sampleItem3.path,
+      role: Role.ATTENDEE,
       username: username,
       accessToken: 'bearer dddddd',
       refreshToken: 'beared ddddddds',

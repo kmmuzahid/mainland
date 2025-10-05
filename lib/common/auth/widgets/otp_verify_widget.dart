@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -35,50 +36,57 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
   }
 
   @override
-  Widget build(_) => BlocProvider(
-    create: (context) => OtpCubit()..sendOtp(widget.email),
-    child: Column(
-      children: [
-        IconButton(
-          onPressed: appRouter.pop,
-          icon: Icon(Icons.close, size: 20.w),
-        ).end,
-        CommonText(
-          text: AppString.enterVerifyCode,
-          style: AppTextStyles.titleLarge,
-          bottom: 10.w,
-        ).start,
-        Form(key: formKey, child: _otpBuilder(context)),
-        CommonText(
-          text: AppString.codeHasBeenSentTo, style: AppTextStyles.bodySmall,
+  Widget build(_) => CustomForm(
+    builder: (context, formKey) {
+      return BlocProvider(
+        create: (context) => OtpCubit()..sendOtp(widget.email),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: appRouter.pop,
+              icon: Icon(Icons.close, size: 20.w),
+            ).end,
+            CommonText(
+              text: AppString.enterVerifyCode,
+              style: AppTextStyles.titleLarge,
+              bottom: 10.w,
+            ).start,
+            _otpBuilder(context),
+            20.height,
+            CommonText(text: AppString.codeHasBeenSentTo, style: AppTextStyles.bodySmall),
+            BlocSelector<OtpCubit, OtpState, int>(
+              selector: (otpState) => otpState.count,
+              builder: (context, state) => _resendOtpTimerBuilder(
+                state,
+                widget.email,
+                () => context.read<OtpCubit>().sendOtp(widget.email),
+              ),
+            ).end,
+            20.height,
+            BlocSelector<OtpCubit, OtpState, bool>(
+              selector: (otpState) => otpState.isLoading,
+              builder: (context, state) => CommonButton(
+                titleText: AppString.confim,
+                isLoading: state,
+                buttonRadius: 12.w,
+                buttonWidth: 100,
+                titleWeight: FontWeight.w500,
+                onTap: () {
+                  // if (formKey.currentState?.validate() == true) {
+                  context.read<OtpCubit>().verifyOtp(
+                    otp: controller.text,
+                    onSuccess: widget.onSuccess,
+                  );
+                  // }
+                },
+              ),
+            ),
+            20.height,
+          ],
         ),
-        BlocSelector<OtpCubit, OtpState, int>(
-          selector: (otpState) => otpState.count,
-          builder: (context, state) => _resendOtpTimerBuilder(
-            state,
-            widget.email,
-            () => context.read<OtpCubit>().sendOtp(widget.email),
-          ),
-        ).end,
-        20.height,
-        BlocSelector<OtpCubit, OtpState, bool>(
-          selector: (otpState) => otpState.isLoading,
-          builder: (context, state) => CommonButton(
-            titleText: AppString.confim,
-            isLoading: state,
-            buttonRadius: 12.w,
-            buttonWidth: 100,
-            titleWeight: FontWeight.w500,
-            onTap: () {
-              // if (formKey.currentState?.validate() == true) {
-              context.read<OtpCubit>().verifyOtp(otp: controller.text, onSuccess: widget.onSuccess);
-              // }
-            },
-          ),
-        ),
-        20.height,
-      ],
-    ),
+      );
+    }
   );
 
   Widget _resendOtpTimerBuilder(int count, String username, Function onResend) {

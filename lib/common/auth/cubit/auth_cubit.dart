@@ -21,6 +21,10 @@ class AuthCubit extends SafeCubit<AuthState> {
   final StorageService _storageService = getIt();
   final String _loginInfo = 'login_info_key';
 
+  void onChangeUserRole(Role role) {
+    emit(state.copyWith(userLoginInfoModel: state.userLoginInfoModel.copyWith(role: role)));
+  }
+
   Future<void> _saveUserInfo(UserLoginInfoModel userInfo) async {
     emit(state.copyWith(userLoginInfoModel: userInfo));
     _storageService.write(_loginInfo, userInfo.toJson());
@@ -57,9 +61,14 @@ class AuthCubit extends SafeCubit<AuthState> {
     if (responce.statusCode == 200) {
       AppLogger.debug(responce.data.toString(), tag: 'AuthCubit');
       await _saveUserInfo(responce.data);
-      appRouter.replaceAll([const HomeRoute()]);
+      if (state.userLoginInfoModel.role == Role.ORGANIZER) {
+        // change logic here for api integration
+        appRouter.replaceAll([const HomeRoute()]);
+      } else {
+        appRouter.replaceAll([const PreferenceRoute()]);
+      }
     } else {
-      showSnackBar(responce.message ?? '');
+      showSnackBar(responce.message ?? '', type: SnackBarType.error);
     }
   }
 
@@ -71,7 +80,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       emit(const AuthState());
       signIn(signUpModel.email, signUpModel.password);
     } else {
-      showSnackBar(responce.message ?? '');
+      showSnackBar(responce.message ?? '', type: SnackBarType.error);
     }
   }
 

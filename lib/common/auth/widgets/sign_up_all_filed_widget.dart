@@ -1,16 +1,20 @@
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
+import 'package:mainland/common/auth/model/us_states_model.dart';
 
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
+import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
+import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
 import 'package:mainland/core/component/text_field/common_phone_number_text_filed.dart';
@@ -23,6 +27,7 @@ import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/gen/assets.gen.dart';
 
 class SignUpAllField extends StatelessWidget {
   const SignUpAllField({super.key});
@@ -93,73 +98,7 @@ class SignUpAllField extends StatelessWidget {
                 10.height,
             
                 /// User Phone here
-                BlocSelector<AuthCubit, AuthState, DateTime?>(
-                  selector: (state) => state.signUpModel.dateOfBirth,
-                  builder: (context, date) {
-                    final cubit = context.read<AuthCubit>();
-                    return CommonDateInputTextField(
-                      prefixIcon: _requiredIcon(),
-                      borderColor: AppColors.disable,
-                      backgroundColor: AppColors.disable,
-                      onChanged: (date) {
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(
-                            dateOfBirth: DateTime.tryParse(date) ?? DateTime.now(),
-                          ),
-                        );
-                      },
-                      validation: (value) {
-                        final result = InputHelper.validate(ValidationType.validateDate, value);
-                        if (result != null) {
-                          return result;
-                        }
-                     
-                        if (value != null && value.isNotEmpty) {
-                          final date = DateTime.tryParse(value);
-                          if (date == null) {
-                            return 'Invalid date';
-                          }
-                          if (!date.isBefore(
-                            DateTime.now().subtract(const Duration(days: 18 * 365)),
-                          )) {
-                            return 'You must be at least 18 years old';
-                          }
-                        }
-                        return null;
-                      },
-                      suffix: SizedBox(
-                        width: 110.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Icon(Icons.calendar_month_outlined, color: AppColors.primaryText),
-                            CommonText(
-                              enableBorder: true,
-                              backgroundColor: AppColors.disable,
-                              top: 1,
-                              bottom: 1,
-                              left: 5,
-                              right: 5,
-                              borderColor: AppColors.disable,
-                              text: '${calculateAge(date)} Yrs',
-                              style: TextStyle(
-                                color: AppColors.primaryText,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
-                      ),
-                      onSave: (date) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(dateOfBirth: DateTime.tryParse(date)),
-                        );
-                      },
-                    );
-                  },
-                ),
+                _dateOfBirth(),
                 10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),
@@ -188,17 +127,25 @@ class SignUpAllField extends StatelessWidget {
                   },
                 ),
                 10.height,
-                CommonTextField(
-                  prefixIcon: _requiredIcon(),
+                CommonDropDown<MapEntry<String, String>>(
+                  hint: AppString.state,
+                  items: usStates.entries.toList(),
+                  textStyle: AppTextStyles.bodyMedium,
                   borderColor: AppColors.disable,
+                  prefix: _requiredIcon(),
+                  enableInitalSelection: false,
                   backgroundColor: AppColors.disable,
-                  hintText: AppString.state,
-                  validationType: ValidationType.validateFullName,
-                  onSaved: (value, controller) {
+                  onChanged: (states) {
                     final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(state: value));
+                    cubit.onChangeSignUpModel(
+                      cubit.state.signUpModel.copyWith(state: states?.value),
+                    );
+                  },
+                  nameBuilder: (states) {
+                    return states.value;
                   },
                 ),
+
                 10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),
@@ -214,10 +161,17 @@ class SignUpAllField extends StatelessWidget {
                 // All Text Filed here
                 10.height,
                 CommonTextField(
-                  prefixIcon: _requiredIcon(),
+                  prefixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CommonImage(width: 32, height: 24, imageSrc: Assets.images.usFlag.path),
+                      10.width,
+                      _requiredIcon(),
+                    ],
+                  ),
                   borderColor: AppColors.disable,
                   backgroundColor: AppColors.disable,
-                  hintText: AppString.city,
+                  hintText: 'XXX-XXX-XXXX',
                   validationType: ValidationType.validatePhone,
                   onSaved: (value, controller) {
                     final cubit = context.read<AuthCubit>();
@@ -248,12 +202,100 @@ class SignUpAllField extends StatelessWidget {
 
                 ///  Sign In Instruction here
                 const AlreadyAccountRichText().center,
-                50.height,
+                24.height,
+                RichText(
+                  text: TextSpan(
+                    style: AppTextStyles.labelSmall?.copyWith(color: AppColors.outlineColor),
+                    children: [
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () =>
+                              appRouter.push(ShowInfoRoute(title: AppString.termsOfuse)),
+                        text: AppString.termsOfuse,
+                        style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
+                      ),
+                      const TextSpan(text: ' and '),
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () =>
+                              appRouter.push(ShowInfoRoute(title: AppString.privacyNotice)),
+                        text: AppString.privacyNotice,
+                        style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
+                      ),
+                    ],
+                  ),
+                ).center,
+                60.height,
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  BlocSelector<AuthCubit, AuthState, DateTime?> _dateOfBirth() {
+    return BlocSelector<AuthCubit, AuthState, DateTime?>(
+      selector: (state) => state.signUpModel.dateOfBirth,
+      builder: (context, date) {
+        final cubit = context.read<AuthCubit>();
+        return CommonDateInputTextField(
+          prefixIcon: _requiredIcon(),
+          borderColor: AppColors.disable,
+          backgroundColor: AppColors.disable,
+          onChanged: (date) {
+            cubit.onChangeSignUpModel(
+              cubit.state.signUpModel.copyWith(
+                dateOfBirth: DateTime.tryParse(date) ?? DateTime.now(),
+              ),
+            );
+          },
+          validation: (value) {
+            final result = InputHelper.validate(ValidationType.validateDate, value);
+            if (result != null) {
+              return result;
+            }
+
+            if (value != null && value.isNotEmpty) {
+              final date = DateTime.tryParse(value);
+              if (date == null) {
+                return 'Invalid date';
+              }
+              if (!date.isBefore(DateTime.now().subtract(const Duration(days: 18 * 365)))) {
+                return 'You must be at least 18 years old';
+              }
+            }
+            return null;
+          },
+          suffix: SizedBox(
+            width: 110.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.calendar_month_outlined, color: AppColors.primaryText),
+                CommonText(
+                  enableBorder: true,
+                  backgroundColor: AppColors.disable,
+                  top: 1,
+                  bottom: 1,
+                  left: 5,
+                  right: 5,
+                  borderColor: AppColors.disable,
+                  text: '${calculateAge(date)} Yrs',
+                  style: TextStyle(color: AppColors.primaryText, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ),
+          onSave: (date) {
+            final cubit = context.read<AuthCubit>();
+            cubit.onChangeSignUpModel(
+              cubit.state.signUpModel.copyWith(dateOfBirth: DateTime.tryParse(date)),
+            );
+          },
+        );
+      },
     );
   }
   String calculateAge(DateTime? date) {

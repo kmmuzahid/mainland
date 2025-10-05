@@ -25,7 +25,10 @@ class OtpCubit extends SafeCubit<OtpState> {
 
   Future<void> sendOtp(String username) async {
     if (_timer?.isActive == true || state.isLoading) {
-      showSnackBar('${AppString.resendCodeIn} ${state.count} ${AppString.seconds}');
+      showSnackBar(
+        '${AppString.resendCodeIn} ${state.count} ${AppString.seconds}',
+        type: SnackBarType.warning,
+      );
       return;
     }
     emit(OtpState(isLoading: true, username: username));

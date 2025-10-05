@@ -12,7 +12,7 @@ final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
 
     primary: Color(0xFF00B050), // 🟦 Primary: Buttons, active tabs
-    onPrimary: Color(0xFFFFFFFF), // 🔳 Text/icons on primary
+    onPrimary: Colors.black, // 🔳 Text/icons on primary
 
     secondary: Color(0xFF00B050), // 🟢 Secondary: Chips, toggles
     onSecondary: Color(0xFFFFFFFF), // ⚪ Text/icons on secondary
@@ -36,8 +36,8 @@ final ThemeData lightTheme = ThemeData(
 
     inversePrimary: Color(0xFF4DB8BF), // 🔄 For contrast on dark background
 
-    outline: Color(0xFFCCCCCC), // 📏 Borders, outlines
-    outlineVariant: Color(0xFFF4F4F4), // 📏 Lower emphasis outlines
+    outline: Color(0xFFA1A1A1), // 📏 Borders, outlines
+    outlineVariant: Color(0xFFEDF1F3), // 📏 Lower emphasis outlines
 
     shadow: Color(0x1F000000), // 🧱 Shadows for elevation
     scrim: Color(0x80000000), // 🚪 Overlays, modals
@@ -153,7 +153,7 @@ final ThemeData lightTheme = ThemeData(
     /// labelSmall — size: 12.sp, weight: w600, color: #FFFFFF
     labelSmall: TextStyle(
       overflow: TextOverflow.fade,
-      color: const Color(0xFFFFFFFF),
+      color: const Color(0xFF858585),
       fontSize: 12.sp, // Tiny 10/12
       height: 14 / 12,
       fontWeight: FontWeight.w600,

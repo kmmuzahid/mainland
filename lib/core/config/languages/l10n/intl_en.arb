@@ -76,5 +76,7 @@
   "state": "State",
   "city": "City",
   "confim": "Confirm",
-  "alreadyHaveAccount": "Already have an account?"
+  "alreadyHaveAccount": "Already have an account?",
+  "selectYourPreference": "Select Your Preference",
+  "eventsWillBeShownBasedOnYourPreferences": "Events will be shown based on your preferences"
 }

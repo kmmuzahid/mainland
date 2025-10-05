@@ -549,6 +549,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Already have an account?'**
   String get alreadyHaveAccount;
+
+  /// No description provided for @selectYourPreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Your Preference'**
+  String get selectYourPreference;
+
+  /// No description provided for @eventsWillBeShownBasedOnYourPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Events will be shown based on your preferences'**
+  String get eventsWillBeShownBasedOnYourPreferences;
 }
 
 class _AppLocalizationsDelegate

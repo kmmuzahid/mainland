@@ -44,6 +44,8 @@ class AppColors {
   static Color get primaryButton => getTheme.colorScheme.primary;
   static Color get secondaryText => getTheme.colorScheme.onSurfaceVariant;
   static Color get disable => getTheme.colorScheme.outlineVariant;
+  static Color get outlineColor => getTheme.colorScheme.outline;
+  static const primary50 = Color(0xFFE6F4EA);
   static const success = Color(0xff008000);
   static const warning = Color(0xffFF5B00);
   static Color get error => getTheme.colorScheme.error;

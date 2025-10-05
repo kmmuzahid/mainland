@@ -15,7 +15,7 @@ class NotificationItem extends StatelessWidget {
   GestureDetector _content(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showSnackBar(AppString.noDetailsAvailableForThisNotification);
+        showSnackBar(AppString.noDetailsAvailableForThisNotification, type: SnackBarType.warning);
       },
       child: Card(
         color: getTheme.scaffoldBackgroundColor,

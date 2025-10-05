@@ -27,6 +27,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/english.png
   AssetGenImage get english => const AssetGenImage('assets/images/english.png');
 
+  /// File path: assets/images/preference_icon.png
+  AssetGenImage get preferenceIcon =>
+      const AssetGenImage('assets/images/preference_icon.png');
+
   /// File path: assets/images/sampleItem.png
   AssetGenImage get sampleItem =>
       const AssetGenImage('assets/images/sampleItem.png');
@@ -39,12 +43,17 @@ class $AssetsImagesGen {
   AssetGenImage get sampleItem3 =>
       const AssetGenImage('assets/images/sampleItem_3.png');
 
+  /// File path: assets/images/us_flag.png
+  AssetGenImage get usFlag => const AssetGenImage('assets/images/us_flag.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     english,
+    preferenceIcon,
     sampleItem,
     sampleItem2,
     sampleItem3,
+    usFlag,
   ];
 }
 

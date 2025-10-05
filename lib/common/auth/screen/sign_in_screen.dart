@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
@@ -62,7 +63,11 @@ class SignInScreen extends StatelessWidget {
               15.height,
               CommonRadioGroup(
                 options: {'attendee': AppString.attendee, 'organizer': AppString.organizer},
-                onChanged: print,
+                onChanged: (value) {
+                  context.read<AuthCubit>().onChangeUserRole(
+                    value == 'organizer' ? Role.ORGANIZER : Role.ATTENDEE,
+                  );
+                },
                 initialKey: 'attendee',
                 iconSize: 25.w,
                 textStyle: AppTextStyles.headlineSmall,

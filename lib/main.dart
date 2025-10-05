@@ -39,6 +39,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 // mason make getx_feature --name packageName
 // mason make bloc_feature --name packageName
 
+enum SnackBarType { success, error, warning }
+
 void main() async {
   Bloc.observer = AppBlocObserver();
 
@@ -66,11 +68,15 @@ void _diInit() {
   dI.dependencies();
 }
 
-void showSnackBar(String text) {
+void showSnackBar(String text, {required SnackBarType type}) {
   ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(
     SnackBar(
-      duration: const Duration(milliseconds: 800),
-      backgroundColor: AppColors.primaryColor,
+      duration: const Duration(milliseconds: 1000),
+      backgroundColor: type == SnackBarType.success
+          ? AppColors.primaryColor
+          : type == SnackBarType.error
+          ? AppColors.error
+          : AppColors.warning,
       content: CommonText(text: text, color: AppColors.textWhite, fontWeight: FontWeight.bold),
     ),
   );

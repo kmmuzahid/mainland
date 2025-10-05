@@ -14,11 +14,9 @@ Future commonDialog({
       backgroundColor: AppColors.serfeceBG,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: IntrinsicHeight(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: child,
-        ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: child,
       ),
     ),
   );

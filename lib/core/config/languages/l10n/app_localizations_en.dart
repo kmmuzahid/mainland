@@ -251,4 +251,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get selectYourPreference => 'Select Your Preference';
+
+  @override
+  String get eventsWillBeShownBasedOnYourPreferences =>
+      'Events will be shown based on your preferences';
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-enum Role { RIDER, USER, ADMIN, SUPER_ADMIN, VENDOR, AGENT }
+enum Role { ATTENDEE, ORGANIZER }
 
 class UserLoginInfoModel {
   final String id;

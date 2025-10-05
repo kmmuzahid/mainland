@@ -156,7 +156,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
           counterText: '',
           errorMaxLines: 2,
           fillColor: widget.backgroundColor,
-          hintStyle: TextStyle(fontSize: 16.sp),
+          hintStyle: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
           prefixIcon: widget.prefixText?.isNotEmpty == true
               ? Padding(
                   padding: const EdgeInsets.only(
@@ -169,7 +169,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: widget.prefixIcon,
                 ),
-          prefixIconConstraints: const BoxConstraints(maxWidth: 40),
+          prefixIconConstraints: const BoxConstraints(),
           suffixIcon: widget.showActionButton
               ? GestureDetector(
                   onTap: () {

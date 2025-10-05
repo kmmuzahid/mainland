@@ -1,6 +1,5 @@
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,17 +12,27 @@ class CommonDropDown<T> extends StatefulWidget {
     required this.nameBuilder,
     this.validator,
     this.borderColor,
+    this.backgroundColor,
+    this.textStyle,
     this.isLoading = false,
+    this.borderRadius = 12,
+    this.prefix,
+    this.enableInitalSelection = true,
     super.key,
   });
 
   final String hint;
   final List<T> items;
   final Color? borderColor;
+  final Color? backgroundColor;
+  final TextStyle? textStyle;
   final Function(T? value) onChanged;
   final String Function(T value) nameBuilder;
   final String? Function(String? value)? validator;
   final bool isLoading;
+  final double borderRadius;
+  final Widget? prefix;
+  final bool enableInitalSelection;
 
   @override
   State<CommonDropDown<T>> createState() => _CommonDropDownState<T>();
@@ -79,23 +88,38 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
       alignment: Alignment.center,
       children: [
         DropdownButtonFormField<T>(
+          style: widget.textStyle,
+
           validator: (value) => (widget.validator == null || value == null)
               ? null
               : widget.validator!(widget.nameBuilder(value)),
-          initialValue: _selectedItem,
+          initialValue: widget.enableInitalSelection ? _selectedItem : null,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 10.w, right: 2.w),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+            isDense: true,
+            filled: widget.backgroundColor != null,
+            fillColor: widget.backgroundColor,
+            prefixIcon: widget.prefix != null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: widget.prefix,
+                  )
+                : null,
+            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+            contentPadding: EdgeInsets.only(left: 10.w, right: 2.w, top: 14.w, bottom: 14.w),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(widget.borderRadius.r)),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: getTheme.dividerColor, width: 1.w),
-              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: borderColor, width: 1.w),
+              borderRadius: BorderRadius.circular(widget.borderRadius.r),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor, width: 1.w),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(widget.borderRadius.r),
             ),
           ),
-          hint: CommonText(text: widget.hint),
+          hint: CommonText(
+            text: widget.hint,
+            style: TextStyle(fontSize: widget.textStyle?.fontSize, color: AppColors.outlineColor),
+          ),
           icon: const Icon(Icons.arrow_drop_down),
           dropdownColor: AppColors.serfeceBG,
           isExpanded: true,
@@ -103,7 +127,7 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
               .map(
                 (item) => DropdownMenuItem<T>(
                   value: item,
-                  child: CommonText(text: widget.nameBuilder(item), fontSize: 14.sp),
+                  child: CommonText(text: widget.nameBuilder(item), style: widget.textStyle),
                 ),
               )
               .toList(),
@@ -121,7 +145,13 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
             child: AnimatedBuilder(
               animation: _controller,
               builder: (_, __) {
-                return CustomPaint(painter: _BorderLoaderPainter(_controller.value, borderColor));
+                return CustomPaint(
+                  painter: _BorderLoaderPainter(
+                    _controller.value,
+                    borderColor,
+                    widget.borderRadius,
+                  ),
+                );
               },
             ),
           ),
@@ -131,14 +161,15 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
 }
 
 class _BorderLoaderPainter extends CustomPainter {
-  _BorderLoaderPainter(this.progress, this.color);
+  _BorderLoaderPainter(this.progress, this.color, this.borderRadius);
   final double progress; // 0.0 to 1.0
   final Color color;
+  final double borderRadius;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final path = Path()..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)));
+    final path = Path()..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(borderRadius)));
 
     final paint = Paint()
       ..color = color
