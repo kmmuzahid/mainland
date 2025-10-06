@@ -27,6 +27,30 @@ class $AssetsImagesGen {
   /// File path: assets/images/english.png
   AssetGenImage get english => const AssetGenImage('assets/images/english.png');
 
+  /// File path: assets/images/nav_account.png
+  AssetGenImage get navAccount =>
+      const AssetGenImage('assets/images/nav_account.png');
+
+  /// File path: assets/images/nav_chat.png
+  AssetGenImage get navChat =>
+      const AssetGenImage('assets/images/nav_chat.png');
+
+  /// File path: assets/images/nav_fanClub.png
+  AssetGenImage get navFanClub =>
+      const AssetGenImage('assets/images/nav_fanClub.png');
+
+  /// File path: assets/images/nav_favorite.png
+  AssetGenImage get navFavorite =>
+      const AssetGenImage('assets/images/nav_favorite.png');
+
+  /// File path: assets/images/nav_home.png
+  AssetGenImage get navHome =>
+      const AssetGenImage('assets/images/nav_home.png');
+
+  /// File path: assets/images/nav_ticket.png
+  AssetGenImage get navTicket =>
+      const AssetGenImage('assets/images/nav_ticket.png');
+
   /// File path: assets/images/preference_icon.png
   AssetGenImage get preferenceIcon =>
       const AssetGenImage('assets/images/preference_icon.png');
@@ -49,6 +73,12 @@ class $AssetsImagesGen {
   /// List of all assets
   List<AssetGenImage> get values => [
     english,
+    navAccount,
+    navChat,
+    navFanClub,
+    navFavorite,
+    navHome,
+    navTicket,
     preferenceIcon,
     sampleItem,
     sampleItem2,

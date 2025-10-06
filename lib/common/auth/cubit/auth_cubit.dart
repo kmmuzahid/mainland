@@ -22,6 +22,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _loginInfo = 'login_info_key';
 
   void onChangeUserRole(Role role) {
+    AppLogger.debug(role.name, tag: 'AuthCubit');
     emit(state.copyWith(userLoginInfoModel: state.userLoginInfoModel.copyWith(role: role)));
   }
 

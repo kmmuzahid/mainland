@@ -1,12 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -57,7 +60,12 @@ class PreferenceScreen extends StatelessWidget {
                 if (state.selectedCategory != null)
                   Padding(
                     padding: EdgeInsets.only(bottom: 80.w),
-                    child: CommonButton(titleText: 'Next', onTap: () {}),
+                    child: CommonButton(
+                      titleText: 'Next',
+                      onTap: () {
+                        appRouter.replaceAll([const HomeRoute()]);
+                      },
+                    ),
                   ),
               ],
             );

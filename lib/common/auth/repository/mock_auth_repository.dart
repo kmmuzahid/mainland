@@ -1,7 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
 import 'package:mainland/core/config/network/response_state.dart';
+import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
@@ -15,7 +18,7 @@ class MockAuthRepository implements AuthRepository {
       id: '',
       name: 'Km M Islam',
       image: Assets.images.sampleItem3.path,
-      role: Role.ATTENDEE,
+      role: appRouter.navigatorKey.currentContext?.read<AuthCubit>().state.userLoginInfoModel.role,
       username: username,
       accessToken: 'bearer dddddd',
       refreshToken: 'beared ddddddds',
