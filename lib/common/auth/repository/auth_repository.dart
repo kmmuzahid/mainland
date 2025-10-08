@@ -7,6 +7,7 @@ abstract class AuthRepository {
   Future<ResponseState<UserLoginInfoModel>> signIn({
     required String username,
     required String password,
+    required Role role,
   });
 
   Future<ResponseState<String>> signUp({required SignUpModel signUpModel});

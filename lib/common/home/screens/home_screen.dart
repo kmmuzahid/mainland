@@ -1,7 +1,13 @@
 // File: home_screen.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/user/home/screens/user_home.dart';
 
 //  AutoRoute(page: HomeRoute.page),
 
@@ -9,12 +15,32 @@ import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  List<Widget> userPagesList() => const [
+    UserHome(),
+    UserHome(),
+    UserHome(),
+    UserHome(),
+    UserHome(),
+  ];
+  List<Widget> oranizerPageList() => const [UserHome(), UserHome(), UserHome(), UserHome()];
+
   @override
-  Widget build(BuildContext context) => const Scaffold(
-    body: SafeArea(child: Column(children: [
-          
-        ],
-      )),
-    bottomNavigationBar: CustomBottomNavigationBar(),
+  Widget build(BuildContext context) => BlocProvider(
+    create: (context) => HomeCubit(),
+    child: Scaffold(
+      body: SafeArea(
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            return IndexedStack(
+              index: state.currentIndex,
+              children: context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
+                  ? oranizerPageList()
+                  : userPagesList(),
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
+    ),
   );
 }

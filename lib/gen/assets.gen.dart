@@ -70,6 +70,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/us_flag.png
   AssetGenImage get usFlag => const AssetGenImage('assets/images/us_flag.png');
 
+  /// File path: assets/images/user.png
+  AssetGenImage get user => const AssetGenImage('assets/images/user.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     english,
@@ -84,6 +87,7 @@ class $AssetsImagesGen {
     sampleItem2,
     sampleItem3,
     usFlag,
+    user,
   ];
 }
 

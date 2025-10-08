@@ -20,10 +20,11 @@ class AuthCubit extends SafeCubit<AuthState> {
   final AuthRepository _repository = getIt();
   final StorageService _storageService = getIt();
   final String _loginInfo = 'login_info_key';
+  Role _role = Role.ATTENDEE;
 
   void onChangeUserRole(Role role) {
     AppLogger.debug(role.name, tag: 'AuthCubit');
-    emit(state.copyWith(userLoginInfoModel: state.userLoginInfoModel.copyWith(role: role)));
+    _role = role;
   }
 
   Future<void> _saveUserInfo(UserLoginInfoModel userInfo) async {
@@ -57,12 +58,12 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> signIn(String username, String password) async {
     if (state.isLoading) return;
     emit(const AuthState(isLoading: true));
-    final responce = await _repository.signIn(username: username, password: password);
+    final responce = await _repository.signIn(username: username, password: password, role: _role);
     emit(state.copyWith(isLoading: false));
     if (responce.statusCode == 200) {
       AppLogger.debug(responce.data.toString(), tag: 'AuthCubit');
       await _saveUserInfo(responce.data);
-      if (state.userLoginInfoModel.role == Role.ORGANIZER) {
+      if (responce.data.role == Role.ORGANIZER) {
         // change logic here for api integration
         appRouter.replaceAll([const HomeRoute()]);
       } else {

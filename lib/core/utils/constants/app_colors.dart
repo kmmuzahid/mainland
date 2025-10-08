@@ -49,5 +49,6 @@ class AppColors {
   static const success = Color(0xff008000);
   static const warning = Color(0xffFF5B00);
   static Color get error => getTheme.colorScheme.error;
+  static Color get background => const Color(0xFFF4F4F4);
 
 }

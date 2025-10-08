@@ -561,6 +561,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Events will be shown based on your preferences'**
   String get eventsWillBeShownBasedOnYourPreferences;
+
+  /// No description provided for @newlyAddedEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Newly Added Events'**
+  String get newlyAddedEvents;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// No description provided for @morePlus.
+  ///
+  /// In en, this message translates to:
+  /// **'More+'**
+  String get morePlus;
+
+  /// No description provided for @popularEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Events'**
+  String get popularEvents;
 }
 
 class _AppLocalizationsDelegate

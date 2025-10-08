@@ -78,5 +78,9 @@
   "confim": "Confirm",
   "alreadyHaveAccount": "Already have an account?",
   "selectYourPreference": "Select Your Preference",
-  "eventsWillBeShownBasedOnYourPreferences": "Events will be shown based on your preferences"
+  "eventsWillBeShownBasedOnYourPreferences": "Events will be shown based on your preferences",
+    "newlyAddedEvents": "Newly Added Events",
+    "seeMore": "See more",
+    "morePlus": "More+",
+    "popularEvents": "Popular Events"
 }

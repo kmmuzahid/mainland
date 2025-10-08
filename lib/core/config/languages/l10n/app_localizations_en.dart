@@ -258,4 +258,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get eventsWillBeShownBasedOnYourPreferences =>
       'Events will be shown based on your preferences';
+
+  @override
+  String get newlyAddedEvents => 'Newly Added Events';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get morePlus => 'More+';
+
+  @override
+  String get popularEvents => 'Popular Events';
 }

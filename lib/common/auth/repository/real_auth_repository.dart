@@ -47,6 +47,7 @@ class RealAuthRepository implements AuthRepository {
   Future<ResponseState<UserLoginInfoModel>> signIn({
     required String username,
     required String password,
+    required Role role,
   }) {
     // TODO: implement signIn
     throw UnimplementedError();
