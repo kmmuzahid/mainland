@@ -270,4 +270,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get popularEvents => 'Popular Events';
+
+  @override
+  String get categories => 'Categories';
 }

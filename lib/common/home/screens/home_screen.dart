@@ -1,6 +1,7 @@
 // File: home_screen.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
@@ -27,20 +28,24 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
     create: (context) => HomeCubit(),
-    child: Scaffold(
-      body: SafeArea(
-        child: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            return IndexedStack(
-              index: state.currentIndex,
-              children: context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
-                  ? oranizerPageList()
-                  : userPagesList(),
-            );
-          },
+    child: AnnotatedRegion(
+      value: const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),  
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              return IndexedStack(
+                index: state.currentIndex,
+                children: context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
+                    ? oranizerPageList()
+                    : userPagesList(),
+              );
+            },
+          ),
         ),
+        bottomNavigationBar: const CustomBottomNavigationBar(),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
     ),
   );
 }

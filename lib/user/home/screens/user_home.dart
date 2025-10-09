@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -23,6 +27,7 @@ class UserHome extends StatelessWidget {
           child: Column(
             children: [
               _topChild(),
+              10.height,
               _header(title: AppString.newlyAddedEvents, onTap: () {}),
               10.height,
               _suggestions(count: 8),
@@ -53,10 +58,11 @@ class UserHome extends StatelessWidget {
     );
   }
 
-  Expanded _suggestions({required int count}) {
-    return Expanded(
+  Widget _suggestions({required int count}) {
+    // Give the horizontal list a fixed height when used inside SingleChildScrollView
+    return SizedBox(
+      height: 261.h,
       child: ListView.builder(
-        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: count,
         itemBuilder: (context, index) => Padding(
@@ -74,6 +80,7 @@ class UserHome extends StatelessWidget {
 
   Widget _topChild() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () {
@@ -81,6 +88,34 @@ class UserHome extends StatelessWidget {
           },
           child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
         ),
+        const Spacer(),
+        Column(
+          children: [
+            const CommonLogo(),
+            CommonText(
+              text: AppString.appName,
+              style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
+            ),
+            CommonText(
+              text: DateFormat(DateFormat.MONTH_WEEKDAY_DAY).format(DateTime.now()),
+              style: AppTextStyles.titleLarge,
+            ),
+            8.height,
+            CommonButton(
+              borderColor: AppColors.iconColorBlack,
+              titleColor: AppColors.primaryColor,
+              buttonRadius: 12,
+              buttonColor: AppColors.transparent,
+              titleText: AppString.categories,
+              onTap: () {},
+            ),
+          ],
+        ),
+        const Spacer(),
+        Padding(
+          padding: EdgeInsets.all(10.w),
+          child: Badge.count(count: 8, child: Icon(Icons.notifications_outlined, size: 26.w)),
+        )
       ],
     );
   }
