@@ -135,6 +135,7 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget _chatItem(ChatModel model, BuildContext context) {
+    final bool isImageOnly = model.files?.isNotEmpty == true && model.content.isEmpty;
     final Color isMeBackground = AppColors.primaryColor;
     final Color isMeText = AppColors.textWhite;
     final bool isMe =
@@ -144,7 +145,9 @@ class ChatScreen extends StatelessWidget {
         Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
           child: Card(
-            color: isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20),
+            color: isImageOnly
+                ? null
+                : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
             child: SizedBox(
               width: chatIemWidth,
               child: Padding(

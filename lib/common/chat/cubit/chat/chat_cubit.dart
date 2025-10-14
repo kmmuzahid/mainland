@@ -73,19 +73,21 @@ class ChatCubit extends SafeCubit<ChatState> {
     if (isAttachment) {
       await const PermissionHandlerHelper(permission: Permission.storage).getStatus();
       final pickedFile = await _picker.pickFiles(allowMultiple: true);
-      final files = pickedFile?.files.map((e) => e.xFile).toList() ?? [];
+      List<XFile> files = pickedFile?.files.map((e) => e.xFile).toList() ?? [];
       if (files.length > 9) {
-        files.removeRange(9, files.length);
-        showSnackBar(AppString.maximumFileSelection(9), type: SnackBarType.error);
+        files = files.sublist(0, 9);
+        showSnackBar(AppString.maximumFileSelection(9), type: SnackBarType.warning);
       }
 
       emit(state.copyWith(filePath: files));
     } else {
       await const PermissionHandlerHelper(permission: Permission.photos).getStatus();
       final pickedFile = await _imagePicker.pickMultiImage(limit: 9);
-      final files = pickedFile.map((e) => XFile(e.path)).toList();
+      List<XFile> files = pickedFile.map((e) => XFile(e.path)).toList();
       if (files.length > 9) {
-        files.removeRange(9, files.length);
+        files = files.sublist(0, 9);
+        showSnackBar(AppString.maximumFileSelection(9), type: SnackBarType.warning);
+
       }
       emit(state.copyWith(filePath: files));
     }
