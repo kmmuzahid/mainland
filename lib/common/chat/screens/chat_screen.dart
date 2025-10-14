@@ -220,7 +220,7 @@ class ChatScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CommonText(text: chatListItemModel.userName, style: getTheme.textTheme.titleSmall),
-              CommonText(text: chatListItemModel.userStatus.displayName),
+              // CommonText(text: chatListItemModel.userStatus.displayName),
             ],
           ),
         ],

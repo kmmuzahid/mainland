@@ -96,7 +96,7 @@ class ChatListScreen extends StatelessWidget {
           Stack(
             children: [
               CommonImage(imageSrc: chatListItem.userImage, size: 40, borderRadius: 5),
-              _buildOnlineIcon(40, chatListItem.userStatus),
+              // _buildOnlineIcon(40, chatListItem.userStatus),
             ],
           ),
           10.width,
