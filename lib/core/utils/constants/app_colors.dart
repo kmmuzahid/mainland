@@ -50,5 +50,9 @@ class AppColors {
   static const warning = Color(0xffFF5B00);
   static Color get error => getTheme.colorScheme.error;
   static Color get background => const Color(0xFFF4F4F4);
+  static Color get greay500 => const Color(0xFF333333);
+  static Color get white300 => const Color(0xFFF0F0F0);
+  static Color get backgroundWhite => const Color.fromARGB(255, 255, 255, 255);
+  static Color get greay50 => const Color(0xFFEBEBEB);
 
 }

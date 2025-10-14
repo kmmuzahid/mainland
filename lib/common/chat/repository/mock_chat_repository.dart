@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 import 'package:mainland/common/chat/repository/chat_repository.dart';
@@ -38,31 +39,31 @@ class MockChatRepository implements ChatRepository {
   }) async {
     final list = generateMockList(
       builder: (index) {
-        if (index == 0)
-          return ChatModel(
-            chatId: 'chatId',
-            chatType: ChatType.callFailed,
-            content: '',
-            userInfo: ChatUserInfo(
-              userId: index % 2 == 0 ? '' : 'userId',
-              name: 'Cameron Williamson',
-              image: Assets.images.sampleItem2.path,
-            ),
-            createdAt: DateTime.now(),
-          );
-        if (index == 1)
-          return ChatModel(
-            chatId: 'chatId',
-            chatType: ChatType.callSuccess,
-            content: '',
+        // if (index == 0)
+        //   return ChatModel(
+        //     chatId: 'chatId',
+        //     chatType: ChatType.callFailed,
+        //     content: '',
+        //     userInfo: ChatUserInfo(
+        //       userId: index % 2 == 0 ? '' : 'userId',
+        //       name: 'Cameron Williamson',
+        //       image: Assets.images.sampleItem2.path,
+        //     ),
+        //     createdAt: DateTime.now(),
+        //   );
+        // if (index == 1)
+        //   return ChatModel(
+        //     chatId: 'chatId',
+        //     chatType: ChatType.callSuccess,
+        //     content: '',
 
-            userInfo: ChatUserInfo(
-              userId: index % 2 == 0 ? '' : 'userId',
-              name: 'Cameron Williamson',
-              image: Assets.images.sampleItem2.path,
-            ),
-            createdAt: DateTime.now(),
-          );
+        //     userInfo: ChatUserInfo(
+        //       userId: index % 2 == 0 ? '' : 'userId',
+        //       name: 'Cameron Williamson',
+        //       image: Assets.images.sampleItem2.path,
+        //     ),
+        //     createdAt: DateTime.now(),
+        //   );
         return ChatModel(
           chatId: 'chatId',
           chatType: ChatType.message,
@@ -87,7 +88,7 @@ class MockChatRepository implements ChatRepository {
     required String message,
     required String chatId,
     required String userId,
-    List<PlatformFile>? file,
+    List<XFile>? file,
   }) async {
     await SimulateMocRepo();
     return true;

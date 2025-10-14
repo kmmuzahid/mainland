@@ -273,4 +273,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categories => 'Categories';
+
+  @override
+  String get searchEventsHere => 'Search events here';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get report => 'Report';
+
+  @override
+  String get privacyConcerns => 'Privacy concerns';
+
+  @override
+  String get eroticContent => 'Erotic content';
+
+  @override
+  String get copyrightViolations => 'Copyright violations';
+
+  @override
+  String get defamation => 'Defamation';
+
+  @override
+  String get obscene => 'Obscene';
+
+  @override
+  String get others => 'Others';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get selectReasons => 'Select Reasons';
+
+  @override
+  String get otherDetails => 'Other/ Details';
+
+  @override
+  String get typeYourMessage => 'Type your message';
+
+  @override
+  String maximumFileSelection(Object count) {
+    return 'Maximum $count files/Images can be selected';
+  }
 }

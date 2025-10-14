@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 import 'package:mainland/common/chat/repository/chat_repository.dart';
@@ -24,7 +25,7 @@ class RealChatRepository implements ChatRepository {
     required String message,
     required String chatId,
     required String userId,
-    List<PlatformFile>? file,
+    List<XFile>? file,
   }) {
     // TODO: implement sendMessage
     throw UnimplementedError();

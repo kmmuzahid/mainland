@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/constants/app_text_styles.dart';
 
 class CommonPopupMenu extends StatefulWidget {
   const CommonPopupMenu({
@@ -13,6 +14,8 @@ class CommonPopupMenu extends StatefulWidget {
     this.showTextTrigger = true,
     this.showIconTrigger = false,
     this.triggerIcon = Icons.more_vert,
+    this.onPrimaryColor,
+    this.primaryColor,
   }) : assert(
          icons == null || icons.length == items.length,
          'If icons are provided, they must match the length of items',
@@ -25,6 +28,8 @@ class CommonPopupMenu extends StatefulWidget {
   final bool showTextTrigger; // show main button with text
   final bool showIconTrigger; // show icon trigger
   final IconData triggerIcon;
+  final Color? onPrimaryColor;
+  final Color? primaryColor;
 
   @override
   State<CommonPopupMenu> createState() => _SelectablePopupMenuState();
@@ -52,7 +57,7 @@ class _SelectablePopupMenuState extends State<CommonPopupMenu> {
         position.dx + button.size.width,
         position.dy,
       ),
-      color: AppColors.serfeceBG,
+      color: widget.primaryColor ?? AppColors.serfeceBG,
       shadowColor: AppColors.disable,
       items: List.generate(widget.items.length, (index) {
         return PopupMenuItem<String>(
@@ -61,7 +66,7 @@ class _SelectablePopupMenuState extends State<CommonPopupMenu> {
             children: [
               if (widget.icons != null) Icon(widget.icons![index], size: 18.w),
               if (widget.icons != null) SizedBox(width: 8.w),
-              Text(widget.items[index]),
+              Text(widget.items[index], style: AppTextStyles.titleLarge),
             ],
           ),
         );

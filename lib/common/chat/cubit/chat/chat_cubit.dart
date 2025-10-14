@@ -1,11 +1,14 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 import 'package:mainland/common/chat/model/chat_user_info.dart';
 import 'package:mainland/common/chat/repository/chat_repository.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:mainland/main.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'chat_state.dart';
@@ -16,6 +19,7 @@ class ChatCubit extends SafeCubit<ChatState> {
 
   final ChatRepository _repository = getIt();
   final FilePicker _picker = FilePicker.platform;
+  final ImagePicker _imagePicker = ImagePicker();
 
   int? _getPageNo(List responce) => responce.isNotEmpty ? state.pageNo + 1 : null;
 
@@ -52,7 +56,7 @@ class ChatCubit extends SafeCubit<ChatState> {
       chatId: chatId,
       chatType: ChatType.message,
       content: state.message,
-      files: state.filePath.map((e) => e.xFile.path).toList(),
+      files: state.filePath.map((e) => e.path).toList(),
       userInfo: ChatUserInfo(userId: '', name: '', image: ''),
       createdAt: DateTime.now(),
     );
@@ -65,11 +69,26 @@ class ChatCubit extends SafeCubit<ChatState> {
     emit(state.copyWith(message: message));
   }
 
-  Future<void> pickImage() async {
-    await const PermissionHandlerHelper(permission: Permission.storage).getStatus();
-    final pickedFile = await _picker.pickFiles(allowMultiple: true);
+  Future<void> pickImage({bool isAttachment = true}) async {
+    if (isAttachment) {
+      await const PermissionHandlerHelper(permission: Permission.storage).getStatus();
+      final pickedFile = await _picker.pickFiles(allowMultiple: true);
+      final files = pickedFile?.files.map((e) => e.xFile).toList() ?? [];
+      if (files.length > 9) {
+        files.removeRange(9, files.length);
+        showSnackBar(AppString.maximumFileSelection(9), type: SnackBarType.error);
+      }
 
-    emit(state.copyWith(filePath: pickedFile?.files ?? []));
+      emit(state.copyWith(filePath: files));
+    } else {
+      await const PermissionHandlerHelper(permission: Permission.photos).getStatus();
+      final pickedFile = await _imagePicker.pickMultiImage(limit: 9);
+      final files = pickedFile.map((e) => XFile(e.path)).toList();
+      if (files.length > 9) {
+        files.removeRange(9, files.length);
+      }
+      emit(state.copyWith(filePath: files));
+    }
   }
 
   Future<void> removeFile(int index) async {

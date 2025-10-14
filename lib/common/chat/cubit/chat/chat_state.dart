@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 
 class ChatState extends Equatable {
@@ -16,12 +17,12 @@ class ChatState extends Equatable {
   final int pageNo;
   final bool isLoading;
   final int unread;
-  final List<PlatformFile> filePath;
+  final List<XFile> filePath;
   final String message;
 
   ChatState copyWith({
     List<ChatModel>? chats,
-    List<PlatformFile>? filePath,
+    List<XFile>? filePath,
     int? pageNo,
     bool? isLoading,
     String? message,

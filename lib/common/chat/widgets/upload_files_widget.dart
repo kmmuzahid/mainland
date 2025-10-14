@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -10,7 +11,7 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 
 class UploadFilesWidget extends StatelessWidget {
   const UploadFilesWidget({required this.files, required this.onRemove, super.key});
-  final List<PlatformFile> files;
+  final List<XFile> files;
   final Function(int index) onRemove;
 
   @override
@@ -34,8 +35,8 @@ class UploadFilesWidget extends StatelessWidget {
         ),
         itemCount: files.length,
         itemBuilder: (context, index) {
-          final PlatformFile file = files[index];
-          final fileExtension = file.extension;
+          final XFile file = files[index];
+          final fileExtension = file.path.split('.').last;
           final bool isImage = fileExtension == 'png' || fileExtension == 'jpg';
 
           return Stack(
@@ -49,7 +50,7 @@ class UploadFilesWidget extends StatelessWidget {
                 ),
                 child: isImage
                     ? CommonImage(
-                        imageSrc: file.xFile.path,
+                        imageSrc: file.path,
                         fill: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/chat/screens/chat_list_screen.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -21,9 +22,9 @@ class HomeScreen extends StatelessWidget {
     UserHome(),
     UserHome(),
     UserHome(),
-    UserHome(),
+    ChatListScreen(),
   ];
-  List<Widget> oranizerPageList() => const [UserHome(), UserHome(), UserHome(), UserHome()];
+  List<Widget> oranizerPageList() => const [UserHome(), UserHome(), UserHome(), ChatListScreen()];
 
   @override
   Widget build(BuildContext context) => BlocProvider(

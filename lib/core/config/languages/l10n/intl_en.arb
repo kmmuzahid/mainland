@@ -83,5 +83,19 @@
     "seeMore": "See more",
     "morePlus": "More+",
     "popularEvents": "Popular Events",
-    "categories": "Categories"
+    "categories": "Categories",
+    "searchEventsHere": "Search events here",
+    "messages": "Messages",
+    "report": "Report",
+    "privacyConcerns": "Privacy concerns",
+    "eroticContent": "Erotic content",
+    "copyrightViolations": "Copyright violations",
+    "defamation": "Defamation",
+    "obscene": "Obscene",
+    "others": "Others",
+    "submit": "Submit",
+    "selectReasons": "Select Reasons",
+    "otherDetails": "Other/ Details",
+    "typeYourMessage": "Type your message",
+    "maximumFileSelection": "Maximum {count} files/Images can be selected"
 }

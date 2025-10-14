@@ -591,6 +591,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Categories'**
   String get categories;
+
+  /// No description provided for @searchEventsHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Search events here'**
+  String get searchEventsHere;
+
+  /// No description provided for @messages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// No description provided for @report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// No description provided for @privacyConcerns.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy concerns'**
+  String get privacyConcerns;
+
+  /// No description provided for @eroticContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Erotic content'**
+  String get eroticContent;
+
+  /// No description provided for @copyrightViolations.
+  ///
+  /// In en, this message translates to:
+  /// **'Copyright violations'**
+  String get copyrightViolations;
+
+  /// No description provided for @defamation.
+  ///
+  /// In en, this message translates to:
+  /// **'Defamation'**
+  String get defamation;
+
+  /// No description provided for @obscene.
+  ///
+  /// In en, this message translates to:
+  /// **'Obscene'**
+  String get obscene;
+
+  /// No description provided for @others.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get others;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @selectReasons.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Reasons'**
+  String get selectReasons;
+
+  /// No description provided for @otherDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Other/ Details'**
+  String get otherDetails;
+
+  /// No description provided for @typeYourMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your message'**
+  String get typeYourMessage;
+
+  /// No description provided for @maximumFileSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum {count} files/Images can be selected'**
+  String maximumFileSelection(Object count);
 }
 
 class _AppLocalizationsDelegate

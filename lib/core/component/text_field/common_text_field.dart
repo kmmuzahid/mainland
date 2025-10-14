@@ -31,8 +31,10 @@ class CommonTextField extends StatefulWidget {
     this.originalPassword,
     this.validation,
     this.backgroundColor,
+    this.borderWidth = 1.2,
   });
-
+  
+  final double borderWidth;
   final Function(String value, TextEditingController controller)? onSaved;
   final Function(String value)? onChanged;
   final String? initialText;
@@ -184,16 +186,31 @@ class _CommonTextFieldState extends State<CommonTextField> {
               : widget.suffixIcon,
           prefixIconColor: _iconColor(),
           suffixIconColor: _iconColor(),
+          
 
-          enabledBorder: widget.borderColor != null
-              ? getTheme.inputDecorationTheme.enabledBorder?.copyWith(
-                  borderSide:
-                      getTheme.inputDecorationTheme.enabledBorder?.borderSide.copyWith(
-                        color: widget.borderColor,
-                      ) ??
-                      BorderSide(color: widget.borderColor!),
-                )
-              : getTheme.inputDecorationTheme.enabledBorder,
+          focusedBorder: OutlineInputBorder(
+            borderSide: getTheme.inputDecorationTheme.focusedBorder!.borderSide.copyWith(
+              color: getTheme.primaryColor,
+              width: widget.borderWidth.w,
+            ),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
+          ),
+
+          errorBorder: OutlineInputBorder(
+            borderSide: getTheme.inputDecorationTheme.errorBorder!.borderSide.copyWith(
+              color: AppColors.error,
+              width: widget.borderWidth.w,
+            ),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: getTheme.inputDecorationTheme.enabledBorder!.borderSide.copyWith(
+              color: widget.borderColor ?? getTheme.dividerColor,
+              width: widget.borderWidth.w,
+            ),
+
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
+          ),
           contentPadding: EdgeInsets.symmetric(
             horizontal: widget.paddingHorizontal.w,
             vertical: widget.paddingVertical.h,

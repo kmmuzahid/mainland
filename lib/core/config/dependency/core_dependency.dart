@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mainland/common/chat/repository/chat_repository.dart';
 import 'package:mainland/common/notifications/repository/notification_repository.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -32,7 +33,7 @@ class CoreDependency {
         },
       );
     });
-    getIt.registerLazySingleton(NotificationRepository.new);
+    getIt.registerLazySingleton<NotificationRepository>(NotificationRepository.new);
 
     AppLogger.debug('Core dependency initalized', tag: 'dependency');
   }

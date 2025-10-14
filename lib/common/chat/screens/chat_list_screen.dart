@@ -2,17 +2,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
 import 'package:mainland/core/component/pop_up/common_popup_menu.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import '../cubit/chat_list/chat_list_cubit.dart';
 import '../cubit/chat_list/chat_list_state.dart';
@@ -24,12 +28,16 @@ class ChatListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: CommonAppBar(title: AppString.message),
+    // appBar: CommonAppBar(title: AppString.message),
     body: Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: BlocProvider(
         create: (context) => ChatListCubit()..fetch(),
-        child: BlocBuilder<ChatListCubit, ChatListState>(
+        child: Column(
+          children: [
+            _header(context),
+            Expanded(
+              child: BlocBuilder<ChatListCubit, ChatListState>(
           builder: (context, state) {
             final cubit = context.read<ChatListCubit>();
             return SmartListLoader(
@@ -48,10 +56,37 @@ class ChatListScreen extends StatelessWidget {
               },
             );
           },
+              ),
+            ),
+          ],
         ),
       ),
     ),
   );
+
+  Widget _header(BuildContext context) {
+    return Column(
+      children: [
+        CommonText(
+          text: AppString.messages,
+          fontWeight: FontWeight.w700,
+          fontSize: 24,
+          color: AppColors.primaryColor,
+        ).start,
+        CommonText(
+          text: context.read<AuthCubit>().state.userLoginInfoModel.name,
+          style: AppTextStyles.labelMedium?.copyWith(color: AppColors.secondaryText),
+        ).start,
+        10.height,
+        CommonTextField(
+          backgroundColor: AppColors.backgroundWhite,
+          prefixIcon: const Icon(Icons.search),
+          hintText: AppString.searchEventsHere,
+          validationType: ValidationType.notRequired,
+        ),
+      ],
+    );
+  }
 
   Widget _chatItem(ChatListItemModel chatListItem) {
     return Padding(
@@ -60,7 +95,7 @@ class ChatListScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              CommonImage(imageSrc: chatListItem.userImage, size: 40, borderRadius: 30),
+              CommonImage(imageSrc: chatListItem.userImage, size: 40, borderRadius: 5),
               _buildOnlineIcon(40, chatListItem.userStatus),
             ],
           ),
@@ -79,7 +114,9 @@ class ChatListScreen extends StatelessWidget {
                   text: chatListItem.lastMessage,
                   maxLines: 1,
                   style: TextStyle(
-                    color: chatListItem.isRead ? AppColors.disable : AppColors.primaryText,
+                    color: chatListItem.isRead
+                        ? AppColors.primaryText.withValues(alpha: .5)
+                        : AppColors.primaryText,
                     overflow: TextOverflow.fade,
                   ),
                 ),
@@ -87,29 +124,34 @@ class ChatListScreen extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              CommonPopupMenu(
-                showTextTrigger: false,
-                showIconTrigger: true,
-                items: [AppString.deleteUser, AppString.blockUser],
-                icons: const [Icons.delete_outline, Icons.block_outlined],
-                onItemSelected: (value) {
-                  if (value == AppString.deleteUser) {
-                    //delete user
-                  } else if (value == AppString.blockUser) {
-                    //block user
-                  }
-                },
-              ),
-              CommonText(
-                text: Utils.formatTime(chatListItem.lastSendMessageTime),
-                color: AppColors.disable,
-                right: 15,
-              ),
-            ],
+          CommonText(
+            text: Utils.formatTime(chatListItem.lastSendMessageTime),
+            color: AppColors.primaryText,
+            right: 15,
           ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.end,
+          //   children: [
+          //     CommonPopupMenu(
+          //       showTextTrigger: false,
+          //       showIconTrigger: true,
+          //       items: [AppString.deleteUser, AppString.blockUser],
+          //       icons: const [Icons.delete_outline, Icons.block_outlined],
+          //       onItemSelected: (value) {
+          //         if (value == AppString.deleteUser) {
+          //           //delete user
+          //         } else if (value == AppString.blockUser) {
+          //           //block user
+          //         }
+          //       },
+          //     ),
+          //     CommonText(
+          //       text: Utils.formatTime(chatListItem.lastSendMessageTime),
+          //       color: AppColors.disable,
+          //       right: 15,
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
