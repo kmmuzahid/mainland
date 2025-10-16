@@ -97,5 +97,24 @@
     "selectReasons": "Select Reasons",
     "otherDetails": "Other/ Details",
     "typeYourMessage": "Type your message",
-    "maximumFileSelection": "Maximum {count} files/Images can be selected"
+    "maximumFileSelection": "Maximum {count} files/Images can be selected",
+    "moreMinus": "More-",
+    "getOrganizerTicket": "Get Organizer Ticket",
+    "viewAttendeeTickets": "View Attendee Tickets",
+    "messageOrganizer": "Message Organizer",
+    "attendeeInformation": "Attendee Information",
+    "tickets": "Tickets",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "checkout": "Checkout",
+    "paymentMethod": "Payment Method",
+    "summery": "Summery",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "next": "Next",
+    "mainlandFee": "Mainland Fee",
+    "discount": "Discount",
+    "subtotal":"Subtotal"
+
 }

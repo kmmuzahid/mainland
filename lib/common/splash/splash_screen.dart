@@ -36,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      backgroundColor: AppColors.backgroundWhite,
       body: Column(
         children: [
           const Spacer(),

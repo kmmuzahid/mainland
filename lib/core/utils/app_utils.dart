@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/auth/cubit/auth_state.dart';
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/core/config/route/app_router.dart';
 
 class Utils {
   static late Size deviceSize;
+
+  static Role? getRole() =>
+      appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.userLoginInfoModel.role;
+  
+
 
   static String formatDateTimeToHms(DateTime dateTime) {
     final hours = dateTime.hour.toString().padLeft(2, '0');

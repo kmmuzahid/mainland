@@ -22,6 +22,7 @@ class OtpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
+    backgroundColor: AppColors.backgroundWhite,
     body: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: BlocProvider(

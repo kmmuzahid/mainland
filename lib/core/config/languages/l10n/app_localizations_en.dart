@@ -317,4 +317,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String maximumFileSelection(Object count) {
     return 'Maximum $count files/Images can be selected';
   }
+
+  @override
+  String get moreMinus => 'More-';
+
+  @override
+  String get getOrganizerTicket => 'Get Organizer Ticket';
+
+  @override
+  String get viewAttendeeTickets => 'View Attendee Tickets';
+
+  @override
+  String get messageOrganizer => 'Message Organizer';
+
+  @override
+  String get attendeeInformation => 'Attendee Information';
+
+  @override
+  String get tickets => 'Tickets';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get checkout => 'Checkout';
+
+  @override
+  String get paymentMethod => 'Payment Method';
+
+  @override
+  String get summery => 'Summery';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get mainlandFee => 'Mainland Fee';
+
+  @override
+  String get discount => 'Discount';
+
+  @override
+  String get subtotal => 'Subtotal';
 }

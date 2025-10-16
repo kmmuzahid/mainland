@@ -25,6 +25,7 @@ class PreferenceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(),
       body: BlocProvider<PreferenceCubit>(
         create: (context) => PreferenceCubit(),

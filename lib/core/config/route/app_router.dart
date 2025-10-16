@@ -61,5 +61,11 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: HomeRoute.page),
     AutoRoute(page: ShowInfoRoute.page),
     AutoRoute(page: PreferenceRoute.page),
+    AutoRoute(page: AllEventRoute.page),
+    AutoRoute(page: EventDetailsRoute.page),
+    AutoRoute(page: AttendieTicketRoute.page),
+    AutoRoute(page: AttendieTicketBuyingRoute.page),
+    AutoRoute(page: OrganizerTicketBuyingRoute.page),
+    AutoRoute(page: TicketCheckoutRoute.page),
   ];
 }

@@ -31,6 +31,7 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       /// App Bar Sections Starts here
       appBar: AppBar(),
+      backgroundColor: AppColors.backgroundWhite,
       /// Body Sections Starts here
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),

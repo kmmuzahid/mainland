@@ -8,6 +8,8 @@ import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -31,11 +33,26 @@ class UserHome extends StatelessWidget {
             children: [
               _topChild(),
               10.height,
-              _header(title: AppString.newlyAddedEvents, onTap: () {}),
+              CommonTextField(
+                hintText: AppString.searchEventsHere,
+                validationType: ValidationType.notRequired,
+              ),
+              10.height,
+              _header(
+                title: AppString.newlyAddedEvents,
+                onTap: () {
+                  appRouter.push(AllEventRoute(title: AppString.newlyAddedEvents));
+                },
+              ),
               10.height,
               _suggestions(count: 8),
               Divider(color: AppColors.outlineColor),
-              _header(title: AppString.popularEvents, onTap: () {}),
+              _header(
+                title: AppString.popularEvents,
+                onTap: () {
+                  appRouter.push(AllEventRoute(title: AppString.popularEvents));
+                },
+              ),
               10.height,
               _suggestions(count: 8),
             ],
@@ -72,7 +89,9 @@ class UserHome extends StatelessWidget {
           padding: EdgeInsets.only(right: 10.w),
           child: EventWidget(
             image: Assets.images.sampleItem.path,
-            onTap: () {},
+            onTap: () {
+              appRouter.push(EventDetailsRoute(eventId: '1'));
+            },
             width: 167,
             height: 261,
           ),
@@ -105,12 +124,14 @@ class UserHome extends StatelessWidget {
             ),
             8.height,
             CommonButton(
-              borderColor: AppColors.iconColorBlack,
+              borderColor: AppColors.iconColorBlack.withValues(alpha: .6),
               titleColor: AppColors.primaryColor,
               buttonRadius: 12,
               buttonColor: AppColors.transparent,
               titleText: AppString.categories,
-              onTap: () {},
+              onTap: () {
+                // appRouter.push(const CategoriesRoute());
+              },
             ),
           ],
         ),

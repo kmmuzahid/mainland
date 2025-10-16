@@ -6,9 +6,11 @@ final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
   fontFamily: 'Selawik',
+  
 
   // Color scheme aligned with AppColors
   colorScheme: const ColorScheme(
+    
     brightness: Brightness.light,
 
     primary: Color(0xFF00B050), // 🟦 Primary: Buttons, active tabs
@@ -44,7 +46,7 @@ final ThemeData lightTheme = ThemeData(
     surfaceTint: Color(0xFF00B050), // 🎨 Tint applied on elevated surfaces
   ),
 
-  scaffoldBackgroundColor: Colors.white, // 📱 Screen background
+  scaffoldBackgroundColor: const Color(0xFFF4F4F4), // 📱 Screen background
 
   appBarTheme: const AppBarTheme(
     surfaceTintColor: Colors.transparent, // 🧼 Disable elevation tint

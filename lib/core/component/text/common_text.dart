@@ -26,6 +26,7 @@ class CommonText extends StatelessWidget {
     this.borderRadiusOnly,
     this.suffix,
     this.preffix,
+    this.isDescription = false
   });
 
   final double left;
@@ -48,6 +49,7 @@ class CommonText extends StatelessWidget {
   final MainAxisAlignment? alignment;
   final Widget? suffix;
   final Widget? preffix;
+  final bool isDescription;
 
   @override
   Widget build(BuildContext context) {

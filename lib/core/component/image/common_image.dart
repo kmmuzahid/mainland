@@ -15,7 +15,7 @@ class CommonImage extends StatelessWidget {
     this.borderRadius = 0,
     this.width,
     this.size,
-    this.fill = BoxFit.fill,
+    this.fill = BoxFit.cover,
     this.defaultImage,
     super.key,
   });

@@ -675,6 +675,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maximum {count} files/Images can be selected'**
   String maximumFileSelection(Object count);
+
+  /// No description provided for @moreMinus.
+  ///
+  /// In en, this message translates to:
+  /// **'More-'**
+  String get moreMinus;
+
+  /// No description provided for @getOrganizerTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Organizer Ticket'**
+  String get getOrganizerTicket;
+
+  /// No description provided for @viewAttendeeTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'View Attendee Tickets'**
+  String get viewAttendeeTickets;
+
+  /// No description provided for @messageOrganizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Organizer'**
+  String get messageOrganizer;
+
+  /// No description provided for @attendeeInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendee Information'**
+  String get attendeeInformation;
+
+  /// No description provided for @tickets.
+  ///
+  /// In en, this message translates to:
+  /// **'Tickets'**
+  String get tickets;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkout;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethod;
+
+  /// No description provided for @summery.
+  ///
+  /// In en, this message translates to:
+  /// **'Summery'**
+  String get summery;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @mainlandFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Mainland Fee'**
+  String get mainlandFee;
+
+  /// No description provided for @discount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get discount;
+
+  /// No description provided for @subtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get subtotal;
 }
 
 class _AppLocalizationsDelegate

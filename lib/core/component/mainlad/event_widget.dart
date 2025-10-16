@@ -16,53 +16,58 @@ Eko Hotel & Suites
 Pre Order available
 Nov. 1''',
     required this.onTap,
-    required this.width,
-    required this.height,
+    this.width,
+    this.height,
     super.key,
   });
   final String image;
   final String title;
   final Function() onTap;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Container(
-        width: width.w,
-        height: height.h,
+      onTap: onTap,
+      child: SizedBox(
+        width: width?.w ?? double.infinity,
+        height: height?.h ?? double.infinity,
 
-        child: Column(
-          children: [
-            SizedBox(
-              height: height.h - 50.w,
-              width: width.w,
-              child: Stack(
-                children: [
-                  CommonImage(imageSrc: image, borderRadius: 12),
-                  Container(
-                    width: width,
-                    height: height.h - 50.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryText.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight.h - 50.w,
+                  width: constraints.maxWidth,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: CommonImage(imageSrc: image, borderRadius: 12)),
+                      Container(
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight.h - 50.w,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryText.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      Align(
+                        child: CommonText(
+                          text: title,
+                          style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
+                        ),
+                      ),
+                    ],
                   ),
-                  Align(
-                    child: CommonText(
-                      text: title,
-                      style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            CommonText(
-              text: AppString.morePlus,
-              style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
-            ).start,
-          ],
+                ),
+                CommonText(
+                  text: AppString.morePlus,
+                  style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
+                ).start,
+              ],
+            );
+          }
         ),
       ),
     );

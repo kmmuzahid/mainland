@@ -22,6 +22,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: AppColors.backgroundWhite,
     appBar: AppBar(),
     body: CustomForm(
       builder: (_, formKey) => Padding(
