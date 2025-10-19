@@ -13,9 +13,9 @@ class CommonText extends StatelessWidget {
     this.right = 0,
     this.top = 0,
     this.bottom = 0,
-    this.fontSize = 12,
-    this.fontWeight = FontWeight.w400,
-    this.color,
+    this.fontSize,
+    this.fontWeight,
+    this.textColor,
     this.style,
     this.overflow,
     this.enableBorder = false,
@@ -26,16 +26,16 @@ class CommonText extends StatelessWidget {
     this.borderRadiusOnly,
     this.suffix,
     this.preffix,
-    this.isDescription = false
+    this.isDescription = false,
   });
 
   final double left;
   final double right;
   final double top;
   final double bottom;
-  final double fontSize;
-  final FontWeight fontWeight;
-  final Color? color;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Color? textColor;
   final String text;
   final TextAlign textAlign;
   final int? maxLines;
@@ -101,18 +101,33 @@ class CommonText extends StatelessWidget {
           maxLines: maxLines,
           softWrap: true,
           overflow: maxLines == null ? TextOverflow.visible : (overflow ?? TextOverflow.ellipsis),
-          style:
-              style ??
-              GoogleFonts.dmSans(
-                fontSize: fontSize.sp,
-                fontWeight: fontWeight,
-                color: color ?? Theme.of(context).textTheme.bodyMedium?.color,
-              ),
+          style: getStyle(),
         ),
         if (suffix != null) 10.width,
         if (suffix != null) suffix!,
         if (suffix != null) 10.width,
       ],
     );
+  }
+
+  TextStyle getStyle() {
+    var style =
+        this.style ??
+        GoogleFonts.dmSans(
+          fontSize: fontSize?.sp ?? 12.sp,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          color: textColor ?? getTheme.textTheme.bodyMedium?.color,
+        );
+
+    if (textColor != null) {
+      style = style.copyWith(color: textColor);
+    }
+    if (fontWeight != null) {
+      style = style.copyWith(fontWeight: fontWeight);
+    }
+    if (fontSize != null) {
+      style = style.copyWith(fontSize: fontSize!.sp);
+    }
+    return style;
   }
 }

@@ -9,8 +9,8 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
   TicketPurchaseCubit() : super(const TicketPurchaseState());
   final repository = getIt<TicketPurchaseRepository>();
 
-  Future<void> fetchTicketPurchase() async {
-    final response = await repository.getTicketPurchaseState();
+  Future<void> fetchTicketPurchase({String? filterTicketType}) async {
+    final response = await repository.getTicketPurchaseState(filterTicketType: filterTicketType);
     emit(state.copyWith(tickets: response));
   }
 

@@ -155,7 +155,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 fontSize: widget.titleSize.sp,
-                                color: widget.titleColor ?? AppColors.onPrimaryColor,
+                                textColor: widget.titleColor ?? AppColors.onPrimaryColor,
                                 fontWeight: widget.titleWeight,
                               ),
                       ],

@@ -165,7 +165,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                     left: 10,
                     right: 5,
                   ), // add some right padding to allow hint space
-                  child: CommonText(text: widget.prefixText!, color: _iconColor()),
+                  child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
                 )
               : Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),

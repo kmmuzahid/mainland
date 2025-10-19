@@ -1,0 +1,79 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
+import 'package:mainland/common/tickets/cubit/tickets_state.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
+import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
+import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
+import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
+import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/constants/app_text_styles.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
+
+class TicketsScreen extends StatelessWidget {
+  const TicketsScreen({super.key, required this.onTap, required this.filters, required this.title});
+  final Function(String ticketId) onTap;
+  final List<TicketFilter> filters;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: BlocProvider(
+            create: (context) => TicketsCubit()..initalize(filters.first),
+            child: BlocBuilder<TicketsCubit, TicketsState>(
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    20.height,
+                    CommonText(
+                      text: AppString.tickets,
+                      style: AppTextStyles.headlineSmall,
+                      textColor: AppColors.primaryColor,
+                    ).start,
+                    CommonText(text: title, style: AppTextStyles.bodyMedium).start,
+                    10.height,
+                    TicketFilterWidget(
+                      filters: filters,
+                      selectedFilter: state.selectedFilter,
+                      onTap: (filter) {
+                        context.read<TicketsCubit>().filter(filter);
+                      },
+                    ),
+                    10.height,
+                    Expanded(
+                      child: SmartStaggeredLoader(
+                        itemCount: state.tickets.length,
+                        aspectRatio: .8,
+                        mainAxisSpacing: 0,
+                        crossAxisSpacing: 10,
+                        itemBuilder: (context, index) {
+                          final ticket = state.tickets[index];
+                          return TicketWidget(
+                            filter: state.selectedFilter,
+                            image: ticket.image,
+                            title: ticket.title,
+                            onTap: () {
+                              onTap(ticket.eventId);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

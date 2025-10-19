@@ -71,7 +71,7 @@ class ChatListScreen extends StatelessWidget {
           text: AppString.messages,
           fontWeight: FontWeight.w700,
           fontSize: 24,
-          color: AppColors.primaryColor,
+          textColor: AppColors.primaryColor,
         ).start,
         CommonText(
           text: context.read<AuthCubit>().state.userLoginInfoModel.name,
@@ -106,7 +106,7 @@ class ChatListScreen extends StatelessWidget {
               CommonText(
                 text: chatListItem.userName,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primaryText,
+                textColor: AppColors.primaryText,
               ),
               SizedBox(
                 width: 220.w,
@@ -126,7 +126,7 @@ class ChatListScreen extends StatelessWidget {
           const Spacer(),
           CommonText(
             text: Utils.formatTime(chatListItem.lastSendMessageTime),
-            color: AppColors.primaryText,
+            textColor: AppColors.primaryText,
             right: 15,
           ),
           // Column(

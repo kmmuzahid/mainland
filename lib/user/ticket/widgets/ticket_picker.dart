@@ -16,9 +16,11 @@ class TicketPicker extends StatefulWidget {
     required this.onChange,
     required this.title,
     required this.price,
+    this.userName,
   });
   final int limit;
   final String title;
+  final String? userName;
   final String price;
   final Function(int)? onChange;
 
@@ -44,62 +46,77 @@ class _TicketPickerState extends State<TicketPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        if (widget.userName != null)
+          CommonText(
+            text: widget.userName ?? '',
+            style: AppTextStyles.bodyMedium,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ).start,
+        Row(
           children: [
-            CommonText(text: '${widget.title} (${widget.limit})', style: AppTextStyles.bodyMedium),
-            CommonText(
-              text: '\$${widget.price}',
-              style: AppTextStyles.bodyMedium?.copyWith(color: AppColors.primaryColor),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonText(
+                  text: '${widget.title} (${widget.limit})',
+                  style: AppTextStyles.bodyMedium,
+                ),
+                CommonText(
+                  text: '\$${widget.price}',
+                  style: AppTextStyles.bodyMedium?.copyWith(color: AppColors.primaryColor),
+                ),
+              ],
+            ),
+            const Spacer(),
+            CommonButton(
+              titleText: '',
+              buttonWidth: 40,
+              buttonColor: count > 0 ? AppColors.primaryColor : AppColors.greay50,
+              icon: const Icon(Icons.remove),
+              onTap: () {
+                setState(() {
+                  if (count > 0) {
+                    count--;
+                    controller.text = count.toString();
+                    widget.onChange?.call(count);
+                  }
+                });
+              },
+            ),
+            5.width,
+            SizedBox(
+              width: 55,
+              height: 40,
+              child: CommonTextField(
+                paddingHorizontal: 0,
+                paddingVertical: 0,
+                validationType: ValidationType.validateNumber,
+                controller: controller,
+              ),
+            ),
+            5.width,
+            CommonButton(
+              titleText: '',
+              buttonWidth: 40,
+              buttonColor: count < widget.limit ? AppColors.primaryColor : AppColors.greay50,
+              icon: const Icon(Icons.add),
+              onTap: () {
+                setState(() {
+                  if (count < widget.limit) {
+                    count++;
+                    controller.text = count.toString();
+                    widget.onChange?.call(count);
+                  }
+                });
+              },
             ),
           ],
         ),
-        const Spacer(),
-        CommonButton(
-          titleText: '',
-          buttonWidth: 40,
-          buttonColor: count > 0 ? AppColors.primaryColor : AppColors.greay50,
-          icon: const Icon(Icons.remove),
-          onTap: () {
-            setState(() {
-              if (count > 0) {
-                count--;
-                controller.text = count.toString();
-                widget.onChange?.call(count);
-              }
-            });
-          },
-        ),
-        5.width,
-        SizedBox(
-          width: 55,
-          height: 40,
-          child: CommonTextField(
-            paddingHorizontal: 0,
-            paddingVertical: 0,
-            validationType: ValidationType.validateNumber,
-            controller: controller,
-          ),
-        ),
-        5.width,
-        CommonButton(
-          titleText: '',
-          buttonWidth: 40,
-          buttonColor: count < widget.limit ? AppColors.primaryColor : AppColors.greay50,
-          icon: const Icon(Icons.add),
-          onTap: () {
-            setState(() {
-              if (count < widget.limit) {
-                count++;
-                controller.text = count.toString();
-                widget.onChange?.call(count);
-              }
-            });
-          },
-        ),
-      ],
+        Divider(color: AppColors.greay50, thickness: 2),
+      ]
     );
   }
 }

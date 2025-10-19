@@ -352,7 +352,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentMethod => 'Payment Method';
 
   @override
-  String get summery => 'Summery';
+  String get summary => 'Summary';
 
   @override
   String get apply => 'Apply';
@@ -371,4 +371,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subtotal => 'Subtotal';
+
+  @override
+  String get promoCode => 'Promo code';
+
+  @override
+  String get availableTickets => 'Available Tickets';
+
+  @override
+  String get availableunits => 'Available Units(s)';
+
+  @override
+  String get soldOut => 'Sold Out';
+
+  @override
+  String get fanClub => 'Fan Club';
+
+  @override
+  String get showingYourFavoriteEvent => 'Showing your favorite event';
+
+  @override
+  String get chooseYourFavorites => 'Choose your favorites';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get confirmDeleteMessage =>
+      'Are you sure you want to delete this favorite?';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get viewPlus => 'View+';
+
+  @override
+  String get liveAvailableForSaleSoldAndExpired =>
+      'Live, available for Sale, Sold, and Expired';
+
+  @override
+  String get allAvailableTickets => 'All available Tickets';
+
+  @override
+  String get liveUnderReviewDraftAndClosedTickets =>
+      'Live, Under Review, Draft and Closed Tickets';
+
+  @override
+  String get yourEventIsUnderReview =>
+      'Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland';
 }

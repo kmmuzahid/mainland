@@ -310,5 +310,5 @@ class SignUpAllField extends StatelessWidget {
   }
 
   Widget _requiredIcon() =>
-      const CommonText(text: '*', color: AppColors.warning, fontSize: 20, top: 10);
+      const CommonText(text: '*', textColor: AppColors.warning, fontSize: 20, top: 10);
 }

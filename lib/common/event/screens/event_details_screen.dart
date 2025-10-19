@@ -9,6 +9,8 @@ import 'package:mainland/common/event/cubit/event_details_state.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
 import 'package:mainland/user/ticket/widgets/ticket_picker.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -22,13 +24,22 @@ import 'package:mainland/gen/assets.gen.dart';
 
 @RoutePage()
 class EventDetailsScreen extends StatelessWidget {
-  const EventDetailsScreen({super.key, required this.eventId});
+  const EventDetailsScreen({
+    required this.eventId,
+    super.key,
+    this.showEventActions = true,
+    this.isEventAvailable = true,
+    this.isEventUnderReview = false,
+  });
 
   final String eventId;
+  final bool showEventActions;
+  final bool isEventAvailable;
+  final bool isEventUnderReview;
 
   @override
   Widget build(BuildContext context) {
-    final showButton = Utils.getRole() == Role.ATTENDEE;
+    final showButton = showEventActions == false ? false : Utils.getRole() == Role.ATTENDEE;
     final String title =
         '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''';
     return Scaffold(
@@ -59,23 +70,27 @@ class EventDetailsScreen extends StatelessWidget {
   Widget _scondChild(BuildContext context, EventDetailsState state, bool showButton) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            context.read<EventDetailsCubit>().showDetails(false);
-          },
-          child: CommonText(
-            left: 10,
-            top: 5,
-            text: AppString.moreMinus,
-            style: AppTextStyles.titleLarge?.copyWith(
-              color: AppColors.primaryColor,
-              fontSize: 24.sp,
-            ),
-          ).start,
+        SizedBox(
+          height: 50.h,
+          child: GestureDetector(
+            onTap: () {
+              context.read<EventDetailsCubit>().showDetails(false);
+            },
+            child: CommonText(
+              left: 10,
+              top: 5,
+              text: AppString.moreMinus,
+              style: AppTextStyles.titleLarge?.copyWith(
+                color: AppColors.primaryColor,
+                fontSize: 24.sp,
+              ),
+            ).start,
+          ),
         ),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 CommonText(text: state.details, isDescription: true, textAlign: TextAlign.left),
                 10.height,
@@ -95,6 +110,7 @@ class EventDetailsScreen extends StatelessWidget {
   }
 
   Column _firstChild(String title, BuildContext context, bool showButton) {
+    AppLogger.debug(isEventAvailable.toString());
     return Column(
       children: [
         10.height,
@@ -103,13 +119,18 @@ class EventDetailsScreen extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: CommonImage(imageSrc: Assets.images.sampleItem.path, borderRadius: 12),
+                child: CommonImage(
+                  imageSrc: Assets.images.sampleItem.path,
+                  enableGrayscale: !isEventAvailable,
+                  borderRadius: 12,
+                ),
               ),
 
+              if (isEventAvailable)
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.primaryText.withValues(alpha: .5),
+                      color: AppColors.primaryText.withValues(alpha: isEventAvailable ? .5 : 1),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
@@ -144,6 +165,19 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              if (isEventUnderReview)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: CommonText(
+                    left: 10.w,
+                    right: 10.w,
+                    bottom: 20.w,
+                    text: AppString.yourEventIsUnderReview,
+                    style: AppTextStyles.titleLarge,
+                    textColor: AppColors.textWhite,
+                    fontSize: 20,
+                  ),
+                ),
               if (showButton) Positioned(left: 0, right: 0, bottom: 50.h, child: _buttons()),
             ],
           ),
@@ -175,7 +209,7 @@ class EventDetailsScreen extends StatelessWidget {
           titleText: AppString.getOrganizerTicket,
           borderColor: AppColors.primaryColor,
           onTap: () {
-            appRouter.push(const OrganizerTicketBuyingRoute());
+            appRouter.push(TicketPurchaseRoute(type: TicketCheckoutType.organizer));
           },
         ),
         10.height,
@@ -184,7 +218,7 @@ class EventDetailsScreen extends StatelessWidget {
           titleText: AppString.viewAttendeeTickets,
           borderColor: AppColors.primaryColor,
           onTap: () {
-            appRouter.push(const AttendieTicketRoute());
+            appRouter.push(const AttendieTicketAvailablityRoute());
           },
         ),
         10.height,

@@ -8,7 +8,11 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/chat/screens/chat_list_screen.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
+import 'package:mainland/common/tickets/screens/tickets_screen.dart';
+import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
+import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/user/fanclub/screens/fan_club_screen.dart';
 import 'package:mainland/user/home/screens/user_home.dart';
 
 //  AutoRoute(page: HomeRoute.page),
@@ -17,14 +21,43 @@ import 'package:mainland/user/home/screens/user_home.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  List<Widget> userPagesList() => const [
-    UserHome(),
-    UserHome(),
-    UserHome(),
-    UserHome(),
-    ChatListScreen(),
+  List<Widget> userPagesList() => [
+    const UserHome(),
+
+    TicketsScreen(
+      onTap: (eventId) {},
+      filters: const [
+        TicketFilter.Live,
+        TicketFilter.Available,
+        TicketFilter.Sold,
+        TicketFilter.Expired,
+      ],
+      title: AppString.liveAvailableForSaleSoldAndExpired,
+    ),
+    const FanClubScreen(),
+
+    TicketsScreen(
+      onTap: (eventId) {},
+      filters: const [TicketFilter.Upcoming, TicketFilter.Used],
+      title: AppString.allAvailableTickets,
+    ),
+    const ChatListScreen(),
   ];
-  List<Widget> oranizerPageList() => const [UserHome(), UserHome(), UserHome(), ChatListScreen()];
+  List<Widget> oranizerPageList() => [
+    const UserHome(),
+    TicketsScreen(
+      onTap: (eventId) {},
+      filters: const [
+        TicketFilter.Live,
+        TicketFilter.UnderReview,
+        TicketFilter.Draft,
+        TicketFilter.Closed,
+      ],
+      title: AppString.liveUnderReviewDraftAndClosedTickets,
+    ),
+    UserHome(),
+    const ChatListScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) => BlocProvider(

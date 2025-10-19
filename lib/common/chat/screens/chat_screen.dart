@@ -162,7 +162,7 @@ class ChatScreen extends StatelessWidget {
                     if (model.content.isNotEmpty)
                       CommonText(
                         text: model.content,
-                        color: isMe ? isMeText : null,
+                        textColor: isMe ? isMeText : null,
                         fontSize: 16.sp,
                       ),
                     if (model.chatType == ChatType.callFailed)
@@ -176,7 +176,7 @@ class ChatScreen extends StatelessWidget {
                           ),
                           CommonText(
                             text: 'Voice Call',
-                            color: isMe
+                            textColor: isMe
                                 ? getTheme.textTheme.bodySmall?.color
                                 : getTheme.colorScheme.error,
                           ),
@@ -201,7 +201,7 @@ class ChatScreen extends StatelessWidget {
             left: isMe ? 0 : 10.w,
             right: isMe ? 10.w : 0,
             text: Utils.formatDateTime(model.createdAt),
-            color: AppColors.primaryText,
+            textColor: AppColors.primaryText,
           ),
         ),
         10.height,

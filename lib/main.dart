@@ -77,7 +77,7 @@ void showSnackBar(String text, {required SnackBarType type}) {
           : type == SnackBarType.error
           ? AppColors.error
           : AppColors.warning,
-      content: CommonText(text: text, color: AppColors.textWhite, fontWeight: FontWeight.bold),
+      content: CommonText(text: text, textColor: AppColors.textWhite, fontWeight: FontWeight.bold),
     ),
   );
 }

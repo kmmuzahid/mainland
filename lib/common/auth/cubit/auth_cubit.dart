@@ -10,6 +10,7 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 
@@ -67,7 +68,7 @@ class AuthCubit extends SafeCubit<AuthState> {
         // change logic here for api integration
         appRouter.replaceAll([const HomeRoute()]);
       } else {
-        appRouter.replaceAll([const PreferenceRoute()]);
+        appRouter.replaceAll([PreferenceRoute(backgroundColor: AppColors.backgroundWhite)]);
       }
     } else {
       showSnackBar(responce.message ?? '', type: SnackBarType.error);

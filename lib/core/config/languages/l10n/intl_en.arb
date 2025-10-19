@@ -109,12 +109,29 @@
     "total": "Total",
     "checkout": "Checkout",
     "paymentMethod": "Payment Method",
-    "summery": "Summery",
+    "summary": "Summary",
     "apply": "Apply",
     "cancel": "Cancel",
     "next": "Next",
     "mainlandFee": "Mainland Fee",
     "discount": "Discount",
-    "subtotal":"Subtotal"
+    "subtotal":"Subtotal",
+    "promoCode" :"Promo code",
+    "availableTickets": "Available Tickets",
+     "availableunits": "Available Units(s)",
+    "soldOut": "Sold Out",
+    "fanClub": "Fan Club",
+    "showingYourFavoriteEvent": "Showing your favorite event",
+    "chooseYourFavorites": "Choose your favorites",
+    "favorites": "Favorites",
+    "confirmDelete": "Confirm Delete",
+    "confirmDeleteMessage": "Are you sure you want to delete this favorite?",
+    "confirm": "Confirm",
+    "viewPlus": "View+",
+    "liveAvailableForSaleSoldAndExpired": "Live, available for Sale, Sold, and Expired",
+    "allAvailableTickets": "All available Tickets",
+    "liveUnderReviewDraftAndClosedTickets": "Live, Under Review, Draft and Closed Tickets",
+    "yourEventIsUnderReview": "Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland"
+
 
 }

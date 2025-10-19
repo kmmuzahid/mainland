@@ -32,6 +32,10 @@ class AppTextStyles {
   /// bodySmall — mirrors light_theme: 14.sp, w400, color from theme
   static TextStyle? get bodySmall => getTheme.textTheme.bodySmall;
 
+  /// bodySmall — mirrors light_theme: 14.sp, w400, color from theme
+  static TextStyle? get label =>
+      getTheme.textTheme.bodySmall?.copyWith(color: const Color(0xFF6C7278));
+
   // Buttons / Labels
   /// labelLarge — mirrors light_theme: 18.sp, w700, color from theme
   static TextStyle? get labelLarge => getTheme.textTheme.labelLarge;

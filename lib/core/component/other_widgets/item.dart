@@ -38,7 +38,7 @@ class Item extends StatelessWidget {
             Row(
               children: [
                 icon != null ? Icon(icon, color: color) : CommonImage(imageSrc: image),
-                CommonText(text: title, color: color, fontSize: 18, left: 16),
+                CommonText(text: title, textColor: color, fontSize: 18, left: 16),
                 const Spacer(),
                 disableIcon
                     ? const SizedBox()

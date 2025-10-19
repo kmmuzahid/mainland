@@ -742,11 +742,11 @@ abstract class AppLocalizations {
   /// **'Payment Method'**
   String get paymentMethod;
 
-  /// No description provided for @summery.
+  /// No description provided for @summary.
   ///
   /// In en, this message translates to:
-  /// **'Summery'**
-  String get summery;
+  /// **'Summary'**
+  String get summary;
 
   /// No description provided for @apply.
   ///
@@ -783,6 +783,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Subtotal'**
   String get subtotal;
+
+  /// No description provided for @promoCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Promo code'**
+  String get promoCode;
+
+  /// No description provided for @availableTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Tickets'**
+  String get availableTickets;
+
+  /// No description provided for @availableunits.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Units(s)'**
+  String get availableunits;
+
+  /// No description provided for @soldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold Out'**
+  String get soldOut;
+
+  /// No description provided for @fanClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Fan Club'**
+  String get fanClub;
+
+  /// No description provided for @showingYourFavoriteEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing your favorite event'**
+  String get showingYourFavoriteEvent;
+
+  /// No description provided for @chooseYourFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your favorites'**
+  String get chooseYourFavorites;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @confirmDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this favorite?'**
+  String get confirmDeleteMessage;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @viewPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'View+'**
+  String get viewPlus;
+
+  /// No description provided for @liveAvailableForSaleSoldAndExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Live, available for Sale, Sold, and Expired'**
+  String get liveAvailableForSaleSoldAndExpired;
+
+  /// No description provided for @allAvailableTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'All available Tickets'**
+  String get allAvailableTickets;
+
+  /// No description provided for @liveUnderReviewDraftAndClosedTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'Live, Under Review, Draft and Closed Tickets'**
+  String get liveUnderReviewDraftAndClosedTickets;
+
+  /// No description provided for @yourEventIsUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland'**
+  String get yourEventIsUnderReview;
 }
 
 class _AppLocalizationsDelegate

@@ -17,6 +17,7 @@ class CommonImage extends StatelessWidget {
     this.size,
     this.fill = BoxFit.cover,
     this.defaultImage,
+    this.enableGrayscale = false,
     super.key,
   });
   final String imageSrc;
@@ -26,7 +27,7 @@ class CommonImage extends StatelessWidget {
   final double? width;
   final double borderRadius;
   final double? size;
-
+  final bool enableGrayscale;
   final BoxFit fill;
 
   void checkImageType() {}
@@ -35,6 +36,20 @@ class CommonImage extends StatelessWidget {
   Widget build(BuildContext context) {
     if (imageSrc.isEmpty) return const SizedBox();
 
+    if (!enableGrayscale) return getImage();
+
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix(<double>[
+        0.2126, 0.7152, 0.0722, 0, 0, // red
+        0.2126, 0.7152, 0.0722, 0, 0, // green
+        0.2126, 0.7152, 0.0722, 0, 0, // blue
+        0, 0, 0, 1, 0, // alpha
+      ]),
+      child: getImage(),
+    );
+  }
+
+  Widget getImage() {
     if (imageSrc.startsWith('assets/svg')) {
       return _buildSvgImage();
     } else if (imageSrc.startsWith('assets/')) {
