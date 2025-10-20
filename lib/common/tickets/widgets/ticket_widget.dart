@@ -13,11 +13,7 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 class TicketWidget extends StatelessWidget {
   const TicketWidget({
     required this.image,
-    this.title = '''Juice WRLD
-Mon. Jan. 12, 8pm
-Eko Hotel & Suites
-Pre Order available
-Nov. 1''',
+    this.title = 'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1',
     required this.onTap,
     this.width,
     this.height,
@@ -57,12 +53,30 @@ Nov. 1''',
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                       ),
-                      Align(
+                      Center(
                         child: CommonText(
                           text: title,
+                          alignment: MainAxisAlignment.center,
                           style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
                         ),
                       ),
+                      if (filter == TicketFilter.Live ||
+                          filter == TicketFilter.Upcoming ||
+                          filter == TicketFilter.Used)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            width: 12.w,
+                            height: 12.w,
+                            margin: EdgeInsets.all(10.w),
+                            decoration: BoxDecoration(
+                              color: filter == TicketFilter.Used
+                                  ? AppColors.error
+                                  : AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                        ) 
                     ],
                   ),
                 ),
@@ -86,6 +100,7 @@ Nov. 1''',
                     style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
                   ).start,
                 ),
+               
               ],
             );
           },

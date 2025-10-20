@@ -423,4 +423,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get yourEventIsUnderReview =>
       'Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland';
+
+  @override
+  String get aNewTicketEvent => 'A new Ticket Event';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get venue => 'Venue';
+
+  @override
+  String get upcomingEvents => 'Upcoming Events';
+
+  @override
+  String get ticketDetails => 'Ticket Details';
+
+  @override
+  String get withdrawTicket => 'Withdraw Ticket';
+
+  @override
+  String get sellTicket => 'Sell Ticket';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get sellNow => 'Sell Now';
+
+  @override
+  String get viewLess => 'View Less';
+
+  @override
+  String get withdrawnTicketsMustBeRelistedToSellAgain =>
+      'Withdrawn Tickets must be relisted to sell again';
+
+  @override
+  String get confirmWithdraw => 'Confirm Withdraw';
+
+  @override
+  String get purchasedPrice => 'Purchased Price';
+
+  @override
+  String get totalSoldPrice => 'Total Sold Price';
+
+  @override
+  String get yourPayout => 'Your Payout';
+
+  @override
+  String
+  get whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent =>
+      'When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. ';
+
+  @override
+  String
+  get mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer =>
+      'Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer';
 }

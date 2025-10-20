@@ -11,7 +11,10 @@ import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:mainland/common/tickets/screens/tickets_screen.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/organizer/home/screens/org_home.dart';
 import 'package:mainland/user/fanclub/screens/fan_club_screen.dart';
 import 'package:mainland/user/home/screens/user_home.dart';
 
@@ -21,11 +24,14 @@ import 'package:mainland/user/home/screens/user_home.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+//user page list
   List<Widget> userPagesList() => [
     const UserHome(),
 
     TicketsScreen(
-      onTap: (eventId) {},
+      onTap: (ticketId, ticketFilter) {
+        appRouter.push(UserTicketManageRoute(ticketId: ticketId, ticketFilter: ticketFilter));
+      },
       filters: const [
         TicketFilter.Live,
         TicketFilter.Available,
@@ -37,16 +43,22 @@ class HomeScreen extends StatelessWidget {
     const FanClubScreen(),
 
     TicketsScreen(
-      onTap: (eventId) {},
+      onTap: (ticketId, ticketFilter) {
+        appRouter.push(TicketSaveRoute(ticketId: ticketId));
+      },
       filters: const [TicketFilter.Upcoming, TicketFilter.Used],
       title: AppString.allAvailableTickets,
     ),
     const ChatListScreen(),
   ];
+
+//organizer page list
   List<Widget> oranizerPageList() => [
-    const UserHome(),
+    const OrgHome(),
     TicketsScreen(
-      onTap: (eventId) {},
+      onTap: (ticketId, ticketFilter) {
+        appRouter.push(TicketSaveRoute(ticketId: ticketId));
+      },
       filters: const [
         TicketFilter.Live,
         TicketFilter.UnderReview,

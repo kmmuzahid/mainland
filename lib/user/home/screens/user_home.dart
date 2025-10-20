@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
-import 'package:mainland/common/notifications/screen/notifications_screen.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
-import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
+import 'package:mainland/common/home/widgets/home_top_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
-import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -34,6 +32,8 @@ class UserHome extends StatelessWidget {
               _topChild(),
               10.height,
               CommonTextField(
+                backgroundColor: AppColors.backgroundWhite,
+                prefixIcon: const Icon(Icons.search),
                 hintText: AppString.searchEventsHere,
                 validationType: ValidationType.notRequired,
               ),
@@ -101,51 +101,24 @@ class UserHome extends StatelessWidget {
   }
 
   Widget _topChild() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {
-            // navigate to account screen.
-          },
-          child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
-        ),
-        const Spacer(),
-        Column(
-          children: [
-            const CommonLogo(),
-            CommonText(
-              text: AppString.appName,
-              style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
-            ),
-            CommonText(
-              text: DateFormat(DateFormat.MONTH_WEEKDAY_DAY).format(DateTime.now()),
-              style: AppTextStyles.titleLarge,
-            ),
-            8.height,
-            CommonButton(
-              borderColor: AppColors.iconColorBlack.withValues(alpha: .6),
-              titleColor: AppColors.primaryColor,
-              buttonRadius: 12,
-              buttonColor: AppColors.transparent,
-              titleText: AppString.categories,
-              onTap: () {
-                // appRouter.push(const CategoriesRoute());
-              },
-            ),
-          ],
-        ),
-        const Spacer(),
-        Padding(
-          padding: EdgeInsets.all(10.w),
-          child: GestureDetector(
-            onTap: () {
-              appRouter.push(const NotificationRoute());
-            },
-            child: Badge.count(count: 8, child: Icon(Icons.notifications_outlined, size: 26.w)),
-          ),
-        )
-      ],
+    return HomeTopWidget(
+      startWidget: GestureDetector(
+        onTap: () {
+          // navigate to account screen.
+        },
+        child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
+      ),
+      middleWidget: CommonButton(
+        borderColor: AppColors.iconColorBlack.withValues(alpha: .6),
+        titleColor: AppColors.primaryColor,
+        buttonRadius: 12,
+        buttonColor: AppColors.transparent,
+        titleText: AppString.categories,
+        onTap: () {
+          // appRouter.push(const CategoriesRoute());
+        },
+      ),
     );
+   
   }
 }

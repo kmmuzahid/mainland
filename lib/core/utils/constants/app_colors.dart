@@ -34,6 +34,7 @@ class AppColors {
   static Color get primaryText => getTheme.colorScheme.onSurface;
   // Brand primary (sourced from ColorScheme.primary for M3 correctness)
   static Color get primaryColor => getTheme.colorScheme.primary;
+  static Color get primary100 => const Color(0xFFB0DCBD);
   static Color get onPrimaryColor => getTheme.colorScheme.onPrimary;
   static const textWhite = Color(0xffFFFFFF);
   // Neutrals (some mapped to theme for better consistency)
@@ -55,6 +56,9 @@ class AppColors {
   static Color get backgroundWhite => const Color.fromARGB(255, 255, 255, 255);
   static Color get greay50 => const Color(0xFFEBEBEB);
   static Color get greay => const Color(0xFF979797);
+  static Color get greay300 => const Color(0xFF767676);
   static Color get greay400 => const Color(0xFF5C5C5C);
+  static Color get white100 => const Color(0xFFF2F2F2);
+  static Color get white400 => const Color(0xFFEDEDED);
 
 }

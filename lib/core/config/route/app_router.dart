@@ -68,5 +68,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: TicketCheckoutRoute.page),
     AutoRoute(page: ModifyFavoriteFanClub.page),
     AutoRoute(page: PerfenceSubcategoryRoute.page),
+    AutoRoute(page: TicketSaveRoute.page),
+    AutoRoute(page: UserTicketManageRoute.page),
   ];
 }

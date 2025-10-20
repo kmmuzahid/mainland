@@ -24,8 +24,16 @@ class $AssetsIconGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/apple_wallet.png
+  AssetGenImage get appleWallet =>
+      const AssetGenImage('assets/images/apple_wallet.png');
+
   /// File path: assets/images/english.png
   AssetGenImage get english => const AssetGenImage('assets/images/english.png');
+
+  /// File path: assets/images/google_wallet.png
+  AssetGenImage get googleWallet =>
+      const AssetGenImage('assets/images/google_wallet.png');
 
   /// File path: assets/images/nav_account.png
   AssetGenImage get navAccount =>
@@ -67,6 +75,10 @@ class $AssetsImagesGen {
   AssetGenImage get sampleItem3 =>
       const AssetGenImage('assets/images/sampleItem_3.png');
 
+  /// File path: assets/images/sample_qr.png
+  AssetGenImage get sampleQr =>
+      const AssetGenImage('assets/images/sample_qr.png');
+
   /// File path: assets/images/us_flag.png
   AssetGenImage get usFlag => const AssetGenImage('assets/images/us_flag.png');
 
@@ -75,7 +87,9 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
+    appleWallet,
     english,
+    googleWallet,
     navAccount,
     navChat,
     navFanClub,
@@ -86,6 +100,7 @@ class $AssetsImagesGen {
     sampleItem,
     sampleItem2,
     sampleItem3,
+    sampleQr,
     usFlag,
     user,
   ];

@@ -879,6 +879,110 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland'**
   String get yourEventIsUnderReview;
+
+  /// No description provided for @aNewTicketEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new Ticket Event'**
+  String get aNewTicketEvent;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @venue.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue'**
+  String get venue;
+
+  /// No description provided for @upcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Events'**
+  String get upcomingEvents;
+
+  /// No description provided for @ticketDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket Details'**
+  String get ticketDetails;
+
+  /// No description provided for @withdrawTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Ticket'**
+  String get withdrawTicket;
+
+  /// No description provided for @sellTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Ticket'**
+  String get sellTicket;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @sellNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Now'**
+  String get sellNow;
+
+  /// No description provided for @viewLess.
+  ///
+  /// In en, this message translates to:
+  /// **'View Less'**
+  String get viewLess;
+
+  /// No description provided for @withdrawnTicketsMustBeRelistedToSellAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn Tickets must be relisted to sell again'**
+  String get withdrawnTicketsMustBeRelistedToSellAgain;
+
+  /// No description provided for @confirmWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Withdraw'**
+  String get confirmWithdraw;
+
+  /// No description provided for @purchasedPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased Price'**
+  String get purchasedPrice;
+
+  /// No description provided for @totalSoldPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sold Price'**
+  String get totalSoldPrice;
+
+  /// No description provided for @yourPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Payout'**
+  String get yourPayout;
+
+  /// No description provided for @whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. '**
+  String
+  get whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent;
+
+  /// No description provided for @mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer.
+  ///
+  /// In en, this message translates to:
+  /// **'Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer'**
+  String
+  get mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer;
 }
 
 class _AppLocalizationsDelegate

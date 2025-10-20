@@ -1,10 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
 import 'package:mainland/common/tickets/cubit/tickets_state.dart';
-import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
@@ -16,7 +14,7 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 
 class TicketsScreen extends StatelessWidget {
   const TicketsScreen({super.key, required this.onTap, required this.filters, required this.title});
-  final Function(String ticketId) onTap;
+  final Function(String ticketId, TicketFilter ticketFilter) onTap;
   final List<TicketFilter> filters;
   final String title;
 
@@ -61,7 +59,7 @@ class TicketsScreen extends StatelessWidget {
                             image: ticket.image,
                             title: ticket.title,
                             onTap: () {
-                              onTap(ticket.eventId);
+                              onTap(ticket.eventId, state.selectedFilter!);
                             },
                           );
                         },

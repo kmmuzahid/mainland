@@ -9,14 +9,14 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i24;
-import 'package:flutter/material.dart' as _i25;
+import 'package:auto_route/auto_route.dart' as _i26;
+import 'package:flutter/material.dart' as _i27;
 import 'package:mainland/common/auth/screen/forget_password_screen.dart' as _i6;
 import 'package:mainland/common/auth/screen/otp_screen.dart' as _i11;
 import 'package:mainland/common/auth/screen/profile_info_screen.dart' as _i15;
 import 'package:mainland/common/auth/screen/sign_in_screen.dart' as _i18;
 import 'package:mainland/common/auth/screen/sign_up_screen.dart' as _i19;
-import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i26;
+import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i28;
 import 'package:mainland/common/chat/screens/chat_list_screen.dart' as _i3;
 import 'package:mainland/common/chat/screens/chat_screen.dart' as _i4;
 import 'package:mainland/common/event/screens/all_event_screen.dart' as _i1;
@@ -33,9 +33,11 @@ import 'package:mainland/common/setting/screens/terms_condition_screen.dart'
     as _i21;
 import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i17;
 import 'package:mainland/common/splash/splash_screen.dart' as _i20;
+import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart'
+    as _i30;
 import 'package:mainland/user/fanclub/screens/modify_favorite_fan_club.dart'
     as _i8;
-import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i27;
+import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i29;
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart'
     as _i12;
 import 'package:mainland/user/preferense/screen/preference_screen.dart' as _i13;
@@ -45,14 +47,18 @@ import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart'
     as _i22;
 import 'package:mainland/user/ticket/screen/ticket_purchasing_screen.dart'
     as _i23;
+import 'package:mainland/user/ticketManage/screens/ticket_save_screen.dart'
+    as _i24;
+import 'package:mainland/user/ticketManage/screens/user_ticket_manage_screen.dart'
+    as _i25;
 
 /// generated route for
 /// [_i1.AllEventScreen]
-class AllEventRoute extends _i24.PageRouteInfo<AllEventRouteArgs> {
+class AllEventRoute extends _i26.PageRouteInfo<AllEventRouteArgs> {
   AllEventRoute({
-    _i25.Key? key,
+    _i27.Key? key,
     required String title,
-    List<_i24.PageRouteInfo>? children,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          AllEventRoute.name,
          args: AllEventRouteArgs(key: key, title: title),
@@ -61,7 +67,7 @@ class AllEventRoute extends _i24.PageRouteInfo<AllEventRouteArgs> {
 
   static const String name = 'AllEventRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<AllEventRouteArgs>();
@@ -73,7 +79,7 @@ class AllEventRoute extends _i24.PageRouteInfo<AllEventRouteArgs> {
 class AllEventRouteArgs {
   const AllEventRouteArgs({this.key, required this.title});
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   final String title;
 
@@ -95,13 +101,13 @@ class AllEventRouteArgs {
 
 /// generated route for
 /// [_i2.AttendieTicketAvailablityScreen]
-class AttendieTicketAvailablityRoute extends _i24.PageRouteInfo<void> {
-  const AttendieTicketAvailablityRoute({List<_i24.PageRouteInfo>? children})
+class AttendieTicketAvailablityRoute extends _i26.PageRouteInfo<void> {
+  const AttendieTicketAvailablityRoute({List<_i26.PageRouteInfo>? children})
     : super(AttendieTicketAvailablityRoute.name, initialChildren: children);
 
   static const String name = 'AttendieTicketAvailablityRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i2.AttendieTicketAvailablityScreen();
@@ -111,13 +117,13 @@ class AttendieTicketAvailablityRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.ChatListScreen]
-class ChatListRoute extends _i24.PageRouteInfo<void> {
-  const ChatListRoute({List<_i24.PageRouteInfo>? children})
+class ChatListRoute extends _i26.PageRouteInfo<void> {
+  const ChatListRoute({List<_i26.PageRouteInfo>? children})
     : super(ChatListRoute.name, initialChildren: children);
 
   static const String name = 'ChatListRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i3.ChatListScreen();
@@ -127,12 +133,12 @@ class ChatListRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.ChatScreen]
-class ChatRoute extends _i24.PageRouteInfo<ChatRouteArgs> {
+class ChatRoute extends _i26.PageRouteInfo<ChatRouteArgs> {
   ChatRoute({
-    required _i26.ChatListItemModel chatListItemModel,
-    _i25.Key? key,
-    _i25.Widget? action,
-    List<_i24.PageRouteInfo>? children,
+    required _i28.ChatListItemModel chatListItemModel,
+    _i27.Key? key,
+    _i27.Widget? action,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          ChatRoute.name,
          args: ChatRouteArgs(
@@ -145,7 +151,7 @@ class ChatRoute extends _i24.PageRouteInfo<ChatRouteArgs> {
 
   static const String name = 'ChatRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ChatRouteArgs>();
@@ -161,11 +167,11 @@ class ChatRoute extends _i24.PageRouteInfo<ChatRouteArgs> {
 class ChatRouteArgs {
   const ChatRouteArgs({required this.chatListItemModel, this.key, this.action});
 
-  final _i26.ChatListItemModel chatListItemModel;
+  final _i28.ChatListItemModel chatListItemModel;
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
-  final _i25.Widget? action;
+  final _i27.Widget? action;
 
   @override
   String toString() {
@@ -188,14 +194,14 @@ class ChatRouteArgs {
 
 /// generated route for
 /// [_i5.EventDetailsScreen]
-class EventDetailsRoute extends _i24.PageRouteInfo<EventDetailsRouteArgs> {
+class EventDetailsRoute extends _i26.PageRouteInfo<EventDetailsRouteArgs> {
   EventDetailsRoute({
     required String eventId,
-    _i25.Key? key,
+    _i27.Key? key,
     bool showEventActions = true,
     bool isEventAvailable = true,
     bool isEventUnderReview = false,
-    List<_i24.PageRouteInfo>? children,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          EventDetailsRoute.name,
          args: EventDetailsRouteArgs(
@@ -210,7 +216,7 @@ class EventDetailsRoute extends _i24.PageRouteInfo<EventDetailsRouteArgs> {
 
   static const String name = 'EventDetailsRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<EventDetailsRouteArgs>();
@@ -236,7 +242,7 @@ class EventDetailsRouteArgs {
 
   final String eventId;
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   final bool showEventActions;
 
@@ -271,11 +277,11 @@ class EventDetailsRouteArgs {
 
 /// generated route for
 /// [_i6.ForgetPasswordScreen]
-class ForgetPasswordRoute extends _i24.PageRouteInfo<ForgetPasswordRouteArgs> {
+class ForgetPasswordRoute extends _i26.PageRouteInfo<ForgetPasswordRouteArgs> {
   ForgetPasswordRoute({
-    required _i25.TextEditingController newPasswordController,
-    _i25.Key? key,
-    List<_i24.PageRouteInfo>? children,
+    required _i27.TextEditingController newPasswordController,
+    _i27.Key? key,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          ForgetPasswordRoute.name,
          args: ForgetPasswordRouteArgs(
@@ -287,7 +293,7 @@ class ForgetPasswordRoute extends _i24.PageRouteInfo<ForgetPasswordRouteArgs> {
 
   static const String name = 'ForgetPasswordRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ForgetPasswordRouteArgs>();
@@ -305,9 +311,9 @@ class ForgetPasswordRouteArgs {
     this.key,
   });
 
-  final _i25.TextEditingController newPasswordController;
+  final _i27.TextEditingController newPasswordController;
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   @override
   String toString() {
@@ -328,13 +334,13 @@ class ForgetPasswordRouteArgs {
 
 /// generated route for
 /// [_i7.HomeScreen]
-class HomeRoute extends _i24.PageRouteInfo<void> {
-  const HomeRoute({List<_i24.PageRouteInfo>? children})
+class HomeRoute extends _i26.PageRouteInfo<void> {
+  const HomeRoute({List<_i26.PageRouteInfo>? children})
     : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i7.HomeScreen();
@@ -344,13 +350,13 @@ class HomeRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.ModifyFavoriteFanClub]
-class ModifyFavoriteFanClub extends _i24.PageRouteInfo<void> {
-  const ModifyFavoriteFanClub({List<_i24.PageRouteInfo>? children})
+class ModifyFavoriteFanClub extends _i26.PageRouteInfo<void> {
+  const ModifyFavoriteFanClub({List<_i26.PageRouteInfo>? children})
     : super(ModifyFavoriteFanClub.name, initialChildren: children);
 
   static const String name = 'ModifyFavoriteFanClub';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i8.ModifyFavoriteFanClub();
@@ -360,13 +366,13 @@ class ModifyFavoriteFanClub extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i9.NotificationScreen]
-class NotificationRoute extends _i24.PageRouteInfo<void> {
-  const NotificationRoute({List<_i24.PageRouteInfo>? children})
+class NotificationRoute extends _i26.PageRouteInfo<void> {
+  const NotificationRoute({List<_i26.PageRouteInfo>? children})
     : super(NotificationRoute.name, initialChildren: children);
 
   static const String name = 'NotificationRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i9.NotificationScreen();
@@ -376,13 +382,13 @@ class NotificationRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.OnboardingScreen]
-class OnboardingRoute extends _i24.PageRouteInfo<void> {
-  const OnboardingRoute({List<_i24.PageRouteInfo>? children})
+class OnboardingRoute extends _i26.PageRouteInfo<void> {
+  const OnboardingRoute({List<_i26.PageRouteInfo>? children})
     : super(OnboardingRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i10.OnboardingScreen();
@@ -392,11 +398,11 @@ class OnboardingRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i11.OtpScreen]
-class OtpRoute extends _i24.PageRouteInfo<OtpRouteArgs> {
+class OtpRoute extends _i26.PageRouteInfo<OtpRouteArgs> {
   OtpRoute({
     required dynamic Function() onSuccess,
-    _i25.Key? key,
-    List<_i24.PageRouteInfo>? children,
+    _i27.Key? key,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          OtpRoute.name,
          args: OtpRouteArgs(onSuccess: onSuccess, key: key),
@@ -405,7 +411,7 @@ class OtpRoute extends _i24.PageRouteInfo<OtpRouteArgs> {
 
   static const String name = 'OtpRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<OtpRouteArgs>();
@@ -419,7 +425,7 @@ class OtpRouteArgs {
 
   final dynamic Function() onSuccess;
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   @override
   String toString() {
@@ -440,14 +446,14 @@ class OtpRouteArgs {
 /// generated route for
 /// [_i12.PerfenceSubcategoryScreen]
 class PerfenceSubcategoryRoute
-    extends _i24.PageRouteInfo<PerfenceSubcategoryRouteArgs> {
+    extends _i26.PageRouteInfo<PerfenceSubcategoryRouteArgs> {
   PerfenceSubcategoryRoute({
-    _i25.Key? key,
-    required _i25.Color backgroundColor,
+    _i27.Key? key,
+    required _i27.Color backgroundColor,
     String? buttonTitle,
-    required _i27.PreferenceCubit cubit,
-    _i25.Widget? header,
-    List<_i24.PageRouteInfo>? children,
+    required _i29.PreferenceCubit cubit,
+    _i27.Widget? header,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          PerfenceSubcategoryRoute.name,
          args: PerfenceSubcategoryRouteArgs(
@@ -462,7 +468,7 @@ class PerfenceSubcategoryRoute
 
   static const String name = 'PerfenceSubcategoryRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PerfenceSubcategoryRouteArgs>();
@@ -486,15 +492,15 @@ class PerfenceSubcategoryRouteArgs {
     this.header,
   });
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
-  final _i25.Color backgroundColor;
+  final _i27.Color backgroundColor;
 
   final String? buttonTitle;
 
-  final _i27.PreferenceCubit cubit;
+  final _i29.PreferenceCubit cubit;
 
-  final _i25.Widget? header;
+  final _i27.Widget? header;
 
   @override
   String toString() {
@@ -523,13 +529,13 @@ class PerfenceSubcategoryRouteArgs {
 
 /// generated route for
 /// [_i13.PreferenceScreen]
-class PreferenceRoute extends _i24.PageRouteInfo<PreferenceRouteArgs> {
+class PreferenceRoute extends _i26.PageRouteInfo<PreferenceRouteArgs> {
   PreferenceRoute({
-    _i25.Key? key,
-    _i25.Widget? header,
+    _i27.Key? key,
+    _i27.Widget? header,
     String? buttonTitle,
-    _i25.Color? backgroundColor,
-    List<_i24.PageRouteInfo>? children,
+    _i27.Color? backgroundColor,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          PreferenceRoute.name,
          args: PreferenceRouteArgs(
@@ -543,7 +549,7 @@ class PreferenceRoute extends _i24.PageRouteInfo<PreferenceRouteArgs> {
 
   static const String name = 'PreferenceRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PreferenceRouteArgs>(
@@ -567,13 +573,13 @@ class PreferenceRouteArgs {
     this.backgroundColor,
   });
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
-  final _i25.Widget? header;
+  final _i27.Widget? header;
 
   final String? buttonTitle;
 
-  final _i25.Color? backgroundColor;
+  final _i27.Color? backgroundColor;
 
   @override
   String toString() {
@@ -600,13 +606,13 @@ class PreferenceRouteArgs {
 
 /// generated route for
 /// [_i14.PrivacyPolicyScreen]
-class PrivacyPolicyRoute extends _i24.PageRouteInfo<void> {
-  const PrivacyPolicyRoute({List<_i24.PageRouteInfo>? children})
+class PrivacyPolicyRoute extends _i26.PageRouteInfo<void> {
+  const PrivacyPolicyRoute({List<_i26.PageRouteInfo>? children})
     : super(PrivacyPolicyRoute.name, initialChildren: children);
 
   static const String name = 'PrivacyPolicyRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i14.PrivacyPolicyScreen();
@@ -616,13 +622,13 @@ class PrivacyPolicyRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i15.ProfileInfoScreen]
-class ProfileInfoRoute extends _i24.PageRouteInfo<void> {
-  const ProfileInfoRoute({List<_i24.PageRouteInfo>? children})
+class ProfileInfoRoute extends _i26.PageRouteInfo<void> {
+  const ProfileInfoRoute({List<_i26.PageRouteInfo>? children})
     : super(ProfileInfoRoute.name, initialChildren: children);
 
   static const String name = 'ProfileInfoRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i15.ProfileInfoScreen();
@@ -632,13 +638,13 @@ class ProfileInfoRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i16.SettingScreen]
-class SettingRoute extends _i24.PageRouteInfo<void> {
-  const SettingRoute({List<_i24.PageRouteInfo>? children})
+class SettingRoute extends _i26.PageRouteInfo<void> {
+  const SettingRoute({List<_i26.PageRouteInfo>? children})
     : super(SettingRoute.name, initialChildren: children);
 
   static const String name = 'SettingRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i16.SettingScreen();
@@ -648,11 +654,11 @@ class SettingRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i17.ShowInfoScreen]
-class ShowInfoRoute extends _i24.PageRouteInfo<ShowInfoRouteArgs> {
+class ShowInfoRoute extends _i26.PageRouteInfo<ShowInfoRouteArgs> {
   ShowInfoRoute({
-    _i25.Key? key,
+    _i27.Key? key,
     required String title,
-    List<_i24.PageRouteInfo>? children,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          ShowInfoRoute.name,
          args: ShowInfoRouteArgs(key: key, title: title),
@@ -661,7 +667,7 @@ class ShowInfoRoute extends _i24.PageRouteInfo<ShowInfoRouteArgs> {
 
   static const String name = 'ShowInfoRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ShowInfoRouteArgs>();
@@ -673,7 +679,7 @@ class ShowInfoRoute extends _i24.PageRouteInfo<ShowInfoRouteArgs> {
 class ShowInfoRouteArgs {
   const ShowInfoRouteArgs({this.key, required this.title});
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   final String title;
 
@@ -695,12 +701,12 @@ class ShowInfoRouteArgs {
 
 /// generated route for
 /// [_i18.SignInScreen]
-class SignInRoute extends _i24.PageRouteInfo<SignInRouteArgs> {
+class SignInRoute extends _i26.PageRouteInfo<SignInRouteArgs> {
   SignInRoute({
-    required _i25.TextEditingController ctrUsername,
-    required _i25.TextEditingController ctrPassword,
-    _i25.Key? key,
-    List<_i24.PageRouteInfo>? children,
+    required _i27.TextEditingController ctrUsername,
+    required _i27.TextEditingController ctrPassword,
+    _i27.Key? key,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          SignInRoute.name,
          args: SignInRouteArgs(
@@ -713,7 +719,7 @@ class SignInRoute extends _i24.PageRouteInfo<SignInRouteArgs> {
 
   static const String name = 'SignInRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SignInRouteArgs>();
@@ -733,11 +739,11 @@ class SignInRouteArgs {
     this.key,
   });
 
-  final _i25.TextEditingController ctrUsername;
+  final _i27.TextEditingController ctrUsername;
 
-  final _i25.TextEditingController ctrPassword;
+  final _i27.TextEditingController ctrPassword;
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   @override
   String toString() {
@@ -760,13 +766,13 @@ class SignInRouteArgs {
 
 /// generated route for
 /// [_i19.SignUpScreen]
-class SignUpRoute extends _i24.PageRouteInfo<void> {
-  const SignUpRoute({List<_i24.PageRouteInfo>? children})
+class SignUpRoute extends _i26.PageRouteInfo<void> {
+  const SignUpRoute({List<_i26.PageRouteInfo>? children})
     : super(SignUpRoute.name, initialChildren: children);
 
   static const String name = 'SignUpRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i19.SignUpScreen();
@@ -776,13 +782,13 @@ class SignUpRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i20.SplashScreen]
-class SplashRoute extends _i24.PageRouteInfo<void> {
-  const SplashRoute({List<_i24.PageRouteInfo>? children})
+class SplashRoute extends _i26.PageRouteInfo<void> {
+  const SplashRoute({List<_i26.PageRouteInfo>? children})
     : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i20.SplashScreen();
@@ -792,13 +798,13 @@ class SplashRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i21.TermsConditionScreen]
-class TermsConditionRoute extends _i24.PageRouteInfo<void> {
-  const TermsConditionRoute({List<_i24.PageRouteInfo>? children})
+class TermsConditionRoute extends _i26.PageRouteInfo<void> {
+  const TermsConditionRoute({List<_i26.PageRouteInfo>? children})
     : super(TermsConditionRoute.name, initialChildren: children);
 
   static const String name = 'TermsConditionRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       return const _i21.TermsConditionScreen();
@@ -808,11 +814,11 @@ class TermsConditionRoute extends _i24.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i22.TicketCheckoutScreen]
-class TicketCheckoutRoute extends _i24.PageRouteInfo<TicketCheckoutRouteArgs> {
+class TicketCheckoutRoute extends _i26.PageRouteInfo<TicketCheckoutRouteArgs> {
   TicketCheckoutRoute({
-    _i25.Key? key,
+    _i27.Key? key,
     required _i22.TicketCheckoutType type,
-    List<_i24.PageRouteInfo>? children,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          TicketCheckoutRoute.name,
          args: TicketCheckoutRouteArgs(key: key, type: type),
@@ -821,7 +827,7 @@ class TicketCheckoutRoute extends _i24.PageRouteInfo<TicketCheckoutRouteArgs> {
 
   static const String name = 'TicketCheckoutRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TicketCheckoutRouteArgs>();
@@ -833,7 +839,7 @@ class TicketCheckoutRoute extends _i24.PageRouteInfo<TicketCheckoutRouteArgs> {
 class TicketCheckoutRouteArgs {
   const TicketCheckoutRouteArgs({this.key, required this.type});
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   final _i22.TicketCheckoutType type;
 
@@ -855,12 +861,12 @@ class TicketCheckoutRouteArgs {
 
 /// generated route for
 /// [_i23.TicketPurchaseScreen]
-class TicketPurchaseRoute extends _i24.PageRouteInfo<TicketPurchaseRouteArgs> {
+class TicketPurchaseRoute extends _i26.PageRouteInfo<TicketPurchaseRouteArgs> {
   TicketPurchaseRoute({
-    _i25.Key? key,
+    _i27.Key? key,
     required _i22.TicketCheckoutType type,
     String? filterTicket,
-    List<_i24.PageRouteInfo>? children,
+    List<_i26.PageRouteInfo>? children,
   }) : super(
          TicketPurchaseRoute.name,
          args: TicketPurchaseRouteArgs(
@@ -873,7 +879,7 @@ class TicketPurchaseRoute extends _i24.PageRouteInfo<TicketPurchaseRouteArgs> {
 
   static const String name = 'TicketPurchaseRoute';
 
-  static _i24.PageInfo page = _i24.PageInfo(
+  static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TicketPurchaseRouteArgs>();
@@ -893,7 +899,7 @@ class TicketPurchaseRouteArgs {
     this.filterTicket,
   });
 
-  final _i25.Key? key;
+  final _i27.Key? key;
 
   final _i22.TicketCheckoutType type;
 
@@ -915,4 +921,116 @@ class TicketPurchaseRouteArgs {
 
   @override
   int get hashCode => key.hashCode ^ type.hashCode ^ filterTicket.hashCode;
+}
+
+/// generated route for
+/// [_i24.TicketSaveScreen]
+class TicketSaveRoute extends _i26.PageRouteInfo<TicketSaveRouteArgs> {
+  TicketSaveRoute({
+    _i27.Key? key,
+    required String ticketId,
+    List<_i26.PageRouteInfo>? children,
+  }) : super(
+         TicketSaveRoute.name,
+         args: TicketSaveRouteArgs(key: key, ticketId: ticketId),
+         initialChildren: children,
+       );
+
+  static const String name = 'TicketSaveRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<TicketSaveRouteArgs>();
+      return _i24.TicketSaveScreen(key: args.key, ticketId: args.ticketId);
+    },
+  );
+}
+
+class TicketSaveRouteArgs {
+  const TicketSaveRouteArgs({this.key, required this.ticketId});
+
+  final _i27.Key? key;
+
+  final String ticketId;
+
+  @override
+  String toString() {
+    return 'TicketSaveRouteArgs{key: $key, ticketId: $ticketId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TicketSaveRouteArgs) return false;
+    return key == other.key && ticketId == other.ticketId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ ticketId.hashCode;
+}
+
+/// generated route for
+/// [_i25.UserTicketManageScreen]
+class UserTicketManageRoute
+    extends _i26.PageRouteInfo<UserTicketManageRouteArgs> {
+  UserTicketManageRoute({
+    required _i30.TicketFilter ticketFilter,
+    required String ticketId,
+    _i27.Key? key,
+    List<_i26.PageRouteInfo>? children,
+  }) : super(
+         UserTicketManageRoute.name,
+         args: UserTicketManageRouteArgs(
+           ticketFilter: ticketFilter,
+           ticketId: ticketId,
+           key: key,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'UserTicketManageRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<UserTicketManageRouteArgs>();
+      return _i25.UserTicketManageScreen(
+        ticketFilter: args.ticketFilter,
+        ticketId: args.ticketId,
+        key: args.key,
+      );
+    },
+  );
+}
+
+class UserTicketManageRouteArgs {
+  const UserTicketManageRouteArgs({
+    required this.ticketFilter,
+    required this.ticketId,
+    this.key,
+  });
+
+  final _i30.TicketFilter ticketFilter;
+
+  final String ticketId;
+
+  final _i27.Key? key;
+
+  @override
+  String toString() {
+    return 'UserTicketManageRouteArgs{ticketFilter: $ticketFilter, ticketId: $ticketId, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! UserTicketManageRouteArgs) return false;
+    return ticketFilter == other.ticketFilter &&
+        ticketId == other.ticketId &&
+        key == other.key;
+  }
+
+  @override
+  int get hashCode => ticketFilter.hashCode ^ ticketId.hashCode ^ key.hashCode;
 }

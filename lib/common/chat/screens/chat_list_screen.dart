@@ -89,7 +89,8 @@ class ChatListScreen extends StatelessWidget {
   }
 
   Widget _chatItem(ChatListItemModel chatListItem) {
-    return Padding(
+    return Container(
+      color: AppColors.background,
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
         children: [

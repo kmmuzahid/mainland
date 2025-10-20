@@ -131,7 +131,24 @@
     "liveAvailableForSaleSoldAndExpired": "Live, available for Sale, Sold, and Expired",
     "allAvailableTickets": "All available Tickets",
     "liveUnderReviewDraftAndClosedTickets": "Live, Under Review, Draft and Closed Tickets",
-    "yourEventIsUnderReview": "Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland"
+    "yourEventIsUnderReview": "Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland",
+    "aNewTicketEvent": "A new Ticket Event",
+    "create": "Create",
+    "venue": "Venue",
+    "upcomingEvents": "Upcoming Events",
+    "ticketDetails": "Ticket Details",
+    "withdrawTicket": "Withdraw Ticket",
+    "sellTicket": "Sell Ticket",
+    "viewDetails": "View Details",
+    "sellNow": "Sell Now",
+    "viewLess": "View Less",
+    "withdrawnTicketsMustBeRelistedToSellAgain": "Withdrawn Tickets must be relisted to sell again",
+    "confirmWithdraw": "Confirm Withdraw",
+    "purchasedPrice": "Purchased Price",
+    "totalSoldPrice": "Total Sold Price",
+    "yourPayout": "Your Payout",
+    "whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent": "When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. ",
+    "mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer": "Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer"
 
 
 }
