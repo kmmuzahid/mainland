@@ -471,6 +471,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourPayout => 'Your Payout';
 
   @override
+  String get logOut => 'Log Out';
+
+  @override
+  String get validate => 'Validate';
+
+  @override
+  String get insertEventCode => 'Insert event code';
+
+  @override
   String
   get whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent =>
       'When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. ';

@@ -45,6 +45,9 @@ class OrgHome extends StatelessWidget {
   HomeTopWidget _topChild() {
     return HomeTopWidget(
       startWidget: GestureDetector(
+        onTap: () {
+          appRouter.push(const VenueSplashRoute());
+        },
         child: Container(
           padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 10.h),
           decoration: BoxDecoration(

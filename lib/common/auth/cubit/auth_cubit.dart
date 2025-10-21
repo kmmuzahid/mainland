@@ -59,6 +59,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> signIn(String username, String password) async {
     if (state.isLoading) return;
     emit(const AuthState(isLoading: true));
+    AppLogger.debug(_role.name, tag: 'AuthCubit');
     final responce = await _repository.signIn(username: username, password: password, role: _role);
     emit(state.copyWith(isLoading: false));
     if (responce.statusCode == 200) {
@@ -118,6 +119,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> logout() async {
+    _role = Role.ATTENDEE;
     await _repository.signOut();
     await _storageService.deleteAll();
     appRouter.replaceAll([

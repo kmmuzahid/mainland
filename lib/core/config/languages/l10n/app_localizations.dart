@@ -970,6 +970,24 @@ abstract class AppLocalizations {
   /// **'Your Payout'**
   String get yourPayout;
 
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
+
+  /// No description provided for @validate.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate'**
+  String get validate;
+
+  /// No description provided for @insertEventCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert event code'**
+  String get insertEventCode;
+
   /// No description provided for @whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent.
   ///
   /// In en, this message translates to:

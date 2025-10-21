@@ -70,5 +70,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: PerfenceSubcategoryRoute.page),
     AutoRoute(page: TicketSaveRoute.page),
     AutoRoute(page: UserTicketManageRoute.page),
+    AutoRoute(page: OrgTicketManageRoute.page),
+    AutoRoute(page: VenueSplashRoute.page),
+    AutoRoute(page: VenueHomeRoute.page),
   ];
 }

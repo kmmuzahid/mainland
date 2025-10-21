@@ -1,6 +1,7 @@
 // File: home_screen.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/chat/screens/chat_list_screen.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
+import 'package:mainland/common/setting/screens/setting_screen.dart';
 import 'package:mainland/common/tickets/screens/tickets_screen.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -24,7 +26,7 @@ import 'package:mainland/user/home/screens/user_home.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-//user page list
+  //user page list
   List<Widget> userPagesList() => [
     const UserHome(),
 
@@ -52,12 +54,23 @@ class HomeScreen extends StatelessWidget {
     const ChatListScreen(),
   ];
 
-//organizer page list
+  //organizer page list
   List<Widget> oranizerPageList() => [
     const OrgHome(),
     TicketsScreen(
       onTap: (ticketId, ticketFilter) {
-        appRouter.push(TicketSaveRoute(ticketId: ticketId));
+        if (ticketFilter == TicketFilter.Live || ticketFilter == TicketFilter.Draft) {
+          appRouter.push(OrgTicketManageRoute(ticketId: ticketId, ticketFilter: ticketFilter));
+        } else {
+          appRouter.push(
+            EventDetailsRoute(
+              eventId: ticketId,
+              showEventActions: false,
+              isEventAvailable: false,
+              isEventUnderReview: ticketFilter == TicketFilter.UnderReview,
+            ),
+          );
+        }
       },
       filters: const [
         TicketFilter.Live,
@@ -67,7 +80,7 @@ class HomeScreen extends StatelessWidget {
       ],
       title: AppString.liveUnderReviewDraftAndClosedTickets,
     ),
-    UserHome(),
+    const SettingScreen(),
     const ChatListScreen(),
   ];
 
@@ -75,7 +88,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
     create: (context) => HomeCubit(),
     child: AnnotatedRegion(
-      value: const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),  
+      value: const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: SafeArea(

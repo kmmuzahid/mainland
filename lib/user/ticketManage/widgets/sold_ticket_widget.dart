@@ -48,7 +48,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
           AnimatedCrossFade(
             firstChild: _buildViewDetails(),
             secondChild: _tickets(),
-            crossFadeState: viewDetails ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            crossFadeState: viewDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             duration: const Duration(milliseconds: 300),
           ),
           Row(
@@ -69,7 +69,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
             ],
           ),
           CommonButton(
-            icon: Icon(viewDetails ? Icons.add : Icons.remove, color: AppColors.iconColorBlack),
+            icon: Icon(viewDetails ? Icons.remove : Icons.add, color: AppColors.iconColorBlack),
             titleText: viewDetails ? AppString.viewDetails : AppString.viewLess,
             onTap: () {
               setState(() {

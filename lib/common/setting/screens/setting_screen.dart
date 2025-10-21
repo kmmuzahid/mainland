@@ -1,9 +1,14 @@
 // File: setting_screen.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
+import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 
 @RoutePage()
@@ -91,6 +96,18 @@ class SettingScreen extends StatelessWidget {
               //       },
               //     );
               //   },
+            ),
+            CommonButton(
+              titleText: AppString.logOut,
+              onTap: () {
+                context.read<AuthCubit>().logout();
+                // appRouter.replaceAll([
+                //   SignInRoute(
+                //     ctrUsername: TextEditingController(),
+                //     ctrPassword: TextEditingController(),
+                //   ),
+                // ]);
+              },
             ),
           ],
         ),
