@@ -268,9 +268,9 @@ class SignUpAllField extends StatelessWidget {
             return null;
           },
           suffix: SizedBox(
-            width: 110.w,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.calendar_month_outlined, color: AppColors.primaryText),
                 CommonText(
@@ -284,7 +284,6 @@ class SignUpAllField extends StatelessWidget {
                   text: '${calculateAge(date)} Yrs',
                   style: TextStyle(color: AppColors.primaryText, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 10),
               ],
             ),
           ),

@@ -55,6 +55,7 @@ class AppColors {
   static Color get white300 => const Color(0xFFF0F0F0);
   static Color get backgroundWhite => const Color.fromARGB(255, 255, 255, 255);
   static Color get greay50 => const Color(0xFFEBEBEB);
+  static Color get greay100 => const Color(0xFFC0C0C0);
   static Color get greay => const Color(0xFF979797);
   static Color get greay300 => const Color(0xFF767676);
   static Color get greay400 => const Color(0xFF5C5C5C);

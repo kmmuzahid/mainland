@@ -37,13 +37,14 @@ class TicketSummeryViewWidget extends StatelessWidget {
               ),
             ),
             child: DualFieldRow(
+              spaceBetween: summery.values.elementAt(index) is Widget,
               left: CommonText(
                 textColor: AppColors.greay400,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 textAlign: TextAlign.left,
                 text: summery.keys.elementAt(index),
-              ),
+              ), 
               enableSpacer: false,
               right: summery.values.elementAt(index) is Widget
                   ? summery.values.elementAt(index)
@@ -52,7 +53,7 @@ class TicketSummeryViewWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                       textAlign: TextAlign.right,
-                      text: summery.values.elementAt(index),
+                      text: summery.values.elementAt(index).toString(),
                       alignment: MainAxisAlignment.end,
                     ),
             ),

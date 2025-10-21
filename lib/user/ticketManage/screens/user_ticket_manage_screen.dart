@@ -7,6 +7,8 @@ import 'package:mainland/user/ticketManage/widgets/live_and_expired_ticket_widge
 import 'package:mainland/user/ticketManage/widgets/sell_available_ticket_widget.dart';
 import 'package:mainland/user/ticketManage/widgets/sold_ticket_widget.dart';
 
+import '../model/sold_ticket_details_model.dart';
+
 @RoutePage()
 class UserTicketManageScreen extends StatelessWidget {
   const UserTicketManageScreen({required this.ticketFilter, required this.ticketId, super.key});
@@ -35,9 +37,32 @@ class UserTicketManageScreen extends StatelessWidget {
       );
     }
     if (ticketFilter == TicketFilter.Sold) {
-      return const SoldTicketWidget(
+      return SoldTicketWidget(
+        soldTicketDetails: [
+          SoldTicketDetailsModel(
+            type: 'Standard',
+            unit: 10,
+            soldPrice: 120,
+            mainlandCommission: 12,
+            yourPayout: 108,
+          ),
+          SoldTicketDetailsModel(
+            type: 'VIP',
+            unit: 7,
+            soldPrice: 150,
+            mainlandCommission: 15,
+            yourPayout: 135,
+          ),
+          SoldTicketDetailsModel(
+            type: 'Premium',
+            unit: 8,
+            soldPrice: 150,
+            mainlandCommission: 15,
+            yourPayout: 135,
+          ),
+        ],
         eventName: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
-        summery: {
+        summery: const {
           'Types': 'Standard - 1x\nVIP -  2x',
           'Total Sold Price': '\$520',
           'Mainland Commission (10%)': '\$52',

@@ -32,8 +32,10 @@ class CommonTextField extends StatefulWidget {
     this.validation,
     this.backgroundColor,
     this.borderWidth = 1.2,
+    this.showValidationMessage = true,
+    this.textAlign = TextAlign.left,
   });
-  
+
   final double borderWidth;
   final Function(String value, TextEditingController controller)? onSaved;
   final Function(String value)? onChanged;
@@ -57,7 +59,9 @@ class CommonTextField extends StatefulWidget {
   final ValidationType validationType;
   final String Function()? originalPassword;
   final Color? backgroundColor;
-  
+  final bool showValidationMessage;
+  final TextAlign textAlign;
+
   final String? Function(String? value)? validation;
 
   @override
@@ -111,9 +115,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
   }
 
   Color _iconColor() {
-    return _focusNode.hasFocus
-        ? getTheme.primaryColor
-        : getTheme.colorScheme.outline;
+    return _focusNode.hasFocus ? getTheme.primaryColor : getTheme.colorScheme.outline;
   }
 
   void _onSave(String? value) {
@@ -131,8 +133,10 @@ class _CommonTextFieldState extends State<CommonTextField> {
     return Material(
       type: MaterialType.transparency,
       child: TextFormField(
+        textAlign: widget.textAlign,
         controller: _controller,
         focusNode: _focusNode,
+        enableInteractiveSelection: !widget.isReadOnly,
         obscureText: _obscureText,
         readOnly: widget.isReadOnly,
         onChanged: widget.onChanged,
@@ -146,17 +150,23 @@ class _CommonTextFieldState extends State<CommonTextField> {
         onTap: widget.onTap,
         validator:
             widget.validation ??
-            (value) => InputHelper.validate(
-          widget.validationType,
-          value,
-              originalPassword: widget.originalPassword?.call(),
-        ),
+            (value) {
+              final error = InputHelper.validate(
+                widget.validationType,
+                value,
+                originalPassword: widget.originalPassword?.call(),
+              );
+              // Return the error to show the error border, but return null for the message if showValidationMessage is false
+              return widget.showValidationMessage ? error : (error != null ? '' : null);
+            },
 
         style: getTheme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500, fontSize: 16.sp),
         decoration: InputDecoration(
           filled: true,
           counterText: '',
-          errorMaxLines: 2,
+      
+          errorMaxLines: widget.showValidationMessage ? 2 : 1,
+          errorStyle: widget.showValidationMessage ? null : const TextStyle(fontSize: 0, height: 0),
           fillColor: widget.backgroundColor,
           hintStyle: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
           prefixIcon: widget.prefixText?.isNotEmpty == true
@@ -168,10 +178,20 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
                 )
               : Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.only(left: 10.w, right: widget.paddingHorizontal),
                   child: widget.prefixIcon,
                 ),
-          prefixIconConstraints: const BoxConstraints(),
+          suffixIconConstraints: BoxConstraints(
+            maxWidth:
+                widget.suffixIcon == null &&
+                    widget.validationType != ValidationType.validatePassword
+                ? widget.paddingHorizontal
+                : double.infinity,
+          ),
+
+          prefixIconConstraints: BoxConstraints(
+            maxWidth: widget.prefixIcon == null ? widget.paddingHorizontal : double.infinity,
+          ),
           suffixIcon: widget.showActionButton
               ? GestureDetector(
                   onTap: () {
@@ -180,17 +200,19 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   child: widget.actionButtonIcon ?? const Icon(Icons.search),
                 )
               : widget.validationType == ValidationType.validatePassword
-              ? (_obscureText 
-              ? _buildPasswordSuffixIcon()
-              : _buildPasswordSuffixIcon())
-              : widget.suffixIcon,
+              ? (_obscureText ? _buildPasswordSuffixIcon() : _buildPasswordSuffixIcon())
+              : Padding(
+                  padding: EdgeInsets.only(right: 10, left: widget.paddingHorizontal),
+                  child: widget.suffixIcon,
+                ),
           prefixIconColor: _iconColor(),
           suffixIconColor: _iconColor(),
-          
 
           focusedBorder: OutlineInputBorder(
             borderSide: getTheme.inputDecorationTheme.focusedBorder!.borderSide.copyWith(
-              color: getTheme.primaryColor,
+              color: widget.isReadOnly
+                  ? (widget.borderColor ?? getTheme.dividerColor)
+                  : getTheme.primaryColor,
               width: widget.borderWidth.w,
             ),
             borderRadius: BorderRadius.circular(widget.borderRadius.r),
