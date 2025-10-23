@@ -21,7 +21,7 @@ class MockAuthRepository implements AuthRepository {
     return ResponseState(
       data: UserLoginInfoModel(
         id: '',
-        name: 'Km M Islam',
+        name: 'Gbenga Drebak',
         image: role == Role.ORGANIZER
             ? Assets.images.sampleItem3.path
             : Assets.images.sampleItem2.path,
@@ -61,7 +61,7 @@ class MockAuthRepository implements AuthRepository {
     return ResponseState(
         data: UserLoginInfoModel(
           id: '',
-          name: 'Km M Islam',
+          name: 'Gbenga Drebak',
         image: role == Role.ORGANIZER
             ? Assets.images.sampleItem3.path
             : Assets.images.sampleItem2.path,

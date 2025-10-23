@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mainland/common/auth/widgets/common_logo.dart';
-import 'package:mainland/core/app_bar/common_app_bar.dart';
-import 'package:mainland/core/component/text/common_text.dart';
-import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:mainland/venue/venueHome/cubit/venue_cubit.dart';
+import 'package:mainland/venue/venueHome/widgets/venue_setting_widget.dart';
+
+import '../widgets/venue_bottom_navigation.dart';
+import '../widgets/venue_history_widget.dart';
+import '../widgets/venue_home_widget.dart';
 
 @RoutePage()
 class VenueHomeScreen extends StatelessWidget {
@@ -14,37 +15,27 @@ class VenueHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CommonAppBar(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Column(
+    return BlocProvider(
+      create: (context) => VenueCubit(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: BlocBuilder<VenueCubit, VenueState>(
+              builder: (context, state) {
+                return IndexedStack(
+                  index: context.read<VenueCubit>().state.currentIndex,
                   children: [
-                    const CommonLogo(width: 53, height: 50),
-                    CommonText(
-                      text: AppString.appName,
-                      style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-                    ),
-
-                    Badge(
-                      label: const Icon(Icons.add, size: 16),
-                      backgroundColor: AppColors.transparent,
-                      child: CommonText(text: AppString.venue, fontWeight: FontWeight.w600),
-                    ),
+                    const VenueHomeWidget(),
+                    const VenueHistoryWidget(),
+                    VenueSettingWidget(about: state.about, faqHelp: state.faqHelp),
                   ],
-                ),
-                const Spacer(),
-                const CommonText(text: 'Scanner', fontWeight: FontWeight.w400, fontSize: 24),
-                const Spacer(),
-                const Icon(Icons.remove),
-              ],
+                );
+              },
             ),
-          ],
+          ),
         ),
+        bottomNavigationBar: const VenueBottomNavigationBar(),
       ),
     );
   }

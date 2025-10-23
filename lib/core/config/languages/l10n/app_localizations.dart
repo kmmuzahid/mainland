@@ -466,6 +466,49 @@ abstract class AppLocalizations {
   /// **'No'**
   String get no;
 
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @writeYourMessageHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your message here'**
+  String get writeYourMessageHere;
+
+  /// No description provided for @areYouSureYouWantToDeleteYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get areYouSureYouWantToDeleteYourAccount;
+
+  /// No description provided for @oldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Old Password'**
+  String get oldPassword;
+
+  /// No description provided for @myBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'My Balance'**
+  String get myBalance;
+
+  /// No description provided for @withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get withdraw;
+
+  /// No description provided for @forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'For the best support experience, please describe your issue clearly in a single, detailed message. Our team will review it and get in touch with you via email.'**
+  String
+  get forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail;
+
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
@@ -987,6 +1030,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insert event code'**
   String get insertEventCode;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get scanner;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @browseDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Device'**
+  String get browseDevice;
+
+  /// No description provided for @insertNewEventCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert New Event Code'**
+  String get insertNewEventCode;
+
+  /// No description provided for @eventCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Code'**
+  String get eventCode;
+
+  /// No description provided for @faqHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ/Help'**
+  String get faqHelp;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @vibrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate'**
+  String get vibrate;
+
+  /// No description provided for @sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get sound;
+
+  /// No description provided for @myAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'My Account'**
+  String get myAccount;
+
+  /// No description provided for @aboutUs.
+  ///
+  /// In en, this message translates to:
+  /// **'About Us'**
+  String get aboutUs;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contactUs;
+
+  /// No description provided for @linkYourBankAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Link your (Bank) Account'**
+  String get linkYourBankAccount;
+
+  /// No description provided for @emailPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Preferences'**
+  String get emailPreferences;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @locations.
+  ///
+  /// In en, this message translates to:
+  /// **'Locations'**
+  String get locations;
+
+  /// No description provided for @sendNotificationAboutAnEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Notification about an Event'**
+  String get sendNotificationAboutAnEvent;
+
+  /// No description provided for @uploadImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Image'**
+  String get uploadImage;
+
+  /// No description provided for @removeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Image'**
+  String get removeImage;
+
+  /// No description provided for @receiveEmailNotificationsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive email notifications for'**
+  String get receiveEmailNotificationsFor;
+
+  /// No description provided for @whenYouSellYourTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'When you Sell your Ticket'**
+  String get whenYouSellYourTicket;
+
+  /// No description provided for @whenYouReceiveAMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'When you receive a Message'**
+  String get whenYouReceiveAMessage;
+
+  /// No description provided for @whenAFavoritePublishAnEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'When a Favorite publish an Event'**
+  String get whenAFavoritePublishAnEvent;
+
+  /// No description provided for @whenYouCanWithdrawFromYourWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'When you can Withdraw from your Wallet'**
+  String get whenYouCanWithdrawFromYourWallet;
 
   /// No description provided for @whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent.
   ///

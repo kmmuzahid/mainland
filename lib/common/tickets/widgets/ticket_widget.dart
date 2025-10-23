@@ -44,7 +44,12 @@ class TicketWidget extends StatelessWidget {
                   width: constraints.maxWidth,
                   child: Stack(
                     children: [
-                      Positioned.fill(child: CommonImage(imageSrc: image, borderRadius: 12)),
+                      Positioned.fill(
+                        child: AspectRatio(
+                          aspectRatio: .7,
+                          child: CommonImage(imageSrc: image, borderRadius: 12),
+                        ),
+                      ),
                       Container(
                         width: constraints.maxWidth,
                         height: constraints.maxHeight.h - 50.w,

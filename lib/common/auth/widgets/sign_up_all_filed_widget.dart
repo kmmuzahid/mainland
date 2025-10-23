@@ -30,7 +30,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
 class SignUpAllField extends StatelessWidget {
-  const SignUpAllField({super.key});
+  const SignUpAllField({super.key, required this.state});
+  final AuthState state;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +192,12 @@ class SignUpAllField extends StatelessWidget {
                       child: OtpVerifyWidget(
                         email: cubit.state.signUpModel.email,
                         onSuccess: () {
-                          appRouter.popUntilRouteWithName(SignInRoute.name);
+                          appRouter.replaceAll([
+                            SignInRoute(
+                              ctrUsername: TextEditingController(),
+                              ctrPassword: TextEditingController(),
+                            ),
+                          ]);
                         },
                       ),
                     );
@@ -210,7 +216,9 @@ class SignUpAllField extends StatelessWidget {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () =>
-                              appRouter.push(ShowInfoRoute(title: AppString.termsOfuse)),
+                              appRouter.push(
+                            ShowInfoRoute(title: AppString.termsOfuse, content: state.about),
+                          ),
                         text: AppString.termsOfuse,
                         style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
                       ),
@@ -218,7 +226,9 @@ class SignUpAllField extends StatelessWidget {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () =>
-                              appRouter.push(ShowInfoRoute(title: AppString.privacyNotice)),
+                              appRouter.push(
+                            ShowInfoRoute(title: AppString.privacyNotice, content: state.about),
+                          ),
                         text: AppString.privacyNotice,
                         style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
                       ),

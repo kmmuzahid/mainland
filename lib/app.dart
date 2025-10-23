@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
                     scrollBehavior: CustomScrollBehavior(),
                     debugShowCheckedModeBanner: false,
                     routerConfig: appRouter.config(),
+                    themeMode: ThemeMode.light,
                     theme: themeState.themeData,
                     supportedLocales: const [
                       Locale('en'), // English

@@ -209,6 +209,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no => 'No';
 
   @override
+  String get send => 'Send';
+
+  @override
+  String get writeYourMessageHere => 'Write your message here';
+
+  @override
+  String get areYouSureYouWantToDeleteYourAccount =>
+      'Are you sure you want to delete your account?';
+
+  @override
+  String get oldPassword => 'Old Password';
+
+  @override
+  String get myBalance => 'My Balance';
+
+  @override
+  String get withdraw => 'Withdraw';
+
+  @override
+  String
+  get forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail =>
+      'For the best support experience, please describe your issue clearly in a single, detailed message. Our team will review it and get in touch with you via email.';
+
+  @override
   String get emailAddress => 'Email Address';
 
   @override
@@ -478,6 +502,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insertEventCode => 'Insert event code';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get scanner => 'Scanner';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get browseDevice => 'Browse Device';
+
+  @override
+  String get insertNewEventCode => 'Insert New Event Code';
+
+  @override
+  String get eventCode => 'Event Code';
+
+  @override
+  String get faqHelp => 'FAQ/Help';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get vibrate => 'Vibrate';
+
+  @override
+  String get sound => 'Sound';
+
+  @override
+  String get myAccount => 'My Account';
+
+  @override
+  String get aboutUs => 'About Us';
+
+  @override
+  String get contactUs => 'Contact Us';
+
+  @override
+  String get linkYourBankAccount => 'Link your (Bank) Account';
+
+  @override
+  String get emailPreferences => 'Email Preferences';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get locations => 'Locations';
+
+  @override
+  String get sendNotificationAboutAnEvent => 'Send Notification about an Event';
+
+  @override
+  String get uploadImage => 'Upload Image';
+
+  @override
+  String get removeImage => 'Remove Image';
+
+  @override
+  String get receiveEmailNotificationsFor => 'Receive email notifications for';
+
+  @override
+  String get whenYouSellYourTicket => 'When you Sell your Ticket';
+
+  @override
+  String get whenYouReceiveAMessage => 'When you receive a Message';
+
+  @override
+  String get whenAFavoritePublishAnEvent => 'When a Favorite publish an Event';
+
+  @override
+  String get whenYouCanWithdrawFromYourWallet =>
+      'When you can Withdraw from your Wallet';
 
   @override
   String

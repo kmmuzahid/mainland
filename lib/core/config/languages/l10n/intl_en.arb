@@ -61,8 +61,14 @@
   "yes": "Yes",
   "noDetailsAvailableForThisNotification": "No details available for this notification",
   "no": "No",
-  
-  
+  "send": "Send",
+  "writeYourMessageHere": "Write your message here",
+  "areYouSureYouWantToDeleteYourAccount": "Are you sure you want to delete your account?",
+  "oldPassword": "Old Password",
+  "myBalance": "My Balance",
+  "withdraw": "Withdraw",
+  "forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail": "For the best support experience, please describe your issue clearly in a single, detailed message. Our team will review it and get in touch with you via email.",
+
   "emailAddress": "Email Address",
   "buySellKeepFavoriteTickets": "Buy, Sell, and Keep your Favorite Tickets",
   "copyright": "©2025 Essence Software. All rights reserved.",
@@ -150,6 +156,35 @@
      "logOut": "Log Out",
      "validate":"Validate",
      "insertEventCode": "Insert event code",
+     "history": "History",
+     "scanner": "Scanner",
+     "settings": "Settings",
+     "browseDevice": "Browse Device",
+     "insertNewEventCode": "Insert New Event Code",
+     "eventCode" : "Event Code",
+      "faqHelp": "FAQ/Help",
+      "about": "About",
+      "vibrate": "Vibrate",
+      "sound": "Sound",
+      "myAccount": "My Account",
+      "aboutUs": "About Us",
+
+      "contactUs": "Contact Us",
+      "linkYourBankAccount": "Link your (Bank) Account",
+      "emailPreferences": "Email Preferences",
+      "changePassword": "Change Password",
+      "deleteAccount": "Delete Account",
+      "locations": "Locations",
+      "sendNotificationAboutAnEvent": "Send Notification about an Event",
+      "uploadImage": "Upload Image",
+      "removeImage": "Remove Image",
+      "receiveEmailNotificationsFor": "Receive email notifications for",
+      "whenYouSellYourTicket": "When you Sell your Ticket",
+      "whenYouReceiveAMessage": "When you receive a Message",
+      "whenAFavoritePublishAnEvent": "When a Favorite publish an Event",
+      "whenYouCanWithdrawFromYourWallet": "When you can Withdraw from your Wallet",
+
+
     "whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent": "When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. ",
     "mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer": "Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer"
 

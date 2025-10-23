@@ -81,7 +81,7 @@ class UserHome extends StatelessWidget {
   Widget _suggestions({required int count}) {
     // Give the horizontal list a fixed height when used inside SingleChildScrollView
     return SizedBox(
-      height: 261.h,
+      height: 272.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: count,
@@ -93,7 +93,7 @@ class UserHome extends StatelessWidget {
               appRouter.push(EventDetailsRoute(eventId: '1'));
             },
             width: 167,
-            height: 261,
+            height: 271,
           ),
         ),
       ),
@@ -105,7 +105,7 @@ class UserHome extends StatelessWidget {
       startWidget: GestureDetector(
         onTap: () {
           // navigate to account screen.
-          appRouter.push(const SettingRoute());
+          appRouter.push(SettingRoute());
         },
         child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
       ),

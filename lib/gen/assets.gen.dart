@@ -24,6 +24,10 @@ class $AssetsIconGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/account_banner.png
+  AssetGenImage get accountBanner =>
+      const AssetGenImage('assets/images/account_banner.png');
+
   /// File path: assets/images/apple_wallet.png
   AssetGenImage get appleWallet =>
       const AssetGenImage('assets/images/apple_wallet.png');
@@ -85,8 +89,21 @@ class $AssetsImagesGen {
   /// File path: assets/images/user.png
   AssetGenImage get user => const AssetGenImage('assets/images/user.png');
 
+  /// File path: assets/images/venue_history.png
+  AssetGenImage get venueHistory =>
+      const AssetGenImage('assets/images/venue_history.png');
+
+  /// File path: assets/images/venue_home.png
+  AssetGenImage get venueHome =>
+      const AssetGenImage('assets/images/venue_home.png');
+
+  /// File path: assets/images/venue_setting.png
+  AssetGenImage get venueSetting =>
+      const AssetGenImage('assets/images/venue_setting.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
+    accountBanner,
     appleWallet,
     english,
     googleWallet,
@@ -103,6 +120,9 @@ class $AssetsImagesGen {
     sampleQr,
     usFlag,
     user,
+    venueHistory,
+    venueHome,
+    venueSetting,
   ];
 }
 

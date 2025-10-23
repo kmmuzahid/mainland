@@ -41,6 +41,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 
 enum SnackBarType { success, error, warning }
 
+String versionCode = '1.0.0';
+
 void main() async {
   Bloc.observer = AppBlocObserver();
 

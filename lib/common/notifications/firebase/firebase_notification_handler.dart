@@ -21,7 +21,7 @@ class FirebaseNotificationHandler {
     // Request notification permissions for iOS
     await _firebaseMessaging.requestPermission();
 
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidInit = AndroidInitializationSettings('@mipmap/launcher_icon');
     const initSettings = InitializationSettings(android: androidInit);
 
     await _flutterLocalNotificationsPlugin.initialize(initSettings);

@@ -6,6 +6,15 @@ import 'package:mainland/core/utils/log/app_log.dart';
 
 ThemeData get getTheme => Theme.of(appRouter.globalRouterKey.currentContext!);
 
+extension StringCasingExtension on String {
+  String capitalizeEachWord() {
+    if (isEmpty) return this;
+    return split(' ')
+        .map((word) => word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
+  }
+}
+
 extension EnumDisplayName on Enum {
   String get displayName {
     final raw = name;

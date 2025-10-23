@@ -49,7 +49,7 @@ class TicketsScreen extends StatelessWidget {
                     Expanded(
                       child: SmartStaggeredLoader(
                         itemCount: state.tickets.length,
-                        aspectRatio: .8,
+                        aspectRatio: .6,
                         mainAxisSpacing: 0,
                         crossAxisSpacing: 10,
                         itemBuilder: (context, index) {

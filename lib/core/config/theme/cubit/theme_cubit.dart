@@ -11,8 +11,8 @@ class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit() : super(ThemeState(themeData: lightTheme));
   Future<void> update({Brightness? brightness}) async {
     brightness ??= WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    emit(ThemeState(themeData: brightness == Brightness.dark ? darkTheme : lightTheme));
-    // emit(ThemeState(themeData: lightTheme));
+    // emit(ThemeState(themeData: brightness == Brightness.dark ? darkTheme : lightTheme));
+    emit(ThemeState(themeData: lightTheme));
     AppLogger.debug('Theme has been changed', tag: 'ThemeCubit');
   }
 }

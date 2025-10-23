@@ -6,6 +6,11 @@ import '../model/user_login_info_model.dart';
 
 class AuthState extends Equatable {
   const AuthState({
+    this.about =
+        '<html><body>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem </body></html>',
+    this.faqHelp =
+        '<html><body>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem </body></html>',
+
     this.userLoginInfoModel = const UserLoginInfoModel(
       id: '',
       name: '',
@@ -33,6 +38,8 @@ class AuthState extends Equatable {
   });
 
   // Fields
+  final String about;
+  final String faqHelp;
   final bool isLoading;
   final String errMessage;
   final UserLoginInfoModel userLoginInfoModel;
@@ -44,12 +51,16 @@ class AuthState extends Equatable {
     String? errMessage,
     UserLoginInfoModel? userLoginInfoModel,
     SignUpModel? signUpModel,
+    String? about,
+    String? faqHelp,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       errMessage: errMessage ?? this.errMessage,
       userLoginInfoModel: userLoginInfoModel ?? this.userLoginInfoModel,
       signUpModel: signUpModel ?? this.signUpModel,
+      about: about ?? this.about,
+      faqHelp: faqHelp ?? this.faqHelp,
     );
   }
 
@@ -59,5 +70,7 @@ class AuthState extends Equatable {
     errMessage,
     userLoginInfoModel.hashCode,
     signUpModel.hashCode,
+    about,
+    faqHelp,
   ];
 }
