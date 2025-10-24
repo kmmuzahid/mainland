@@ -32,6 +32,7 @@ class ContactUsScreen extends StatelessWidget {
             ).start,
             CommonText(
               textAlign: TextAlign.justify,
+              fontSize: 13,
               text: AppString
                   .forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail,
             ),

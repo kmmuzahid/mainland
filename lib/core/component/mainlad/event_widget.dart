@@ -40,6 +40,7 @@ class EventWidget extends StatelessWidget {
                     text: title,
                     left: 10,
                     right: 10,
+                    fontSize: 18,
                     textAlign: TextAlign.left,
                     style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
                   ),
@@ -49,6 +50,7 @@ class EventWidget extends StatelessWidget {
           ),
           CommonText(
             text: AppString.morePlus,
+            fontSize: 18,
             style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
           ).start,
         ],

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 
 class Utils {
   static late Size deviceSize;
+
+  static RepaintBoundary divider() => RepaintBoundary(
+    child: Divider(color: AppColors.greay100, thickness: 1.w),
+  );
 
   static Role? getRole() =>
       appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.userLoginInfoModel.role;

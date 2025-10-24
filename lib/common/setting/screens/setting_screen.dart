@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -92,48 +94,68 @@ class SettingScreen extends StatelessWidget {
                   accountSummery(),
                   15.height,
                   if (Utils.getRole() == Role.ORGANIZER) ...[
-                    _menuItems(title: AppString.sendNotificationAboutAnEvent, onTap: () {}),
-                    Divider(color: AppColors.greay100),
+                    _menuItems(
+                      context: context,
+                      title: AppString.sendNotificationAboutAnEvent,
+                      showInfo: true,
+                      onTap: () {
+                        appRouter.push(
+                          AllEventRoute(
+                            onTap: (eventId, title) {
+                              appRouter.push(EventNotificationEnableRoute(title: title));
+                            },
+                            title: 'Select an Event to send a Notification',
+                          ),
+                        );
+                      },
+                    ),
+                    Utils.divider(),
                   ],
 
                   _menuItems(
+                    context: context,
                     title: AppString.aboutUs,
                     onTap: () {
                       appRouter.push(ShowInfoRoute(title: AppString.aboutUs, content: 'About Us'));
                     },
                   ),
-                  Divider(color: AppColors.greay100),
+                  Utils.divider(),
                   _menuItems(
+                    context: context,
                     title: AppString.faqHelp,
                     onTap: () {
                       appRouter.push(ShowInfoRoute(title: AppString.faqHelp, content: 'FAQ/Help'));
                     },
                   ),
-                  Divider(color: AppColors.greay100),
+                  Utils.divider(),
                   _menuItems(
+                    context: context,
                     title: AppString.contactUs,
                     onTap: () {
                       appRouter.push(const ContactUsRoute());
                     },
                   ),
-                  Divider(color: AppColors.greay100),
-                  _menuItems(title: AppString.linkYourBankAccount, onTap: () {}),
-                  Divider(color: AppColors.greay100),
+                  Utils.divider(),
+                  _menuItems(context: context, title: AppString.linkYourBankAccount, onTap: () {}),
+                  Utils.divider(),
                   _menuItems(
+                    context: context,
                     title: AppString.emailPreferences,
                     onTap: () {
                       appRouter.push(const EmailPreferenceRoute());
                     },
                   ),
-                  Divider(color: AppColors.greay100),
+                  Utils.divider(),
                   _menuItems(
+                    context: context,
                     title: AppString.changePassword,
                     onTap: () {
                       appRouter.push(const ChangePasswordRoute());
                     },
                   ),
-                  Divider(color: AppColors.greay100),
+                  Utils.divider(),
                   _menuItems(
+                    context: context,
                     title: AppString.deleteAccount,
                     onTap: () {
                       CommonDialogWithActions(
@@ -150,8 +172,13 @@ class SettingScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  Divider(color: AppColors.greay100),
-                  _menuItems(title: AppString.locations, subTitle: 'Lagos, Nigeria', onTap: () {}),
+                  Utils.divider(),
+                  _menuItems(
+                    context: context,
+                    title: AppString.locations,
+                    subTitle: 'Lagos, Nigeria',
+                    onTap: () {},
+                  ),
                   20.height,
                   CommonButton(
                     titleText: AppString.logOut,
@@ -209,7 +236,13 @@ class SettingScreen extends StatelessWidget {
     ),
   );
 
-  Widget _menuItems({required String title, required Function() onTap, String? subTitle}) {
+  Widget _menuItems({
+    required BuildContext context,
+    required String title,
+    required Function() onTap,
+    String? subTitle,
+    bool showInfo = false,
+  }) {
     Widget textWidget = CommonText(
       fontSize: 14,
       fontWeight: FontWeight.w400,
@@ -240,6 +273,40 @@ class SettingScreen extends StatelessWidget {
       child: Row(
         children: [
           textWidget,
+          if (showInfo)
+            IconButton(
+              onPressed: () {
+                commonDialog(
+                  isDismissible: true,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      24.height,
+                      const CommonLogo(),
+                      CommonText(
+                        text: AppString.appName,
+                        fontSize: 20,
+                        textColor: AppColors.primaryColor,
+                      ),
+                      10.height,
+                      CommonText(
+                        text:
+                            'Request Mainland to send urgent updates. Once approved, attendees who purchased your Event ticket will get an email and push notification.',
+                        fontSize: 22,
+                        textColor: AppColors.greay400,
+                        fontWeight: FontWeight.w400,
+                        textAlign: TextAlign.left,
+                      ),
+                      10.height,
+                      CommonButton(titleText: AppString.cancel, onTap: appRouter.pop),
+                      24.height,
+                    ],
+                  ),
+                  context: context,
+                );
+              },
+              icon: const Icon(Icons.info_outline),
+            ),
           const Spacer(),
           Icon(Icons.arrow_forward_ios, color: AppColors.primaryColor),
         ],
@@ -259,7 +326,6 @@ class SettingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
-        
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,4 +359,3 @@ class SettingScreen extends StatelessWidget {
     );
   }
 }
-

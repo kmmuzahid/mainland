@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
         TicketFilter.Sold,
         TicketFilter.Expired,
       ],
-      title: AppString.liveAvailableForSaleSoldAndExpired,
+      subTitle: AppString.liveAvailableForSaleSoldAndExpired,
     ),
     const FanClubScreen(),
 
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
         appRouter.push(TicketSaveRoute(ticketId: ticketId));
       },
       filters: const [TicketFilter.Upcoming, TicketFilter.Used],
-      title: AppString.allAvailableTickets,
+      subTitle: AppString.allAvailableTickets,
     ),
     const ChatListScreen(),
   ];
@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
         TicketFilter.Draft,
         TicketFilter.Closed,
       ],
-      title: AppString.liveUnderReviewDraftAndClosedTickets,
+      subTitle: AppString.liveUnderReviewDraftAndClosedTickets,
     ),
     const SettingScreen(),
     const ChatListScreen(),

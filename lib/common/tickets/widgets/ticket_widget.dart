@@ -49,6 +49,7 @@ class TicketWidget extends StatelessWidget {
                     left: 10,
                     right: 10,
                     text: title,
+                    fontSize: 18,
                     textAlign: TextAlign.left,
                     style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
                   ),
@@ -91,6 +92,7 @@ class TicketWidget extends StatelessWidget {
             },
             child: CommonText(
               text: AppString.viewPlus,
+              fontSize: 18,
               style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
             ),
           ).start,

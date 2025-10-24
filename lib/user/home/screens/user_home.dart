@@ -87,11 +87,14 @@ class UserHome extends StatelessWidget {
         itemCount: count,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.only(right: 10.w),
-          child: EventWidget(
-            image: Assets.images.sampleItem.path,
-            onTap: () {
-              appRouter.push(EventDetailsRoute(eventId: '1'));
-            },
+          child: AspectRatio(
+            aspectRatio: 0.6434,
+            child: EventWidget(
+              image: Assets.images.sampleItem.path,
+              onTap: () {
+                appRouter.push(EventDetailsRoute(eventId: '1'));
+              },
+            ),
           ),
         ),
       ),

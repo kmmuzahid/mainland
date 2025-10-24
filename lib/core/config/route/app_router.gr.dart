@@ -9,93 +9,106 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i32;
-import 'package:flutter/material.dart' as _i33;
+import 'package:auto_route/auto_route.dart' as _i34;
+import 'package:collection/collection.dart' as _i40;
+import 'package:flutter/material.dart' as _i35;
 import 'package:mainland/common/auth/screen/change_password_screen.dart' as _i3;
-import 'package:mainland/common/auth/screen/forget_password_screen.dart' as _i9;
-import 'package:mainland/common/auth/screen/otp_screen.dart' as _i15;
-import 'package:mainland/common/auth/screen/profile_info_screen.dart' as _i19;
-import 'package:mainland/common/auth/screen/sign_in_screen.dart' as _i22;
-import 'package:mainland/common/auth/screen/sign_up_screen.dart' as _i23;
-import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i34;
+import 'package:mainland/common/auth/screen/forget_password_screen.dart'
+    as _i10;
+import 'package:mainland/common/auth/screen/otp_screen.dart' as _i16;
+import 'package:mainland/common/auth/screen/profile_info_screen.dart' as _i20;
+import 'package:mainland/common/auth/screen/sign_in_screen.dart' as _i23;
+import 'package:mainland/common/auth/screen/sign_up_screen.dart' as _i24;
+import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i36;
 import 'package:mainland/common/chat/screens/chat_list_screen.dart' as _i4;
 import 'package:mainland/common/chat/screens/chat_screen.dart' as _i5;
 import 'package:mainland/common/event/screens/all_event_screen.dart' as _i1;
 import 'package:mainland/common/event/screens/event_details_screen.dart' as _i8;
-import 'package:mainland/common/home/screens/home_screen.dart' as _i10;
+import 'package:mainland/common/home/screens/home_screen.dart' as _i11;
 import 'package:mainland/common/notifications/screen/notifications_screen.dart'
-    as _i12;
-import 'package:mainland/common/onboarding_screen/onboarding_screen.dart'
     as _i13;
+import 'package:mainland/common/onboarding_screen/onboarding_screen.dart'
+    as _i14;
 import 'package:mainland/common/setting/screens/contact_us_screen.dart' as _i6;
 import 'package:mainland/common/setting/screens/email_preference_screen.dart'
     as _i7;
+import 'package:mainland/common/setting/screens/event_notification_enable_screen.dart'
+    as _i9;
 import 'package:mainland/common/setting/screens/privacy_policy_screen.dart'
-    as _i18;
-import 'package:mainland/common/setting/screens/setting_screen.dart' as _i20;
+    as _i19;
+import 'package:mainland/common/setting/screens/setting_screen.dart' as _i21;
 import 'package:mainland/common/setting/screens/terms_condition_screen.dart'
-    as _i25;
-import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i21;
-import 'package:mainland/common/splash/splash_screen.dart' as _i24;
+    as _i26;
+import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i22;
+import 'package:mainland/common/splash/splash_screen.dart' as _i25;
+import 'package:mainland/common/tickets/screens/tickets_screen.dart' as _i30;
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart'
-    as _i35;
+    as _i37;
+import 'package:mainland/core/app_bar/common_app_bar.dart' as _i39;
 import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage.dart'
-    as _i14;
+    as _i15;
 import 'package:mainland/user/fanclub/screens/modify_favorite_fan_club.dart'
-    as _i11;
-import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i36;
+    as _i12;
+import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i38;
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart'
-    as _i16;
-import 'package:mainland/user/preferense/screen/preference_screen.dart' as _i17;
+    as _i17;
+import 'package:mainland/user/preferense/screen/preference_screen.dart' as _i18;
 import 'package:mainland/user/ticket/screen/attendie_ticket_availablity_screen.dart'
     as _i2;
 import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart'
-    as _i26;
-import 'package:mainland/user/ticket/screen/ticket_purchasing_screen.dart'
     as _i27;
-import 'package:mainland/user/ticketManage/screens/ticket_save_screen.dart'
+import 'package:mainland/user/ticket/screen/ticket_purchasing_screen.dart'
     as _i28;
-import 'package:mainland/user/ticketManage/screens/user_ticket_manage_screen.dart'
+import 'package:mainland/user/ticketManage/screens/ticket_save_screen.dart'
     as _i29;
-import 'package:mainland/venue/venueHome/screens/venue_home_screen.dart'
-    as _i30;
-import 'package:mainland/venue/venueHome/screens/venue_splash_screen.dart'
+import 'package:mainland/user/ticketManage/screens/user_ticket_manage_screen.dart'
     as _i31;
+import 'package:mainland/venue/venueHome/screens/venue_home_screen.dart'
+    as _i32;
+import 'package:mainland/venue/venueHome/screens/venue_splash_screen.dart'
+    as _i33;
 
 /// generated route for
 /// [_i1.AllEventScreen]
-class AllEventRoute extends _i32.PageRouteInfo<AllEventRouteArgs> {
+class AllEventRoute extends _i34.PageRouteInfo<AllEventRouteArgs> {
   AllEventRoute({
-    _i33.Key? key,
+    _i35.Key? key,
     required String title,
-    List<_i32.PageRouteInfo>? children,
+    dynamic Function(String, String)? onTap,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          AllEventRoute.name,
-         args: AllEventRouteArgs(key: key, title: title),
+         args: AllEventRouteArgs(key: key, title: title, onTap: onTap),
          initialChildren: children,
        );
 
   static const String name = 'AllEventRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<AllEventRouteArgs>();
-      return _i1.AllEventScreen(key: args.key, title: args.title);
+      return _i1.AllEventScreen(
+        key: args.key,
+        title: args.title,
+        onTap: args.onTap,
+      );
     },
   );
 }
 
 class AllEventRouteArgs {
-  const AllEventRouteArgs({this.key, required this.title});
+  const AllEventRouteArgs({this.key, required this.title, this.onTap});
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   final String title;
 
+  final dynamic Function(String, String)? onTap;
+
   @override
   String toString() {
-    return 'AllEventRouteArgs{key: $key, title: $title}';
+    return 'AllEventRouteArgs{key: $key, title: $title, onTap: $onTap}';
   }
 
   @override
@@ -111,13 +124,13 @@ class AllEventRouteArgs {
 
 /// generated route for
 /// [_i2.AttendieTicketAvailablityScreen]
-class AttendieTicketAvailablityRoute extends _i32.PageRouteInfo<void> {
-  const AttendieTicketAvailablityRoute({List<_i32.PageRouteInfo>? children})
+class AttendieTicketAvailablityRoute extends _i34.PageRouteInfo<void> {
+  const AttendieTicketAvailablityRoute({List<_i34.PageRouteInfo>? children})
     : super(AttendieTicketAvailablityRoute.name, initialChildren: children);
 
   static const String name = 'AttendieTicketAvailablityRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       return const _i2.AttendieTicketAvailablityScreen();
@@ -127,13 +140,13 @@ class AttendieTicketAvailablityRoute extends _i32.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.ChangePasswordScreen]
-class ChangePasswordRoute extends _i32.PageRouteInfo<void> {
-  const ChangePasswordRoute({List<_i32.PageRouteInfo>? children})
+class ChangePasswordRoute extends _i34.PageRouteInfo<void> {
+  const ChangePasswordRoute({List<_i34.PageRouteInfo>? children})
     : super(ChangePasswordRoute.name, initialChildren: children);
 
   static const String name = 'ChangePasswordRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       return const _i3.ChangePasswordScreen();
@@ -143,13 +156,13 @@ class ChangePasswordRoute extends _i32.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.ChatListScreen]
-class ChatListRoute extends _i32.PageRouteInfo<void> {
-  const ChatListRoute({List<_i32.PageRouteInfo>? children})
+class ChatListRoute extends _i34.PageRouteInfo<void> {
+  const ChatListRoute({List<_i34.PageRouteInfo>? children})
     : super(ChatListRoute.name, initialChildren: children);
 
   static const String name = 'ChatListRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       return const _i4.ChatListScreen();
@@ -159,12 +172,12 @@ class ChatListRoute extends _i32.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.ChatScreen]
-class ChatRoute extends _i32.PageRouteInfo<ChatRouteArgs> {
+class ChatRoute extends _i34.PageRouteInfo<ChatRouteArgs> {
   ChatRoute({
-    required _i34.ChatListItemModel chatListItemModel,
-    _i33.Key? key,
-    _i33.Widget? action,
-    List<_i32.PageRouteInfo>? children,
+    required _i36.ChatListItemModel chatListItemModel,
+    _i35.Key? key,
+    _i35.Widget? action,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          ChatRoute.name,
          args: ChatRouteArgs(
@@ -177,7 +190,7 @@ class ChatRoute extends _i32.PageRouteInfo<ChatRouteArgs> {
 
   static const String name = 'ChatRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ChatRouteArgs>();
@@ -193,11 +206,11 @@ class ChatRoute extends _i32.PageRouteInfo<ChatRouteArgs> {
 class ChatRouteArgs {
   const ChatRouteArgs({required this.chatListItemModel, this.key, this.action});
 
-  final _i34.ChatListItemModel chatListItemModel;
+  final _i36.ChatListItemModel chatListItemModel;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i33.Widget? action;
+  final _i35.Widget? action;
 
   @override
   String toString() {
@@ -220,13 +233,13 @@ class ChatRouteArgs {
 
 /// generated route for
 /// [_i6.ContactUsScreen]
-class ContactUsRoute extends _i32.PageRouteInfo<void> {
-  const ContactUsRoute({List<_i32.PageRouteInfo>? children})
+class ContactUsRoute extends _i34.PageRouteInfo<void> {
+  const ContactUsRoute({List<_i34.PageRouteInfo>? children})
     : super(ContactUsRoute.name, initialChildren: children);
 
   static const String name = 'ContactUsRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       return const _i6.ContactUsScreen();
@@ -236,13 +249,13 @@ class ContactUsRoute extends _i32.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i7.EmailPreferenceScreen]
-class EmailPreferenceRoute extends _i32.PageRouteInfo<void> {
-  const EmailPreferenceRoute({List<_i32.PageRouteInfo>? children})
+class EmailPreferenceRoute extends _i34.PageRouteInfo<void> {
+  const EmailPreferenceRoute({List<_i34.PageRouteInfo>? children})
     : super(EmailPreferenceRoute.name, initialChildren: children);
 
   static const String name = 'EmailPreferenceRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       return const _i7.EmailPreferenceScreen();
@@ -252,14 +265,14 @@ class EmailPreferenceRoute extends _i32.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.EventDetailsScreen]
-class EventDetailsRoute extends _i32.PageRouteInfo<EventDetailsRouteArgs> {
+class EventDetailsRoute extends _i34.PageRouteInfo<EventDetailsRouteArgs> {
   EventDetailsRoute({
     required String eventId,
-    _i33.Key? key,
+    _i35.Key? key,
     bool showEventActions = true,
     bool isEventAvailable = true,
     bool isEventUnderReview = false,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          EventDetailsRoute.name,
          args: EventDetailsRouteArgs(
@@ -274,7 +287,7 @@ class EventDetailsRoute extends _i32.PageRouteInfo<EventDetailsRouteArgs> {
 
   static const String name = 'EventDetailsRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<EventDetailsRouteArgs>();
@@ -300,7 +313,7 @@ class EventDetailsRouteArgs {
 
   final String eventId;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   final bool showEventActions;
 
@@ -334,12 +347,63 @@ class EventDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i9.ForgetPasswordScreen]
-class ForgetPasswordRoute extends _i32.PageRouteInfo<ForgetPasswordRouteArgs> {
+/// [_i9.EventNotificationEnableScreen]
+class EventNotificationEnableRoute
+    extends _i34.PageRouteInfo<EventNotificationEnableRouteArgs> {
+  EventNotificationEnableRoute({
+    _i35.Key? key,
+    required String title,
+    List<_i34.PageRouteInfo>? children,
+  }) : super(
+         EventNotificationEnableRoute.name,
+         args: EventNotificationEnableRouteArgs(key: key, title: title),
+         initialChildren: children,
+       );
+
+  static const String name = 'EventNotificationEnableRoute';
+
+  static _i34.PageInfo page = _i34.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<EventNotificationEnableRouteArgs>();
+      return _i9.EventNotificationEnableScreen(
+        key: args.key,
+        title: args.title,
+      );
+    },
+  );
+}
+
+class EventNotificationEnableRouteArgs {
+  const EventNotificationEnableRouteArgs({this.key, required this.title});
+
+  final _i35.Key? key;
+
+  final String title;
+
+  @override
+  String toString() {
+    return 'EventNotificationEnableRouteArgs{key: $key, title: $title}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! EventNotificationEnableRouteArgs) return false;
+    return key == other.key && title == other.title;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ title.hashCode;
+}
+
+/// generated route for
+/// [_i10.ForgetPasswordScreen]
+class ForgetPasswordRoute extends _i34.PageRouteInfo<ForgetPasswordRouteArgs> {
   ForgetPasswordRoute({
-    required _i33.TextEditingController newPasswordController,
-    _i33.Key? key,
-    List<_i32.PageRouteInfo>? children,
+    required _i35.TextEditingController newPasswordController,
+    _i35.Key? key,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          ForgetPasswordRoute.name,
          args: ForgetPasswordRouteArgs(
@@ -351,11 +415,11 @@ class ForgetPasswordRoute extends _i32.PageRouteInfo<ForgetPasswordRouteArgs> {
 
   static const String name = 'ForgetPasswordRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ForgetPasswordRouteArgs>();
-      return _i9.ForgetPasswordScreen(
+      return _i10.ForgetPasswordScreen(
         newPasswordController: args.newPasswordController,
         key: args.key,
       );
@@ -369,9 +433,9 @@ class ForgetPasswordRouteArgs {
     this.key,
   });
 
-  final _i33.TextEditingController newPasswordController;
+  final _i35.TextEditingController newPasswordController;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   @override
   String toString() {
@@ -391,78 +455,78 @@ class ForgetPasswordRouteArgs {
 }
 
 /// generated route for
-/// [_i10.HomeScreen]
-class HomeRoute extends _i32.PageRouteInfo<void> {
-  const HomeRoute({List<_i32.PageRouteInfo>? children})
+/// [_i11.HomeScreen]
+class HomeRoute extends _i34.PageRouteInfo<void> {
+  const HomeRoute({List<_i34.PageRouteInfo>? children})
     : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i10.HomeScreen();
+      return const _i11.HomeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i11.ModifyFavoriteFanClub]
-class ModifyFavoriteFanClub extends _i32.PageRouteInfo<void> {
-  const ModifyFavoriteFanClub({List<_i32.PageRouteInfo>? children})
+/// [_i12.ModifyFavoriteFanClub]
+class ModifyFavoriteFanClub extends _i34.PageRouteInfo<void> {
+  const ModifyFavoriteFanClub({List<_i34.PageRouteInfo>? children})
     : super(ModifyFavoriteFanClub.name, initialChildren: children);
 
   static const String name = 'ModifyFavoriteFanClub';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i11.ModifyFavoriteFanClub();
+      return const _i12.ModifyFavoriteFanClub();
     },
   );
 }
 
 /// generated route for
-/// [_i12.NotificationScreen]
-class NotificationRoute extends _i32.PageRouteInfo<void> {
-  const NotificationRoute({List<_i32.PageRouteInfo>? children})
+/// [_i13.NotificationScreen]
+class NotificationRoute extends _i34.PageRouteInfo<void> {
+  const NotificationRoute({List<_i34.PageRouteInfo>? children})
     : super(NotificationRoute.name, initialChildren: children);
 
   static const String name = 'NotificationRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i12.NotificationScreen();
+      return const _i13.NotificationScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i13.OnboardingScreen]
-class OnboardingRoute extends _i32.PageRouteInfo<void> {
-  const OnboardingRoute({List<_i32.PageRouteInfo>? children})
+/// [_i14.OnboardingScreen]
+class OnboardingRoute extends _i34.PageRouteInfo<void> {
+  const OnboardingRoute({List<_i34.PageRouteInfo>? children})
     : super(OnboardingRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i13.OnboardingScreen();
+      return const _i14.OnboardingScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i14.OrgTicketManageScreen]
+/// [_i15.OrgTicketManageScreen]
 class OrgTicketManageRoute
-    extends _i32.PageRouteInfo<OrgTicketManageRouteArgs> {
+    extends _i34.PageRouteInfo<OrgTicketManageRouteArgs> {
   OrgTicketManageRoute({
-    _i33.Key? key,
-    required _i35.TicketFilter ticketFilter,
+    _i35.Key? key,
+    required _i37.TicketFilter ticketFilter,
     required String ticketId,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          OrgTicketManageRoute.name,
          args: OrgTicketManageRouteArgs(
@@ -475,11 +539,11 @@ class OrgTicketManageRoute
 
   static const String name = 'OrgTicketManageRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<OrgTicketManageRouteArgs>();
-      return _i14.OrgTicketManageScreen(
+      return _i15.OrgTicketManageScreen(
         key: args.key,
         ticketFilter: args.ticketFilter,
         ticketId: args.ticketId,
@@ -495,9 +559,9 @@ class OrgTicketManageRouteArgs {
     required this.ticketId,
   });
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i35.TicketFilter ticketFilter;
+  final _i37.TicketFilter ticketFilter;
 
   final String ticketId;
 
@@ -520,12 +584,12 @@ class OrgTicketManageRouteArgs {
 }
 
 /// generated route for
-/// [_i15.OtpScreen]
-class OtpRoute extends _i32.PageRouteInfo<OtpRouteArgs> {
+/// [_i16.OtpScreen]
+class OtpRoute extends _i34.PageRouteInfo<OtpRouteArgs> {
   OtpRoute({
     required dynamic Function() onSuccess,
-    _i33.Key? key,
-    List<_i32.PageRouteInfo>? children,
+    _i35.Key? key,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          OtpRoute.name,
          args: OtpRouteArgs(onSuccess: onSuccess, key: key),
@@ -534,11 +598,11 @@ class OtpRoute extends _i32.PageRouteInfo<OtpRouteArgs> {
 
   static const String name = 'OtpRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<OtpRouteArgs>();
-      return _i15.OtpScreen(onSuccess: args.onSuccess, key: args.key);
+      return _i16.OtpScreen(onSuccess: args.onSuccess, key: args.key);
     },
   );
 }
@@ -548,7 +612,7 @@ class OtpRouteArgs {
 
   final dynamic Function() onSuccess;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   @override
   String toString() {
@@ -567,16 +631,16 @@ class OtpRouteArgs {
 }
 
 /// generated route for
-/// [_i16.PerfenceSubcategoryScreen]
+/// [_i17.PerfenceSubcategoryScreen]
 class PerfenceSubcategoryRoute
-    extends _i32.PageRouteInfo<PerfenceSubcategoryRouteArgs> {
+    extends _i34.PageRouteInfo<PerfenceSubcategoryRouteArgs> {
   PerfenceSubcategoryRoute({
-    _i33.Key? key,
-    required _i33.Color backgroundColor,
+    _i35.Key? key,
+    required _i35.Color backgroundColor,
     String? buttonTitle,
-    required _i36.PreferenceCubit cubit,
-    _i33.Widget? header,
-    List<_i32.PageRouteInfo>? children,
+    required _i38.PreferenceCubit cubit,
+    _i35.Widget? header,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          PerfenceSubcategoryRoute.name,
          args: PerfenceSubcategoryRouteArgs(
@@ -591,11 +655,11 @@ class PerfenceSubcategoryRoute
 
   static const String name = 'PerfenceSubcategoryRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PerfenceSubcategoryRouteArgs>();
-      return _i16.PerfenceSubcategoryScreen(
+      return _i17.PerfenceSubcategoryScreen(
         key: args.key,
         backgroundColor: args.backgroundColor,
         buttonTitle: args.buttonTitle,
@@ -615,15 +679,15 @@ class PerfenceSubcategoryRouteArgs {
     this.header,
   });
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i33.Color backgroundColor;
+  final _i35.Color backgroundColor;
 
   final String? buttonTitle;
 
-  final _i36.PreferenceCubit cubit;
+  final _i38.PreferenceCubit cubit;
 
-  final _i33.Widget? header;
+  final _i35.Widget? header;
 
   @override
   String toString() {
@@ -651,14 +715,14 @@ class PerfenceSubcategoryRouteArgs {
 }
 
 /// generated route for
-/// [_i17.PreferenceScreen]
-class PreferenceRoute extends _i32.PageRouteInfo<PreferenceRouteArgs> {
+/// [_i18.PreferenceScreen]
+class PreferenceRoute extends _i34.PageRouteInfo<PreferenceRouteArgs> {
   PreferenceRoute({
-    _i33.Key? key,
-    _i33.Widget? header,
+    _i35.Key? key,
+    _i35.Widget? header,
     String? buttonTitle,
-    _i33.Color? backgroundColor,
-    List<_i32.PageRouteInfo>? children,
+    _i35.Color? backgroundColor,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          PreferenceRoute.name,
          args: PreferenceRouteArgs(
@@ -672,13 +736,13 @@ class PreferenceRoute extends _i32.PageRouteInfo<PreferenceRouteArgs> {
 
   static const String name = 'PreferenceRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PreferenceRouteArgs>(
         orElse: () => const PreferenceRouteArgs(),
       );
-      return _i17.PreferenceScreen(
+      return _i18.PreferenceScreen(
         key: args.key,
         header: args.header,
         buttonTitle: args.buttonTitle,
@@ -696,13 +760,13 @@ class PreferenceRouteArgs {
     this.backgroundColor,
   });
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i33.Widget? header;
+  final _i35.Widget? header;
 
   final String? buttonTitle;
 
-  final _i33.Color? backgroundColor;
+  final _i35.Color? backgroundColor;
 
   @override
   String toString() {
@@ -728,44 +792,44 @@ class PreferenceRouteArgs {
 }
 
 /// generated route for
-/// [_i18.PrivacyPolicyScreen]
-class PrivacyPolicyRoute extends _i32.PageRouteInfo<void> {
-  const PrivacyPolicyRoute({List<_i32.PageRouteInfo>? children})
+/// [_i19.PrivacyPolicyScreen]
+class PrivacyPolicyRoute extends _i34.PageRouteInfo<void> {
+  const PrivacyPolicyRoute({List<_i34.PageRouteInfo>? children})
     : super(PrivacyPolicyRoute.name, initialChildren: children);
 
   static const String name = 'PrivacyPolicyRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i18.PrivacyPolicyScreen();
+      return const _i19.PrivacyPolicyScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i19.ProfileInfoScreen]
-class ProfileInfoRoute extends _i32.PageRouteInfo<void> {
-  const ProfileInfoRoute({List<_i32.PageRouteInfo>? children})
+/// [_i20.ProfileInfoScreen]
+class ProfileInfoRoute extends _i34.PageRouteInfo<void> {
+  const ProfileInfoRoute({List<_i34.PageRouteInfo>? children})
     : super(ProfileInfoRoute.name, initialChildren: children);
 
   static const String name = 'ProfileInfoRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i19.ProfileInfoScreen();
+      return const _i20.ProfileInfoScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i20.SettingScreen]
-class SettingRoute extends _i32.PageRouteInfo<SettingRouteArgs> {
+/// [_i21.SettingScreen]
+class SettingRoute extends _i34.PageRouteInfo<SettingRouteArgs> {
   SettingRoute({
-    _i33.Key? key,
+    _i35.Key? key,
     bool showBackButton = false,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          SettingRoute.name,
          args: SettingRouteArgs(key: key, showBackButton: showBackButton),
@@ -774,13 +838,13 @@ class SettingRoute extends _i32.PageRouteInfo<SettingRouteArgs> {
 
   static const String name = 'SettingRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SettingRouteArgs>(
         orElse: () => const SettingRouteArgs(),
       );
-      return _i20.SettingScreen(
+      return _i21.SettingScreen(
         key: args.key,
         showBackButton: args.showBackButton,
       );
@@ -791,7 +855,7 @@ class SettingRoute extends _i32.PageRouteInfo<SettingRouteArgs> {
 class SettingRouteArgs {
   const SettingRouteArgs({this.key, this.showBackButton = false});
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   final bool showBackButton;
 
@@ -812,13 +876,13 @@ class SettingRouteArgs {
 }
 
 /// generated route for
-/// [_i21.ShowInfoScreen]
-class ShowInfoRoute extends _i32.PageRouteInfo<ShowInfoRouteArgs> {
+/// [_i22.ShowInfoScreen]
+class ShowInfoRoute extends _i34.PageRouteInfo<ShowInfoRouteArgs> {
   ShowInfoRoute({
-    _i33.Key? key,
+    _i35.Key? key,
     required String title,
     required String content,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          ShowInfoRoute.name,
          args: ShowInfoRouteArgs(key: key, title: title, content: content),
@@ -827,11 +891,11 @@ class ShowInfoRoute extends _i32.PageRouteInfo<ShowInfoRouteArgs> {
 
   static const String name = 'ShowInfoRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ShowInfoRouteArgs>();
-      return _i21.ShowInfoScreen(
+      return _i22.ShowInfoScreen(
         key: args.key,
         title: args.title,
         content: args.content,
@@ -847,7 +911,7 @@ class ShowInfoRouteArgs {
     required this.content,
   });
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   final String title;
 
@@ -870,13 +934,13 @@ class ShowInfoRouteArgs {
 }
 
 /// generated route for
-/// [_i22.SignInScreen]
-class SignInRoute extends _i32.PageRouteInfo<SignInRouteArgs> {
+/// [_i23.SignInScreen]
+class SignInRoute extends _i34.PageRouteInfo<SignInRouteArgs> {
   SignInRoute({
-    required _i33.TextEditingController ctrUsername,
-    required _i33.TextEditingController ctrPassword,
-    _i33.Key? key,
-    List<_i32.PageRouteInfo>? children,
+    required _i35.TextEditingController ctrUsername,
+    required _i35.TextEditingController ctrPassword,
+    _i35.Key? key,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          SignInRoute.name,
          args: SignInRouteArgs(
@@ -889,11 +953,11 @@ class SignInRoute extends _i32.PageRouteInfo<SignInRouteArgs> {
 
   static const String name = 'SignInRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SignInRouteArgs>();
-      return _i22.SignInScreen(
+      return _i23.SignInScreen(
         ctrUsername: args.ctrUsername,
         ctrPassword: args.ctrPassword,
         key: args.key,
@@ -909,11 +973,11 @@ class SignInRouteArgs {
     this.key,
   });
 
-  final _i33.TextEditingController ctrUsername;
+  final _i35.TextEditingController ctrUsername;
 
-  final _i33.TextEditingController ctrPassword;
+  final _i35.TextEditingController ctrPassword;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   @override
   String toString() {
@@ -935,60 +999,60 @@ class SignInRouteArgs {
 }
 
 /// generated route for
-/// [_i23.SignUpScreen]
-class SignUpRoute extends _i32.PageRouteInfo<void> {
-  const SignUpRoute({List<_i32.PageRouteInfo>? children})
+/// [_i24.SignUpScreen]
+class SignUpRoute extends _i34.PageRouteInfo<void> {
+  const SignUpRoute({List<_i34.PageRouteInfo>? children})
     : super(SignUpRoute.name, initialChildren: children);
 
   static const String name = 'SignUpRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i23.SignUpScreen();
+      return const _i24.SignUpScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i24.SplashScreen]
-class SplashRoute extends _i32.PageRouteInfo<void> {
-  const SplashRoute({List<_i32.PageRouteInfo>? children})
+/// [_i25.SplashScreen]
+class SplashRoute extends _i34.PageRouteInfo<void> {
+  const SplashRoute({List<_i34.PageRouteInfo>? children})
     : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i24.SplashScreen();
+      return const _i25.SplashScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i25.TermsConditionScreen]
-class TermsConditionRoute extends _i32.PageRouteInfo<void> {
-  const TermsConditionRoute({List<_i32.PageRouteInfo>? children})
+/// [_i26.TermsConditionScreen]
+class TermsConditionRoute extends _i34.PageRouteInfo<void> {
+  const TermsConditionRoute({List<_i34.PageRouteInfo>? children})
     : super(TermsConditionRoute.name, initialChildren: children);
 
   static const String name = 'TermsConditionRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i25.TermsConditionScreen();
+      return const _i26.TermsConditionScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i26.TicketCheckoutScreen]
-class TicketCheckoutRoute extends _i32.PageRouteInfo<TicketCheckoutRouteArgs> {
+/// [_i27.TicketCheckoutScreen]
+class TicketCheckoutRoute extends _i34.PageRouteInfo<TicketCheckoutRouteArgs> {
   TicketCheckoutRoute({
-    _i33.Key? key,
-    required _i26.TicketCheckoutType type,
-    List<_i32.PageRouteInfo>? children,
+    _i35.Key? key,
+    required _i27.TicketCheckoutType type,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          TicketCheckoutRoute.name,
          args: TicketCheckoutRouteArgs(key: key, type: type),
@@ -997,11 +1061,11 @@ class TicketCheckoutRoute extends _i32.PageRouteInfo<TicketCheckoutRouteArgs> {
 
   static const String name = 'TicketCheckoutRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TicketCheckoutRouteArgs>();
-      return _i26.TicketCheckoutScreen(key: args.key, type: args.type);
+      return _i27.TicketCheckoutScreen(key: args.key, type: args.type);
     },
   );
 }
@@ -1009,9 +1073,9 @@ class TicketCheckoutRoute extends _i32.PageRouteInfo<TicketCheckoutRouteArgs> {
 class TicketCheckoutRouteArgs {
   const TicketCheckoutRouteArgs({this.key, required this.type});
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i26.TicketCheckoutType type;
+  final _i27.TicketCheckoutType type;
 
   @override
   String toString() {
@@ -1030,13 +1094,13 @@ class TicketCheckoutRouteArgs {
 }
 
 /// generated route for
-/// [_i27.TicketPurchaseScreen]
-class TicketPurchaseRoute extends _i32.PageRouteInfo<TicketPurchaseRouteArgs> {
+/// [_i28.TicketPurchaseScreen]
+class TicketPurchaseRoute extends _i34.PageRouteInfo<TicketPurchaseRouteArgs> {
   TicketPurchaseRoute({
-    _i33.Key? key,
-    required _i26.TicketCheckoutType type,
+    _i35.Key? key,
+    required _i27.TicketCheckoutType type,
     String? filterTicket,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          TicketPurchaseRoute.name,
          args: TicketPurchaseRouteArgs(
@@ -1049,11 +1113,11 @@ class TicketPurchaseRoute extends _i32.PageRouteInfo<TicketPurchaseRouteArgs> {
 
   static const String name = 'TicketPurchaseRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TicketPurchaseRouteArgs>();
-      return _i27.TicketPurchaseScreen(
+      return _i28.TicketPurchaseScreen(
         key: args.key,
         type: args.type,
         filterTicket: args.filterTicket,
@@ -1069,9 +1133,9 @@ class TicketPurchaseRouteArgs {
     this.filterTicket,
   });
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
-  final _i26.TicketCheckoutType type;
+  final _i27.TicketCheckoutType type;
 
   final String? filterTicket;
 
@@ -1094,12 +1158,12 @@ class TicketPurchaseRouteArgs {
 }
 
 /// generated route for
-/// [_i28.TicketSaveScreen]
-class TicketSaveRoute extends _i32.PageRouteInfo<TicketSaveRouteArgs> {
+/// [_i29.TicketSaveScreen]
+class TicketSaveRoute extends _i34.PageRouteInfo<TicketSaveRouteArgs> {
   TicketSaveRoute({
-    _i33.Key? key,
+    _i35.Key? key,
     required String ticketId,
-    List<_i32.PageRouteInfo>? children,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          TicketSaveRoute.name,
          args: TicketSaveRouteArgs(key: key, ticketId: ticketId),
@@ -1108,11 +1172,11 @@ class TicketSaveRoute extends _i32.PageRouteInfo<TicketSaveRouteArgs> {
 
   static const String name = 'TicketSaveRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TicketSaveRouteArgs>();
-      return _i28.TicketSaveScreen(key: args.key, ticketId: args.ticketId);
+      return _i29.TicketSaveScreen(key: args.key, ticketId: args.ticketId);
     },
   );
 }
@@ -1120,7 +1184,7 @@ class TicketSaveRoute extends _i32.PageRouteInfo<TicketSaveRouteArgs> {
 class TicketSaveRouteArgs {
   const TicketSaveRouteArgs({this.key, required this.ticketId});
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   final String ticketId;
 
@@ -1141,14 +1205,111 @@ class TicketSaveRouteArgs {
 }
 
 /// generated route for
-/// [_i29.UserTicketManageScreen]
+/// [_i30.TicketsScreen]
+class TicketsRoute extends _i34.PageRouteInfo<TicketsRouteArgs> {
+  TicketsRoute({
+    _i35.Key? key,
+    required dynamic Function(String, _i37.TicketFilter) onTap,
+    required List<_i37.TicketFilter> filters,
+    String? subTitle,
+    String? title,
+    double? titleSize,
+    _i39.CommonAppBar? appBar,
+    List<_i34.PageRouteInfo>? children,
+  }) : super(
+         TicketsRoute.name,
+         args: TicketsRouteArgs(
+           key: key,
+           onTap: onTap,
+           filters: filters,
+           subTitle: subTitle,
+           title: title,
+           titleSize: titleSize,
+           appBar: appBar,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'TicketsRoute';
+
+  static _i34.PageInfo page = _i34.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<TicketsRouteArgs>();
+      return _i30.TicketsScreen(
+        key: args.key,
+        onTap: args.onTap,
+        filters: args.filters,
+        subTitle: args.subTitle,
+        title: args.title,
+        titleSize: args.titleSize,
+        appBar: args.appBar,
+      );
+    },
+  );
+}
+
+class TicketsRouteArgs {
+  const TicketsRouteArgs({
+    this.key,
+    required this.onTap,
+    required this.filters,
+    this.subTitle,
+    this.title,
+    this.titleSize,
+    this.appBar,
+  });
+
+  final _i35.Key? key;
+
+  final dynamic Function(String, _i37.TicketFilter) onTap;
+
+  final List<_i37.TicketFilter> filters;
+
+  final String? subTitle;
+
+  final String? title;
+
+  final double? titleSize;
+
+  final _i39.CommonAppBar? appBar;
+
+  @override
+  String toString() {
+    return 'TicketsRouteArgs{key: $key, onTap: $onTap, filters: $filters, subTitle: $subTitle, title: $title, titleSize: $titleSize, appBar: $appBar}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TicketsRouteArgs) return false;
+    return key == other.key &&
+        const _i40.ListEquality().equals(filters, other.filters) &&
+        subTitle == other.subTitle &&
+        title == other.title &&
+        titleSize == other.titleSize &&
+        appBar == other.appBar;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      const _i40.ListEquality().hash(filters) ^
+      subTitle.hashCode ^
+      title.hashCode ^
+      titleSize.hashCode ^
+      appBar.hashCode;
+}
+
+/// generated route for
+/// [_i31.UserTicketManageScreen]
 class UserTicketManageRoute
-    extends _i32.PageRouteInfo<UserTicketManageRouteArgs> {
+    extends _i34.PageRouteInfo<UserTicketManageRouteArgs> {
   UserTicketManageRoute({
-    required _i35.TicketFilter ticketFilter,
+    required _i37.TicketFilter ticketFilter,
     required String ticketId,
-    _i33.Key? key,
-    List<_i32.PageRouteInfo>? children,
+    _i35.Key? key,
+    List<_i34.PageRouteInfo>? children,
   }) : super(
          UserTicketManageRoute.name,
          args: UserTicketManageRouteArgs(
@@ -1161,11 +1322,11 @@ class UserTicketManageRoute
 
   static const String name = 'UserTicketManageRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<UserTicketManageRouteArgs>();
-      return _i29.UserTicketManageScreen(
+      return _i31.UserTicketManageScreen(
         ticketFilter: args.ticketFilter,
         ticketId: args.ticketId,
         key: args.key,
@@ -1181,11 +1342,11 @@ class UserTicketManageRouteArgs {
     this.key,
   });
 
-  final _i35.TicketFilter ticketFilter;
+  final _i37.TicketFilter ticketFilter;
 
   final String ticketId;
 
-  final _i33.Key? key;
+  final _i35.Key? key;
 
   @override
   String toString() {
@@ -1206,33 +1367,33 @@ class UserTicketManageRouteArgs {
 }
 
 /// generated route for
-/// [_i30.VenueHomeScreen]
-class VenueHomeRoute extends _i32.PageRouteInfo<void> {
-  const VenueHomeRoute({List<_i32.PageRouteInfo>? children})
+/// [_i32.VenueHomeScreen]
+class VenueHomeRoute extends _i34.PageRouteInfo<void> {
+  const VenueHomeRoute({List<_i34.PageRouteInfo>? children})
     : super(VenueHomeRoute.name, initialChildren: children);
 
   static const String name = 'VenueHomeRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i30.VenueHomeScreen();
+      return const _i32.VenueHomeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i31.VenueSplashScreen]
-class VenueSplashRoute extends _i32.PageRouteInfo<void> {
-  const VenueSplashRoute({List<_i32.PageRouteInfo>? children})
+/// [_i33.VenueSplashScreen]
+class VenueSplashRoute extends _i34.PageRouteInfo<void> {
+  const VenueSplashRoute({List<_i34.PageRouteInfo>? children})
     : super(VenueSplashRoute.name, initialChildren: children);
 
   static const String name = 'VenueSplashRoute';
 
-  static _i32.PageInfo page = _i32.PageInfo(
+  static _i34.PageInfo page = _i34.PageInfo(
     name,
     builder: (data) {
-      return const _i31.VenueSplashScreen();
+      return const _i33.VenueSplashScreen();
     },
   );
 }

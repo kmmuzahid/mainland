@@ -74,8 +74,9 @@ class FanClubScreen extends StatelessWidget {
               child: SmartStaggeredLoader(
                 itemCount: 20,
                 crossAxisSpacing: 10,
-                aspectRatio: .6,
-                mainAxisSpacing: 2,
+                aspectRatio: 0.6434,
+                isSeperated: true,
+                mainAxisSpacing: 10,
                 itemBuilder: (context, index) => EventWidget(
                   image: Assets.images.sampleItem.path,
                   onTap: () {

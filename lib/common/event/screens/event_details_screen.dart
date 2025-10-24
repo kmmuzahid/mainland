@@ -57,7 +57,7 @@ class EventDetailsScreen extends StatelessWidget {
                             context.read<EventDetailsCubit>().showDetails(false);
                           },
                           child: CommonText(
-                            left: 10,
+                            
                             top: 5,
                             text: AppString.moreMinus,
                             style: AppTextStyles.titleLarge?.copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/home/widgets/home_top_widget.dart';
+import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -10,6 +11,7 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
 class OrgHome extends StatelessWidget {
@@ -23,11 +25,16 @@ class OrgHome extends StatelessWidget {
         onRefresh: () {},
         itemCount: 20,
         appbar: PreferredSize(preferredSize: Size(double.infinity, 240.h), child: _topChild()),
-        onColapsAppbar: CommonText(
-          top: 10,
-          bottom: 10,
-          text: AppString.upcomingEvents,
-          style: AppTextStyles.titleLarge,
+        onColapsAppbar: Column(
+          children: [
+            Divider(color: AppColors.primaryColor, thickness: 1.h, height: 2.h),
+            CommonText(
+              top: 10,
+              bottom: 10,
+              text: AppString.upcomingEvents,
+              style: AppTextStyles.titleLarge,
+            ).start,
+          ],
         ),
         crossAxisSpacing: 10,
         aspectRatio: 0.6434,
@@ -55,22 +62,7 @@ class OrgHome extends StatelessWidget {
             color: AppColors.white400,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CommonLogo(width: 53, height: 50),
-              CommonText(
-                text: AppString.appName,
-                style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-              ),
-
-              Badge(
-                label: const Icon(Icons.add),
-                backgroundColor: AppColors.transparent,
-                child: CommonText(text: AppString.venue, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
+          child: CommonImage(imageSrc: Assets.icon.venueIcon.path, width: 58.w, height: 70.h),
         ),
       ),
       middleWidget: Container(

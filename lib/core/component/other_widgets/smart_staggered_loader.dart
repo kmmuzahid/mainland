@@ -144,9 +144,15 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
             (context, index) {
               if (index < widget.itemCount) {
                 if (widget.isSeperated) {
-                  return _seprated(index, widget.itemBuilder(context, index), constraints.maxWidth);
+                  return RepaintBoundary(
+                    child: _seprated(
+                      index,
+                      widget.itemBuilder(context, index),
+                      constraints.maxWidth,
+                    ),
+                  );
                 }
-                return widget.itemBuilder(context, index);
+                return RepaintBoundary(child: widget.itemBuilder(context, index));
               
               } else if (widget.isLoadingMore) {
                 // Show load more indicator at the bottom of list
@@ -236,7 +242,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
       decoration: BoxDecoration(
         border: Border(
           bottom: !gridChildPosition.isItInLastRow
-              ? BorderSide(color: AppColors.greay200, width: 1.4.w)
+              ? BorderSide(color: AppColors.greay100, width: 1.4.w)
               : BorderSide.none,
         ),
       ),
@@ -291,4 +297,50 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     }
     return _buildContent();
   }
+  GridChildInfo calculateGridChildInfo({
+    required int index,
+    required int totalChildren,
+    required double crossAxisCount, // use int, not double
+    required double width,
+  }) {
+    final childrenInRow = (width / crossAxisCount).round();
+
+    // Total rows
+    final totalRows = totalChildren ~/ childrenInRow;
+
+    // Position in the row (0-based)
+    final positionInRow = index % crossAxisCount;
+
+    // First / middle / last
+    final isFirstInRow = positionInRow == 0;
+    final isLastInRow = positionInRow == childrenInRow - 1;
+    final isMiddleInRow = !isFirstInRow && !isLastInRow;
+
+    final beforeLastRowItemsCount = (totalRows) * childrenInRow;
+    final isItInLastRow = beforeLastRowItemsCount <= index;
+
+    return GridChildInfo(
+      childrenInRow: childrenInRow,
+      isFirstInRow: isFirstInRow,
+      isMiddleInRow: isMiddleInRow,
+      isLastInRow: isLastInRow,
+      isItInLastRow: isItInLastRow,
+    );
+  }
+
 }
+class GridChildInfo {
+  GridChildInfo({
+    required this.childrenInRow,
+    required this.isFirstInRow,
+    required this.isMiddleInRow,
+    required this.isLastInRow,
+    required this.isItInLastRow,
+  });
+  final int childrenInRow; // number of items in this row
+  final bool isFirstInRow;
+  final bool isMiddleInRow;
+  final bool isLastInRow;
+  final bool isItInLastRow;
+}
+

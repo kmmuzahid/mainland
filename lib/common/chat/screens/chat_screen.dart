@@ -241,11 +241,21 @@ class ChatScreen extends StatelessWidget {
           items: [AppString.report],
           onItemSelected: (value) {
             showModalBottomSheet(
+              isScrollControlled: true,
               backgroundColor: AppColors.backgroundWhite,
               context: context,
-              constraints: BoxConstraints(minWidth: double.infinity, maxHeight: 460.h),
+              constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (context) {
-                return expandedContent();
+                final keyboard = MediaQuery.of(context).viewInsets.bottom;
+                return AnimatedPadding(
+                  duration: const Duration(milliseconds: 150),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.only(bottom: keyboard),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 460.h, minWidth: double.infinity),
+                    child: expandedContent(),
+                  ),
+                );
               },
             );
           },

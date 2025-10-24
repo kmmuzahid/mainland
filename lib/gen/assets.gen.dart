@@ -17,8 +17,12 @@ class $AssetsIconGen {
   /// File path: assets/icon/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/icon/icon.png');
 
+  /// File path: assets/icon/venue_icon.png
+  AssetGenImage get venueIcon =>
+      const AssetGenImage('assets/icon/venue_icon.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [icon];
+  List<AssetGenImage> get values => [icon, venueIcon];
 }
 
 class $AssetsImagesGen {

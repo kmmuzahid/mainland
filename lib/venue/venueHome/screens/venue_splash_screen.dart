@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
@@ -15,6 +16,7 @@ import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/gen/assets.gen.dart';
 
 @RoutePage()
 class VenueSplashScreen extends StatelessWidget {
@@ -35,18 +37,7 @@ class VenueSplashScreen extends StatelessWidget {
                 icon: Icon(Icons.close, color: AppColors.iconColorBlack),
               ).end,
               50.height,
-              const CommonLogo().center,
-              CommonText(
-                text: AppString.appName,
-                fontSize: 20,
-                style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-              ).center,
-
-              Badge(
-                label: const Icon(Icons.add, size: 16),
-                backgroundColor: AppColors.transparent,
-                child: CommonText(text: AppString.venue, fontWeight: FontWeight.w600, fontSize: 20),
-              ).center,
+              CommonImage(imageSrc: Assets.icon.venueIcon.path, width: 108.w, height: 126.h),
               20.height,
               CommonText(
                 text: AppString.insertEventCode,

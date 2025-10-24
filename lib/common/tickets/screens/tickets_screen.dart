@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +6,7 @@ import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
 import 'package:mainland/common/tickets/cubit/tickets_state.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -15,15 +17,28 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/grid_child_postion.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 
+@RoutePage()
 class TicketsScreen extends StatelessWidget {
-  const TicketsScreen({super.key, required this.onTap, required this.filters, required this.title});
+  const TicketsScreen({
+    super.key,
+    required this.onTap,
+    required this.filters,
+    this.subTitle,
+    this.title,
+    this.titleSize,
+    this.appBar,
+  });
   final Function(String ticketId, TicketFilter ticketFilter) onTap;
   final List<TicketFilter> filters;
-  final String title;
+  final String? subTitle;
+  final String? title;
+  final double? titleSize;
+  final CommonAppBar? appBar;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -33,14 +48,18 @@ class TicketsScreen extends StatelessWidget {
               builder: (context, state) {
                 return Column(
                   children: [
+                    if (appBar == null)
                     20.height,
                     CommonText(
-                      text: AppString.tickets,
+                      text: title ?? AppString.tickets,
                       style: AppTextStyles.headlineSmall,
+                      fontSize: titleSize,
                       textColor: AppColors.primaryColor,
                     ).start,
-                    CommonText(text: title, style: AppTextStyles.bodyMedium).start,
+                    if (subTitle != null)
+                      CommonText(text: subTitle!, style: AppTextStyles.bodyMedium).start,
                     10.height,
+                    if (filters.length > 1)
                     TicketFilterWidget(
                       filters: filters,
                       selectedFilter: state.selectedFilter,
@@ -78,6 +97,4 @@ class TicketsScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }
