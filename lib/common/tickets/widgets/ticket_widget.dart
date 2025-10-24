@@ -15,101 +15,86 @@ class TicketWidget extends StatelessWidget {
     required this.image,
     this.title = 'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1',
     required this.onTap,
-    this.width,
-    this.height,
     this.filter,
     super.key,
   });
   final String image;
   final String title;
   final Function() onTap;
-  final double? width;
-  final double? height;
   final TicketFilter? filter;
 
   @override
   Widget build(BuildContext context) {
+    return _content();
+  }
+
+  GestureDetector _content() {
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
-        width: width?.w ?? double.infinity,
-        height: height?.h ?? double.infinity,
-
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
+      child: Column(
+        children: [
+          Expanded(
+            child: Stack(
               children: [
-                SizedBox(
-                  height: constraints.maxHeight.h - 50.w,
-                  width: constraints.maxWidth,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: AspectRatio(
-                          aspectRatio: .7,
-                          child: CommonImage(imageSrc: image, borderRadius: 12),
-                        ),
-                      ),
-                      Container(
-                        width: constraints.maxWidth,
-                        height: constraints.maxHeight.h - 50.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryText.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      Center(
-                        child: CommonText(
-                          text: title,
-                          alignment: MainAxisAlignment.center,
-                          style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
-                        ),
-                      ),
-                      if (filter == TicketFilter.Live ||
-                          filter == TicketFilter.Upcoming ||
-                          filter == TicketFilter.Used)
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Container(
-                            width: 12.w,
-                            height: 12.w,
-                            margin: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              color: filter == TicketFilter.Used
-                                  ? AppColors.error
-                                  : AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                        ) 
-                    ],
+                Positioned.fill(
+                child: CommonImage(imageSrc: image, borderRadius: 12)),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryText.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    appRouter.push(
-                      EventDetailsRoute(
-                        eventId: '',
-                        showEventActions: false,
-                        isEventAvailable:
-                            filter != TicketFilter.Closed &&
-                            filter != TicketFilter.UnderReview &&
-                            filter != TicketFilter.Draft &&
-                            filter != TicketFilter.Expired,
-                        isEventUnderReview: filter == TicketFilter.UnderReview,
-                      ),
-                    );
-                  },
+                Align(
                   child: CommonText(
-                    text: AppString.viewPlus,
-                    style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
-                  ).start,
+                    left: 10,
+                    right: 10,
+                    text: title,
+                    textAlign: TextAlign.left,
+                    style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
+                  ),
                 ),
-               
+                if (filter == TicketFilter.Live ||
+                    filter == TicketFilter.Upcoming ||
+                    filter == TicketFilter.Used)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      width: 12.w,
+                      height: 12.w,
+                      margin: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: filter == TicketFilter.Used
+                            ? AppColors.error
+                            : AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                  ) 
+             
               ],
-            );
-          },
-        ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              appRouter.push(
+                EventDetailsRoute(
+                  eventId: '',
+                  showEventActions: false,
+                  isEventAvailable:
+                      filter != TicketFilter.Closed &&
+                      filter != TicketFilter.UnderReview &&
+                      filter != TicketFilter.Draft &&
+                      filter != TicketFilter.Expired,
+                  isEventUnderReview: filter == TicketFilter.UnderReview,
+                ),
+              );
+            },
+            child: CommonText(
+              text: AppString.viewPlus,
+              style: AppTextStyles.titleLarge?.copyWith(color: AppColors.primaryColor),
+            ),
+          ).start,
+        ],
       ),
     );
   }

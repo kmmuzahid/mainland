@@ -5,12 +5,15 @@ import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
 import 'package:mainland/common/tickets/cubit/tickets_state.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
+import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/grid_child_postion.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 
 class TicketsScreen extends StatelessWidget {
   const TicketsScreen({super.key, required this.onTap, required this.filters, required this.title});
@@ -48,9 +51,10 @@ class TicketsScreen extends StatelessWidget {
                     10.height,
                     Expanded(
                       child: SmartStaggeredLoader(
-                        itemCount: state.tickets.length,
-                        aspectRatio: .6,
-                        mainAxisSpacing: 0,
+                        itemCount: 20,
+                        aspectRatio: 0.6434,
+                        isSeperated: true,
+                        mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
                         itemBuilder: (context, index) {
                           final ticket = state.tickets[index];
@@ -74,4 +78,6 @@ class TicketsScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }

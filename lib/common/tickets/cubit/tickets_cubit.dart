@@ -18,12 +18,8 @@ class TicketsCubit extends SafeCubit<TicketsState> {
         tickets: [
           for (int i = 0; i < 20; i++)
             TicketModel(
-              title: '''
-            Juice WRLD
-Mon. Jan. 12, 8pm
-Eko Hotel & Suites
-Pre Order available
-Nov. 1 $i''',
+              title:
+                  'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1 $i',
               isAvailable: i % 2 == 0,
               image: Assets.images.sampleItem.path,
               eventId: 'event_id_$i',

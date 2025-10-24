@@ -92,8 +92,6 @@ class UserHome extends StatelessWidget {
             onTap: () {
               appRouter.push(EventDetailsRoute(eventId: '1'));
             },
-            width: 167,
-            height: 271,
           ),
         ),
       ),

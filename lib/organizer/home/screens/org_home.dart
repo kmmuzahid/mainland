@@ -30,8 +30,9 @@ class OrgHome extends StatelessWidget {
           style: AppTextStyles.titleLarge,
         ),
         crossAxisSpacing: 10,
-        aspectRatio: .6,
-        mainAxisSpacing: 2,
+        aspectRatio: 0.6434,
+        mainAxisSpacing: 10,
+        isSeperated: true,
         itemBuilder: (context, index) => EventWidget(
           image: Assets.images.sampleItem.path,
           onTap: () {

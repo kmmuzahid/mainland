@@ -72,3 +72,56 @@ class Utils {
     }
   }
 }
+
+
+String sampleHtmlDetails = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Description Replication</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom configuration for Inter font -->
+
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Container matching the gray background and width from the image -->
+    <div class="w-full max-w-2xl p-6 md:p-8">
+
+        <!-- Replication Block 1 -->
+        <div class="mb-8">
+            <!-- Header font size changed from text-xl (20px) to text-lg (18px) -->
+            <h2 class="text-lg font-bold text-gray-900 mb-2">Event Description</h2>
+            <!-- Body font size is text-base (16px) -->
+            <p class="text-gray-700">
+                A casual yet insightful gathering for designers, creators, and digital thinkers to connect, share stories, and explore the future of design. Join us for a day filled with inspiring talks, interactive sessions, and networking with local talents from the creative industry. Join us for a day filled with inspiring talks, interactive sessions, and networking with local talents from the creative industry.
+            </p>
+        </div>
+
+        <!-- Replication Block 2 -->
+        <div class="mb-8">
+            <!-- Header font size changed from text-xl (20px) to text-lg (18px) -->
+            <h2 class="text-lg font-bold text-gray-900 mb-2">Event Description</h2>
+            <!-- Body font size is text-base (16px) -->
+            <p class="text-gray-700">
+                A casual yet insightful gathering for designers, creators, and digital thinkers to connect, share stories, and explore the future of design. Join us for a day filled with inspiring talks, interactive sessions, and networking with local talents from the creative industry. Join us for a day filled with inspiring talks, interactive sessions, and networking with local talents from the creative industry.
+            </p>
+        </div>
+
+        <!-- Replication Block 3 -->
+        <div class="mb-0">
+            <!-- Header font size changed from text-xl (20px) to text-lg (18px) -->
+            <h2 class="text-lg font-bold text-gray-900 mb-2">Event Description</h2>
+            <!-- Body font size is text-base (16px) -->
+            <p class="text-gray-700">
+                A casual yet insightful gathering for designers, creators, and digital thinkers to connect, share stories, and explore the future of design. Join us for a day filled with inspiring talks, interactive sessions, and networking with local talents from the creative industry.
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>
+''';

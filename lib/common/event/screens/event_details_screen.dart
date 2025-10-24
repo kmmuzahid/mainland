@@ -6,12 +6,8 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/event/cubit/event_details_cubit.dart';
 import 'package:mainland/common/event/cubit/event_details_state.dart';
-import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
-import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
-import 'package:mainland/user/ticket/widgets/ticket_picker.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -21,6 +17,7 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
 
 @RoutePage()
 class EventDetailsScreen extends StatelessWidget {
@@ -50,14 +47,40 @@ class EventDetailsScreen extends StatelessWidget {
             create: (context) => EventDetailsCubit(),
             child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
               builder: (context, state) {
-                return AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 300),
-                  sizeCurve: Curves.easeInToLinear,
-                  firstChild: _firstChild(title, context, showButton),
-                  secondChild: _scondChild(context, state, showButton),
-                  crossFadeState: state.showDetails
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
+                return Column(
+                  children: [
+                    if (state.showDetails)
+                      SizedBox(
+                        height: 50.h,
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<EventDetailsCubit>().showDetails(false);
+                          },
+                          child: CommonText(
+                            left: 10,
+                            top: 5,
+                            text: AppString.moreMinus,
+                            style: AppTextStyles.titleLarge?.copyWith(
+                              color: AppColors.primaryColor,
+                              fontSize: 24.sp,
+                            ),
+                          ).start,
+                        ),
+                      ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 300),
+                          sizeCurve: Curves.easeInToLinear,
+                          firstChild: _firstChild(title, context, showButton),
+                          secondChild: _scondChild(context, state, showButton),
+                          crossFadeState: state.showDetails
+                              ? CrossFadeState.showSecond
+                              : CrossFadeState.showFirst,
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -70,47 +93,21 @@ class EventDetailsScreen extends StatelessWidget {
   Widget _scondChild(BuildContext context, EventDetailsState state, bool showButton) {
     return Column(
       children: [
-        SizedBox(
-          height: 50.h,
-          child: GestureDetector(
-            onTap: () {
-              context.read<EventDetailsCubit>().showDetails(false);
-            },
-            child: CommonText(
-              left: 10,
-              top: 5,
-              text: AppString.moreMinus,
-              style: AppTextStyles.titleLarge?.copyWith(
-                color: AppColors.primaryColor,
-                fontSize: 24.sp,
-              ),
-            ).start,
+        CommonText(text: state.details, isDescription: true, textAlign: TextAlign.left),
+        10.height,
+        if (showButton) Divider(color: AppColors.disable, thickness: 2),
+        10.height,
+        if (showButton)
+          Padding(
+            padding: EdgeInsets.only(bottom: 50.h),
+            child: _buttons(),
           ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CommonText(text: state.details, isDescription: true, textAlign: TextAlign.left),
-                10.height,
-                if (showButton) Divider(color: AppColors.disable, thickness: 2),
-                10.height,
-                if (showButton)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 50.h),
-                    child: _buttons(),
-                  ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
 
+
   Column _firstChild(String title, BuildContext context, bool showButton) {
-    AppLogger.debug(isEventAvailable.toString());
     return Column(
       children: [
         10.height,

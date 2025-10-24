@@ -106,20 +106,18 @@ class ChatListScreen extends StatelessWidget {
             children: [
               CommonText(
                 text: chatListItem.userName,
-                fontWeight: FontWeight.w700,
-                textColor: AppColors.primaryText,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                textColor: AppColors.greay400,
               ),
               SizedBox(
                 width: 220.w,
                 child: CommonText(
                   text: chatListItem.lastMessage,
                   maxLines: 1,
-                  style: TextStyle(
-                    color: chatListItem.isRead
-                        ? AppColors.primaryText.withValues(alpha: .5)
-                        : AppColors.primaryText,
-                    overflow: TextOverflow.fade,
-                  ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  textColor: chatListItem.isRead ? AppColors.greay200 : AppColors.primaryText,
                 ),
               ),
             ],

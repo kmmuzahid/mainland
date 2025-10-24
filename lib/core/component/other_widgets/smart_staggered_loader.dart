@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/grid_child_postion.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 
 class SmartStaggeredLoader extends StatefulWidget {
@@ -22,7 +24,8 @@ class SmartStaggeredLoader extends StatefulWidget {
     this.enableMassionary = false,
     this.aspectRatio = 1,
     this.appbar,
-    this.onColapsAppbar
+    this.onColapsAppbar,
+    this.isSeperated = false,
   });
 
   final int itemCount;
@@ -42,6 +45,7 @@ class SmartStaggeredLoader extends StatefulWidget {
   final double aspectRatio;
   final Widget? appbar;
   final Widget? onColapsAppbar;
+  final bool isSeperated;
 
   @override
   State<SmartStaggeredLoader> createState() => _SmartStaggeredLoaderState();
@@ -82,16 +86,27 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     // Handle app bar visibility if appbar is provided
     if (widget.appbar != null) {
       final currentScroll = _scrollController.position.pixels;
-      final isScrollingDown = currentScroll > _lastScrollOffset && currentScroll > 0;
-      final isAtTop = currentScroll <= 0;
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final isAtBottom = currentScroll >= maxScroll;
+      final isAtTop = currentScroll <= _scrollController.position.minScrollExtent;
 
-      if (isScrollingDown && _isAppBarVisible) {
-        // Hide app bar when scrolling down
-        _isAppBarVisible = false;
-        setState(() {});
-        _animationController.reverse();
-      } else if ((!isScrollingDown && !_isAppBarVisible && !isAtTop) || isAtTop) {
-        // Show app bar when scrolling up or when at top
+      // Only process scroll events when not at the boundaries to prevent bouncing effects
+      if (!isAtTop && !isAtBottom) {
+        final isScrollingDown = currentScroll > _lastScrollOffset && currentScroll > 0;
+        
+        if (isScrollingDown && _isAppBarVisible) {
+          // Hide app bar when scrolling down
+          _isAppBarVisible = false;
+          setState(() {});
+          _animationController.reverse();
+        } else if (!isScrollingDown && !_isAppBarVisible) {
+          // Show app bar when scrolling up
+          _isAppBarVisible = true;
+          setState(() {});
+          _animationController.forward();
+        }
+      } else if (isAtTop && !_isAppBarVisible) {
+        // Ensure app bar is visible when at top
         _isAppBarVisible = true;
         setState(() {});
         _animationController.forward();
@@ -110,39 +125,47 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
   }
 
   Widget _buildGrid({ScrollController? controller, ScrollPhysics? physics}) {
-    return GridView.custom(
-      controller: controller,
-      key: ValueKey('staggered${widget.itemCount}'),
-      physics: physics ?? const AlwaysScrollableScrollPhysics(),
-      padding: widget.padding,
-      shrinkWrap: physics is NeverScrollableScrollPhysics,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        childAspectRatio: widget.aspectRatio,
-        maxCrossAxisExtent: widget.maxCrossAxisExtent,
-        mainAxisSpacing: widget.mainAxisSpacing,
-        crossAxisSpacing: widget.crossAxisSpacing,
-      ),
-      childrenDelegate: SliverChildBuilderDelegate(childCount: widget.itemCount + 1, (
-        context,
-        index,
-      ) {
-        if (index < widget.itemCount) {
-          return widget.itemBuilder(context, index);
-        } else if (widget.isLoadingMore) {
-          // Show load more indicator at the bottom of list
-          return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } else if (widget.isLoadDone) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(child: Text('All data loaded')),
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      }),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.custom(
+          controller: controller,
+          key: ValueKey('staggered${widget.itemCount}'),
+          physics: physics ?? const AlwaysScrollableScrollPhysics(),
+          padding: widget.padding,
+          shrinkWrap: physics is NeverScrollableScrollPhysics,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            childAspectRatio: widget.aspectRatio,
+            maxCrossAxisExtent: widget.maxCrossAxisExtent,
+            mainAxisSpacing: widget.mainAxisSpacing,
+            crossAxisSpacing: widget.isSeperated ? 0 : widget.crossAxisSpacing,
+          ),
+          childrenDelegate: SliverChildBuilderDelegate(
+            childCount: widget.itemCount + (widget.isLoadingMore ? 1 : 0),
+            (context, index) {
+              if (index < widget.itemCount) {
+                if (widget.isSeperated) {
+                  return _seprated(index, widget.itemBuilder(context, index), constraints.maxWidth);
+                }
+                return widget.itemBuilder(context, index);
+              
+              } else if (widget.isLoadingMore) {
+                // Show load more indicator at the bottom of list
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (widget.isLoadDone) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Center(child: Text('All data loaded')),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+        );
+      }
     );
   }
 
@@ -194,6 +217,33 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
           )
         : grid;
   }
+
+  Widget _seprated(int index, Widget child, double width) {
+    final gridChildPosition = calculateGridChildInfo(
+      index: index,
+      totalChildren: widget.itemCount,
+      crossAxisCount: widget.maxCrossAxisExtent,
+      width: width,
+    );
+
+    final double spaceing = widget.crossAxisSpacing <= 0 ? 0 : widget.crossAxisSpacing / 2;
+
+    return Container(
+      padding: EdgeInsets.only(
+        left: gridChildPosition.isLastInRow || gridChildPosition.isMiddleInRow ? spaceing : 0,
+        right: gridChildPosition.isFirstInRow || gridChildPosition.isMiddleInRow ? spaceing : 0,
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: !gridChildPosition.isItInLastRow
+              ? BorderSide(color: AppColors.greay200, width: 1.4.w)
+              : BorderSide.none,
+        ),
+      ),
+      child: child,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {

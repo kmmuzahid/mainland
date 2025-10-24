@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mainland/core/config/theme/light_theme.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
 class CommonText extends StatelessWidget {
@@ -53,6 +55,7 @@ class CommonText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
     return enableBorder == true || backgroundColor != null
         ? _withBorder(context)
         : _withoutBorder(context);
@@ -87,28 +90,53 @@ class CommonText extends StatelessWidget {
     }
   }
 
+  bool _isHtml(String input) {
+    final htmlRegex = RegExp(r"<[^>]+>", multiLine: true, caseSensitive: false);
+    return htmlRegex.hasMatch(input);
+  }
+
   Widget _textField(BuildContext context) {
-    return Wrap(
-      alignment: _convertAlignment(),
-      // mainAxisSize: MainAxisSize.min,
-      // mainAxisAlignment: alignment ?? MainAxisAlignment.start,
-      children: [
-        if (preffix != null) preffix!,
-        if (preffix != null) 10.width,
-        Text(
+    final content = _isHtml(text)
+        ? Html(
+            data: text,
+            style: {
+              "body": Style(
+                // fontSize: FontSize(fontSize ?? 12.sp),
+                // color: textColor ?? getTheme.textTheme.bodyMedium?.color,
+                // fontWeight: fontWeight ?? FontWeight.w400,
+                fontFamily: getTheme.textTheme.bodyLarge?.fontFamily,
+                margin: Margins.zero,
+                padding: HtmlPaddings.zero,
+                textAlign: textAlign,
+                // backgroundColor: backgroundColor, // ✅ optional inline fallback
+              ),
+            },
+          )
+        : Text(
           text,
           textAlign: textAlign,
           maxLines: maxLines,
           softWrap: true,
-          overflow: maxLines == null ? TextOverflow.visible : (overflow ?? TextOverflow.ellipsis),
+            overflow: maxLines == null ? TextOverflow.visible : (overflow ?? TextOverflow.ellipsis),
           style: getStyle(),
-        ),
+          );
+
+    return Container(
+      color: backgroundColor ?? Colors.transparent, // ✅ ensure bg color applied
+      child: Wrap(
+        alignment: _convertAlignment(),
+        children: [
+          if (preffix != null) preffix!,
+          if (preffix != null) 10.width,
+          content,
         if (suffix != null) 10.width,
         if (suffix != null) suffix!,
         if (suffix != null) 10.width,
       ],
+      ),
     );
   }
+
 
   TextStyle getStyle() {
     var style =
@@ -119,15 +147,9 @@ class CommonText extends StatelessWidget {
           color: textColor ?? getTheme.textTheme.bodyMedium?.color,
         );
 
-    if (textColor != null) {
-      style = style.copyWith(color: textColor);
-    }
-    if (fontWeight != null) {
-      style = style.copyWith(fontWeight: fontWeight);
-    }
-    if (fontSize != null) {
-      style = style.copyWith(fontSize: fontSize!.sp);
-    }
+    if (textColor != null) style = style.copyWith(color: textColor);
+    if (fontWeight != null) style = style.copyWith(fontWeight: fontWeight);
+    if (fontSize != null) style = style.copyWith(fontSize: fontSize!.sp);
     return style;
   }
 }
