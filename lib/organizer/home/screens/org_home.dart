@@ -65,23 +65,28 @@ class OrgHome extends StatelessWidget {
           child: CommonImage(imageSrc: Assets.icon.venueIcon.path, width: 58.w, height: 70.h),
         ),
       ),
-      middleWidget: Container(
-        padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: AppColors.white400,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.add),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CommonText(text: AppString.create, fontSize: 24),
-                CommonText(text: AppString.aNewTicketEvent, fontSize: 16),
-              ],
-            ),
-          ],
+      middleWidget: GestureDetector(
+        onTap: () {
+          appRouter.push(const CreateEventRoute());
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            color: AppColors.white400,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.add),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CommonText(text: AppString.create, fontSize: 24),
+                  CommonText(text: AppString.aNewTicketEvent, fontSize: 16),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/event/cubit/event_details_cubit.dart';
 import 'package:mainland/common/event/cubit/event_details_state.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -51,20 +52,24 @@ class EventDetailsScreen extends StatelessWidget {
                   children: [
                     if (state.showDetails)
                       SizedBox(
-                        height: 50.h,
-                        child: GestureDetector(
-                          onTap: () {
-                            context.read<EventDetailsCubit>().showDetails(false);
-                          },
-                          child: CommonText(
-                            
-                            top: 5,
-                            text: AppString.moreMinus,
-                            style: AppTextStyles.titleLarge?.copyWith(
-                              color: AppColors.primaryColor,
-                              fontSize: 24.sp,
+                        height: 60.h,
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                context.read<EventDetailsCubit>().showDetails(false);
+                              },
+                              child: CommonText(
+                                top: 5,
+                                text: AppString.moreMinus,
+                                style: AppTextStyles.titleLarge?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 24.sp,
+                                ),
+                              ).start,
                             ),
-                          ).start,
+                            Utils.divider(),
+                          ],
                         ),
                       ),
                     Expanded(
@@ -111,8 +116,8 @@ class EventDetailsScreen extends StatelessWidget {
     return Column(
       children: [
         10.height,
-        SizedBox(
-          height: Utils.deviceSize.height * .6,
+        AspectRatio(
+          aspectRatio: 0.562499994567678,
           child: Stack(
             children: [
               Positioned.fill(
@@ -194,6 +199,7 @@ class EventDetailsScreen extends StatelessWidget {
             ),
           ).start,
         ),
+        Utils.divider()
       ],
     );
   }

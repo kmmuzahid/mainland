@@ -37,7 +37,12 @@ class TicketWidget extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned.fill(
-                child: CommonImage(imageSrc: image, borderRadius: 12)),
+                  child: CommonImage(
+                    enableGrayscale: filter == TicketFilter.Closed || filter == TicketFilter.Used,
+                    imageSrc: image,
+                    borderRadius: 12,
+                  ),
+                ),
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.primaryText.withValues(alpha: 0.5),

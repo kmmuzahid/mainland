@@ -78,5 +78,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ChangePasswordRoute.page),
     AutoRoute(page: TicketsRoute.page),
     AutoRoute(page: EventNotificationEnableRoute.page),
+    AutoRoute(page: CreateEventRoute.page),
   ];
 }

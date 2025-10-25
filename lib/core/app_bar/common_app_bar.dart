@@ -13,7 +13,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.actions,
     this.isCenterTitle = true,
-    this.backgroundColor
+    this.backgroundColor,
+    this.disableBack = false
   });
   final String? title;
   final Widget? titleWidget;
@@ -22,6 +23,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool isCenterTitle;
   final Color? backgroundColor;
+  final bool disableBack;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -38,7 +40,9 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (onBackPress != null) {
               onBackPress!();
             }
-            appRouter.pop();
+            if (!disableBack) {
+              appRouter.pop();
+            }
           },
           icon: const Icon(Icons.arrow_back_outlined),
         ),

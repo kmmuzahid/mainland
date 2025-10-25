@@ -97,21 +97,22 @@ class SignUpAllField extends StatelessWidget {
                   },
                 ),
                 10.height,
-            
-                /// User Phone here
-                _dateOfBirth(),
-                10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),
                   borderColor: AppColors.disable,
                   backgroundColor: AppColors.disable,
                   validationType: ValidationType.validatePassword,
-                  hintText: AppString.newPassword,
+                  hintText: AppString.password,
                   onChanged: (value) {
                     final cubit = context.read<AuthCubit>();
                     cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(password: value));
                   },
                 ),
+                10.height,
+
+                /// User Phone here
+                _dateOfBirth(),
+               
                 10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),

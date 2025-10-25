@@ -28,6 +28,7 @@ class CommonText extends StatelessWidget {
     this.suffix,
     this.preffix,
     this.isDescription = false,
+    this.textHeight,
   });
 
   final double left;
@@ -51,6 +52,7 @@ class CommonText extends StatelessWidget {
   final Widget? suffix;
   final Widget? preffix;
   final bool isDescription;
+  final double? textHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -97,30 +99,30 @@ class CommonText extends StatelessWidget {
         if (preffix != null) preffix!,
         if (preffix != null) 10.width,
         _isHtml(text)
-        ? Html(
-            data: text,
-            style: {
-              "body": Style(
-                // fontSize: FontSize(fontSize ?? 12.sp),
-                // color: textColor ?? getTheme.textTheme.bodyMedium?.color,
-                // fontWeight: fontWeight ?? FontWeight.w400,
-                fontFamily: getTheme.textTheme.bodyLarge?.fontFamily,
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-                textAlign: textAlign,
-                // backgroundColor: backgroundColor, // ✅ optional inline fallback
-              ),
-            },
-          )
+            ? Html(
+                data: text,
+                style: {
+                  "body": Style(
+                    // fontSize: FontSize(fontSize ?? 12.sp),
+                    // color: textColor ?? getTheme.textTheme.bodyMedium?.color,
+                    // fontWeight: fontWeight ?? FontWeight.w400,
+                    fontFamily: getTheme.textTheme.bodyLarge?.fontFamily,
+                    margin: Margins.zero,
+                    padding: HtmlPaddings.zero,
+                    textAlign: textAlign,
+                    // backgroundColor: backgroundColor, // ✅ optional inline fallback
+                  ),
+                },
+              )
             : Text(
-          text,
-          textAlign: textAlign,
-          maxLines: maxLines,
-          softWrap: true,
+                text,
+                textAlign: textAlign,
+                maxLines: maxLines,
+                softWrap: true,
                 overflow: maxLines == null
                     ? TextOverflow.visible
                     : (overflow ?? TextOverflow.ellipsis),
-          style: getStyle(),
+                style: getStyle(),
               ),
         if (suffix != null) 10.width,
         if (suffix != null) suffix!,
@@ -141,16 +143,16 @@ class CommonText extends StatelessWidget {
           fontSize: fontSize?.sp ?? 12.sp,
           fontWeight: fontWeight ?? FontWeight.w400,
           color: textColor ?? getTheme.textTheme.bodyMedium?.color,
-        );
-
+        );  
+    final double? fontHeight = textHeight != null ? textHeight! / style.fontSize! : null;
     if (textColor != null) {
-      style = style.copyWith(color: textColor);
+      style = style.copyWith(color: textColor, height: fontHeight);
     }
     if (fontWeight != null) {
-      style = style.copyWith(fontWeight: fontWeight);
+      style = style.copyWith(fontWeight: fontWeight, height: fontHeight);
     }
     if (fontSize != null) {
-      style = style.copyWith(fontSize: fontSize!.sp);
+      style = style.copyWith(fontSize: fontSize!.sp, height: fontHeight);
     }
     return style;
   }

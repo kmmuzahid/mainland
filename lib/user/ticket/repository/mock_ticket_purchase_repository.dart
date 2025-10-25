@@ -6,7 +6,7 @@ import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 class MockTicketPurchaseRepository extends TicketPurchaseRepository {
   @override
   Future<List<TicketPickerModel>> getTicketPurchaseState({String? filterTicketType}) async {
-    await SimulateMocRepo();
+ 
     final username = filterTicketType != null ? 'KM MI' : null;
     return [
       TicketPickerModel(

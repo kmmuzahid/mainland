@@ -5,6 +5,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:flutter/material.dart';
 
+import 'quill_custom_editor.dart';
+
 class CommonMultilineTextField extends StatelessWidget {
   const CommonMultilineTextField({
     required this.height,
@@ -18,9 +20,10 @@ class CommonMultilineTextField extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.borderWidth = 1.2,
-    this.maxLenght
+    this.maxLenght,
+    this.enableHtml = false,
   });
-
+  final bool enableHtml;
   final double height;
   final Function(String p1) onSave;
   final ValidationType validationType;
@@ -35,6 +38,20 @@ class CommonMultilineTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // if (enableHtml) {
+    //   return CustomQuillField(
+    //     height: height,
+    //     onSave: onSave,
+    //     validator: validationType,
+    //     initialText: initialText,
+    //     readOnly: readOnly,
+    //     hintText: hintText,
+    //     borderRadius: borderRadius,
+    //     backgroundColor: backgroundColor,
+    //     borderColor: borderColor,
+    //     borderWidth: borderWidth,
+    //   );
+    // }
     return SizedBox(
       height: height,
       child: TextFormField(
