@@ -15,7 +15,8 @@ class CommonDateInputTextField extends StatefulWidget {
     this.validation,
     this.borderColor,
     this.backgroundColor,
-});
+    this.isReadOnly = false
+  });
   final double paddingHorizontal;
   final double paddingVertical;
   final double borderRadius;
@@ -26,6 +27,7 @@ class CommonDateInputTextField extends StatefulWidget {
   final Color? borderColor;
   final Color? backgroundColor;
   final Widget? prefixIcon;
+  final bool isReadOnly;
 
   @override
   State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
@@ -55,6 +57,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
   @override
   Widget build(BuildContext context) {
     return CommonTextField(
+      isReadOnly: widget.isReadOnly,
       controller: _controller,
       paddingHorizontal: widget.paddingHorizontal,
       paddingVertical: widget.paddingVertical,
@@ -67,6 +70,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
       },
       suffixIcon: GestureDetector(
         onTap: () {
+          if (widget.isReadOnly) return;
           _openDatePicker(context);
         },
         child: widget.suffix ?? const Icon(Icons.calendar_month_outlined),

@@ -1,24 +1,38 @@
 // form_cubit.dart
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:io';
+
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
-import 'package:flutter/material.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
-import 'create_ticket_state.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:image/image.dart' as img;
-import 'dart:io';
+
+import 'create_ticket_state.dart';
 
 class CreateTicketCubit extends SafeCubit<CreateTicketState> {
-  CreateTicketCubit() : super(CreateTicketState(createEventModel: CreateEventModel.empty()));
+  CreateTicketCubit()
+    : super(
+        CreateTicketState(
+          createEventModel: CreateEventModel.empty(),
+          draftEventModel: CreateEventModel.empty(),
+        ),
+      );
   final ImagePicker _imagePicker = ImagePicker();
   // Navigate to next page
+  void saveDraft() {}
+
+  void fetchDraft() {}
+
   void nextPage() {
     if (state.currentPage < 2) {
       emit(state.copyWith(currentPage: state.currentPage + 1));
     }
+  }
+
+  void updateReadOnly() {
+    emit(state.copyWith(isReadOnly: !state.isReadOnly));
   }
 
   // Navigate to previous page
@@ -28,37 +42,15 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     }
   }
 
-  // Go to specific page
-  void goToPage(int page) {
-    if (page >= 0 && page <= 2) {
-      emit(state.copyWith(currentPage: page));
-    }
-  }
-
   // Toggle between page view and expanded view
   void toggleView() {
+    updateReadOnly();
     emit(state.copyWith(isExpandedView: !state.isExpandedView));
   }
 
   // Update form field
   void updateField(CreateEventModel model) {
     emit(state.copyWith(createEventModel: model));
-  }
-
-  // Update multiple fields at once
-  void updateFields(CreateEventModel model) {
-    emit(state.copyWith(createEventModel: model));
-  }
-
-  // Clear all form data
-  void clearForm() {
-    emit(
-      state.copyWith(
-        currentPage: 0,
-        isExpandedView: false,
-        createEventModel: CreateEventModel.empty(),
-      ),
-    );
   }
 
   // Submit form
@@ -68,7 +60,59 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     // Example: await apiService.submitForm(state.createEventModel);
   }
 
+  Future<void> updateTicket({
+    required TicketName ticketName,
+    int? availableUnit,
+    bool? isSelected,
+    double? unitPrice,
+  }) async {
+    if (isSelected == false) {
+      final List<TicketTypeModel> tickets = List.from(state.createEventModel.ticketTypes);
+      tickets.removeWhere((element) => element.name == ticketName);
+      emit(state.copyWith(createEventModel: state.createEventModel.copyWith(ticketTypes: tickets)));
+    }
+
+    final TicketTypeModel existingTicket = state.createEventModel.ticketTypes.firstWhere(
+      (element) => element.name == ticketName,
+      orElse: TicketTypeModel.empty,
+    );
+
+    final isSelectedTicket = (existingTicket.name == ticketName) || (isSelected ?? false);
+
+    if (!(existingTicket.name == ticketName) && isSelected == true) {
+      //create
+      emit(
+        state.copyWith(
+          createEventModel: state.createEventModel.copyWith(
+            ticketTypes: [
+              ...state.createEventModel.ticketTypes,
+              TicketTypeModel(
+                name: ticketName,
+                availableUnit: availableUnit ?? 0,
+                setUnitPrice: unitPrice ?? 0,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else if (isSelectedTicket) {
+      //update
+      final newTicket = existingTicket.copyWith(
+        availableUnit: availableUnit ?? existingTicket.availableUnit,
+        setUnitPrice: unitPrice ?? existingTicket.setUnitPrice,
+      );
+
+      // copy all tickets as list. later remove existing ticket. then add newticket and emit
+      final List<TicketTypeModel> tickets = List.from(state.createEventModel.ticketTypes);
+      tickets.removeWhere((element) => element.name == ticketName);
+      tickets.add(newTicket);
+      emit(state.copyWith(createEventModel: state.createEventModel.copyWith(ticketTypes: tickets)));
+    }
+    
+  }
+
   Future<void> pickImage({bool isAttachment = true}) async {
+    if (state.isReadOnly) return;
     final status = await const PermissionHandlerHelper(permission: Permission.photos).getStatus();
     if (status) {
       final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);

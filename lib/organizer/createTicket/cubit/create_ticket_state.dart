@@ -5,31 +5,46 @@ import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 
 class CreateTicketState extends Equatable {
   final int currentPage;
+  final bool isReadOnly;
   final bool isExpandedView;
   final CreateEventModel createEventModel;
+  final CreateEventModel draftEventModel;
   final XFile? image;
 
   const CreateTicketState({
     this.currentPage = 0,
     this.isExpandedView = false,
+    this.isReadOnly = false,
     required this.createEventModel,
+    required this.draftEventModel,
     this.image,
   });
 
   CreateTicketState copyWith({
     int? currentPage,
     bool? isExpandedView,
+    bool? isReadOnly,
     CreateEventModel? createEventModel,
+    CreateEventModel? draftEventModel,
     XFile? image,
   }) {
     return CreateTicketState(
       currentPage: currentPage ?? this.currentPage,
       isExpandedView: isExpandedView ?? this.isExpandedView,
+      isReadOnly: isReadOnly ?? this.isReadOnly,
       createEventModel: createEventModel ?? this.createEventModel,
+      draftEventModel: draftEventModel ?? this.draftEventModel,
       image: image ?? this.image,
     );
   }
 
   @override
-  List<Object?> get props => [currentPage, isExpandedView, createEventModel, image?.path];
+  List<Object?> get props => [
+    currentPage,
+    isExpandedView,
+    isReadOnly,
+    createEventModel,
+    draftEventModel,
+    image?.path,
+  ];
 }

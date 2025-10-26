@@ -16,7 +16,7 @@ class FormLabel extends StatelessWidget {
         if (isRequired)
           CommonText(
             text: '*',
-            fontSize: 14,
+            fontSize: 18,
             textColor: AppColors.error,
             fontWeight: FontWeight.w400,
           ),

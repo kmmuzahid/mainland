@@ -49,7 +49,7 @@ class EventNotificationEnableScreen extends StatelessWidget {
               CommonMultilineTextField(
                 height: 270.h,
                 hintText: AppString.writeYourMessageHere,
-                onSave: (value) {},
+                onSaved: (value, controller) {},
                 validationType: ValidationType.validateRequired,
                 maxLenght: 10,
               ),

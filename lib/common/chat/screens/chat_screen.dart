@@ -309,7 +309,7 @@ class ChatScreen extends StatelessWidget {
             hintText: AppString.otherDetails,
             backgroundColor: AppColors.white300,
             height: 78.h,
-            onSave: (p1) {},
+            onSaved: (p1, controller) {},
           ).paddingSymmetric(horizontal: 16.w),
           10.height,
           CommonButton(titleText: AppString.report, onTap: () {}),
