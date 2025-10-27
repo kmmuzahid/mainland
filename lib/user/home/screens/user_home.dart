@@ -117,7 +117,26 @@ class UserHome extends StatelessWidget {
         buttonColor: AppColors.transparent,
         titleText: AppString.categories,
         onTap: () {
-          // appRouter.push(const CategoriesRoute());
+          appRouter.push(
+            PreferenceRoute(
+              header: Row(
+                children: [
+                  CommonText(
+                    top: 10,
+                    text: 'Filter Event',
+                    textAlign: TextAlign.left,
+                    alignment: MainAxisAlignment.start,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    textColor: AppColors.primaryColor,
+                  ),
+                ],
+              ),
+              onSubscategoryTap: (category, subCategory) {
+                appRouter.push(AllEventRoute(title: subCategory));
+              },
+            ),
+          );
         },
       ),
     );

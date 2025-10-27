@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +14,7 @@ import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
+import 'package:mainland/core/component/text/common_rich_text.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
 import 'package:mainland/core/component/text_field/common_phone_number_text_filed.dart';
@@ -28,6 +28,7 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/main.dart';
 
 class SignUpAllField extends StatelessWidget {
   const SignUpAllField({super.key, required this.state});
@@ -112,7 +113,7 @@ class SignUpAllField extends StatelessWidget {
 
                 /// User Phone here
                 _dateOfBirth(),
-               
+
                 10.height,
                 CommonTextField(
                   prefixIcon: _requiredIcon(),
@@ -193,18 +194,20 @@ class SignUpAllField extends StatelessWidget {
                       child: OtpVerifyWidget(
                         email: cubit.state.signUpModel.email,
                         onSuccess: () {
-                          appRouter.replaceAll([
-                            SignInRoute(
-                              ctrUsername: TextEditingController(),
-                              ctrPassword: TextEditingController(),
-                            ),
-                          ]);
+                          appRouter.pop();
+                          _termsOfconditions(context, cubit);
+                          // appRouter.replaceAll([
+                          //   SignInRoute(
+                          //     ctrUsername: TextEditingController(),
+                          //     ctrPassword: TextEditingController(),
+                          //   ),
+                          // ]);
                         },
                       ),
                     );
                   },
                 ).center,
-                
+
                 30.height,
 
                 ///  Sign In Instruction here
@@ -216,8 +219,7 @@ class SignUpAllField extends StatelessWidget {
                     children: [
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () =>
-                              appRouter.push(
+                          ..onTap = () => appRouter.push(
                             ShowInfoRoute(title: AppString.termsOfuse, content: state.about),
                           ),
                         text: AppString.termsOfuse,
@@ -226,8 +228,7 @@ class SignUpAllField extends StatelessWidget {
                       const TextSpan(text: ' and '),
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () =>
-                              appRouter.push(
+                          ..onTap = () => appRouter.push(
                             ShowInfoRoute(title: AppString.privacyNotice, content: state.about),
                           ),
                         text: AppString.privacyNotice,
@@ -242,6 +243,112 @@ class SignUpAllField extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _termsOfconditions(BuildContext context, AuthCubit cubit) async {
+    commonDialog(
+      child: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CommonText(
+                top: 10,
+                text: 'Terms of Use',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                textColor: AppColors.primaryColor,
+                bottom: 10,
+              ),
+              SizedBox(
+                height: 350.h,
+                child: SingleChildScrollView(
+                  child: CommonText(
+                    fontSize: 16,
+                    textAlign: TextAlign.justify,
+                    textColor: AppColors.greay300,
+                    text:
+                        '''For Organizers  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets ''',
+                  ),
+                ),
+              ),
+              10.height,
+              Row(
+                children: [
+                  _buildCheckBox(
+                    isReadOnly: false,
+                    cubit: cubit,
+                    onChanged: (value) {
+                      cubit.updateTermsConditonsStatus(value ?? false);
+                    },
+                  ),
+                  Expanded(
+                    child: CommonRichText(
+                      richTextContent: [
+                        CommonSimpleRichTextContent(
+                          text: 'By ticking this box, you agree to this ',
+                        ),
+                        CommonSimpleRichTextContent(
+                          text: 'Terms of Use',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        CommonSimpleRichTextContent(text: ', and'),
+                        CommonSimpleRichTextContent(
+                          text: 'Privacy Notice',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              10.height,
+              CommonButton(
+                titleText: 'I Agree',
+                onTap: () {
+                  if (cubit.state.isTermsAndConditonsAccepted) {
+                    cubit.signUp(state.signUpModel);
+                  } else {
+                    appRouter.pop();
+                    showSnackBar('Please accept terms and conditions', type: SnackBarType.error);
+                  }
+                },
+              ),
+              30.height,
+            ],
+          );
+        },
+      ),
+      context: context,
+    );
+  }
+
+  Widget _buildCheckBox({
+    required bool isReadOnly,
+    bool? value,
+    required Function(bool?) onChanged,
+    required AuthCubit cubit,
+  }) {
+    return Checkbox(
+      side: BorderSide(
+        width: 2.w,
+        color: cubit.state.isTermsAndConditonsAccepted
+            ? AppColors.primaryColor
+            : AppColors.greay300,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+      value: value ?? cubit.state.isTermsAndConditonsAccepted,
+      onChanged: (value) {
+        if (isReadOnly) return;
+        onChanged(value);
+      },
     );
   }
 
@@ -308,6 +415,7 @@ class SignUpAllField extends StatelessWidget {
       },
     );
   }
+
   String calculateAge(DateTime? date) {
     if (date == null) return '0';
     final now = DateTime.now();

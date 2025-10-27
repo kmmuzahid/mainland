@@ -35,6 +35,7 @@ class AuthState extends Equatable {
       city: '',
       state: '',
     ),
+    this.isTermsAndConditonsAccepted = false
   });
 
   // Fields
@@ -45,6 +46,7 @@ class AuthState extends Equatable {
   final UserLoginInfoModel userLoginInfoModel;
 
   final SignUpModel signUpModel;
+  final bool isTermsAndConditonsAccepted;
 
   AuthState copyWith({
     bool? isLoading,
@@ -53,6 +55,7 @@ class AuthState extends Equatable {
     SignUpModel? signUpModel,
     String? about,
     String? faqHelp,
+    bool? isTermsAndConditonsAccepted,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -61,6 +64,7 @@ class AuthState extends Equatable {
       signUpModel: signUpModel ?? this.signUpModel,
       about: about ?? this.about,
       faqHelp: faqHelp ?? this.faqHelp,
+      isTermsAndConditonsAccepted: isTermsAndConditonsAccepted ?? this.isTermsAndConditonsAccepted,
     );
   }
 
@@ -72,5 +76,6 @@ class AuthState extends Equatable {
     signUpModel.hashCode,
     about,
     faqHelp,
+    isTermsAndConditonsAccepted,
   ];
 }

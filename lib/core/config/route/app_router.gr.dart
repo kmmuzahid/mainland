@@ -692,6 +692,7 @@ class PerfenceSubcategoryRoute
     required _i40.PreferenceCubit cubit,
     _i37.Widget? header,
     _i36.PageRouteInfo<Object?>? successRoute,
+    dynamic Function(String, String)? onSubscategoryTap,
     List<_i36.PageRouteInfo>? children,
   }) : super(
          PerfenceSubcategoryRoute.name,
@@ -702,6 +703,7 @@ class PerfenceSubcategoryRoute
            cubit: cubit,
            header: header,
            successRoute: successRoute,
+           onSubscategoryTap: onSubscategoryTap,
          ),
          initialChildren: children,
        );
@@ -719,6 +721,7 @@ class PerfenceSubcategoryRoute
         cubit: args.cubit,
         header: args.header,
         successRoute: args.successRoute,
+        onSubscategoryTap: args.onSubscategoryTap,
       );
     },
   );
@@ -732,6 +735,7 @@ class PerfenceSubcategoryRouteArgs {
     required this.cubit,
     this.header,
     this.successRoute,
+    this.onSubscategoryTap,
   });
 
   final _i37.Key? key;
@@ -746,9 +750,11 @@ class PerfenceSubcategoryRouteArgs {
 
   final _i36.PageRouteInfo<Object?>? successRoute;
 
+  final dynamic Function(String, String)? onSubscategoryTap;
+
   @override
   String toString() {
-    return 'PerfenceSubcategoryRouteArgs{key: $key, backgroundColor: $backgroundColor, buttonTitle: $buttonTitle, cubit: $cubit, header: $header, successRoute: $successRoute}';
+    return 'PerfenceSubcategoryRouteArgs{key: $key, backgroundColor: $backgroundColor, buttonTitle: $buttonTitle, cubit: $cubit, header: $header, successRoute: $successRoute, onSubscategoryTap: $onSubscategoryTap}';
   }
 
   @override
@@ -782,6 +788,7 @@ class PreferenceRoute extends _i36.PageRouteInfo<PreferenceRouteArgs> {
     _i37.Widget? header,
     String? buttonTitle,
     _i37.Color? backgroundColor,
+    dynamic Function(String, String)? onSubscategoryTap,
     List<_i36.PageRouteInfo>? children,
   }) : super(
          PreferenceRoute.name,
@@ -791,6 +798,7 @@ class PreferenceRoute extends _i36.PageRouteInfo<PreferenceRouteArgs> {
            header: header,
            buttonTitle: buttonTitle,
            backgroundColor: backgroundColor,
+           onSubscategoryTap: onSubscategoryTap,
          ),
          initialChildren: children,
        );
@@ -809,6 +817,7 @@ class PreferenceRoute extends _i36.PageRouteInfo<PreferenceRouteArgs> {
         header: args.header,
         buttonTitle: args.buttonTitle,
         backgroundColor: args.backgroundColor,
+        onSubscategoryTap: args.onSubscategoryTap,
       );
     },
   );
@@ -821,6 +830,7 @@ class PreferenceRouteArgs {
     this.header,
     this.buttonTitle,
     this.backgroundColor,
+    this.onSubscategoryTap,
   });
 
   final _i36.PageRouteInfo<Object?>? successRoute;
@@ -833,9 +843,11 @@ class PreferenceRouteArgs {
 
   final _i37.Color? backgroundColor;
 
+  final dynamic Function(String, String)? onSubscategoryTap;
+
   @override
   String toString() {
-    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor}';
+    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor, onSubscategoryTap: $onSubscategoryTap}';
   }
 
   @override

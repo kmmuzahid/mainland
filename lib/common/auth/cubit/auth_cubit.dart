@@ -23,6 +23,10 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _loginInfo = 'login_info_key';
   Role _role = Role.ATTENDEE;
 
+  void updateTermsConditonsStatus(bool value) async {
+    emit(state.copyWith(isTermsAndConditonsAccepted: value));
+  }
+
   void onChangeUserRole(Role role) {
     AppLogger.debug(role.name, tag: 'AuthCubit');
     _role = role;
@@ -82,15 +86,21 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> signUp(SignUpModel signUpModel) async {
-    if (state.isLoading) return;
-    emit(const AuthState(isLoading: true));
-    final responce = await _repository.signUp(signUpModel: signUpModel);
-    if (responce.statusCode == 200) {
-      emit(const AuthState());
-      signIn(signUpModel.email, signUpModel.password);
-    } else {
-      showSnackBar(responce.message ?? '', type: SnackBarType.error);
-    }
+    ///front end delivery temp route
+    appRouter.replaceAll([
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+    ]);
+
+    ///---------final
+    // if (state.isLoading) return;
+    // emit(const AuthState(isLoading: true));
+    // final responce = await _repository.signUp(signUpModel: signUpModel);
+    // if (responce.statusCode == 200) {
+    //   emit(const AuthState());
+    //   signIn(signUpModel.email, signUpModel.password);
+    // } else {
+    //   showSnackBar(responce.message ?? '', type: SnackBarType.error);
+    // }
   }
 
   Future<void> signInWithGoogle() async {}

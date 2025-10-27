@@ -21,11 +21,13 @@ class PreferenceScreen extends StatelessWidget {
     this.header,
     this.buttonTitle,
     this.backgroundColor,
+    this.onSubscategoryTap,
   });
   final Widget? header;
   final String? buttonTitle;
   final Color? backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
+  final Function(String category, String subCategory)? onSubscategoryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +77,7 @@ class PreferenceScreen extends StatelessWidget {
                 header: header,
                 successRoute: successRoute,
                 backgroundColor: AppColors.background,
+                onSubscategoryTap: onSubscategoryTap,
               ),
             );
           },

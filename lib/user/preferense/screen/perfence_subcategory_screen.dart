@@ -23,12 +23,14 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
     required this.cubit,
     this.header,
     this.successRoute,
+    this.onSubscategoryTap,
   });
   final String? buttonTitle;
   final PreferenceCubit cubit;
   final Widget? header;
   final Color backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
+  final Function(String category, String subCategory)? onSubscategoryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
                   children: [
                     PreferenceHeaderWideget(header: header),
                     Expanded(child: _subCategoryBuilder(state)),
+                    if (onSubscategoryTap == null)
                     Padding(
                       padding: EdgeInsets.only(bottom: 80.w),
                       child: CommonButton(
@@ -81,7 +84,11 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
         final isSelected = state.selectedSubcategories.contains(subCategory);
         return GestureDetector(
           onTap: () {
-            cubit.selectSubcategory(subCategory);
+            if (onSubscategoryTap != null) {
+              onSubscategoryTap!(state.selectedCategory!, subCategory);
+            } else {
+              cubit.selectSubcategory(subCategory);
+            }
           },
           child: Container(
             height: 45.h,
