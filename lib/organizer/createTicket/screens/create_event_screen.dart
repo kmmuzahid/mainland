@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_state.dart';
 
 import '../cubit/create_ticket_cubit.dart';
@@ -13,16 +14,24 @@ import '../widgets/ticket_form_two.dart';
 
 @RoutePage()
 class CreateEventScreen extends StatelessWidget {
-  const CreateEventScreen({Key? key}) : super(key: key);
+  const CreateEventScreen({Key? key, this.draftId}) : super(key: key);
+  final String? draftId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CreateTicketCubit(),
+      create: (context) {
+        final cubit = CreateTicketCubit();
+        if (draftId != null) {
+          cubit.fetchDraft();
+        }
+        return cubit;
+      },
       child: BlocBuilder<CreateTicketCubit, CreateTicketState>(
         builder: (context, state) {
           final bool isBackDisabled =
               (state.currentPage == 1 || (state.currentPage == 2 && !state.isExpandedView));
+         
           return Scaffold(
             appBar: CommonAppBar(
               disableBack: isBackDisabled,

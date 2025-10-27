@@ -67,7 +67,7 @@ class OrgHome extends StatelessWidget {
       ),
       middleWidget: GestureDetector(
         onTap: () {
-          appRouter.push(const CreateEventRoute());
+          appRouter.push(CreateEventRoute());
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),

@@ -212,10 +212,12 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
           errorStyle: const TextStyle(fontSize: 0, height: 0),
           fillColor: widget.backgroundColor,
           hintStyle: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
-          prefixIcon: widget.prefixText?.isNotEmpty == true
-              ? Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10,
+          prefixIcon: Column(
+            children: [
+              widget.prefixText?.isNotEmpty == true
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10,
                     right: 5,
                   ), // add some right padding to allow hint space
                   child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
@@ -224,6 +226,8 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
                   padding: EdgeInsets.only(left: 10.w, right: widget.paddingHorizontal),
                   child: widget.prefixIcon,
                 ),
+            ],
+          ),
           suffixIconConstraints: BoxConstraints(
             maxWidth:
                 widget.suffixIcon == null &&

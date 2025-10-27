@@ -53,6 +53,7 @@ class EventNotificationEnableScreen extends StatelessWidget {
                 validationType: ValidationType.validateRequired,
                 maxLenght: 10,
               ),
+              20.height,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

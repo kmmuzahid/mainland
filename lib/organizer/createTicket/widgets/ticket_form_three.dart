@@ -134,7 +134,7 @@ class TicketFormThree extends StatelessWidget {
           },
         ),
         const Spacer(),
-        CommonButton(buttonWidth: width, titleText: 'Submit', onTap: () {}),
+        CommonButton(buttonWidth: width, titleText: 'Submit', onTap: cubit.submit),
       ],
     );
   }

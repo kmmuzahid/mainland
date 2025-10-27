@@ -39,7 +39,10 @@ class TicketWidget extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: CommonImage(
-                    enableGrayscale: filter == TicketFilter.Closed || filter == TicketFilter.Used,
+                    enableGrayscale:
+                        filter == TicketFilter.Closed ||
+                        filter == TicketFilter.Used ||
+                        filter == TicketFilter.Expired,
                     imageSrc: image,
                     borderRadius: 12,
                   ),

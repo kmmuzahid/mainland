@@ -5,6 +5,8 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,9 +23,23 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       );
   final ImagePicker _imagePicker = ImagePicker();
   // Navigate to next page
-  void saveDraft() {}
+  void saveDraft() {
+    appRouter.replaceAll([const HomeRoute()]);
+  }
 
-  void fetchDraft() {}
+  void submit() async {
+    appRouter.replaceAll([const HomeRoute()]);
+  }
+
+  void fetchDraft() {
+    emit(
+      state.copyWith(
+        draftEventModel: state.createEventModel.copyWith(
+          title: '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''',
+        ),
+      ),
+    );
+  }
 
   void nextPage() {
     if (state.currentPage < 2) {
@@ -118,7 +134,6 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       tickets.add(newTicket);
       emit(state.copyWith(createEventModel: state.createEventModel.copyWith(ticketTypes: tickets)));
     }
-    
   }
 
   Future<void> pickImage({bool isAttachment = true}) async {

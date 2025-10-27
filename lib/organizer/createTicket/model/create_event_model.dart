@@ -151,7 +151,7 @@ class CreateEventModel {
     required this.state,
     required this.country,
     required this.ticketTypes,
-    this.offerPreSale = false,
+    this.offerPreSale = true,
     this.preSaleStartDate,
     this.preSaleEndDate,
     this.ticketSaleStartDate,
@@ -162,7 +162,7 @@ class CreateEventModel {
     required this.selectedCategory,
     required this.selectedSubcategories,
     this.isFreeEvent = false,
-    this.offerDiscountByCode = false,
+    this.offerDiscountByCode = true,
   });
 
   // Empty Initializer - all dates null
@@ -180,7 +180,7 @@ class CreateEventModel {
       state: '',
       country: '',
       ticketTypes: [],
-      offerPreSale: false,
+      offerPreSale: true,
       preSaleStartDate: null,
       preSaleEndDate: null,
       ticketSaleStartDate: null,
@@ -191,7 +191,7 @@ class CreateEventModel {
       selectedCategory: '',
       selectedSubcategories: [],
       isFreeEvent: false,
-      offerDiscountByCode: false,
+      offerDiscountByCode: true,
     );
   }
 

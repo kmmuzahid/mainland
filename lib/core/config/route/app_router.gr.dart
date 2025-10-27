@@ -47,7 +47,7 @@ import 'package:mainland/common/tickets/screens/tickets_screen.dart' as _i32;
 import 'package:mainland/core/app_bar/common_app_bar.dart' as _i42;
 import 'package:mainland/organizer/createTicket/screens/create_event_screen.dart'
     as _i7;
-import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage.dart'
+import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage_screen.dart'
     as _i17;
 import 'package:mainland/user/fanclub/screens/modify_favorite_fan_club.dart'
     as _i14;
@@ -252,18 +252,51 @@ class ContactUsRoute extends _i36.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i7.CreateEventScreen]
-class CreateEventRoute extends _i36.PageRouteInfo<void> {
-  const CreateEventRoute({List<_i36.PageRouteInfo>? children})
-    : super(CreateEventRoute.name, initialChildren: children);
+class CreateEventRoute extends _i36.PageRouteInfo<CreateEventRouteArgs> {
+  CreateEventRoute({
+    _i37.Key? key,
+    String? draftId,
+    List<_i36.PageRouteInfo>? children,
+  }) : super(
+         CreateEventRoute.name,
+         args: CreateEventRouteArgs(key: key, draftId: draftId),
+         initialChildren: children,
+       );
 
   static const String name = 'CreateEventRoute';
 
   static _i36.PageInfo page = _i36.PageInfo(
     name,
     builder: (data) {
-      return const _i7.CreateEventScreen();
+      final args = data.argsAs<CreateEventRouteArgs>(
+        orElse: () => const CreateEventRouteArgs(),
+      );
+      return _i7.CreateEventScreen(key: args.key, draftId: args.draftId);
     },
   );
+}
+
+class CreateEventRouteArgs {
+  const CreateEventRouteArgs({this.key, this.draftId});
+
+  final _i37.Key? key;
+
+  final String? draftId;
+
+  @override
+  String toString() {
+    return 'CreateEventRouteArgs{key: $key, draftId: $draftId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CreateEventRouteArgs) return false;
+    return key == other.key && draftId == other.draftId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ draftId.hashCode;
 }
 
 /// generated route for

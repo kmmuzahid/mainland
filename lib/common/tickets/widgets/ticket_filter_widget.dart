@@ -21,7 +21,7 @@ class TicketFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = (Utils.deviceSize.width - 70.w) / filters.length;
+    final width = (Utils.deviceSize.width - 40.w) / filters.length;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 6.h),
       decoration: BoxDecoration(

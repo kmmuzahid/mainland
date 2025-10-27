@@ -52,7 +52,7 @@ class TicketFormOne extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            isExpanded
+            isExpanded || createEventModel.title?.isNotEmpty == true
                 ? CreateTicketTitlebar(title: 'Event Details', showSaveButton: false)
                 : _title(),
             FormLabel(isRequired: true, label: 'Event Images'),

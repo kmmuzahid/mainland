@@ -296,7 +296,7 @@ class SignUpAllField extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        CommonSimpleRichTextContent(text: ', and'),
+                        CommonSimpleRichTextContent(text: ', and '),
                         CommonSimpleRichTextContent(
                           text: 'Privacy Notice',
                           style: TextStyle(

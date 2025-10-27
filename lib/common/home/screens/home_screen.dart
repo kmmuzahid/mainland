@@ -60,8 +60,10 @@ class HomeScreen extends StatelessWidget {
     const OrgHome(),
     TicketsScreen(
       onTap: (ticketId, ticketFilter) {
-        if (ticketFilter == TicketFilter.Live || ticketFilter == TicketFilter.Draft) {
+        if (ticketFilter == TicketFilter.Live) {
           appRouter.push(OrgTicketManageRoute(ticketId: ticketId, ticketFilter: ticketFilter));
+        } else if (ticketFilter == TicketFilter.Draft) {
+          appRouter.push(CreateEventRoute(draftId: ticketId));
         } else {
           appRouter.push(
             EventDetailsRoute(
