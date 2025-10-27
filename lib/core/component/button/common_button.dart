@@ -89,14 +89,14 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
 
     // Calculate width based on the content width (text or loader),
     // including horizontal padding and icon width + spacing when applicable.
-    const double horizontalPadding = 24.0; // from EdgeInsets.symmetric(horizontal: 12.0)
+    final double horizontalPadding = 24.0.w; // from EdgeInsets.symmetric(horizontal: 12.0)
     final double contentWidth = widget.isLoading
-        ? (widget.buttonHeight - 12)
+        ? (widget.buttonHeight - 12.h)
               .toDouble() // CommonLoader(size: buttonHeight - 12)
         : textPainter.size.width;
     final bool hasIcon = widget.icon != null;
     final double computedIconWidth = hasIcon
-        ? (widget.iconWidth ?? IconTheme.of(context).size ?? 24.0)
+        ? (widget.iconWidth?.w ?? IconTheme.of(context).size ?? 24.0.w)
         : 0.0;
     final double iconSpacing = hasIcon ? 6.w : 0.0;
 
@@ -104,7 +104,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
     final double borderStroke = (widget.borderWidth.w * 2);
     double buttonWidth =
         contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke;
-    buttonWidth = buttonWidth < widget.buttonWidth ? widget.buttonWidth : buttonWidth;
+    buttonWidth = buttonWidth < widget.buttonWidth.w ? widget.buttonWidth.w : buttonWidth;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -143,13 +143,13 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                 onTapCancel: () => _animationController.reverse(),
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 6.0.h),
                     child: Row(
                       mainAxisAlignment: widget.alignment,
                       children: [
                         if (widget.icon != null) ...[widget.icon!, SizedBox(width: 6.w)],
                         widget.isLoading
-                            ? CommonLoader(size: widget.buttonHeight - 12)
+                            ? CommonLoader(size: widget.buttonHeight - 12.h)
                             : CommonText(
                                 text: widget.titleText,
                                 maxLines: 1,

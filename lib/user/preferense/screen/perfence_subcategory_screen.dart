@@ -22,70 +22,82 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
     this.buttonTitle,
     required this.cubit,
     this.header,
+    this.successRoute,
   });
   final String? buttonTitle;
   final PreferenceCubit cubit;
   final Widget? header;
   final Color backgroundColor;
+  final PageRouteInfo<Object?>? successRoute;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: CommonAppBar(backgroundColor: backgroundColor),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: BlocProvider.value(
-          value: cubit,
-          child: Column(
-            children: [
-              PreferenceHeaderWideget(header: header),
-              Expanded(child: _subCategoryBuilder()),
-              Padding(
-                padding: EdgeInsets.only(bottom: 80.w),
-                child: CommonButton(
-                  titleText: buttonTitle ?? 'Next',
-                  onTap: () {
-                    appRouter.replaceAll([const HomeRoute()]);
-                  },
+    return BlocProvider.value(
+      value: cubit,
+      child: BlocBuilder<PreferenceCubit, PreferenceState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: backgroundColor,
+            appBar: CommonAppBar(backgroundColor: backgroundColor),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: BlocProvider.value(
+                value: cubit,
+                child: Column(
+                  children: [
+                    PreferenceHeaderWideget(header: header),
+                    Expanded(child: _subCategoryBuilder(state)),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 80.w),
+                      child: CommonButton(
+                        titleText: buttonTitle ?? 'Next',
+                        onTap: () {
+                          if (successRoute != null) {
+                            appRouter.replaceAll([successRoute!]);
+                          } else {
+                            appRouter.pop();
+                            appRouter.pop(
+                              MapEntry(state.selectedCategory ?? '', state.selectedSubcategories),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _subCategoryBuilder() {
-    return BlocBuilder<PreferenceCubit, PreferenceState>(
-      builder: (context, state) {
-        return ListView.builder(
-          itemCount: state.data[state.selectedCategory!]?.length ?? 0,
-          itemBuilder: (context, index) {
-            final subCategory = state.data[state.selectedCategory!]![index];
-            final isSelected = state.selectedSubcategories.contains(subCategory);
-            return GestureDetector(
-              onTap: () {
-                cubit.selectSubcategory(subCategory);
-              },
-              child: Container(
-                height: 45.h,
-                margin: EdgeInsets.symmetric(vertical: 5.h),
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary50 : AppColors.disable,
-                  border: Border.all(
-                    color: isSelected ? AppColors.primaryColor : AppColors.disable,
-                    width: 1.2.w,
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: CommonText(text: subCategory, style: AppTextStyles.titleMedium),
-              ),
-            );
+  Widget _subCategoryBuilder(PreferenceState state) {
+    return ListView.builder(
+      itemCount: state.data[state.selectedCategory!]?.length ?? 0,
+      itemBuilder: (context, index) {
+        final subCategory = state.data[state.selectedCategory!]![index];
+        final isSelected = state.selectedSubcategories.contains(subCategory);
+        return GestureDetector(
+          onTap: () {
+            cubit.selectSubcategory(subCategory);
           },
+          child: Container(
+            height: 45.h,
+            margin: EdgeInsets.symmetric(vertical: 5.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primary50 : AppColors.disable,
+              border: Border.all(
+                color: isSelected ? AppColors.primaryColor : AppColors.disable,
+                width: 1.2.w,
+              ),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: CommonText(text: subCategory, style: AppTextStyles.titleMedium),
+          ),
         );
       },
     );

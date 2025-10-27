@@ -18,6 +18,7 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
 
 @RoutePage()
@@ -28,12 +29,16 @@ class EventDetailsScreen extends StatelessWidget {
     this.showEventActions = true,
     this.isEventAvailable = true,
     this.isEventUnderReview = false,
+    this.details,
+    this.image,
   });
 
   final String eventId;
   final bool showEventActions;
   final bool isEventAvailable;
   final bool isEventUnderReview;
+  final String? details;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +103,7 @@ class EventDetailsScreen extends StatelessWidget {
   Widget _scondChild(BuildContext context, EventDetailsState state, bool showButton) {
     return Column(
       children: [
-        CommonText(text: state.details, isDescription: true, textAlign: TextAlign.left),
+        CommonText(text: details ?? state.details, isDescription: true, textAlign: TextAlign.left),
         10.height,
         if (showButton) Divider(color: AppColors.disable, thickness: 2),
         10.height,
@@ -111,7 +116,6 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-
   Column _firstChild(String title, BuildContext context, bool showButton) {
     return Column(
       children: [
@@ -122,21 +126,21 @@ class EventDetailsScreen extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: CommonImage(
-                  imageSrc: Assets.images.sampleItem.path,
+                  imageSrc: image ?? Assets.images.sampleItem.path,
                   enableGrayscale: !isEventAvailable,
                   borderRadius: 12,
                 ),
               ),
 
               if (isEventAvailable)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
                       color: AppColors.primaryText.withValues(alpha: isEventAvailable ? .5 : 1),
-                    borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
                 ),
-              ),
 
               Positioned(
                 child: Row(
@@ -199,7 +203,7 @@ class EventDetailsScreen extends StatelessWidget {
             ),
           ).start,
         ),
-        Utils.divider()
+        Utils.divider(),
       ],
     );
   }
@@ -212,7 +216,7 @@ class EventDetailsScreen extends StatelessWidget {
           titleText: AppString.getOrganizerTicket,
           borderColor: AppColors.primaryColor,
           onTap: () {
-            appRouter.push(TicketPurchaseRoute(type: TicketCheckoutType.organizer));
+            appRouter.push(TicketPurchaseRoute(type: TicketOwnerType.organizer));
           },
         ),
         10.height,

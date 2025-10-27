@@ -28,8 +28,8 @@ import '../cubit/ticket_purchase_cubit.dart';
 @RoutePage()
 class TicketPurchaseScreen extends StatelessWidget {
   const TicketPurchaseScreen({super.key, required this.type, this.filterTicket});
-  final TicketCheckoutType type;
-  final String? filterTicket;
+  final TicketOwnerType type;
+  final TicketType? filterTicket;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class TicketPurchaseScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: BlocProvider(
         create: (context) =>
-            TicketPurchaseCubit()..fetchTicketPurchase(filterTicketType: filterTicket),
+            TicketPurchaseCubit()..fetchTicketPurchase(ticketType: filterTicket),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: BlocBuilder<TicketPurchaseCubit, TicketPurchaseState>(
@@ -101,7 +101,7 @@ class TicketPurchaseScreen extends StatelessWidget {
                           child: TicketPicker(
                             limit: state.tickets[index].limit,
                             onChange: (count) {
-                              context.read<TicketPurchaseCubit>().onTicketSelction(
+                              context.read<TicketPurchaseCubit>().onTicketSelection(
                                 state.tickets[index].copyWith(count: count),
                               );
                             },
@@ -145,7 +145,7 @@ class TicketPurchaseScreen extends StatelessWidget {
                     CommonButton(
                       titleText: AppString.next,
                       onTap: () {
-                        appRouter.push(TicketCheckoutRoute(type: TicketCheckoutType.organizer));
+                        appRouter.push(TicketCheckoutRoute(type: TicketOwnerType.organizer));
                       },
                     ),
                     50.height,
@@ -166,21 +166,26 @@ class TicketPurchaseScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: filteredList.length,
       itemBuilder: (context, index) {
+        final item = filteredList[index];
+        final title =
+            '${item.title} (x${item.count}) ${item.userName != null ? '- ${item.userName}' : ''}';
         return _summery(
-          title: '${filteredList[index].title} (x${filteredList[index].count})',
-          price: filteredList[index].price * filteredList[index].count,
+          title: title, price: item.price * item.count,
         );
       },
     );
   }
 
-  DualFieldRow _summery({required String title, required double price, bool isBold = false}) {
+  Widget _summery({required String title, required double price, bool isBold = false}) {
     final style = AppTextStyles.bodyMedium?.copyWith(
       fontWeight: isBold ? FontWeight.bold : AppTextStyles.bodyMedium?.fontWeight,
     );
-    return DualFieldRow(
-      left: CommonText(text: title, style: style),
-      right: CommonText(text: '\$$price', style: style, alignment: MainAxisAlignment.end),
+    return Row(
+      children: [
+        CommonText(text: title, style: style),
+        const Spacer(),
+        CommonText(text: '\$$price', style: style, alignment: MainAxisAlignment.end),
+      ],
     );
   }
 }

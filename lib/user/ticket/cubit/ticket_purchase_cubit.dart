@@ -6,25 +6,44 @@ import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 import 'package:mainland/user/ticket/repository/ticket_purchase_repository.dart';
 
 class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
-  TicketPurchaseCubit() : super(const TicketPurchaseState());
+  TicketPurchaseCubit() : super(TicketPurchaseState());
   final repository = getIt<TicketPurchaseRepository>();
 
-  Future<void> fetchTicketPurchase({String? filterTicketType}) async {
-    final response = await repository.getTicketPurchaseState(filterTicketType: filterTicketType);
+  Future<void> fetchTicketPurchase({
+    TicketOwnerType? ticketOwnerType,
+    TicketType? ticketType,
+  }) async {
+    final response = await repository.getTicketPurchaseState(
+      ticketType: ticketType,
+      ticketOwnerType: TicketOwnerType.attendee,
+    );
     emit(state.copyWith(tickets: response));
   }
 
-  Future<void> onTicketSelction(TicketPickerModel ticketPickerModel) async {
+  Future<void> fetchAvailableTicket() async {
+    final response = await repository.getAvailableTicket();
+    emit(state.copyWith(availableTickets: response));
+  }
+
+  Future<void> onTicketSelection(TicketPickerModel ticketPickerModel) async {
     final List<TicketPickerModel> tickets = List.from(state.tickets);
-    final index = tickets.indexWhere((element) => element.title == ticketPickerModel.title);
-    if (index == -1) return;
-    tickets[index] = ticketPickerModel;
+    final index = tickets.indexWhere((element) => element.id == ticketPickerModel.id);
+
+    if (index == -1) {
+      // Add new ticket if not already present
+      tickets.add(ticketPickerModel);
+    } else {
+      // Update existing ticket
+      tickets[index] = ticketPickerModel;
+    }
+
     final double subTotal = tickets.fold(
       0,
       (previousValue, element) => previousValue + (element.count * element.price),
     );
 
     final double total = subTotal == 0 ? 0 : (subTotal + state.mainlandFee) - state.discount;
+
     emit(state.copyWith(subtotal: subTotal, total: total, tickets: tickets));
   }
 }

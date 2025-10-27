@@ -69,7 +69,12 @@ class AuthCubit extends SafeCubit<AuthState> {
         // change logic here for api integration
         appRouter.replaceAll([const HomeRoute()]);
       } else {
-        appRouter.replaceAll([PreferenceRoute(backgroundColor: AppColors.backgroundWhite)]);
+        appRouter.replaceAll([
+          PreferenceRoute(
+            successRoute: const HomeRoute(),
+            backgroundColor: AppColors.backgroundWhite,
+          ),
+        ]);
       }
     } else {
       showSnackBar(responce.message ?? '', type: SnackBarType.error);

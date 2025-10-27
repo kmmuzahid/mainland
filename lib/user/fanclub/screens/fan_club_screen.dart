@@ -36,6 +36,7 @@ class FanClubScreen extends StatelessWidget {
                   onPressed: () {
                     appRouter.push(
                       PreferenceRoute(
+                        successRoute: const HomeRoute(),
                         backgroundColor: AppColors.background,
                         buttonTitle: AppString.save,
                         header: Column(

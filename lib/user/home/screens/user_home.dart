@@ -106,7 +106,7 @@ class UserHome extends StatelessWidget {
       startWidget: GestureDetector(
         onTap: () {
           // navigate to account screen.
-          appRouter.push(SettingRoute());
+          appRouter.push(SettingRoute(showBackButton: true));
         },
         child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
       ),

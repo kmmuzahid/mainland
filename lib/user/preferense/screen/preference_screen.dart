@@ -15,10 +15,17 @@ import '../cubit/preference_state.dart';
 
 @RoutePage()
 class PreferenceScreen extends StatelessWidget {
-  const PreferenceScreen({super.key, this.header, this.buttonTitle, this.backgroundColor});
+  const PreferenceScreen({
+    this.successRoute,
+    super.key,
+    this.header,
+    this.buttonTitle,
+    this.backgroundColor,
+  });
   final Widget? header;
   final String? buttonTitle;
   final Color? backgroundColor;
+  final PageRouteInfo<Object?>? successRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +73,7 @@ class PreferenceScreen extends StatelessWidget {
                 buttonTitle: buttonTitle,
                 cubit: cubit,
                 header: header,
+                successRoute: successRoute,
                 backgroundColor: AppColors.background,
               ),
             );

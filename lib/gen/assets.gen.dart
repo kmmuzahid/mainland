@@ -43,6 +43,10 @@ class $AssetsImagesGen {
   AssetGenImage get googleWallet =>
       const AssetGenImage('assets/images/google_wallet.png');
 
+  /// File path: assets/images/locationSampleMap.png
+  AssetGenImage get locationSampleMap =>
+      const AssetGenImage('assets/images/locationSampleMap.png');
+
   /// File path: assets/images/nav_account.png
   AssetGenImage get navAccount =>
       const AssetGenImage('assets/images/nav_account.png');
@@ -111,6 +115,7 @@ class $AssetsImagesGen {
     appleWallet,
     english,
     googleWallet,
+    locationSampleMap,
     navAccount,
     navChat,
     navFanClub,

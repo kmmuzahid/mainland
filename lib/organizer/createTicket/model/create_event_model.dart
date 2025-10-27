@@ -128,6 +128,9 @@ class CreateEventModel {
 
   // Discount Codes
   final List<DiscountCodeModel> discountCodes;
+  final String selectedCategory;
+  final List<String> selectedSubcategories;
+
 
   // Event Organizer Details
   final String? organizerName;
@@ -155,7 +158,9 @@ class CreateEventModel {
     required this.discountCodes,
     required this.organizerName,
     required this.emailAddress,
-    required this.phoneNumber,  
+    required this.phoneNumber,
+    required this.selectedCategory,
+    required this.selectedSubcategories,
     this.isFreeEvent = false,
     this.offerDiscountByCode = false,
   });
@@ -183,6 +188,8 @@ class CreateEventModel {
       organizerName: '',
       emailAddress: '',
       phoneNumber: '',
+      selectedCategory: '',
+      selectedSubcategories: [],
       isFreeEvent: false,
       offerDiscountByCode: false,
     );
@@ -225,6 +232,8 @@ class CreateEventModel {
       organizerName: json['organizerName'] as String? ?? '',
       emailAddress: json['emailAddress'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
+      selectedCategory: json['selectedCategory'] as String? ?? '',
+      selectedSubcategories: json['selectedSubcategories'] as List<String>? ?? [],
       isFreeEvent: json['isFreeEvent'] as bool? ?? false,
       offerDiscountByCode: json['offerDiscountByCode'] as bool? ?? false,
     );
@@ -255,6 +264,8 @@ class CreateEventModel {
       'isFreeEvent': isFreeEvent,
       'ticketSaleStartDate': ticketSaleStartDate?.toIso8601String(),
       'offerDiscountByCode': offerDiscountByCode,
+      'selectedCategory': selectedCategory,
+      'selectedSubcategories': selectedSubcategories,
     };
   }
 
@@ -281,6 +292,8 @@ class CreateEventModel {
     bool? offerDiscountByCode,
     bool? isFreeEvent,
     DateTime? ticketSaleStartDate,
+    String? selectedCategory,
+    List<String>? selectedSubcategories,
   }) {
     return CreateEventModel(
       title: title ?? this.title,
@@ -292,7 +305,7 @@ class CreateEventModel {
       streetAddress1: streetAddress1 ?? this.streetAddress1,
       streetAddress2: streetAddress2 ?? this.streetAddress2,
       city: city ?? this.city,
-      state: state ?? this.state,
+      state: state ?? this.state, 
       country: country ?? this.country,
       ticketTypes: ticketTypes ?? this.ticketTypes,
       offerPreSale: offerPreSale ?? this.offerPreSale,
@@ -305,6 +318,8 @@ class CreateEventModel {
       isFreeEvent: isFreeEvent ?? this.isFreeEvent,
       ticketSaleStartDate: ticketSaleStartDate ?? this.ticketSaleStartDate,
       offerDiscountByCode: offerDiscountByCode ?? this.offerDiscountByCode,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedSubcategories: selectedSubcategories ?? this.selectedSubcategories,
     );
   }
 }

@@ -53,6 +53,16 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     emit(state.copyWith(createEventModel: model));
   }
 
+  void removeSubCategory(int index) {
+    final List<String> list = List.from(state.createEventModel.selectedSubcategories);
+    list.removeAt(index);
+    emit(
+      state.copyWith(
+        createEventModel: state.createEventModel.copyWith(selectedSubcategories: list),
+      ),
+    );
+  }
+
   // Submit form
   Future<void> submitForm() async {
     print('Form Data: ${state.createEventModel}');

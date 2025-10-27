@@ -1,7 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+enum TicketOwnerType { organizer, attendee }
+
+enum TicketType { standard, gold, premium, vip, free }
+
+
 class TicketPickerModel {
+  final String id;
   final String? userName;
   final String title;
   final int limit;
@@ -9,6 +15,7 @@ class TicketPickerModel {
   final int count;
 
   TicketPickerModel({
+    required this.id,
     required this.title,
     required this.limit,
     this.userName,
@@ -17,6 +24,7 @@ class TicketPickerModel {
   });
 
   TicketPickerModel copyWith({
+    String? id,
     String? title,
     String? userName,
     int? limit,
@@ -24,6 +32,7 @@ class TicketPickerModel {
     int? count,
   }) {
     return TicketPickerModel(
+      id: id ?? this.id,
       title: title ?? this.title,
       limit: limit ?? this.limit,
       price: price ?? this.price,
@@ -34,6 +43,7 @@ class TicketPickerModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'title': title,
       'limit': limit,
       'price': price,
@@ -45,6 +55,7 @@ class TicketPickerModel {
   factory TicketPickerModel.fromMap(Map<String, dynamic> map) {
     return TicketPickerModel(
       title: map['title'] as String,
+      id: map['id'] as String,
       userName: map['userName'] as String,
       limit: map['limit'] as int,
       price: map['price'] as double,
@@ -70,11 +81,17 @@ class TicketPickerModel {
         other.limit == limit &&
         other.price == price &&
         other.userName == userName &&
-        other.count == count;
+        other.count == count &&
+        other.id == id;
   }
 
   @override
   int get hashCode {
-    return title.hashCode ^ limit.hashCode ^ price.hashCode ^ count.hashCode ^ userName.hashCode;
+    return title.hashCode ^
+        limit.hashCode ^
+        price.hashCode ^
+        count.hashCode ^
+        userName.hashCode ^
+        id.hashCode;
   }
 }

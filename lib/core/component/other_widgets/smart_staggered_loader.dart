@@ -156,13 +156,13 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
               
               } else if (widget.isLoadingMore) {
                 // Show load more indicator at the bottom of list
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
                   child: Center(child: CircularProgressIndicator()),
                 );
               } else if (widget.isLoadDone) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
                   child: Center(child: Text('All data loaded')),
                 );
               } else {
@@ -180,14 +180,14 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     if (widget.itemCount == 0) {
       final placeholder = ListView(
         physics: widget.physics ?? const AlwaysScrollableScrollPhysics(),
-        padding: widget.padding ?? const EdgeInsets.all(16),
+        padding: widget.padding ?? EdgeInsets.all(16.w),
         children: [
           if (widget.isLoading) // only initial loading shows full screen indicator
             const Center(child: CircularProgressIndicator())
           else if (widget.isLoadDone)
             const Center(child: Text('No data found'))
           else
-            const SizedBox(height: 300), // to enable pull-to-refresh overscroll
+            SizedBox(height: 300.h), // to enable pull-to-refresh overscroll
         ],
       );
 

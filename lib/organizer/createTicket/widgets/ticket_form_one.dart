@@ -8,6 +8,8 @@ import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/other_widgets/dotted_border_container.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'time_input_card.dart';
 import 'package:mainland/core/component/other_widgets/dual_field_row_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -52,8 +54,7 @@ class TicketFormOne extends StatelessWidget {
           children: [
             isExpanded
                 ? CreateTicketTitlebar(title: 'Event Details', showSaveButton: false)
-                :
-            _title(),
+                : _title(),
             FormLabel(isRequired: true, label: 'Event Images'),
             _imagePickerBuilder(),
             10.height,
@@ -73,9 +74,63 @@ class TicketFormOne extends StatelessWidget {
               buttonColor: AppColors.backgroundWhite,
               borderColor: AppColors.primaryColor,
               titleText: 'Category',
-              onTap: () {},
+              onTap: () async {
+                final result = await appRouter.push(
+                  PreferenceRoute(
+                    backgroundColor: AppColors.background,
+                    header: Row(
+                      children: [
+                        CommonText(
+                          text: 'Select category & sub-category',
+                          textAlign: TextAlign.left,
+                          alignment: MainAxisAlignment.start,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          textColor: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                    buttonTitle: 'Done',
+                  ),
+                );
+                if (result is MapEntry<String, List<String>>) {
+                  AppLogger.debug(result.toString());
+                  cubit.updateField(
+                    cubit.state.createEventModel.copyWith(
+                      selectedCategory: result.key,
+                      selectedSubcategories: result.value,
+                    ),
+                  );
+                }
+              },
             ),
-            
+
+            if (cubit.state.createEventModel.selectedSubcategories.isNotEmpty)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: cubit.state.createEventModel.selectedSubcategories.map((subCategory) {
+                    final index = cubit.state.createEventModel.selectedSubcategories.indexOf(
+                      subCategory,
+                    );
+                    return CommonText(
+                      suffix: GestureDetector(
+                        onTap: () {
+                          cubit.removeSubCategory(index); // correct index in the list
+                        },
+                        child: Icon(Icons.close, size: 20.w),
+                      ),
+                      backgroundColor: AppColors.primaryColor,
+                      top: 8,
+                      bottom: 8,
+                      left: 15,
+                      fontSize: 14,
+                      borderRadious: 8,
+                      text: subCategory,
+                    );
+                  }).toList(),
+                ),
+              ),
 
             10.height,
             FormLabel(isRequired: true, label: 'Event Description'),
@@ -119,7 +174,7 @@ class TicketFormOne extends StatelessWidget {
                 ),
               ],
             ),
-           
+
             10.height,
             FormLabel(isRequired: true, label: 'Street Address 1'),
             _textEditor(
@@ -180,9 +235,9 @@ class TicketFormOne extends StatelessWidget {
             ),
             if (!isExpanded) ...[
               20.height,
-            CommonButton(titleText: AppString.next, onTap: cubit.nextPage).center,
+              CommonButton(titleText: AppString.next, onTap: cubit.nextPage).center,
               30.height,
-            ]
+            ],
           ],
         );
       },

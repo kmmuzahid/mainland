@@ -168,6 +168,7 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
     return SizedBox(
       height: widget.height,
       child: TextFormField(
+        textAlignVertical: TextAlignVertical.top,
         readOnly: widget.isReadOnly,
         maxLines: null,
         scrollPhysics: const BouncingScrollPhysics(),

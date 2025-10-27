@@ -12,14 +12,14 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 
-enum TicketCheckoutType { organizer, attendee }
 
 @RoutePage()
 class TicketCheckoutScreen extends StatelessWidget {
   const TicketCheckoutScreen({super.key, required this.type});
 
-  final TicketCheckoutType type;
+  final TicketOwnerType type;
 
   @override
   Widget build(BuildContext context) {

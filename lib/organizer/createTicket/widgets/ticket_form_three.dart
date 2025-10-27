@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/required_icon_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -9,6 +10,9 @@ import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
@@ -93,29 +97,45 @@ class TicketFormThree extends StatelessWidget {
                 },
               ).center,
 
-            if (isExpanded)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CommonButton(
-                    buttonWidth: 115,
-                    titleText: 'Edit',
-                    onTap: () {
-                      if (isReadOnly) cubit.updateReadOnly();
-                      showSnackBar('Edit mode enabled', type: SnackBarType.success);
-                    },
-                  ),
-                  10.width,
-                  CommonButton(buttonWidth: 115, titleText: 'Preview', onTap: () {}),
-                  10.width,
-                  CommonButton(buttonWidth: 115, titleText: 'Submit', onTap: () {}),
-                ],
-              ),
+            if (isExpanded) _buttons(),
             30.height,
           ],
         );
       },
+    );
+  }
+
+  Row _buttons() {
+    final width = 121.0;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CommonButton(
+          buttonWidth: width,
+          titleText: 'Edit',
+          onTap: () {
+            if (isReadOnly) cubit.updateReadOnly();
+            showSnackBar('Edit mode enabled', type: SnackBarType.success);
+          },
+        ),
+        const Spacer(),
+        CommonButton(
+          buttonWidth: width,
+          titleText: 'Preview',
+          onTap: () {
+            appRouter.push(
+              EventDetailsRoute(
+                eventId: '1',
+                image: cubit.state.image?.path,
+                details: cubit.state.createEventModel.description,
+              ),
+            );
+          },
+        ),
+        const Spacer(),
+        CommonButton(buttonWidth: width, titleText: 'Submit', onTap: () {}),
+      ],
     );
   }
 }
