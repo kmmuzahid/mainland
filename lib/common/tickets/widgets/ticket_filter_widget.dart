@@ -21,33 +21,35 @@ class TicketFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = (Utils.deviceSize.width - 40.w) / filters.length;
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(26.r),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: List.generate(filters.length, (index) {
-            final filter = filters[index];
-            final isSelected = filter == selectedFilter;
-            return CommonButton(
-              titleText: filter.displayName,
-              buttonRadius: 20,
-              buttonWidth: width,
-              buttonHeight: 32,
-              borderWidth: 0,
-              titleSize: 14,
-              titleWeight: FontWeight.w400,
-              borderColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
-              onTap: () => onTap(filter),
-              buttonColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
-            );
-          }),
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Row(
+            children: List.generate(filters.length, (index) {
+              final filter = filters[index];
+              final isSelected = filter == selectedFilter;
+              return Expanded(
+                child: CommonButton(
+                  titleText: filter.displayName,
+                  buttonRadius: 20,
+                  buttonHeight: 32,
+                  borderWidth: 0,
+                  titleSize: 14,
+                  titleWeight: FontWeight.w400,
+                  borderColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
+                  onTap: () => onTap(filter),
+                  buttonColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
+                ),
+              );
+            }),
+          );
+        },  
       ),
     );
   }

@@ -118,11 +118,11 @@ class UserHome extends StatelessWidget {
         titleText: AppString.categories,
         onTap: () {
           appRouter.push(
-            PreferenceRoute(
+            PreferenceRoute( 
+              backgroundColor: AppColors.background,
               header: Row(
                 children: [
                   CommonText(
-                    top: 10,
                     text: 'Filter Event',
                     textAlign: TextAlign.left,
                     alignment: MainAxisAlignment.start,
