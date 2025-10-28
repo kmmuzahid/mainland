@@ -2,20 +2,18 @@
 import 'package:equatable/equatable.dart';
 
 class PreferenceState extends Equatable {
-  PreferenceState({required this.selectedSubcategories, this.selectedCategory});
+  PreferenceState({required this.selectedSubcategories});
 
   final Map<String, List<String>> data = prefenceData;
 
-  final List<String> selectedSubcategories;
-  final String? selectedCategory;
+  final Map<String, List<String>> selectedSubcategories;
 
   @override
-  List<Object> get props => [selectedSubcategories, selectedCategory ?? ''];
+  List<Object> get props => [selectedSubcategories];
 
-  PreferenceState copyWith({List<String>? selectedSubcategories, String? selectedCategory}) {
+  PreferenceState copyWith({Map<String, List<String>>? selectedSubcategories}) {
     return PreferenceState(
       selectedSubcategories: selectedSubcategories ?? this.selectedSubcategories,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
     );
   }
 }

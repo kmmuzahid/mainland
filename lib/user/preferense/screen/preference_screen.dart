@@ -69,10 +69,10 @@ class PreferenceScreen extends StatelessWidget {
         return PrefenceCategoryWidget(
           category: category,
           onTap: () {
-            cubit.selectCategory(category);
             appRouter.push(
               PerfenceSubcategoryRoute(
                 buttonTitle: buttonTitle,
+                category: category,
                 cubit: cubit,
                 header: header,
                 successRoute: successRoute,

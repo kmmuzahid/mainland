@@ -6,10 +6,8 @@ import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/route/app_router.dart';
-import 'package:mainland/core/config/route/app_router.gr.dart' show HomeRoute;
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/user/preferense/cubit/preference_cubit.dart';
 import 'package:mainland/user/preferense/cubit/preference_state.dart';
 import 'package:mainland/user/preferense/widgets/preference_header_wideget.dart';
@@ -24,12 +22,14 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
     this.header,
     this.successRoute,
     this.onSubscategoryTap,
+    required this.category,
   });
   final String? buttonTitle;
   final PreferenceCubit cubit;
   final Widget? header;
   final Color backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
+  final String category;
   final Function(String category, String subCategory)? onSubscategoryTap;
 
   @override
@@ -50,22 +50,22 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
                     PreferenceHeaderWideget(header: header),
                     Expanded(child: _subCategoryBuilder(state)),
                     if (onSubscategoryTap == null)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 80.w),
-                      child: CommonButton(
-                        titleText: buttonTitle ?? 'Next',
-                        onTap: () {
-                          if (successRoute != null) {
-                            appRouter.replaceAll([successRoute!]);
-                          } else {
-                            appRouter.pop();
-                            appRouter.pop(
-                              MapEntry(state.selectedCategory ?? '', state.selectedSubcategories),
-                            );
-                          }
-                        },
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 80.w),
+                        child: CommonButton(
+                          titleText: buttonTitle ?? 'Next',
+                          onTap: () {
+                            if (successRoute != null) {
+                              appRouter.replaceAll([successRoute!]);
+                            } else {
+                              appRouter.pop();
+                              appRouter.pop(
+                                MapEntry(category, state.selectedSubcategories[category] ?? []),
+                              );
+                            }
+                          },
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -78,16 +78,16 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
 
   Widget _subCategoryBuilder(PreferenceState state) {
     return ListView.builder(
-      itemCount: state.data[state.selectedCategory!]?.length ?? 0,
+      itemCount: state.data[category]?.length ?? 0,
       itemBuilder: (context, index) {
-        final subCategory = state.data[state.selectedCategory!]![index];
-        final isSelected = state.selectedSubcategories.contains(subCategory);
+        final String subCategory = state.data[category]![index];
+        final isSelected = state.selectedSubcategories[category]?.contains(subCategory) ?? false;
         return GestureDetector(
           onTap: () {
             if (onSubscategoryTap != null) {
-              onSubscategoryTap!(state.selectedCategory!, subCategory);
+              onSubscategoryTap!(category, subCategory);
             } else {
-              cubit.selectSubcategory(subCategory);
+              cubit.selectSubcategory(subcategory: subCategory, category: category);
             }
           },
           child: Container(

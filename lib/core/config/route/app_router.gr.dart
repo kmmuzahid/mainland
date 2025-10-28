@@ -726,6 +726,7 @@ class PerfenceSubcategoryRoute
     _i37.Widget? header,
     _i36.PageRouteInfo<Object?>? successRoute,
     dynamic Function(String, String)? onSubscategoryTap,
+    required String category,
     List<_i36.PageRouteInfo>? children,
   }) : super(
          PerfenceSubcategoryRoute.name,
@@ -737,6 +738,7 @@ class PerfenceSubcategoryRoute
            header: header,
            successRoute: successRoute,
            onSubscategoryTap: onSubscategoryTap,
+           category: category,
          ),
          initialChildren: children,
        );
@@ -755,6 +757,7 @@ class PerfenceSubcategoryRoute
         header: args.header,
         successRoute: args.successRoute,
         onSubscategoryTap: args.onSubscategoryTap,
+        category: args.category,
       );
     },
   );
@@ -769,6 +772,7 @@ class PerfenceSubcategoryRouteArgs {
     this.header,
     this.successRoute,
     this.onSubscategoryTap,
+    required this.category,
   });
 
   final _i37.Key? key;
@@ -785,9 +789,11 @@ class PerfenceSubcategoryRouteArgs {
 
   final dynamic Function(String, String)? onSubscategoryTap;
 
+  final String category;
+
   @override
   String toString() {
-    return 'PerfenceSubcategoryRouteArgs{key: $key, backgroundColor: $backgroundColor, buttonTitle: $buttonTitle, cubit: $cubit, header: $header, successRoute: $successRoute, onSubscategoryTap: $onSubscategoryTap}';
+    return 'PerfenceSubcategoryRouteArgs{key: $key, backgroundColor: $backgroundColor, buttonTitle: $buttonTitle, cubit: $cubit, header: $header, successRoute: $successRoute, onSubscategoryTap: $onSubscategoryTap, category: $category}';
   }
 
   @override
@@ -799,7 +805,8 @@ class PerfenceSubcategoryRouteArgs {
         buttonTitle == other.buttonTitle &&
         cubit == other.cubit &&
         header == other.header &&
-        successRoute == other.successRoute;
+        successRoute == other.successRoute &&
+        category == other.category;
   }
 
   @override
@@ -809,7 +816,8 @@ class PerfenceSubcategoryRouteArgs {
       buttonTitle.hashCode ^
       cubit.hashCode ^
       header.hashCode ^
-      successRoute.hashCode;
+      successRoute.hashCode ^
+      category.hashCode;
 }
 
 /// generated route for

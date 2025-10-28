@@ -1,27 +1,41 @@
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 
 import 'preference_state.dart';
 
 class PreferenceCubit extends SafeCubit<PreferenceState> {
-  PreferenceCubit() : super(PreferenceState(selectedSubcategories: const []));
+  PreferenceCubit() : super(PreferenceState(selectedSubcategories: const {}));
 
-  void selectSubcategory(String subcategory) {
-    if (state.selectedSubcategories.contains(subcategory)) {
-      final List<String> updatedList = List.from(state.selectedSubcategories);
-      updatedList.remove(subcategory);
-      emit(state.copyWith(selectedSubcategories: updatedList));
+void selectSubcategory({required String subcategory, required String category}) {
+    // Create a new map to avoid mutating the current state
+    final Map<String, List<String>> updatedMap = Map.from(state.selectedSubcategories);
+    final currentSubcategories = List<String>.from(updatedMap[category] ?? []);
+
+    // Toggle the subcategory
+    if (currentSubcategories.contains(subcategory)) {
+      currentSubcategories.remove(subcategory);
+    } else {
+      // Check if we've reached the maximum allowed subcategories for this category
+      if (currentSubcategories.length >= 3) {
+        showSnackBar(
+          'You can select maximum 3 subcategories per category',
+          type: SnackBarType.warning,
+        );
       return;
     }
-    if (state.selectedSubcategories.length > 2) {
-      showSnackBar('You can select maximum 3 subcategories', type: SnackBarType.warning);
-      return;
+      currentSubcategories.add(subcategory);
     }
-    emit(state.copyWith(selectedSubcategories: [...state.selectedSubcategories, subcategory]));
+
+    // Update the map - remove the category if subcategories list is empty
+    if (currentSubcategories.isEmpty) {
+      updatedMap.remove(category);
+    } else {
+      updatedMap[category] = currentSubcategories;
   }
 
-  void selectCategory(String category) {
-    emit(state.copyWith(selectedCategory: category));
+    // Emit the new state
+    emit(state.copyWith(selectedSubcategories: updatedMap));
   }
+
+
 }
