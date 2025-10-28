@@ -10,6 +10,7 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/user/preferense/cubit/preference_cubit.dart';
 import 'package:mainland/user/preferense/cubit/preference_state.dart';
+import 'package:mainland/user/preferense/widgets/preference_actions_widget.dart';
 import 'package:mainland/user/preferense/widgets/preference_header_wideget.dart';
 
 @RoutePage()
@@ -49,22 +50,12 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
                   children: [
                     PreferenceHeaderWideget(header: header),
                     Expanded(child: _subCategoryBuilder(state)),
-                    if (onSubscategoryTap == null)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 80.w),
-                        child: CommonButton(
-                          titleText: buttonTitle ?? 'Next',
-                          onTap: () {
-                            if (successRoute != null) {
-                              appRouter.replaceAll([successRoute!]);
-                            } else {
-                              appRouter.pop();
-                              appRouter.pop(
-                                MapEntry(category, state.selectedSubcategories[category] ?? []),
-                              );
-                            }
-                          },
-                        ),
+                    PreferenceActionsWidget(
+                      buttonTitle: buttonTitle,
+                      successRoute: successRoute,
+                      category: category,
+                      state: state,
+                      showAllActions: onSubscategoryTap == null,
                       ),
                   ],
                 ),

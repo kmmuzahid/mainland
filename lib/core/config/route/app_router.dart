@@ -80,5 +80,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EventNotificationEnableRoute.page),
     AutoRoute(page: CreateEventRoute.page),
     AutoRoute(page: LocationRoute.page),
+    AutoRoute(page: AllSelectedPreferenceRoute.page),
   ];
 }

@@ -14,15 +14,22 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconGen {
   const $AssetsIconGen();
 
+  /// File path: assets/icon/appIcon.png
+  AssetGenImage get appIcon => const AssetGenImage('assets/icon/appIcon.png');
+
   /// File path: assets/icon/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/icon/icon.png');
+
+  /// File path: assets/icon/launcherIcon.png
+  AssetGenImage get launcherIcon =>
+      const AssetGenImage('assets/icon/launcherIcon.png');
 
   /// File path: assets/icon/venue_icon.png
   AssetGenImage get venueIcon =>
       const AssetGenImage('assets/icon/venue_icon.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [icon, venueIcon];
+  List<AssetGenImage> get values => [appIcon, icon, launcherIcon, venueIcon];
 }
 
 class $AssetsImagesGen {

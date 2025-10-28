@@ -6,18 +6,27 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
 class PrefenceCategoryWidget extends StatelessWidget {
-  const PrefenceCategoryWidget({super.key, required this.category, required this.onTap});
+  const PrefenceCategoryWidget({
+    super.key,
+    required this.category,
+    required this.onTap,
+    required this.selectedSubcategories,
+  });
 
   final String category;
   final Function() onTap;
+  final List<String> selectedSubcategories;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.all(15.w),
         decoration: BoxDecoration(
+          border: selectedSubcategories.isNotEmpty
+              ? Border.all(width: 1.2.w, color: AppColors.primaryColor)
+              : null,
           color: AppColors.primary50,
           borderRadius: BorderRadius.circular(12.r),
         ),

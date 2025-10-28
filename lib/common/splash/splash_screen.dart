@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         children: [
           const Spacer(),
-          CommonImage(imageSrc: Assets.icon.icon.path, width: 208, height: 142).center,
+          CommonImage(imageSrc: Assets.icon.appIcon.path, width: 208, height: 142).center,
           CommonText(
             text: AppString.appName,
             style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),

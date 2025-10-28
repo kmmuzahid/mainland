@@ -62,7 +62,7 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget _buildErrorWidget() {
-    return Image.asset(defaultImage ?? Assets.icon.icon.path);
+    return Image.asset(defaultImage ?? Assets.icon.appIcon.path);
   }
 
   Widget _buildNetworkImage() {
@@ -80,7 +80,7 @@ class CommonImage extends StatelessWidget {
       progressIndicatorBuilder: (context, url, downloadProgress) {
         return Skeletonizer(
           enabled: (downloadProgress.progress ?? 0) < 1,
-          child: CommonImage(imageSrc: Assets.icon.icon.path),
+          child: CommonImage(imageSrc: Assets.icon.appIcon.path),
         );
       },
       errorWidget: (context, url, error) {

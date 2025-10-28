@@ -10,5 +10,5 @@ class CommonLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      CommonImage(imageSrc: Assets.icon.icon.path, width: width.w, height: height.w);
+      CommonImage(imageSrc: Assets.icon.appIcon.path, width: width.w, height: height.w);
 }

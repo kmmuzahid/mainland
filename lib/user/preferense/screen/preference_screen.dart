@@ -12,6 +12,7 @@ import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart
 import 'package:mainland/user/preferense/widgets/preference_header_wideget.dart';
 
 import '../cubit/preference_state.dart';
+import '../widgets/preference_actions_widget.dart';
 
 @RoutePage()
 class PreferenceScreen extends StatelessWidget {
@@ -27,7 +28,8 @@ class PreferenceScreen extends StatelessWidget {
   final String? buttonTitle;
   final Color? backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
-  final Function(String category, String subCategory)? onSubscategoryTap;
+  final Function(String category, String subCategory)?
+  onSubscategoryTap; //its dosent allow to mullti select category.
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +42,22 @@ class PreferenceScreen extends StatelessWidget {
           create: (context) => PreferenceCubit(),
           child: BlocBuilder<PreferenceCubit, PreferenceState>(
             builder: (context, state) {
-              return Column(
-                children: [
-                  PreferenceHeaderWideget(header: header),
-                  SizedBox(height: 20.h),
-                  Expanded(
-                    child: _categoryBuilder(state, context.read<PreferenceCubit>())),
-                ],
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    PreferenceHeaderWideget(header: header),
+                    SizedBox(height: 20.h),
+                    _categoryBuilder(state, context.read<PreferenceCubit>()),
+                    if (state.selectedSubcategories.isNotEmpty)
+                      PreferenceActionsWidget(
+                        buttonTitle: buttonTitle,
+                        successRoute: successRoute,
+                        category: null,
+                        state: state,
+                        showAllActions: onSubscategoryTap == null,
+                      ),
+                  ],
+                ),
               );
             },
           ),
@@ -57,6 +68,8 @@ class PreferenceScreen extends StatelessWidget {
 
   Widget _categoryBuilder(PreferenceState state, PreferenceCubit cubit) {
     return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 10,
@@ -68,6 +81,11 @@ class PreferenceScreen extends StatelessWidget {
         final category = state.data.keys.elementAt(index);
         return PrefenceCategoryWidget(
           category: category,
+          selectedSubcategories:
+              onSubscategoryTap !=
+                  null //
+              ? []
+              : ((state.selectedSubcategories[category]) ?? []),
           onTap: () {
             appRouter.push(
               PerfenceSubcategoryRoute(

@@ -22,6 +22,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 //emulator -list-avds
 //emulator -avd Pixel_9a
 
+//dart run flutter_launcher_icons:generate
+
 //rename import//Get-ChildItem -Recurse -Filter "*.dart" | ForEach-Object { (Get-Content $_.FullName) -replace 'package:bai_serve_agent', 'package:bai_serve_agent' | Set-Content $_.FullName }
 //git remote -v
 //git push sta main
