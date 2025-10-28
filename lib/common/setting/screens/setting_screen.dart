@@ -259,7 +259,7 @@ class SettingScreen extends StatelessWidget {
     Widget textWidget = CommonText(
       fontSize: 14,
       fontWeight: FontWeight.w400,
-      text: title.capitalizeEachWord(),
+      text: title,
     );
     if (subTitle != null) {
       textWidget = Column(

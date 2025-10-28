@@ -16,7 +16,7 @@ class CommonButton extends StatefulWidget {
     this.buttonRadius = 8,
     this.alignment = MainAxisAlignment.center,
     this.titleWeight = FontWeight.w600,
-    this.buttonHeight = 40,
+    this.buttonHeight = 45,
     this.borderWidth = 1.5,
     this.isLoading = false,
     this.buttonWidth = 80,

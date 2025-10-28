@@ -142,4 +142,19 @@ class AuthCubit extends SafeCubit<AuthState> {
     ]);
     emit(const AuthState());
   }
+
+  Future<void> calculateAge(DateTime? date) async {
+    if (date == null) {
+      emit(state.copyWith(age: 0));
+      return;
+    }
+    
+    final now = DateTime.now();
+    int age = now.year - date.year;
+    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
+      age--;
+    }
+    if (age < 0) age = 0; // Ensure age is not negative
+    emit(state.copyWith(age: age));
+  }
 }

@@ -302,6 +302,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchEventsHere => 'Search events here';
 
   @override
+  String get searchMessageHere => 'Search Message here';
+
+  @override
   String get messages => 'Messages';
 
   @override
@@ -435,10 +438,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get liveAvailableForSaleSoldAndExpired =>
-      'Live, available for Sale, Sold, and Expired';
+      'Live, Available for Sale, Sold, and Expired';
 
   @override
-  String get allAvailableTickets => 'All available Tickets';
+  String get allAvailableTickets => 'All Available Tickets';
 
   @override
   String get liveUnderReviewDraftAndClosedTickets =>
@@ -555,7 +558,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locations => 'Locations';
 
   @override
-  String get sendNotificationAboutAnEvent => 'Send Notification about an Event';
+  String get sendNotificationAboutAnEvent => 'Send Notification About an Event';
 
   @override
   String get uploadImage => 'Upload Image';

@@ -20,6 +20,43 @@ class Utils {
       appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.userLoginInfoModel.role;
   
 
+  static DateTime subtractYears(DateTime date, int yearsToSubtract) {
+    // Handle edge case for leap year (Feb 29 to non-leap year)
+    int newYear = date.year - yearsToSubtract;
+    int newMonth = date.month;
+    int newDay = date.day;
+
+    // Check if the resulting date would be invalid (e.g., Feb 29 to non-leap year)
+    // Dart automatically corrects this to Feb 28 if the new year is not a leap year
+    DateTime newDate;
+    try {
+      newDate = DateTime(
+        newYear,
+        newMonth,
+        newDay,
+        date.hour,
+        date.minute,
+        date.second,
+        date.millisecond,
+        date.microsecond,
+      );
+    } catch (e) {
+      // Fallback: if invalid date, set day to last valid day of the month
+      newDate = DateTime(
+        newYear,
+        newMonth + 1,
+        0,
+        date.hour,
+        date.minute,
+        date.second,
+        date.millisecond,
+        date.microsecond,
+      );
+    }
+    return newDate;
+  }
+
+
 
   static String formatDateTimeToHms(DateTime dateTime) {
     final hours = dateTime.hour.toString().padLeft(2, '0');

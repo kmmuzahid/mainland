@@ -81,7 +81,7 @@ class ChatListScreen extends StatelessWidget {
         CommonTextField(
           backgroundColor: AppColors.backgroundWhite,
           prefixIcon: const Icon(Icons.search),
-          hintText: AppString.searchEventsHere,
+          hintText: AppString.searchMessageHere,
           validationType: ValidationType.notRequired,
         ),
       ],

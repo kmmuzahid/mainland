@@ -2,6 +2,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 
+import 'input_formatters/date_input_formatter.dart';
+import 'input_formatters/phone_input_formater.dart';
+
 enum ValidationType {
   validateRequired,
   validateEmail,
@@ -28,9 +31,17 @@ enum ValidationType {
   notRequired,
 }
 
+
+
 class InputHelper {
+  
   static List<TextInputFormatter> getInputFormatters(ValidationType type) {
     switch (type) {
+      case ValidationType.validateDate:
+        return [
+          DateFormatter(), // Deny spaces for email
+        ];
+
       case ValidationType.validateEmail:
         return [
           FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces for email
@@ -38,7 +49,7 @@ class InputHelper {
 
       case ValidationType.validatePhone:
         return [
-          FilteringTextInputFormatter.digitsOnly, // Allow only digits
+          PhoneNumberFormatter(), // Allow only digits
         ];
 
       case ValidationType.validatePassword:
@@ -317,16 +328,17 @@ class InputHelper {
   }
 
   // Phone number validation
-  static String? _validatePhone(String? value) {
+static String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return AppString.requiredField;
     }
-    final phoneRegex = RegExp(r'^\+?1?\d{9,15}$');
+    final phoneRegex = RegExp(r'^\d{3}-\d{3}-\d{4}$'); // Only xxx-xxx-xxxx
     if (!phoneRegex.hasMatch(value)) {
       return AppString.invalidPhone;
     }
     return null;
   }
+
 
   // Password validation
   static String? _validatePassword(String? value) {

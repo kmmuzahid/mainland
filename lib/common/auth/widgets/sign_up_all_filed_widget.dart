@@ -24,9 +24,11 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/gen/assets.gen.dart';
 import 'package:mainland/main.dart';
 
@@ -36,210 +38,222 @@ class SignUpAllField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomForm(
-      builder: (BuildContext context, GlobalKey<FormState> formKey) => SingleChildScrollView(
-        child: BlocProvider<AuthCubit>(
-          create: (context) => AuthCubit(),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //upload image
-                const CommonLogo().center,
-                CommonText(
-                  text: AppString.appName,
-                  style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
-                ).center,
-                CommonText(
-                  text: AppString.buySellKeepFavoriteTickets,
-                  style: AppTextStyles.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
-                  alignment: MainAxisAlignment.center,
-                ).center,
-                20.height,
-                CommonRadioGroup(
-                  options: {'attendee': AppString.attendee, 'organizer': AppString.organizer},
-                  onChanged: (value) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(
-                      cubit.state.signUpModel.copyWith(registrationType: value),
-                    );
-                  },
-                  initialKey: 'attendee',
-                  iconSize: 25.w,
-                  itemSpacing: 50.w,
-                  textStyle: AppTextStyles.titleMedium,
-                ).center,
-                18.height,
+    return BlocProvider.value(
+      value: BlocProvider.of<AuthCubit>(context),
+      child: CustomForm(
+        builder: (BuildContext context, GlobalKey<FormState> formKey) => SingleChildScrollView(
+          child: BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //upload image
+                    const CommonLogo().center,
+                    CommonText(
+                      text: AppString.appName,
+                      style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
+                    ).center,
+                    CommonText(
+                      text: AppString.buySellKeepFavoriteTickets,
+                      style: AppTextStyles.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
+                      alignment: MainAxisAlignment.center,
+                    ).center,
+                    20.height,
+                    CommonRadioGroup(
+                      options: {'attendee': AppString.attendee, 'organizer': AppString.organizer},
+                      onChanged: (value) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(
+                          cubit.state.signUpModel.copyWith(registrationType: value),
+                        );
+                      },
+                      initialKey: 'attendee',
+                      iconSize: 25.w,
+                      itemSpacing: 50.w,
+                      textStyle: AppTextStyles.titleMedium,
+                    ).center,
+                    18.height,
 
-                /// User Name here
-                CommonTextField(
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  prefixIcon: _requiredIcon(),
-                  hintText: AppString.fullName,
-                  validationType: ValidationType.validateFullName,
-                  onSaved: (value, controller) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(fullName: value));
-                  },
-                ),
+                    /// User Name here
+                    CommonTextField(
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      prefixIcon: _requiredIcon(),
+                      hintText: AppString.fullName,
+                      validationType: ValidationType.validateFullName,
+                      onSaved: (value, controller) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(
+                          cubit.state.signUpModel.copyWith(fullName: value),
+                        );
+                      },
+                    ),
 
-                /// User Email here
-                10.height,
-                CommonTextField(
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  prefixIcon: _requiredIcon(),
-                  hintText: AppString.emailAddress,
-                  validationType: ValidationType.validateEmail,
-                  onSaved: (value, controller) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(email: value));
-                  },
-                ),
-                10.height,
-                CommonTextField(
-                  prefixIcon: _requiredIcon(),
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  validationType: ValidationType.validatePassword,
-                  hintText: AppString.password,
-                  onChanged: (value) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(password: value));
-                  },
-                ),
-                10.height,
+                    /// User Email here
+                    10.height,
+                    CommonTextField(
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      prefixIcon: _requiredIcon(),
+                      hintText: AppString.emailAddress,
+                      validationType: ValidationType.validateEmail,
+                      onSaved: (value, controller) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(email: value));
+                      },
+                    ),
+                    10.height,
+                    CommonTextField(
+                      prefixIcon: _requiredIcon(),
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      validationType: ValidationType.validatePassword,
+                      hintText: AppString.password,
+                      onChanged: (value) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(
+                          cubit.state.signUpModel.copyWith(password: value),
+                        );
+                      },
+                    ),
+                    10.height,
 
-                /// User Phone here
-                _dateOfBirth(),
+                    /// User Phone here
+                    _dateOfBirth(context, state),
 
-                10.height,
-                CommonTextField(
-                  prefixIcon: _requiredIcon(),
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  hintText: 'United States',
-                  isReadOnly: true,
-                  validationType: ValidationType.notRequired,
-                  onSaved: (value, controller) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(
-                      cubit.state.signUpModel.copyWith(country: 'United States'),
-                    );
-                  },
-                ),
-                10.height,
-                CommonDropDown<MapEntry<String, String>>(
-                  hint: AppString.state,
-                  items: usStates.entries.toList(),
-                  textStyle: AppTextStyles.bodyMedium,
-                  borderColor: AppColors.disable,
-                  prefix: _requiredIcon(),
-                  enableInitalSelection: false,
-                  backgroundColor: AppColors.disable,
-                  onChanged: (states) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(
-                      cubit.state.signUpModel.copyWith(state: states?.value),
-                    );
-                  },
-                  nameBuilder: (states) {
-                    return states.value;
-                  },
-                ),
+                    10.height,
+                    CommonTextField(
+                      prefixIcon: _requiredIcon(),
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      hintText: 'United States',
+                      isReadOnly: true,
+                      validationType: ValidationType.notRequired,
+                      onSaved: (value, controller) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(
+                          cubit.state.signUpModel.copyWith(country: 'United States'),
+                        );
+                      },
+                    ),
+                    10.height,
+                    CommonDropDown<MapEntry<String, String>>(
+                      hint: AppString.state,
+                      items: usStates.entries.toList(),
+                      textStyle: AppTextStyles.bodyMedium,
+                      borderColor: AppColors.disable,
+                      prefix: _requiredIcon(),
+                      enableInitalSelection: false,
+                      backgroundColor: AppColors.disable,
+                      onChanged: (states) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(
+                          cubit.state.signUpModel.copyWith(state: states?.value),
+                        );
+                      },
+                      nameBuilder: (states) {
+                        return states.value;
+                      },
+                    ),
 
-                10.height,
-                CommonTextField(
-                  prefixIcon: _requiredIcon(),
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  hintText: AppString.city,
-                  validationType: ValidationType.validateFullName,
-                  onSaved: (value, controller) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(city: value));
-                  },
-                ),
-                // All Text Filed here
-                10.height,
-                CommonTextField(
-                  prefixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CommonImage(width: 32, height: 24, imageSrc: Assets.images.usFlag.path),
-                      10.width,
-                      _requiredIcon(),
-                    ],
-                  ),
-                  borderColor: AppColors.disable,
-                  backgroundColor: AppColors.disable,
-                  hintText: 'XXX-XXX-XXXX',
-                  validationType: ValidationType.validatePhone,
-                  onSaved: (value, controller) {
-                    final cubit = context.read<AuthCubit>();
-                    cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(phone: value));
-                  },
-                ),
-                30.height,
-
-                // Submit Button Here
-                CommonButton(
-                  titleText: AppString.signUp,
-                  onTap: () {
-                    final cubit = context.read<AuthCubit>();
-                    formKey.currentState?.save();
-                    commonDialog(
-                      context: context,
-                      child: OtpVerifyWidget(
-                        email: cubit.state.signUpModel.email,
-                        onSuccess: () {
-                          appRouter.pop();
-                          _termsOfconditions(context, cubit);
-                          // appRouter.replaceAll([
-                          //   SignInRoute(
-                          //     ctrUsername: TextEditingController(),
-                          //     ctrPassword: TextEditingController(),
-                          //   ),
-                          // ]);
-                        },
+                    10.height,
+                    CommonTextField(
+                      prefixIcon: _requiredIcon(),
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      hintText: AppString.city,
+                      validationType: ValidationType.validateFullName,
+                      onSaved: (value, controller) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(city: value));
+                      },
+                    ),
+                    // All Text Filed here
+                    10.height,
+                    CommonTextField(
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CommonImage(width: 32, height: 24, imageSrc: Assets.images.usFlag.path),
+                          10.width,
+                          _requiredIcon(),
+                        ],
                       ),
-                    );
-                  },
-                ).center,
+                      borderColor: AppColors.disable,
+                      backgroundColor: AppColors.disable,
+                      hintText: 'XXX-XXX-XXXX',
+                      validationType: ValidationType.validatePhone,
+                      onSaved: (value, controller) {
+                        final cubit = context.read<AuthCubit>();
+                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(phone: value));
+                      },
+                    ),
+                    30.height,
 
-                30.height,
-
-                ///  Sign In Instruction here
-                const AlreadyAccountRichText().center,
-                24.height,
-                RichText(
-                  text: TextSpan(
-                    style: AppTextStyles.labelSmall?.copyWith(color: AppColors.outlineColor),
-                    children: [
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => appRouter.push(
-                            ShowInfoRoute(title: AppString.termsOfuse, content: state.about),
+                    // Submit Button Here
+                    CommonButton(
+                      titleText: AppString.signUp,
+                      onTap: () {
+                        final cubit = context.read<AuthCubit>();
+                        formKey.currentState?.save();
+                        commonDialog(
+                          context: context,
+                          child: OtpVerifyWidget(
+                            email: cubit.state.signUpModel.email,
+                            onSuccess: () {
+                              appRouter.pop();
+                              _termsOfconditions(context, cubit);
+                              // appRouter.replaceAll([
+                              //   SignInRoute(
+                              //     ctrUsername: TextEditingController(),
+                              //     ctrPassword: TextEditingController(),
+                              //   ),
+                              // ]);
+                            },
                           ),
-                        text: AppString.termsOfuse,
-                        style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
-                      ),
-                      const TextSpan(text: ' and '),
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => appRouter.push(
-                            ShowInfoRoute(title: AppString.privacyNotice, content: state.about),
+                        );
+                      },
+                    ).center,
+
+                    30.height,
+
+                    ///  Sign In Instruction here
+                    const AlreadyAccountRichText().center,
+                    24.height,
+                    RichText(
+                      text: TextSpan(
+                        style: AppTextStyles.labelSmall?.copyWith(color: AppColors.outlineColor),
+                        children: [
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => appRouter.push(
+                                ShowInfoRoute(title: AppString.termsOfuse, content: state.about),
+                              ),
+                            text: AppString.termsOfuse,
+                            style: AppTextStyles.labelSmall?.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
                           ),
-                        text: AppString.privacyNotice,
-                        style: AppTextStyles.labelSmall?.copyWith(color: AppColors.primaryColor),
+                          const TextSpan(text: ' and '),
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => appRouter.push(
+                                ShowInfoRoute(title: AppString.privacyNotice, content: state.about),
+                              ),
+                            text: AppString.privacyNotice,
+                            style: AppTextStyles.labelSmall?.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ).center,
-                60.height,
-              ],
-            ),
+                    ).center,
+                    60.height,
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -352,40 +366,40 @@ class SignUpAllField extends StatelessWidget {
     );
   }
 
-  BlocSelector<AuthCubit, AuthState, DateTime?> _dateOfBirth() {
-    return BlocSelector<AuthCubit, AuthState, DateTime?>(
-      selector: (state) => state.signUpModel.dateOfBirth,
-      builder: (context, date) {
-        final cubit = context.read<AuthCubit>();
-        return CommonDateInputTextField(
-          prefixIcon: _requiredIcon(),
-          borderColor: AppColors.disable,
-          backgroundColor: AppColors.disable,
-          onChanged: (date) {
-            cubit.onChangeSignUpModel(
-              cubit.state.signUpModel.copyWith(
-                dateOfBirth: DateTime.tryParse(date) ?? DateTime.now(),
-              ),
-            );
-          },
-          validation: (value) {
-            final result = InputHelper.validate(ValidationType.validateDate, value);
-            if (result != null) {
-              return result;
-            }
+  CommonDateInputTextField _dateOfBirth(BuildContext context, AuthState state) {
+    final cubit = context.read<AuthCubit>();
+    return CommonDateInputTextField(
+      minDate: Utils.subtractYears(DateTime.now(), 140),
+      maxDate: Utils.subtractYears(DateTime.now(), 18),
+      prefixIcon: _requiredIcon(),
+      borderColor: AppColors.disable,
+      backgroundColor: AppColors.disable,
+      onChanged: (date) {
+        final finalDate = DateTime.tryParse(date) ?? DateTime.now();
+        AppLogger.debug(finalDate.toString());
+        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: finalDate));
+        cubit.calculateAge(finalDate);
+      },
+      validation: (value) {
+        final result = InputHelper.validate(ValidationType.validateDate, value);
+        if (result != null) {
+          return result;
+        }
 
-            if (value != null && value.isNotEmpty) {
-              final date = DateTime.tryParse(value);
-              if (date == null) {
-                return 'Invalid date';
-              }
-              if (!date.isBefore(DateTime.now().subtract(const Duration(days: 18 * 365)))) {
-                return 'You must be at least 18 years old';
-              }
-            }
-            return null;
-          },
-          suffix: SizedBox(
+        if (value != null && value.isNotEmpty) {
+          final date = DateTime.tryParse(value);
+          if (date == null) {
+            return 'Invalid date';
+          }
+          if (!date.isBefore(DateTime.now().subtract(const Duration(days: 18 * 365)))) {
+            return 'You must be at least 18 years old';
+          }
+        }
+        return null;
+      },
+      suffix: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          return SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
@@ -399,32 +413,23 @@ class SignUpAllField extends StatelessWidget {
                   left: 5,
                   right: 5,
                   borderColor: AppColors.disable,
-                  text: '${calculateAge(date)} Yrs',
+                  text: '${state.age} Yrs',
                   style: TextStyle(color: AppColors.primaryText, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-          ),
-          onSave: (date) {
-            final cubit = context.read<AuthCubit>();
-            cubit.onChangeSignUpModel(
-              cubit.state.signUpModel.copyWith(dateOfBirth: DateTime.tryParse(date)),
-            );
-          },
-        );
+          );
+        },
+      ),
+      onSave: (date) {
+        final cubit = context.read<AuthCubit>();
+        final dateTime = DateTime.tryParse(date);
+        if (dateTime != null) {
+          cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: dateTime));
+          cubit.calculateAge(dateTime);
+        }
       },
     );
-  }
-
-  String calculateAge(DateTime? date) {
-    if (date == null) return '0';
-    final now = DateTime.now();
-    int years = now.year - date.year;
-    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
-      years--;
-    }
-    if (years < 0) years = 0;
-    return '$years';
   }
 
   Widget _requiredIcon() =>

@@ -641,6 +641,12 @@ abstract class AppLocalizations {
   /// **'Search events here'**
   String get searchEventsHere;
 
+  /// No description provided for @searchMessageHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Message here'**
+  String get searchMessageHere;
+
   /// No description provided for @messages.
   ///
   /// In en, this message translates to:
@@ -902,13 +908,13 @@ abstract class AppLocalizations {
   /// No description provided for @liveAvailableForSaleSoldAndExpired.
   ///
   /// In en, this message translates to:
-  /// **'Live, available for Sale, Sold, and Expired'**
+  /// **'Live, Available for Sale, Sold, and Expired'**
   String get liveAvailableForSaleSoldAndExpired;
 
   /// No description provided for @allAvailableTickets.
   ///
   /// In en, this message translates to:
-  /// **'All available Tickets'**
+  /// **'All Available Tickets'**
   String get allAvailableTickets;
 
   /// No description provided for @liveUnderReviewDraftAndClosedTickets.
@@ -1136,7 +1142,7 @@ abstract class AppLocalizations {
   /// No description provided for @sendNotificationAboutAnEvent.
   ///
   /// In en, this message translates to:
-  /// **'Send Notification about an Event'**
+  /// **'Send Notification About an Event'**
   String get sendNotificationAboutAnEvent;
 
   /// No description provided for @uploadImage.
