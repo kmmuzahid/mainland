@@ -91,6 +91,7 @@ class _TicketPickerState extends State<TicketPicker> {
               width: 55,
               height: 40,
               child: CommonTextField(
+                isReadOnly: true,
                 paddingHorizontal: 0,
                 paddingVertical: 0,
                 validationType: ValidationType.validateNumber,

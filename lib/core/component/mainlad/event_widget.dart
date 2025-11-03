@@ -41,6 +41,8 @@ class EventWidget extends StatelessWidget {
                     left: 10,
                     right: 10,
                     fontSize: 18,
+                    maxLines: 7,
+                    autoResize: false,
                     textAlign: TextAlign.left,
                     style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
                   ),

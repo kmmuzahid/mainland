@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 import '../other_widgets/common_loader.dart';
 import '../text/common_text.dart';
 
@@ -50,13 +51,14 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 80),
-      upperBound: 0.05,
-    )..addListener(() {
-      setState(() {});
-    });
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 80),
+          upperBound: 0.05,
+        )..addListener(() {
+          setState(() {});
+        });
     super.initState();
   }
 
@@ -75,12 +77,14 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
       text: TextSpan(
         text: widget.titleText,
         // Match CommonText: GoogleFonts.dmSans with scaled size and weight
-        style: GoogleFonts.dmSans(
+        
+        style: getTheme.textTheme.bodyMedium?.copyWith(
           fontSize: widget.titleSize.sp,
           fontWeight: widget.titleWeight,
           color: widget.titleColor ?? AppColors.onPrimaryColor,
         ),
       ),
+      
       maxLines: 1,
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
@@ -103,7 +107,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
     // Border is painted inside the container; include its stroke on both sides
     final double borderStroke = (widget.borderWidth.w * 2);
     double buttonWidth =
-        contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke;
+        contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke + 3.w;
     buttonWidth = buttonWidth < widget.buttonWidth.w ? widget.buttonWidth.w : buttonWidth;
 
     return LayoutBuilder(
@@ -117,7 +121,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
         return Transform.scale(
           scale: scale,
           child: Container(
-            width: finalWidth, // Clamped width
+            width: finalWidth + 3.w, // Clamped width
             height: widget.buttonHeight.h,
             decoration: BoxDecoration(
               color: widget.buttonColor ?? AppColors.primaryButton,

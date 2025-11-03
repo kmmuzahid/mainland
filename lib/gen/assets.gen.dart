@@ -43,6 +43,9 @@ class $AssetsImagesGen {
   AssetGenImage get appleWallet =>
       const AssetGenImage('assets/images/apple_wallet.png');
 
+  /// File path: assets/images/back.png
+  AssetGenImage get back => const AssetGenImage('assets/images/back.png');
+
   /// File path: assets/images/english.png
   AssetGenImage get english => const AssetGenImage('assets/images/english.png');
 
@@ -120,6 +123,7 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [
     accountBanner,
     appleWallet,
+    back,
     english,
     googleWallet,
     locationSampleMap,

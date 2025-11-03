@@ -164,6 +164,8 @@ class EventDetailsScreen extends StatelessWidget {
                 width: Utils.deviceSize.width * .5,
                 child: CommonText(
                   text: title,
+                  maxLines: 10,
+                  autoResize: false,
                   textAlign: TextAlign.left,
                   style: AppTextStyles.titleLarge?.copyWith(
                     color: AppColors.textWhite,

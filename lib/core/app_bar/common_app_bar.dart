@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:mainland/gen/assets.gen.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppBar({
@@ -44,7 +46,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
               appRouter.pop();
             }
           },
-          icon: const Icon(Icons.arrow_back_outlined),
+          icon: CommonImage(imageSrc: Assets.images.back.path),
         ),
     actions: actions ?? _appBarActions(),
     title:

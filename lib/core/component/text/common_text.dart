@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 
 class CommonText extends StatelessWidget {
   const CommonText({
@@ -29,6 +30,16 @@ class CommonText extends StatelessWidget {
     this.preffix,
     this.isDescription = false,
     this.textHeight,
+    this.autoResize = true,
+    this.minFontSize = 10,
+    this.maxAutoFontSize,
+    this.stepGranularity = 0.5,
+    this.softWrap,
+    this.decorationColor,
+    this.decoration,
+    this.textDirection,
+    this.height,
+    this.textScaleFactor = .9,
   });
 
   final double left;
@@ -53,6 +64,16 @@ class CommonText extends StatelessWidget {
   final Widget? preffix;
   final bool isDescription;
   final double? textHeight;
+  final bool autoResize;
+  final double minFontSize;
+  final double? maxAutoFontSize;
+  final double stepGranularity;
+  final bool? softWrap;
+  final Color? decorationColor;
+  final TextDecoration? decoration;
+  final TextDirection? textDirection;
+  final double? height;
+  final double textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +112,47 @@ class CommonText extends StatelessWidget {
   }
 
   Widget _textField(BuildContext context) {
+    // Start with the provided style or create a new one
+    final baseTextStyle = (style ?? const TextStyle()).copyWith(
+      fontSize: fontSize?.sp,
+      color: textColor,
+      fontWeight: fontWeight,
+      height: height,
+      decoration: decoration,
+      decorationColor: decorationColor,
+      fontFamily: style?.fontFamily ?? 'Selawik',
+    );
+
+    // If no style was provided, merge with theme's text style
+    final effectiveTextStyle = style != null
+        ? baseTextStyle
+        : Theme.of(context).textTheme.bodyMedium?.merge(baseTextStyle) ?? baseTextStyle;
+
+    // Calculate min/max font sizes for auto-resize
+    final double step = stepGranularity > 0 ? stepGranularity : 1.0;
+    final double baseMin = minFontSize > 0 ? minFontSize : 8.0; // Ensure minimum font size
+    final double baseMax = (maxAutoFontSize ?? fontSize ?? baseTextStyle.fontSize ?? 16);
+
+    // Helper functions for quantizing font sizes
+    double qFloor(double value, double step) {
+      final n = (value / step).floor();
+      return double.parse((n * step).toStringAsFixed(2));
+    }
+
+    double qCeil(double value, double step) {
+      final n = (value / step).ceil();
+      return double.parse((n * step).toStringAsFixed(2));
+    }
+
+    final double adjustedMin = qFloor(baseMin, step);
+    double adjustedMax = qCeil(baseMax, step);
+    if (adjustedMax < adjustedMin) {
+      adjustedMax = adjustedMin;
+    }
+    
+
     return Wrap(
       alignment: _convertAlignment(),
-      // mainAxisSize: MainAxisSize.min,
-      // mainAxisAlignment: alignment ?? MainAxisAlignment.start,
       children: [
         if (preffix != null) preffix!,
         if (preffix != null) 10.width,
@@ -103,26 +161,41 @@ class CommonText extends StatelessWidget {
                 data: text,
                 style: {
                   "body": Style(
-                    // fontSize: FontSize(fontSize ?? 12.sp),
-                    // color: textColor ?? getTheme.textTheme.bodyMedium?.color,
-                    // fontWeight: fontWeight ?? FontWeight.w400,
-                    fontFamily: getTheme.textTheme.bodyLarge?.fontFamily,
+                    fontFamily: 'Selawik',
                     margin: Margins.zero,
                     padding: HtmlPaddings.zero,
                     textAlign: textAlign,
-                    // backgroundColor: backgroundColor, // ✅ optional inline fallback
+                    fontSize: FontSize(fontSize?.toDouble() ?? 16.0),
+                    color: textColor,
+                    fontWeight: fontWeight,
                   ),
                 },
               )
+            : autoResize
+            ? FittedBox(
+                fit: BoxFit.scaleDown,
+                child: AutoSizeText(
+                  text,
+                  maxLines: maxLines,
+                  overflow: overflow ?? TextOverflow.ellipsis,
+                  textAlign: textAlign,
+                  softWrap: softWrap ?? true,
+                  textDirection: textDirection ?? TextDirection.ltr,
+                  style: effectiveTextStyle,
+                  minFontSize: adjustedMin,
+                  maxFontSize: adjustedMax,
+                  stepGranularity: step,
+                  wrapWords: false,
+                ),
+              )
             : Text(
                 text,
-                textAlign: textAlign,
                 maxLines: maxLines,
-                softWrap: true,
-                overflow: maxLines == null
-                    ? TextOverflow.visible
-                    : (overflow ?? TextOverflow.ellipsis),
-                style: getStyle(),
+                overflow: overflow ?? TextOverflow.ellipsis,
+                textAlign: textAlign,
+                softWrap: softWrap ?? true,
+                textDirection: textDirection ?? TextDirection.ltr,
+                style: baseTextStyle,
               ),
         if (suffix != null) 10.width,
         if (suffix != null) suffix!,

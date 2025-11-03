@@ -35,8 +35,8 @@ class PreferenceActionsWidget extends StatelessWidget {
           if (showAllActions) ...[
             10.height,
             CommonButton(
-              buttonWidth: 220,
-              titleText: 'See Added Preferences',
+              buttonWidth: 230,
+              titleText: 'See Selected Preferences',
               onTap: () {
                 appRouter.push(
                   AllSelectedPreferenceRoute(categoryData: state.selectedSubcategories),
@@ -45,7 +45,7 @@ class PreferenceActionsWidget extends StatelessWidget {
             ),
             10.height,
             CommonButton(
-              buttonWidth: 220,
+              buttonWidth: 230,
               titleText: buttonTitle ?? 'Next',
               onTap: () {
                 if (successRoute != null) {

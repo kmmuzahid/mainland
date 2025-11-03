@@ -6,7 +6,6 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
-
 class TicketFilterWidget extends StatelessWidget {
   const TicketFilterWidget({
     super.key,
@@ -34,23 +33,36 @@ class TicketFilterWidget extends StatelessWidget {
             children: List.generate(filters.length, (index) {
               final filter = filters[index];
               final isSelected = filter == selectedFilter;
-              return Expanded(
-                child: CommonButton(
-                  titleText: filter.displayName,
-                  buttonRadius: 20,
-                  buttonHeight: 32,
-                  borderWidth: 0,
-                  titleSize: 14,
-                  titleWeight: FontWeight.w400,
-                  borderColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
-                  onTap: () => onTap(filter),
-                  buttonColor: isSelected ? AppColors.primaryColor : AppColors.backgroundWhite,
-                ),
-              );
+              return filters.contains(TicketFilter.UnderReview)
+                  ? _button(filter, isSelected, constraints.maxWidth)
+                  : Expanded(
+                      child: _button(filter, isSelected, constraints.maxWidth),
+                    );
             }),
           );
-        },  
+        },
       ),
+    );
+  }
+
+  CommonButton _button(TicketFilter filter, bool isSelected, double maxWidth) {
+    double width = (maxWidth - (filters.length * 10 + 10)) / filters.length;
+
+    return CommonButton(
+      titleText: filter.displayName,
+      buttonRadius: 20,
+      buttonHeight: 32,
+      borderWidth: 0,
+      titleSize: 14,
+      buttonWidth: width,
+      titleWeight: FontWeight.w400,
+      borderColor: isSelected
+          ? AppColors.primaryColor
+          : AppColors.backgroundWhite,
+      onTap: () => onTap(filter),
+      buttonColor: isSelected
+          ? AppColors.primaryColor
+          : AppColors.backgroundWhite,
     );
   }
 }

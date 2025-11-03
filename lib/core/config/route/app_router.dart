@@ -37,11 +37,9 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRouteGuard> get guards => [AuthGuard()];
 
-  @override
-  RouteType get defaultRouteType => CustomRouteType(
-    transitionsBuilder: TransitionsBuilders.fadeIn,
-    duration: const Duration(milliseconds: 300),
-  );
+@override
+RouteType get defaultRouteType => const RouteType.cupertino();
+
 
   @override
   List<AutoRoute> get routes => [

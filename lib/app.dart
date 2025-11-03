@@ -23,7 +23,9 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
   }
 
   @override
-  ScrollViewKeyboardDismissBehavior getKeyboardDismissBehavior(BuildContext context) {
+  ScrollViewKeyboardDismissBehavior getKeyboardDismissBehavior(
+    BuildContext context,
+  ) {
     return ScrollViewKeyboardDismissBehavior.onDrag;
   }
 }
@@ -37,7 +39,10 @@ class MyApp extends StatelessWidget {
       ensureScreenSize: true,
       minTextAdapt: true,
       splitScreenMode: true,
-      designSize: const Size(428, 926), // ✅ Use the size your UI was designed for
+      designSize: const Size(
+        428,
+        926,
+      ), // ✅ Use the size your UI was designed for
       // designSize: const Size(428, 926),
       builder: (context, child) => MultiBlocProvider(
         providers: [
@@ -48,9 +53,9 @@ class MyApp extends StatelessWidget {
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, themeState) {
-            FirebaseNotificationHandler.instance.setNotificationCubit(
-              context.read<NotificationCubit>(),
-            );
+            // FirebaseNotificationHandler.instance.setNotificationCubit(
+            //   context.read<NotificationCubit>(),
+            // );
 
             return BlocBuilder<LanguageCubit, LanguageState>(
               builder: (context, languageState) {

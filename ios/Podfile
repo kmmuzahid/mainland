@@ -1,0 +1,56 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '15.0'  # Set minimum iOS version to 12.0 or higher
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# The following code sets the path for Flutter generated settings
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+# Path to Flutter generated settings
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+# Load Flutter pod helper methods (ensure it's included)
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+# Call Flutter-specific iOS Podfile setup (this is required for Flutter projects)
+flutter_ios_podfile_setup
+
+# The main target for your Flutter app
+target 'Runner' do
+  use_frameworks!  # Ensures that frameworks are used instead of static libraries
+  use_modular_headers!  # Required for Firebase and other plugins
+
+  # Install all Flutter plugin dependencies
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Add Firebase dependencies (adjust versions if needed)
+  pod 'Firebase/Core'       # Firebase core
+  pod 'Firebase/Messaging'  # Firebase messaging
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+# Post-installation block to apply Flutter-specific build settings to all targets
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end

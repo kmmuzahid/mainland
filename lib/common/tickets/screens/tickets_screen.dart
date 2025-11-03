@@ -49,8 +49,7 @@ class TicketsScreen extends StatelessWidget {
               builder: (context, state) {
                 return Column(
                   children: [
-                    if (appBar == null)
-                    20.height,
+                    if (appBar == null) 20.height,
                     CommonText(
                       text: title ?? AppString.tickets,
                       style: AppTextStyles.headlineSmall,
@@ -58,16 +57,19 @@ class TicketsScreen extends StatelessWidget {
                       textColor: AppColors.primaryColor,
                     ).start,
                     if (subTitle != null)
-                      CommonText(text: subTitle!, style: AppTextStyles.bodyMedium).start,
+                      CommonText(
+                        text: subTitle!,
+                        style: AppTextStyles.bodyMedium,
+                      ).start,
                     10.height,
                     if (filters.length > 1)
-                    TicketFilterWidget(
-                      filters: filters,
-                      selectedFilter: state.selectedFilter,
-                      onTap: (filter) {
-                        context.read<TicketsCubit>().filter(filter);
-                      },
-                    ),
+                      TicketFilterWidget(
+                        filters: filters,
+                        selectedFilter: state.selectedFilter,
+                        onTap: (filter) {
+                          context.read<TicketsCubit>().filter(filter);
+                        },
+                      ),
                     10.height,
                     Expanded(
                       child: SmartStaggeredLoader(

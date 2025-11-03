@@ -58,6 +58,8 @@ class TicketWidget extends StatelessWidget {
                     left: 10,
                     right: 10,
                     text: title,
+                    autoResize: false,
+                    maxLines: 7,
                     fontSize: 18,
                     textAlign: TextAlign.left,
                     style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
