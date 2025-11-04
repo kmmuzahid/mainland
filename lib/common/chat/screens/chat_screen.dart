@@ -11,6 +11,7 @@ import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 import 'package:mainland/common/chat/widgets/file_thumbnail_grid.dart';
 import 'package:mainland/common/chat/widgets/upload_files_widget.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_draggable_bottom_sheet.dart';
@@ -164,6 +165,9 @@ class ChatScreen extends StatelessWidget {
                         text: model.content,
                         textColor: isMe ? isMeText : null,
                         fontSize: 16.sp,
+                        autoResize: false,
+                        textAlign: TextAlign.left,
+                        maxLines: 100,
                       ),
                     if (model.chatType == ChatType.callFailed)
                       Row(
@@ -209,29 +213,27 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: getTheme.colorScheme.outlineVariant,
-      title: Row(
+  CommonAppBar _appBar(BuildContext context) {
+    return CommonAppBar(
+      isCenterTitle: false,
+      titleWidget: Row(
         children: [
-          CommonImage(imageSrc: chatListItemModel.userImage, size: 29, borderRadius: 29),
+          CommonImage(imageSrc: chatListItemModel.userImage, size: 35, borderRadius: 7),
           10.width,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CommonText(text: chatListItemModel.userName, style: getTheme.textTheme.titleSmall),
+              CommonText(
+                text: chatListItemModel.userName,
+                fontWeight: FontWeight.w600,
+                textColor: AppColors.greay400,
+                fontSize: 16,
+              ),
               // CommonText(text: chatListItemModel.userStatus.displayName),
             ],
           ),
         ],
-      ),
-      leadingWidth: 40,
-      leading: GestureDetector(
-        onTap: appRouter.pop,
-        child: const Padding(padding: EdgeInsets.only(left: 10), child: Icon(Icons.arrow_back_ios)),
-      ),
-      actionsPadding: const EdgeInsets.only(right: 10),
-      titleSpacing: 0,
+      ), 
       actions: [
         CommonPopupMenu(
           showTextTrigger: false,

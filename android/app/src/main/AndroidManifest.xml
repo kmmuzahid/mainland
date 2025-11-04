@@ -14,7 +14,7 @@
         android:maxSdkVersion="32" />
         
     <application
-        android:label="mainland"
+        android:label="The Mainland"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

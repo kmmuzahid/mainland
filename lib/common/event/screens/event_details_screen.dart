@@ -46,6 +46,14 @@ class EventDetailsScreen extends StatelessWidget {
     final String title =
         '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''';
     return Scaffold(
+      appBar: CommonAppBar(
+        actions: [
+          IconButton(
+            onPressed: appRouter.pop,
+            icon: Icon(Icons.ios_share_outlined, color: AppColors.primaryColor),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -119,7 +127,6 @@ class EventDetailsScreen extends StatelessWidget {
   Column _firstChild(String title, BuildContext context, bool showButton) {
     return Column(
       children: [
-        10.height,
         AspectRatio(
           aspectRatio: 0.562499994567678,
           child: Stack(
@@ -143,24 +150,8 @@ class EventDetailsScreen extends StatelessWidget {
                 ),
 
               Positioned(
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: appRouter.pop,
-                      icon: Icon(Icons.arrow_back_outlined, color: AppColors.backgroundWhite),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: appRouter.pop,
-                      icon: Icon(Icons.ios_share_outlined, color: AppColors.primaryColor),
-                    ),
-                  ],
-                ),
-              ),
-
-              Positioned(
                 left: 10.w,
-                top: 50.h,
+                top: 30.h,
                 width: Utils.deviceSize.width * .5,
                 child: CommonText(
                   text: title,

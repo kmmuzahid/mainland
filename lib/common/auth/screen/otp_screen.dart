@@ -8,6 +8,7 @@ import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/auth/widgets/otp_send_widget.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -21,7 +22,7 @@ class OtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(),
+    appBar: CommonAppBar(backgroundColor: AppColors.backgroundWhite),
     backgroundColor: AppColors.backgroundWhite,
     body: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),

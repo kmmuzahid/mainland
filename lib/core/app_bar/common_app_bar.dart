@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -46,7 +48,19 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
               appRouter.pop();
             }
           },
-          icon: CommonImage(imageSrc: Assets.images.back.path),
+          icon:
+              // Platform.isIOS
+              //     ? const Icon(Icons.arrow_back_ios, size: 25)
+              //     :
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: CommonImage(
+                  fill: BoxFit.contain,
+                  width: 25.w,
+                  height: 18.h,
+                  imageSrc: Assets.images.back.path,
+                ),
+              ),
         ),
     actions: actions ?? _appBarActions(),
     title:

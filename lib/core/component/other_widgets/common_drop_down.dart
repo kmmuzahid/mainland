@@ -28,7 +28,7 @@ class CommonDropDown<T> extends StatefulWidget {
   final TextStyle? textStyle;
   final Function(T? value) onChanged;
   final String Function(T value) nameBuilder;
-  final String? Function(String? value)? validator;
+  final String? Function(T)? validator;
   final bool isLoading;
   final double borderRadius;
   final Widget? prefix;
@@ -92,7 +92,7 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
 
           validator: (value) => (widget.validator == null || value == null)
               ? null
-              : widget.validator!(widget.nameBuilder(value)),
+              : widget.validator!(value),
           initialValue: widget.enableInitalSelection ? _selectedItem : null,
           decoration: InputDecoration(
             isDense: true,

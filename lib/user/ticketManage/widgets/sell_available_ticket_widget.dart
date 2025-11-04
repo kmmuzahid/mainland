@@ -62,6 +62,8 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
             width: Utils.deviceSize.width * .6,
             child: CommonText(
               text: widget.eventName,
+              autoResize: false,
+              maxLines: 10,
               style: AppTextStyles.titleLarge,
               textColor: AppColors.primaryColor,
               textAlign: TextAlign.left,
@@ -105,6 +107,8 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
                     text: AppString
                         .mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer,
                     fontSize: 14,
+                    autoResize: false,
+                    maxLines: 10,
                     fontWeight: FontWeight.w300,
                     top: 10,
                     bottom: 10,
@@ -112,6 +116,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
                 ),
               ],
             ),
+          10.height,
 
           CommonButton(
             titleText: isWantToSell ? AppString.sellNow : AppString.sellTicket,

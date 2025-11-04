@@ -31,6 +31,8 @@ class TicketSaveScreen extends StatelessWidget {
               width: Utils.deviceSize.width * .6,
               child: CommonText(
                 text: '''Juice WRLD  Eko Hotel & Suites Monday, September 6''',
+                autoResize: false,
+                maxLines: 10,
                 textAlign: TextAlign.start,
                 alignment: MainAxisAlignment.start,
                 fontWeight: FontWeight.w600,

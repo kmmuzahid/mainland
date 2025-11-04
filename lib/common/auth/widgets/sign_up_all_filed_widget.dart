@@ -9,6 +9,7 @@ import 'package:mainland/common/auth/model/us_states_model.dart';
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
+import 'package:mainland/common/auth/widgets/state_selector.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -71,7 +72,11 @@ class SignUpAllField extends StatelessWidget {
                       initialKey: 'attendee',
                       iconSize: 25.w,
                       itemSpacing: 50.w,
-                      textStyle: AppTextStyles.titleMedium,
+                      textStyle: AppTextStyles.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                        color: AppColors.greay400,
+                      ),
                     ).center,
                     18.height,
 
@@ -138,25 +143,7 @@ class SignUpAllField extends StatelessWidget {
                       },
                     ),
                     10.height,
-                    CommonDropDown<MapEntry<String, String>>(
-                      hint: AppString.state,
-                      items: usStates.entries.toList(),
-                      textStyle: AppTextStyles.bodyMedium,
-                      borderColor: AppColors.disable,
-                      prefix: _requiredIcon(),
-                      enableInitalSelection: false,
-                      backgroundColor: AppColors.disable,
-                      onChanged: (states) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(state: states?.value),
-                        );
-                      },
-                      nameBuilder: (states) {
-                        return states.value;
-                      },
-                    ),
-
+                    const StateSelector(),
                     10.height,
                     CommonTextField(
                       prefixIcon: _requiredIcon(),
@@ -282,8 +269,9 @@ class SignUpAllField extends StatelessWidget {
                     fontSize: 16,
                     textAlign: TextAlign.justify,
                     textColor: AppColors.greay300,
+
                     text:
-                        '''For Organizers  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets ''',
+                        '''<html><body>For Organizers  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets</body></html>''',
                   ),
                 ),
               ),

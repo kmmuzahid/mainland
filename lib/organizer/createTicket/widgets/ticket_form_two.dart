@@ -237,6 +237,7 @@ class TicketFormTwo extends StatelessWidget {
       children: [
         Expanded(
           child: CommonTextField(
+            hintText: 'Promo Code',
             isReadOnly:
                 isReadOnly ||
                 cubit.state.createEventModel.isFreeEvent ||
@@ -251,11 +252,13 @@ class TicketFormTwo extends StatelessWidget {
         SizedBox(
           width: 70.w,
           child: CommonTextField(
+            hintText: '10',
             isReadOnly:
                 isReadOnly ||
                 cubit.state.createEventModel.isFreeEvent ||
                 !cubit.state.createEventModel.offerPreSale,
             onSaved: (value, controller) {},
+            mexLength: 3,
             validationType: ValidationType.validateNumber,
             backgroundColor: AppColors.backgroundWhite,
           ),

@@ -19,6 +19,8 @@ class OrgLiveTicketWidget extends StatelessWidget {
           child: CommonText(
             bottom: 10,
             text: eventName,
+            autoResize: false,
+            maxLines: 10,
             style: AppTextStyles.titleLarge,
             textColor: AppColors.primaryColor,
             textAlign: TextAlign.left,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
@@ -23,7 +24,7 @@ class ForgetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.backgroundWhite,
-    appBar: AppBar(),
+    appBar: CommonAppBar(backgroundColor: AppColors.backgroundWhite),
     body: CustomForm(
       builder: (_, formKey) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),

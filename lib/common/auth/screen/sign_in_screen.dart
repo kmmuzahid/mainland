@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -30,7 +31,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       /// App Bar Sections Starts here
-      appBar: AppBar(),
+      appBar: CommonAppBar(backgroundColor: AppColors.backgroundWhite),
       backgroundColor: AppColors.backgroundWhite,
       /// Body Sections Starts here
       body: SingleChildScrollView(

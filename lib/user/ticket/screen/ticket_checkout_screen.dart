@@ -33,6 +33,8 @@ class TicketCheckoutScreen extends StatelessWidget {
               width: Utils.deviceSize.width * .6,
               child: CommonText(
                 text: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
+                autoResize: false,
+                maxLines: 10,
                 textAlign: TextAlign.left,
                 style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
               ),

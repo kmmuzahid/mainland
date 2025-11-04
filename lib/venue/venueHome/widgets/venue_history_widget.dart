@@ -54,6 +54,8 @@ class VenueHistoryWidget extends StatelessWidget {
                 child: CommonText(
                   text: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
                   fontSize: 22,
+                  autoResize: false,
+                  maxLines: 10,
                   textAlign: TextAlign.left,
                   textColor: AppColors.primaryColor,
                   fontWeight: FontWeight.w600,

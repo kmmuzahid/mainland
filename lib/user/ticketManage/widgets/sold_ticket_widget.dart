@@ -38,6 +38,8 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
             width: Utils.deviceSize.width * .6,
             child: CommonText(
               text: widget.eventName,
+              autoResize: false,
+              maxLines: 10,
               style: AppTextStyles.titleLarge,
               textColor: AppColors.primaryColor,
               textAlign: TextAlign.left,
@@ -61,6 +63,8 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
                   text: AppString
                       .whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent,
                   fontSize: 14,
+                  autoResize: false,
+                  maxLines: 10,
                   fontWeight: FontWeight.w300,
                   top: 10,
                   bottom: 10,

@@ -38,6 +38,8 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
               child: CommonText(
                 text: eventName,
                 style: AppTextStyles.titleLarge,
+                autoResize: false,
+                maxLines: 10,
                 textColor: AppColors.primaryColor,
                 textAlign: TextAlign.left,
                 alignment: MainAxisAlignment.start,

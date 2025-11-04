@@ -118,9 +118,8 @@ class _RadioItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = selected ? AppColors.primaryColor : AppColors.secondaryText;
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

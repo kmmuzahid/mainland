@@ -32,6 +32,8 @@ class EventNotificationEnableScreen extends StatelessWidget {
                 child: CommonText(
                   text: title,
                   fontSize: 22,
+                  autoResize: false,
+                  maxLines: 10,
                   textAlign: TextAlign.left,
                   fontWeight: FontWeight.w600,
                   style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
@@ -42,6 +44,8 @@ class EventNotificationEnableScreen extends StatelessWidget {
               const CommonText(
                 textAlign: TextAlign.left,
                 fontSize: 12,
+                autoResize: false,
+                maxLines: 3,
                 text:
                     'Send one Message per issue. Avoid repeating Messages on the same issue to ensure quick Notification.',
               ).start,

@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Mainland'**
+  /// **'The Mainland'**
   String get appName;
 
   /// No description provided for @requiredField.
