@@ -43,7 +43,7 @@ class EventNotificationEnableScreen extends StatelessWidget {
               const CommonText(text: 'Notification', fontSize: 16).start,
               const CommonText(
                 textAlign: TextAlign.left,
-                fontSize: 12,
+                fontSize: 14,
                 autoResize: false,
                 maxLines: 3,
                 text:

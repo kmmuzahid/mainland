@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/main.dart';
 
@@ -32,13 +33,19 @@ class NotificationItem extends StatelessWidget {
                   children: [
                     CommonText(
                       text: item.notification?.title ?? '',
-                      style: getTheme.textTheme.titleSmall,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      textColor: AppColors.greay400,
                     ),
                     CommonText(
+                      autoResize: false,
                       text: item.notification?.body ?? '',
-                      textAlign: TextAlign.justify,
-                      fontSize: 10,
+                      maxLines: 2,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      textColor: AppColors.greay400,
                     ),
+                   
                   ],
                 ),
               ),
