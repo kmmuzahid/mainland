@@ -49,10 +49,10 @@ class SignInScreen extends StatelessWidget {
               CommonText(
                 textAlign: TextAlign.start,
                 text: '${AppString.welcomeBack}\n${AppString.youHaveBeenMissed}',
-                style: getTheme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w400,
-                  height: 1,
-                ),
+                maxLines: 2,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+               
               ),
               20.height,
               CommonText(

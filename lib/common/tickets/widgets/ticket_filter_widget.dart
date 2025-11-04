@@ -30,6 +30,7 @@ class TicketFilterWidget extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(filters.length, (index) {
               final filter = filters[index];
               final isSelected = filter == selectedFilter;
