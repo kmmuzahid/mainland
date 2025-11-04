@@ -40,7 +40,7 @@ class EventWidget extends StatelessWidget {
                     text: title,
                     left: 10,
                     right: 10,
-                    fontSize: 18,
+                    fontSize: 16.5,
                     maxLines: 7,
                     autoResize: false,
                     textAlign: TextAlign.left,

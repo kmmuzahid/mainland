@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -49,18 +50,7 @@ class VenueHistoryWidget extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 bottom: 10,
               ).start,
-              SizedBox(
-                width: Utils.deviceSize.width * .6,
-                child: CommonText(
-                  text: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
-                  fontSize: 22,
-                  autoResize: false,
-                  maxLines: 10,
-                  textAlign: TextAlign.left,
-                  textColor: AppColors.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ).start,
+              const EventTitleWidget(title: null).start,
               ...{
                 'Premium': 10,
                 'Standard': 20,

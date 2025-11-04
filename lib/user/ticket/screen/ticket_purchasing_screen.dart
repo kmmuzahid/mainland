@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/required_icon_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/other_widgets/dual_field_row_widget.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -46,16 +47,7 @@ class TicketPurchaseScreen extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: Utils.deviceSize.width * .6,
-                      child: CommonText(
-                        text: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
-                        autoResize: false,
-                        maxLines: 10,
-                        textAlign: TextAlign.left,
-                        style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
-                      ),
-                    ).start,
+                    EventTitleWidget(title: null).start,
                     CommonText(
                       text: AppString.attendeeInformation,
                       style: AppTextStyles.bodyMedium,

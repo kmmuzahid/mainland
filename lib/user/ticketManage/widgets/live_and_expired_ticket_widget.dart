@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -33,18 +34,7 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: Utils.deviceSize.width * .6,
-              child: CommonText(
-                text: eventName,
-                style: AppTextStyles.titleLarge,
-                autoResize: false,
-                maxLines: 10,
-                textColor: AppColors.primaryColor,
-                textAlign: TextAlign.left,
-                alignment: MainAxisAlignment.start,
-              ),
-            ),
+            EventTitleWidget(title: eventName).start,
             const Spacer(),
             if (ticketFilter == TicketFilter.Live)
               Container(

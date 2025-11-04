@@ -40,6 +40,7 @@ class CommonText extends StatelessWidget {
     this.textDirection,
     this.height,
     this.textScaleFactor = .9,
+    this.preventScaling = false,
   });
 
   final double left;
@@ -74,6 +75,7 @@ class CommonText extends StatelessWidget {
   final TextDirection? textDirection;
   final double? height;
   final double textScaleFactor;
+  final bool preventScaling;
 
   @override
   Widget build(BuildContext context) {
@@ -112,94 +114,121 @@ class CommonText extends StatelessWidget {
   }
 
   Widget _textField(BuildContext context) {
-    // Start with the provided style or create a new one
-    final baseTextStyle = (style ?? const TextStyle()).copyWith(
-      fontSize: fontSize?.sp,
-      color: textColor,
-      fontWeight: fontWeight,
-      height: height,
-      decoration: decoration,
-      decorationColor: decorationColor,
-      fontFamily: style?.fontFamily ?? 'Selawik',
-    );
-
-    // If no style was provided, merge with theme's text style
-    final effectiveTextStyle = style != null
-        ? baseTextStyle
-        : Theme.of(context).textTheme.bodyMedium?.merge(baseTextStyle) ?? baseTextStyle;
-
-    // Calculate min/max font sizes for auto-resize
+    final effectiveTextStyle = getStyle();
     final double step = stepGranularity > 0 ? stepGranularity : 1.0;
-    final double baseMin = minFontSize > 0 ? minFontSize : 8.0; // Ensure minimum font size
-    final double baseMax = (maxAutoFontSize ?? fontSize ?? baseTextStyle.fontSize ?? 16);
+    final double baseMin = preventScaling
+        ? (effectiveTextStyle.fontSize ?? 12.0)
+        : (minFontSize > 0 ? minFontSize : 8.0);
+    final double baseMax = preventScaling
+        ? (effectiveTextStyle.fontSize ?? 24.0)
+        : (maxAutoFontSize ?? effectiveTextStyle.fontSize ?? 24.0);
 
     // Helper functions for quantizing font sizes
-    double qFloor(double value, double step) {
-      final n = (value / step).floor();
-      return double.parse((n * step).toStringAsFixed(2));
-    }
-
-    double qCeil(double value, double step) {
-      final n = (value / step).ceil();
-      return double.parse((n * step).toStringAsFixed(2));
-    }
+    double qFloor(double value, double step) => (value / step).floor() * step;
+    double qCeil(double value, double step) => (value / step).ceil() * step;
 
     final double adjustedMin = qFloor(baseMin, step);
     double adjustedMax = qCeil(baseMax, step);
     if (adjustedMax < adjustedMin) {
       adjustedMax = adjustedMin;
     }
-    
 
-    return Wrap(
-      alignment: _convertAlignment(),
+    Widget buildText() {
+      // For HTML content
+      if (_isHtml(text)) {
+        return Html(
+          data: text,
+          style: {
+            "body": Style(
+              fontFamily: 'Selawik',
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+              textAlign: textAlign,
+              fontSize: FontSize(effectiveTextStyle.fontSize ?? 16.0),
+              color: textColor,
+              fontWeight: fontWeight,
+            ),
+          },
+        );
+      }
+
+      // For multiline text
+      if (maxLines != null && maxLines! > 1) {
+        if (preventScaling) {
+          return ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [Colors.black, Colors.transparent],
+                stops: [0.8, 1.0],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: Text(
+              text,
+              maxLines: maxLines,
+              overflow: TextOverflow.fade,
+              textAlign: textAlign,
+              softWrap: softWrap ?? true,
+              textDirection: textDirection ?? TextDirection.ltr,
+              style: effectiveTextStyle,
+            ),
+          );
+        } else {
+          return AutoSizeText(
+            text,
+            maxLines: maxLines,
+            overflow: overflow ?? TextOverflow.ellipsis,
+            textAlign: textAlign,
+            softWrap: softWrap ?? true,
+            textDirection: textDirection ?? TextDirection.ltr,
+            style: effectiveTextStyle,
+            minFontSize: adjustedMin,
+            maxFontSize: adjustedMax,
+            stepGranularity: step,
+            wrapWords: true,
+          );
+        }
+      }
+
+      // For single line text
+      if (preventScaling) {
+        return Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          textAlign: textAlign,
+          textDirection: textDirection ?? TextDirection.ltr,
+          style: effectiveTextStyle,
+        );
+      } else {
+        return FittedBox(
+          fit: BoxFit.scaleDown,
+          child: AutoSizeText(
+            text,
+            maxLines: 1,
+            overflow: overflow ?? TextOverflow.ellipsis,
+            textAlign: textAlign,
+            textDirection: textDirection ?? TextDirection.ltr,
+            style: effectiveTextStyle,
+            minFontSize: adjustedMin,
+            maxFontSize: adjustedMax,
+            stepGranularity: step,
+            wrapWords: false,
+          ),
+        );
+      }
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (preffix != null) preffix!,
         if (preffix != null) 10.width,
-        _isHtml(text)
-            ? Html(
-                data: text,
-                style: {
-                  "body": Style(
-                    fontFamily: 'Selawik',
-                    margin: Margins.zero,
-                    padding: HtmlPaddings.zero,
-                    textAlign: textAlign,
-                    fontSize: FontSize(fontSize?.toDouble() ?? 16.0),
-                    color: textColor,
-                    fontWeight: fontWeight,
-                  ),
-                },
-              )
-            : autoResize
-            ? FittedBox(
-                fit: BoxFit.scaleDown,
-                child: AutoSizeText(
-                  text,
-                  maxLines: maxLines,
-                  overflow: overflow ?? TextOverflow.ellipsis,
-                  textAlign: textAlign,
-                  softWrap: softWrap ?? true,
-                  textDirection: textDirection ?? TextDirection.ltr,
-                  style: effectiveTextStyle,
-                  minFontSize: adjustedMin,
-                  maxFontSize: adjustedMax,
-                  stepGranularity: step,
-                  wrapWords: false,
-                ),
-              )
-            : Text(
-                text,
-                maxLines: maxLines,
-                overflow: overflow ?? TextOverflow.ellipsis,
-                textAlign: textAlign,
-                softWrap: softWrap ?? true,
-                textDirection: textDirection ?? TextDirection.ltr,
-                style: baseTextStyle,
-              ),
+        Flexible(child: buildText()),
         if (suffix != null) 10.width,
         if (suffix != null) suffix!,
-        if (suffix != null) 10.width,
       ],
     );
   }
@@ -210,14 +239,24 @@ class CommonText extends StatelessWidget {
   }
 
   TextStyle getStyle() {
+    final double effectiveFontSize = fontSize ?? 12.0;
+
     var style =
         this.style ??
-        GoogleFonts.dmSans(
-          fontSize: fontSize?.sp ?? 12.sp,
+        TextStyle(
+          fontFamily: getTheme.textTheme.bodyMedium?.fontFamily,
+          fontSize: effectiveFontSize,
           fontWeight: fontWeight ?? FontWeight.w400,
           color: textColor ?? getTheme.textTheme.bodyMedium?.color,
-        );  
-    final double? fontHeight = textHeight != null ? textHeight! / style.fontSize! : null;
+          height: height,
+          decoration: decoration,
+          decorationColor: decorationColor,
+        );
+
+    // Calculate line height if textHeight is provided
+    final double? fontHeight = textHeight != null ? (textHeight! / effectiveFontSize) : null;
+
+    // Apply styles with proper scaling
     if (textColor != null) {
       style = style.copyWith(color: textColor, height: fontHeight);
     }
@@ -225,7 +264,7 @@ class CommonText extends StatelessWidget {
       style = style.copyWith(fontWeight: fontWeight, height: fontHeight);
     }
     if (fontSize != null) {
-      style = style.copyWith(fontSize: fontSize!.sp, height: fontHeight);
+      style = style.copyWith(fontSize: effectiveFontSize, height: fontHeight);
     }
     return style;
   }

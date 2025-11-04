@@ -107,7 +107,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
     // Border is painted inside the container; include its stroke on both sides
     final double borderStroke = (widget.borderWidth.w * 2);
     double buttonWidth =
-        contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke + 3.w;
+        contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke + 5.w;
     buttonWidth = buttonWidth < widget.buttonWidth.w ? widget.buttonWidth.w : buttonWidth;
 
     return LayoutBuilder(

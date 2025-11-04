@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -39,16 +40,8 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
             builder: (context, state) {
               return Column(
                 children: [
-                  SizedBox(
-                    width: Utils.deviceSize.width * .6,
-                    child: CommonText(
-                      text: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
-                      autoResize: false,
-                      maxLines: 10,
-                      textAlign: TextAlign.left,
-                      style: AppTextStyles.headlineSmall?.copyWith(color: AppColors.primaryColor),
-                    ),
-                  ).start,
+                  EventTitleWidget(title: null).start,
+
                   Container(
                     margin: EdgeInsets.only(top: 10.h),
                     padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 15.h, bottom: 12.h),

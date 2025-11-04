@@ -35,8 +35,8 @@ class PreferenceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: const CommonAppBar(),
+      backgroundColor: AppColors.background,
+      appBar: CommonAppBar(backgroundColor: AppColors.background),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<PreferenceCubit>(

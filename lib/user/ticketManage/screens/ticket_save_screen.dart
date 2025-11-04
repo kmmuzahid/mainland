@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/image/common_image.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/app_utils.dart';
@@ -27,19 +28,8 @@ class TicketSaveScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           children: [
-            SizedBox(
-              width: Utils.deviceSize.width * .6,
-              child: CommonText(
-                text: '''Juice WRLD  Eko Hotel & Suites Monday, September 6''',
-                autoResize: false,
-                maxLines: 10,
-                textAlign: TextAlign.start,
-                alignment: MainAxisAlignment.start,
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                textColor: AppColors.primaryColor,
-              ),
-            ).start,
+            EventTitleWidget(title: null).start,
+
             CommonText(text: 'Standard', fontSize: 19, textColor: AppColors.greay300).center,
             10.height,
             Container(

@@ -158,10 +158,9 @@ class EventDetailsScreen extends StatelessWidget {
                   maxLines: 10,
                   autoResize: false,
                   textAlign: TextAlign.left,
-                  style: AppTextStyles.titleLarge?.copyWith(
-                    color: AppColors.textWhite,
-                    fontSize: 22.sp,
-                  ),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.16,
+                  textColor: AppColors.textWhite,
                 ),
               ),
               if (isEventUnderReview)
@@ -171,6 +170,7 @@ class EventDetailsScreen extends StatelessWidget {
                     left: 10.w,
                     right: 10.w,
                     bottom: 20.w,
+                    maxLines: 4,
                     text: AppString.yourEventIsUnderReview,
                     style: AppTextStyles.titleLarge,
                     textColor: AppColors.textWhite,

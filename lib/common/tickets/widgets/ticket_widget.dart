@@ -42,7 +42,8 @@ class TicketWidget extends StatelessWidget {
                     enableGrayscale:
                         filter == TicketFilter.Closed ||
                         filter == TicketFilter.Used ||
-                        filter == TicketFilter.Expired,
+                        filter == TicketFilter.Expired ||
+                        filter == TicketFilter.UnderReview,
                     imageSrc: image,
                     borderRadius: 12,
                   ),
@@ -60,7 +61,7 @@ class TicketWidget extends StatelessWidget {
                     text: title,
                     autoResize: false,
                     maxLines: 7,
-                    fontSize: 18,
+                    fontSize: 16.5,
                     textAlign: TextAlign.left,
                     style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -27,18 +28,7 @@ class EventNotificationEnableScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                width: Utils.deviceSize.width * .6,
-                child: CommonText(
-                  text: title,
-                  fontSize: 22,
-                  autoResize: false,
-                  maxLines: 10,
-                  textAlign: TextAlign.left,
-                  fontWeight: FontWeight.w600,
-                  style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-                ),
-              ).start,
+              EventTitleWidget(title: title).start,
               8.height,
               const CommonText(text: 'Notification', fontSize: 16).start,
               const CommonText(

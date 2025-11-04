@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -58,18 +59,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
     return CustomForm(
       builder: (contex, formKey) => Column(
         children: [
-          SizedBox(
-            width: Utils.deviceSize.width * .6,
-            child: CommonText(
-              text: widget.eventName,
-              autoResize: false,
-              maxLines: 10,
-              style: AppTextStyles.titleLarge,
-              textColor: AppColors.primaryColor,
-              textAlign: TextAlign.left,
-              alignment: MainAxisAlignment.start,
-            ),
-          ).start,
+          EventTitleWidget(title: widget.eventName).start,
           10.height,
           CommonText(text: AppString.ticketDetails, style: AppTextStyles.titleMedium).start,
           10.height,

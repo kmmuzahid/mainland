@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/app_utils.dart';
@@ -34,18 +35,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(
-            width: Utils.deviceSize.width * .6,
-            child: CommonText(
-              text: widget.eventName,
-              autoResize: false,
-              maxLines: 10,
-              style: AppTextStyles.titleLarge,
-              textColor: AppColors.primaryColor,
-              textAlign: TextAlign.left,
-              alignment: MainAxisAlignment.start,
-            ),
-          ).start,
+          EventTitleWidget(title: widget.eventName).start,
           10.height,
           AnimatedCrossFade(
             firstChild: _buildViewDetails(),

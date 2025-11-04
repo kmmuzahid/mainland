@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -14,19 +15,7 @@ class OrgLiveTicketWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: Utils.deviceSize.width * .6,
-          child: CommonText(
-            bottom: 10,
-            text: eventName,
-            autoResize: false,
-            maxLines: 10,
-            style: AppTextStyles.titleLarge,
-            textColor: AppColors.primaryColor,
-            textAlign: TextAlign.left,
-            alignment: MainAxisAlignment.start,
-          ),
-        ).start,
+        EventTitleWidget(title: eventName).start,
         Container(
           padding: EdgeInsets.all(10.w),
           decoration: BoxDecoration(

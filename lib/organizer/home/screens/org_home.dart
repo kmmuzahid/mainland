@@ -57,12 +57,17 @@ class OrgHome extends StatelessWidget {
           appRouter.push(const VenueSplashRoute());
         },
         child: Container(
-          padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 10.h, top: 10.h),
+          padding: EdgeInsets.only(left: 5.w, right: 5.w, bottom: 10.h, top: 10.h),
           decoration: BoxDecoration(
             color: AppColors.white400,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: CommonImage(imageSrc: Assets.icon.venueIcon.path, width: 90.w, height: 78.h),
+          child: CommonImage(
+            fill: BoxFit.contain,
+            imageSrc: Assets.icon.venueIcon.path,
+            width: 70.w,
+            height: 60.h,
+          ),
         ),
       ),
       middleWidget: GestureDetector(
