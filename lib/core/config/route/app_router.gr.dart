@@ -889,6 +889,7 @@ class PreferenceRoute extends _i37.PageRouteInfo<PreferenceRouteArgs> {
     String? buttonTitle,
     _i38.Color? backgroundColor,
     dynamic Function(String, String)? onSubscategoryTap,
+    bool diableBack = false,
     List<_i37.PageRouteInfo>? children,
   }) : super(
          PreferenceRoute.name,
@@ -899,6 +900,7 @@ class PreferenceRoute extends _i37.PageRouteInfo<PreferenceRouteArgs> {
            buttonTitle: buttonTitle,
            backgroundColor: backgroundColor,
            onSubscategoryTap: onSubscategoryTap,
+           diableBack: diableBack,
          ),
          initialChildren: children,
        );
@@ -918,6 +920,7 @@ class PreferenceRoute extends _i37.PageRouteInfo<PreferenceRouteArgs> {
         buttonTitle: args.buttonTitle,
         backgroundColor: args.backgroundColor,
         onSubscategoryTap: args.onSubscategoryTap,
+        diableBack: args.diableBack,
       );
     },
   );
@@ -931,6 +934,7 @@ class PreferenceRouteArgs {
     this.buttonTitle,
     this.backgroundColor,
     this.onSubscategoryTap,
+    this.diableBack = false,
   });
 
   final _i37.PageRouteInfo<Object?>? successRoute;
@@ -945,9 +949,11 @@ class PreferenceRouteArgs {
 
   final dynamic Function(String, String)? onSubscategoryTap;
 
+  final bool diableBack;
+
   @override
   String toString() {
-    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor, onSubscategoryTap: $onSubscategoryTap}';
+    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor, onSubscategoryTap: $onSubscategoryTap, diableBack: $diableBack}';
   }
 
   @override
@@ -958,7 +964,8 @@ class PreferenceRouteArgs {
         key == other.key &&
         header == other.header &&
         buttonTitle == other.buttonTitle &&
-        backgroundColor == other.backgroundColor;
+        backgroundColor == other.backgroundColor &&
+        diableBack == other.diableBack;
   }
 
   @override
@@ -967,7 +974,8 @@ class PreferenceRouteArgs {
       key.hashCode ^
       header.hashCode ^
       buttonTitle.hashCode ^
-      backgroundColor.hashCode;
+      backgroundColor.hashCode ^
+      diableBack.hashCode;
 }
 
 /// generated route for

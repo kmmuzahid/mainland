@@ -3,58 +3,87 @@ import 'package:flutter/services.dart';
 class DateFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // If the new value is empty or shorter than old value (backspace/delete)
+    if (newValue.text.isEmpty || newValue.text.length < oldValue.text.length) {
+      return newValue;
+    }
+
+    // Remove all non-digit characters
     String digits = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
-    String year = '';
-    String month = '';
-    String day = '';
+    
+    // If no digits, return empty
+    if (digits.isEmpty) return const TextEditingValue();
 
-    // Year
-    if (digits.length >= 4) {
-      year = digits.substring(0, 4);
-    } else if (digits.isNotEmpty) {
-      year = digits.substring(0, digits.length);
+    String formatted = '';
+
+    // Handle year (first 4 digits)
+    if (digits.length <= 4) {
+      return TextEditingValue(
+        text: digits,
+        selection: TextSelection.collapsed(offset: digits.length),
+      );
     }
+    
+    // We have at least 4 digits (year)
+    String year = digits.substring(0, 4);
+    formatted = year;
+    digits = digits.substring(4);
 
-    // Month with validation
-    if (digits.length >= 6) {
-      month = digits.substring(4, 6);
-      int m = int.parse(month);
-      if (m < 1) m = 1;
-      if (m > 12) m = 12;
-      month = m.toString().padLeft(2, '0');
-    } else if (digits.length > 4) {
-      month = digits.substring(4, digits.length);
-      int m = int.parse(month);
-      if (m < 1) m = 1;
-      if (m > 12) m = 12;
-      month = m.toString().padLeft(month.length, '0');
+    // Handle month (next 1-2 digits)
+    if (digits.isNotEmpty) {
+      // If we have more than 2 digits, take first 2 for month
+      String monthStr = digits.length > 2 ? digits.substring(0, 2) : digits;
+
+      // Parse month, default to 1 if invalid
+      int month = int.tryParse(monthStr) ?? 1;
+
+      // If we have 2 digits, validate month
+      if (monthStr.length == 2) {
+        if (month < 1) month = 1;
+        if (month > 12) month = 12;
+        formatted += '-${month.toString().padLeft(2, '0')}';
+
+        // Remove processed month digits
+        digits = digits.substring(2);
+
+        // Handle day if we have digits left
+        if (digits.isNotEmpty) {
+          int maxDay = _getDaysInMonth(month, int.parse(year));
+          String dayStr = digits.length > 2 ? digits.substring(0, 2) : digits;
+          int day = int.tryParse(dayStr) ?? 1;
+
+          if (dayStr.length == 2) {
+            if (day < 1) day = 1;
+            if (day > maxDay) day = maxDay;
+            formatted += '-${day.toString().padLeft(2, '0')}';
+          } else {
+            // Single digit day
+            formatted += '-$dayStr';
+          }
+        }
+      } else {
+        // Single digit month, just append without validation
+        formatted += '-$monthStr';
+      }
     }
-
-    // Day with validation
-    if (digits.length >= 8) {
-      day = digits.substring(6, 8);
-      int d = int.parse(day);
-      if (d < 1) d = 1;
-      if (d > 31) d = 31;
-      day = d.toString().padLeft(2, '0');
-    } else if (digits.length > 6) {
-      day = digits.substring(6, digits.length);
-      int d = int.parse(day);
-      if (d < 1) d = 1;
-      if (d > 31) d = 31;
-      day = d.toString().padLeft(day.length, '0');
-    }
-
-    // Combine to formatted text
-    String newText = '';
-    if (year.isNotEmpty) newText += year;
-    if (month.isNotEmpty) newText += '-$month';
-    if (day.isNotEmpty) newText += '-$day';
-    if (newText.length > 10) newText = newText.substring(0, 10);
 
     return TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length),
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
+  }
+  
+  int _getDaysInMonth(int month, int year) {
+    if (month == 2) {
+      // February
+      if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+        return 29; // Leap year
+      }
+      return 28;
+    } else if ([4, 6, 9, 11].contains(month)) {
+      return 30;
+    } else {
+      return 31;
+    }
   }
 }

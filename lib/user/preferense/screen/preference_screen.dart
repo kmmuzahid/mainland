@@ -24,6 +24,7 @@ class PreferenceScreen extends StatelessWidget {
     this.buttonTitle,
     this.backgroundColor,
     this.onSubscategoryTap,
+    this.diableBack = false,
   });
   final Widget? header;
   final String? buttonTitle;
@@ -31,12 +32,13 @@ class PreferenceScreen extends StatelessWidget {
   final PageRouteInfo<Object?>? successRoute;
   final Function(String category, String subCategory)?
   onSubscategoryTap; //its dosent allow to mullti select category.
+  final bool diableBack;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CommonAppBar(backgroundColor: AppColors.background),
+      appBar: diableBack ? null : CommonAppBar(backgroundColor: AppColors.background),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<PreferenceCubit>(

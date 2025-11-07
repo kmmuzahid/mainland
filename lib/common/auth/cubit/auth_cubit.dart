@@ -75,6 +75,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       } else {
         appRouter.replaceAll([
           PreferenceRoute(
+            diableBack: true,
             successRoute: const HomeRoute(),
             backgroundColor: AppColors.backgroundWhite,
           ),
