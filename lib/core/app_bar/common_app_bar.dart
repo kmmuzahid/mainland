@@ -37,7 +37,9 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     backgroundColor: backgroundColor ?? AppColors.background,
     centerTitle: isCenterTitle,
     actionsPadding: const EdgeInsets.only(bottom: 10),
-    leading:
+    leading: disableBack
+        ? const SizedBox.shrink()
+        :
         leading ??
         IconButton(
           onPressed: () {
