@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -19,7 +20,8 @@ class AlreadyAccountRichText extends StatelessWidget {
         children: [
           TextSpan(
             text: AppString.alreadyHaveAccount,
-            style: AppTextStyles.titleMedium?.copyWith(color: AppColors.outlineColor),
+
+            style: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
           ),
 
           /// Sign Up Button here

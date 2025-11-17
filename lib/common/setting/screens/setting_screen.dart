@@ -12,6 +12,7 @@ import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -170,11 +171,17 @@ class SettingScreen extends StatelessWidget {
                       onTap: () {
                         CommonDialogWithActions(
                           title: AppString.deleteAccount,
-                          subTitle: AppString.areYouSureYouWantToDeleteYourAccount,
+                          subTitle: AppString.accountDeleteMessage,
                           content: [
                             CommonTextField(
                               validationType: ValidationType.validatePassword,
                               hintText: AppString.password,
+                            ),
+                            10.height,
+                            CommonMultilineTextField(
+                              height: 110,
+                              validationType: ValidationType.validateRequired,
+                              hintText: AppString.enterYourReason,
                             ),
                           ],
                           onConfirm: () {},
@@ -188,7 +195,7 @@ class SettingScreen extends StatelessWidget {
                       title: AppString.locations,
                       subTitle: 'Lagos, Nigeria',
                       onTap: () {
-                        appRouter.push(const LocationRoute());
+                        appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
                       },
                     ),
                     20.height,
@@ -222,6 +229,8 @@ class SettingScreen extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             textColor: AppColors.primaryColor,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primaryColor,
                           ),
                         ),
                         const CommonText(text: ' & ', fontSize: 12, fontWeight: FontWeight.w400),
@@ -234,6 +243,8 @@ class SettingScreen extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             textColor: AppColors.primaryColor,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primaryColor,
                           ),
                         ),
                       ],

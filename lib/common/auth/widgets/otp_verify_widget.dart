@@ -70,8 +70,7 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
                 titleText: AppString.confim,
                 isLoading: state,
                 buttonRadius: 12.w,
-                buttonWidth: 100,
-                titleWeight: FontWeight.w500,
+                buttonWidth: 100, 
                 onTap: () {
                   // if (formKey.currentState?.validate() == true) {
                   context.read<OtpCubit>().verifyOtp(
@@ -136,8 +135,10 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
     return Flexible(
       flex: 0,
       child: PinCodeTextField(
+       
         controller: controller,
         autoDisposeControllers: false,
+        
         cursorColor: getTheme.textSelectionTheme.cursorColor,
         textStyle: getTheme.textTheme.bodyMedium?.copyWith(
           fontSize: 25,
@@ -150,6 +151,7 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
           borderRadius: BorderRadius.circular(04),
           fieldHeight: 40.w,
           fieldWidth: 40.w,
+          
           activeFillColor: AppColors.disable,
           selectedFillColor: AppColors.disable,
           inactiveFillColor: AppColors.disable,

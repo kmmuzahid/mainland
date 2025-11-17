@@ -220,6 +220,9 @@ class SignUpAllField extends StatelessWidget {
                             text: AppString.termsOfuse,
                             style: AppTextStyles.labelSmall?.copyWith(
                               color: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primaryColor,
+                              decorationThickness: 2,
                             ),
                           ),
                           const TextSpan(text: ' and '),
@@ -231,6 +234,9 @@ class SignUpAllField extends StatelessWidget {
                             text: AppString.privacyNotice,
                             style: AppTextStyles.labelSmall?.copyWith(
                               color: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primaryColor,
+                              decorationThickness: 2,
                             ),
                           ),
                         ],
@@ -296,6 +302,9 @@ class SignUpAllField extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primaryColor,
+                            decorationThickness: 2,
                           ),
                         ),
                         CommonSimpleRichTextContent(text: ', and '),
@@ -304,6 +313,9 @@ class SignUpAllField extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primaryColor,
+                            decorationThickness: 2,
                           ),
                         ),
                       ],

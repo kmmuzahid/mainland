@@ -160,7 +160,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteMessage =>
-      'Are you sure you want to delete your account?';
+      'Please note that once you delete your account, you will not be able to recover it. Kindly let us know why you want to delete your account.';
 
   @override
   String get otpSendButton => 'Send Code';
@@ -190,7 +190,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyNotice => 'Privacy Notice';
 
   @override
-  String get termsOfuse => 'Terms of Use';
+  String get termsOfuse => 'Term of Use';
 
   @override
   String get account => 'Account';
@@ -555,7 +555,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
-  String get locations => 'Locations';
+  String get locations => 'Location';
 
   @override
   String get sendNotificationAboutAnEvent => 'Send Notification About an Event';
@@ -581,6 +581,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get whenYouCanWithdrawFromYourWallet =>
       'When you can Withdraw from your Wallet';
+
+  @override
+  String get enterYourReason => 'Enter your reason';
 
   @override
   String

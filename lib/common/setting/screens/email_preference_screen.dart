@@ -75,6 +75,7 @@ class EmailPreferenceScreen extends StatelessWidget {
     required Function(bool value) onChanged,
   }) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CommonText(
           text: title,
@@ -83,8 +84,9 @@ class EmailPreferenceScreen extends StatelessWidget {
           overflow: TextOverflow.fade,
           textColor: AppColors.greay400,
           fontWeight: FontWeight.w400,
-        ),
-        const Spacer(),
+        ), 
+        20.width,
+        
         CommonSwitch(isActive: isActive, onChanged: onChanged),
       ],
     );

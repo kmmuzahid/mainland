@@ -211,7 +211,11 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
           errorMaxLines: 1,
           errorStyle: const TextStyle(fontSize: 0, height: 0),
           fillColor: widget.backgroundColor,
-          hintStyle: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
+          hintStyle: TextStyle(
+            fontSize: 16.sp,
+            color: AppColors.outlineColor,
+            fontStyle: FontStyle.italic,
+          ),
           prefixIcon: Column(
             children: [
               widget.prefixText?.isNotEmpty == true

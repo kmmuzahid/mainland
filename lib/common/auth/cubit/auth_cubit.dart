@@ -69,39 +69,20 @@ class AuthCubit extends SafeCubit<AuthState> {
     if (responce.statusCode == 200) {
       AppLogger.debug(responce.data.toString(), tag: 'AuthCubit');
       await _saveUserInfo(responce.data);
-      if (responce.data.role == Role.ORGANIZER) {
-        // change logic here for api integration
-        appRouter.replaceAll([const HomeRoute()]);
-      } else {
-        appRouter.replaceAll([
-          PreferenceRoute(
-            diableBack: true,
-            successRoute: const HomeRoute(),
-            backgroundColor: AppColors.backgroundWhite,
-          ),
-        ]);
-      }
+      appRouter.replaceAll([const HomeRoute()]);
     } else {
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
     }
   }
 
   Future<void> signUp(SignUpModel signUpModel) async {
-    ///front end delivery temp route
     appRouter.replaceAll([
-      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+          PreferenceRoute(
+            diableBack: true,
+            successRoute: const HomeRoute(),
+            backgroundColor: AppColors.backgroundWhite,
+          ),
     ]);
-
-    ///---------final
-    // if (state.isLoading) return;
-    // emit(const AuthState(isLoading: true));
-    // final responce = await _repository.signUp(signUpModel: signUpModel);
-    // if (responce.statusCode == 200) {
-    //   emit(const AuthState());
-    //   signIn(signUpModel.email, signUpModel.password);
-    // } else {
-    //   showSnackBar(responce.message ?? '', type: SnackBarType.error);
-    // }
   }
 
   Future<void> signInWithGoogle() async {}
@@ -149,7 +130,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       emit(state.copyWith(age: 0));
       return;
     }
-    
+
     final now = DateTime.now();
     int age = now.year - date.year;
     if (now.month < date.month || (now.month == date.month && now.day < date.day)) {

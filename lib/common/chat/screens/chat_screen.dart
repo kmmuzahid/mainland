@@ -2,6 +2,7 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
@@ -29,6 +30,9 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:mainland/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class ChatScreen extends StatelessWidget {
@@ -145,12 +149,15 @@ class ChatScreen extends StatelessWidget {
       children: [
         Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: Card(
-            color: isImageOnly
-                ? null
-                : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
-            child: SizedBox(
-              width: chatIemWidth,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: chatIemWidth, minWidth: 105.w),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isImageOnly
+                    ? null
+                    : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -161,13 +168,71 @@ class ChatScreen extends StatelessWidget {
                         child: FileThumbnailGrid(files: model.files!),
                       ),
                     if (model.content.isNotEmpty)
-                      CommonText(
-                        text: model.content,
-                        textColor: isMe ? isMeText : null,
-                        fontSize: 16.sp,
-                        autoResize: false,
-                        textAlign: TextAlign.left,
-                        maxLines: 100,
+                      GestureDetector(
+                        onLongPressDown: (details) {
+                          final String phoneNumber =
+                              RegExp(r'(?:\+?880|00880)?1[3-9]\d{8}')
+                                  .firstMatch(model.content)
+                                  ?.group(0)
+                                  ?.replaceAll(RegExp(r'[^0-9+]'), '') ??
+                              '';
+
+                          _showPopupMenu(
+                            tapPosition: details.globalPosition,
+                            context: context,
+                            items: [
+                              'Copy',
+                              if (phoneNumber.isNotEmpty) 'Call',
+                              if (phoneNumber.isNotEmpty) 'Message',
+                              if (isMe) 'Edit',
+                              if (isMe) 'Delete',
+                              'Reply',
+                            ],
+                            icons: [
+                              Icons.copy,
+                              if (phoneNumber.isNotEmpty) Icons.call,
+                              if (phoneNumber.isNotEmpty) Icons.message,
+                              if (isMe) Icons.delete,
+                              if (isMe) Icons.edit,
+                              Icons.reply,
+                            ],
+                            onItemSelected: (value) async {
+                              if (value == 'Copy') {
+                                await Clipboard.setData(ClipboardData(text: model.content));
+                              } else if (value == 'Delete') {
+                              } else if (value == 'Call') {
+                                //show phone number to phone dailer to make a call
+                                final phoneUrl = 'tel:$phoneNumber';
+                                if (await canLaunchUrl(Uri.parse(phoneUrl))) {
+                                  await launchUrl(Uri.parse(phoneUrl));
+                                } else {
+                                  showSnackBar(
+                                    'Could not launch phone app',
+                                    type: SnackBarType.error,
+                                  );
+                                }
+                              } else if (value == 'Reply') {
+                              } else if (value == 'Message') {
+                                if (await canLaunchUrl(Uri(scheme: 'sms', path: phoneNumber))) {
+                                  await launchUrl(Uri(scheme: 'sms', path: phoneNumber));
+                                } else {
+                                  showSnackBar(
+                                    'Could not launch messaging app',
+                                    type: SnackBarType.error,
+                                  );
+                                }
+                              }
+                            },
+                          );
+                        },
+                        child: CommonText(
+                          text: model.content,
+                          textColor: isMe ? isMeText : null,
+                          fontSize: 16.sp,
+                          autoResize: false,
+                          textAlign: TextAlign.left,
+                          maxLines: 100,
+                        ),
                       ),
                     if (model.chatType == ChatType.callFailed)
                       Row(
@@ -213,6 +278,57 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  void _showPopupMenu({
+    required BuildContext context,
+    required List<String> items,
+    List<IconData>? icons,
+    required Function onItemSelected,
+    required Offset tapPosition,
+  }) async {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Calculate position with bounds checking
+    final double left = tapPosition.dx.clamp(
+      0.0,
+      screenSize.width - 200,
+    ); // 200 is the estimated menu width
+    final double top = (tapPosition.dy + 10).clamp(
+      0.0,
+      screenSize.height - 200,
+    ); // 200 is the estimated menu height
+
+    final position = RelativeRect.fromLTRB(
+      left,
+      top,
+      left + 1, // Add minimal width to avoid errors
+      top + 1, // Add minimal height to avoid errors
+    );
+
+    final selected = await showMenu<String>(
+      context: context,
+      position: position,
+
+      color: AppColors.serfeceBG,
+      shadowColor: AppColors.disable,
+      items: List.generate(items.length, (index) {
+        return PopupMenuItem<String>(
+          value: items[index],
+          child: Row(
+            children: [
+              if (icons != null) Icon(icons![index], size: 18.w),
+              if (icons != null) SizedBox(width: 8.w),
+              Text(items[index], style: AppTextStyles.titleLarge),
+            ],
+          ),
+        );
+      }),
+    );
+
+    if (selected != null) {
+      onItemSelected(selected);
+    }
+  }
+
   CommonAppBar _appBar(BuildContext context) {
     return CommonAppBar(
       isCenterTitle: false,
@@ -233,7 +349,7 @@ class ChatScreen extends StatelessWidget {
             ],
           ),
         ],
-      ), 
+      ),
       actions: [
         CommonPopupMenu(
           showTextTrigger: false,

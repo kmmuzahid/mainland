@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageService {
+  static const String lastLocationKey = 'last_location';
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -15,5 +16,7 @@ class StorageService {
   Future<void> deleteAll() async {
     await _storage.deleteAll();
   }
+
+  
 
 }

@@ -168,7 +168,11 @@ class _CommonTextFieldState extends State<CommonTextField> {
           errorMaxLines: widget.showValidationMessage ? 2 : 1,
           errorStyle: widget.showValidationMessage ? null : const TextStyle(fontSize: 0, height: 0),
           fillColor: widget.backgroundColor,
-          hintStyle: TextStyle(fontSize: 16.sp, color: AppColors.outlineColor),
+          hintStyle: TextStyle(
+            fontSize: 16.sp,
+            color: AppColors.outlineColor,
+            fontStyle: FontStyle.italic,
+          ),
           prefixIcon: widget.prefixText?.isNotEmpty == true
               ? Padding(
                   padding: const EdgeInsets.only(

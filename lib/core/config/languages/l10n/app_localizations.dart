@@ -373,7 +373,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeleteMessage.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete your account?'**
+  /// **'Please note that once you delete your account, you will not be able to recover it. Kindly let us know why you want to delete your account.'**
   String get accountDeleteMessage;
 
   /// No description provided for @otpSendButton.
@@ -433,7 +433,7 @@ abstract class AppLocalizations {
   /// No description provided for @termsOfuse.
   ///
   /// In en, this message translates to:
-  /// **'Terms of Use'**
+  /// **'Term of Use'**
   String get termsOfuse;
 
   /// No description provided for @account.
@@ -1136,7 +1136,7 @@ abstract class AppLocalizations {
   /// No description provided for @locations.
   ///
   /// In en, this message translates to:
-  /// **'Locations'**
+  /// **'Location'**
   String get locations;
 
   /// No description provided for @sendNotificationAboutAnEvent.
@@ -1186,6 +1186,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'When you can Withdraw from your Wallet'**
   String get whenYouCanWithdrawFromYourWallet;
+
+  /// No description provided for @enterYourReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your reason'**
+  String get enterYourReason;
 
   /// No description provided for @whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent.
   ///

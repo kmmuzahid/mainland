@@ -13,6 +13,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
+  google_maps_flutter: 
+  flutter_polyline_points:
+  geolocator:
+  widget_to_marker:
+  url_launcher:
+
   cupertino_icons: 1.0.8
   flutter_screenutil: 5.9.3
   flutter_svg: 2.2.1

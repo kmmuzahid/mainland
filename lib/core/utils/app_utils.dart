@@ -59,9 +59,10 @@ class Utils {
 
 
   static String formatDateTimeToHms(DateTime dateTime) {
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
-    final seconds = dateTime.second.toString().padLeft(2, '0');
+    final localDate = dateTime.toLocal();
+    final hours = localDate.hour.toString().padLeft(2, '0');
+    final minutes = localDate.minute.toString().padLeft(2, '0');
+    final seconds = localDate.second.toString().padLeft(2, '0');
 
     return '$hours:$minutes:$seconds';
   }
@@ -75,10 +76,11 @@ class Utils {
   }
 
   static String formatTime(DateTime time) {
-    return DateFormat.jm().format(time); // 'jm' = e.g., 8:00 PM
+    return DateFormat.jm().format(time.toLocal()); // 'jm' = e.g., 8:00 PM
   }
 
   static String formatDateToShortMonth(DateTime dateTime) {
+    final localDate = dateTime.toLocal();
     const List<String> monthAbbr = [
       'Jan',
       'Feb',
@@ -94,16 +96,16 @@ class Utils {
       'Dec',
     ];
 
-    final String day = dateTime.day.toString().padLeft(2, '0');
-    final String month = monthAbbr[dateTime.month - 1];
-    final String year = dateTime.year.toString();
+    final String day = localDate.day.toString().padLeft(2, '0');
+    final String month = monthAbbr[localDate.month - 1];
+    final String year = localDate.year.toString();
 
     return '$day $month $year';
   }
 
   static String formatDateTime(DateTime dateTime) {
-    final dateFormat = DateFormat('MMMM d, h:mm a');
-    return dateFormat.format(dateTime);
+    final dateFormat = DateFormat('MMM dd, h:mm a');
+    return dateFormat.format(dateTime.toLocal());
   }
 
   static String formatDouble(double value) {

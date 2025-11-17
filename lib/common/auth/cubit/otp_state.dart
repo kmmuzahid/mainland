@@ -14,7 +14,7 @@ class OtpState extends Equatable {
   final String verificationId;
   final bool isVerified;
   final String username;
-  final maxCount = 180;
+  final maxCount = 90;
   final bool isLoading;
   final int count;
 

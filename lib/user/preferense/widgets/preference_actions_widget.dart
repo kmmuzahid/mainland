@@ -31,7 +31,7 @@ class PreferenceActionsWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (showAllActions && category != null)
-            CommonButton(buttonWidth: 220, titleText: 'Add More Preference', onTap: appRouter.pop),
+            CommonButton(buttonWidth: 230, titleText: 'Add More Preference', onTap: appRouter.pop),
           if (showAllActions) ...[
             10.height,
             CommonButton(

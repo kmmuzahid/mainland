@@ -40,7 +40,7 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
             builder: (context, state) {
               return Column(
                 children: [
-                  EventTitleWidget(title: null).start,
+                  const EventTitleWidget(title: null).start,
 
                   Container(
                     margin: EdgeInsets.only(top: 10.h),
@@ -97,20 +97,20 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
                 style: AppTextStyles.bodyMedium,
               ),
             ),
-            SizedBox(
+            Container( 
               width: 50.w,
               height: 40.w,
-              child: CommonText(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                color: AppColors.backgroundWhite,
+              ),
+              alignment: Alignment.center,
+              child: CommonText( 
                 text: value,
-                textColor: AppColors.greay,
-                borderColor: AppColors.backgroundWhite,
-                borderRadious: 8,
+                textColor: AppColors.greay, 
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
-                alignment: MainAxisAlignment.center,
-                top: 2,
+                fontSize: 14,  
                 style: AppTextStyles.bodyMedium,
-                backgroundColor: AppColors.backgroundWhite,
               ),
             ),
             Icon(Icons.arrow_forward_ios_rounded, color: AppColors.primaryColor, size: 20),

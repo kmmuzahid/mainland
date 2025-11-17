@@ -56,7 +56,14 @@ Future CommonDialogWithActions({
               fontSize: 24,
             ),
             if (subTitle != null)
-              CommonText(fontWeight: FontWeight.w400, bottom: 10, fontSize: 18, text: subTitle),
+              CommonText(
+                maxLines: 3,
+                fontWeight: FontWeight.w400,
+                textAlign: TextAlign.left,
+                bottom: 10,
+                fontSize: 16,
+                text: subTitle,
+              ),
             ...content,
             20.height,
             Row(

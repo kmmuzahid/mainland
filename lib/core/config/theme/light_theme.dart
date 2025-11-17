@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 // Using bundled font family 'Selawik' configured in pubspec.yaml
 
 final ThemeData lightTheme = ThemeData(
@@ -47,6 +48,14 @@ final ThemeData lightTheme = ThemeData(
   ),
 
   scaffoldBackgroundColor: const Color(0xFFF4F4F4), // 📱 Screen background
+
+  searchBarTheme: SearchBarThemeData(
+    hintStyle: const WidgetStatePropertyAll(
+      TextStyle(color: Color(0xFF979797), fontStyle: FontStyle.italic),
+    ),
+    
+    backgroundColor: WidgetStatePropertyAll(AppColors.background),
+  ),
 
   appBarTheme: const AppBarTheme(
     surfaceTintColor: Colors.transparent, // 🧼 Disable elevation tint

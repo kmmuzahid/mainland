@@ -47,7 +47,7 @@ class TicketPurchaseScreen extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    EventTitleWidget(title: null).start,
+                    const EventTitleWidget(title: null).start,
                     CommonText(
                       text: AppString.attendeeInformation,
                       style: AppTextStyles.bodyMedium,

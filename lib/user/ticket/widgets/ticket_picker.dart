@@ -61,7 +61,7 @@ class _TicketPickerState extends State<TicketPicker> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CommonText(
-                  text: '${widget.title} (${widget.limit})',
+                  text: '${widget.title.capitalizeEachWord()} (${widget.limit})',
                   style: AppTextStyles.bodyMedium,
                 ),
                 CommonText(
