@@ -184,7 +184,7 @@ class DioService {
     AppLogger.apiDebug('Tokens cleared.', tag: 'Auth');
   }
 
-  Future<ResponseState<T>> request<T>({
+  Future<ResponseState<T?>> request<T>({
     required RequestInput input,
     required T Function(dynamic data) responseBuilder,
     int retryCount = 0,
@@ -218,7 +218,12 @@ class DioService {
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         AppLogger.apiDebug('Request cancelled: ${e.message}', tag: input.endpoint);
-        rethrow; // Re-throw to propagate cancellation if needed
+        return ResponseState(
+          data: null,
+          message: e.message,
+          cancelToken: cancelToken,
+          statusCode: e.response?.statusCode,
+        );
       }
 
       // Important: The interceptor will handle the 401 re-execution logic.
@@ -244,11 +249,21 @@ class DioService {
 
       final err = _parseError(e);
       AppLogger.apiError('Request failed: $err', tag: input.endpoint);
-      rethrow; // Re-throw the error for higher-level handling
+      return ResponseState(
+        data: null,
+        message: e.message,
+        cancelToken: cancelToken,
+        statusCode: e.response?.statusCode,
+      );
     } catch (e) {
       final err = e.toString();
       AppLogger.apiError('Unknown error occurred: $err', tag: input.endpoint);
-      rethrow; // Re-throw for higher-level handling
+      return ResponseState(
+        data: null,
+        message: e.toString(),
+        cancelToken: cancelToken,
+        statusCode: 0,
+      );
     }
   }
 

@@ -10,7 +10,7 @@ abstract class AuthRepository {
     required Role role,
   });
 
-  Future<ResponseState<String>> signUp({required SignUpModel signUpModel});
+  Future<ResponseState<String?>> signUp({required SignUpModel signUpModel});
 
   Future<ResponseState<String>> sendOtp({required String username});
 

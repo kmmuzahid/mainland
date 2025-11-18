@@ -80,17 +80,22 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> signUp(SignUpModel signUpModel) async {
-    final response = await _dioService.request(
-      input: RequestInput(endpoint: ApiEndPoint.instance.signUp, method: RequestMethod.POST),
-      responseBuilder: (data) => data,
-    );
-    appRouter.replaceAll([
-          PreferenceRoute(
-            diableBack: true,
-            successRoute: const HomeRoute(),
-            backgroundColor: AppColors.backgroundWhite,
-          ),
-    ]);
+    final response = await _repository.signUp(signUpModel: signUpModel);
+    // if (response.statusCode == 200) {
+    //   AppLogger.debug(response.data.toString(), tag: 'AuthCubit');
+    //   await _saveUserInfo(response.data);
+    //   appRouter.replaceAll([const HomeRoute()]);
+    // } else {
+    //   showSnackBar(response.message ?? '', type: SnackBarType.error);
+    // }
+
+    // appRouter.replaceAll([
+    //       PreferenceRoute(
+    //         diableBack: true,
+    //         successRoute: const HomeRoute(),
+    //         backgroundColor: AppColors.backgroundWhite,
+    //       ),
+    // ]);
   }
 
   Future<void> signInWithGoogle() async {}
