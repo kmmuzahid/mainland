@@ -16,7 +16,7 @@ class CoreDependency {
     // Register StorageService (lazy singleton with init)
     // Register StorageService as eager singleton
     getIt.registerSingletonAsync<StorageService>(() async {
-      final storageService = StorageService();
+      final storageService = StorageService.instance;
       return storageService;
     });
 

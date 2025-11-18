@@ -29,17 +29,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   List<BottomNavigationBarItem> organizer() => [
-    _navBuilder(index: 0, image: Assets.images.navHome.path),
-    _navBuilder(index: 1, image: Assets.images.navTicket.path),
-    _navBuilder(index: 2, image: Assets.images.navAccount.path),
+    _navBuilder(index: 0, image: Assets.images.navHome),
+    _navBuilder(index: 1, image: Assets.images.navTicket),
+    _navBuilder(index: 2, image: Assets.images.navAccount),
     _navBuilder(index: 3, image: Assets.images.navChat.path),
   ];
 
   List<BottomNavigationBarItem> attendee() => [
-    _navBuilder(index: 0, image: Assets.images.navHome.path),
-    _navBuilder(index: 1, image: Assets.images.navFavorite.path),
-    _navBuilder(index: 2, image: Assets.images.navFanClub.path),
-    _navBuilder(index: 3, image: Assets.images.navTicket.path),
+    _navBuilder(index: 0, image: Assets.images.navHome),
+    _navBuilder(index: 1, image: Assets.images.navTicket),
+    _navBuilder(index: 2, image: Assets.images.navFanClub),
+    _navBuilder(index: 3, image: Assets.images.navFavorite),
     _navBuilder(index: 4, image: Assets.images.navChat.path),
   ];
 
@@ -95,7 +95,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     final icon = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CommonImage(imageSrc: image, imageColor: color),
+        CommonImage(size: 25, fill: BoxFit.contain, imageSrc: image, imageColor: color),
         const SizedBox(height: 4),
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),

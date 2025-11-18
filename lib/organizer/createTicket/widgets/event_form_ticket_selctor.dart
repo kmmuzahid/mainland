@@ -47,29 +47,34 @@ class EventFormTicketSelctor extends StatelessWidget {
 
   Widget _buildTicketForm({required bool isReadOnly}) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h), 
       decoration: BoxDecoration(
         color: AppColors.white400,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Table(
+        
         children: [
           TableRow(
+            
             children: [
               CommonText(
                 text: 'Type',
-                fontSize: 16,
+                fontSize: 14,
+                left: 15,
                 textColor: AppColors.greay300,
                 alignment: MainAxisAlignment.center,
               ),
               CommonText(
-                fontSize: 16,
+                left: 10,
+                fontSize: 14,
                 text: 'Set Unit Price(\$)',
                 textColor: AppColors.greay300,
                 alignment: MainAxisAlignment.center,
               ),
               CommonText(
-                fontSize: 16,
+                left: 10,
+                fontSize: 14,
                 text: 'Available Unit',
                 textColor: AppColors.greay300,
                 alignment: MainAxisAlignment.center,
@@ -111,7 +116,9 @@ class EventFormTicketSelctor extends StatelessWidget {
             child: CommonTextField(
               paddingVertical: 0,
               validationType: ValidationType.validateCurrency,
-              backgroundColor: AppColors.backgroundWhite,
+              backgroundColor: cubit.state.createEventModel.isFreeEvent
+                  ? AppColors.white100
+                  : AppColors.backgroundWhite,
               isReadOnly: isReadOnly,
               borderColor: AppColors.backgroundWhite,
               onSaved: (value, controller) {
@@ -127,7 +134,9 @@ class EventFormTicketSelctor extends StatelessWidget {
             child: CommonTextField(
               paddingVertical: 0,
               validationType: ValidationType.validateNumber,
-              backgroundColor: AppColors.backgroundWhite,
+              backgroundColor: cubit.state.createEventModel.isFreeEvent
+                  ? AppColors.white100
+                  : AppColors.backgroundWhite,
               borderColor: AppColors.backgroundWhite,
               isReadOnly: isReadOnly,
               onSaved: (value, controller) {

@@ -96,7 +96,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
                     textAlign: TextAlign.left,
                     text: AppString
                         .mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer,
-                    fontSize: 14,
+                    fontSize: 12,
                     autoResize: false,
                     maxLines: 10,
                     fontWeight: FontWeight.w300,

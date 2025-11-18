@@ -5,6 +5,7 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 
 import 'quill_custom_editor.dart';
 
@@ -17,7 +18,6 @@ class CommonMultilineTextField extends StatefulWidget {
     this.prefixIcon,
     this.controller,
     this.textInputAction = TextInputAction.next,
-    this.mexLength,
     this.prefixText,
     this.paddingHorizontal = 16,
     this.paddingVertical = 14,
@@ -39,7 +39,8 @@ class CommonMultilineTextField extends StatefulWidget {
     this.textAlign = TextAlign.left,
     this.enableHtml = false,
     this.height = 100,
-    this.maxLenght
+    this.maxLength,
+    this.maxWords,
   });
 
   final double borderWidth;
@@ -56,7 +57,6 @@ class CommonMultilineTextField extends StatefulWidget {
   final double paddingHorizontal;
   final double paddingVertical;
   final double borderRadius;
-  final int? mexLength;
   final VoidCallback? onTap;
   final TextEditingController? controller;
   final TextInputAction textInputAction;
@@ -67,9 +67,10 @@ class CommonMultilineTextField extends StatefulWidget {
   final Color? backgroundColor;
   final bool showValidationMessage;
   final TextAlign textAlign;
-  final int? maxLenght;
+  final int? maxLength;
   final bool enableHtml;
   final double height;
+  final int? maxWords;
 
   final String? Function(String? value)? validation;
 
@@ -81,6 +82,8 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
   late bool _obscureText;
+  int wordCount = 0;
+  int lengthCount = 0;
 
   // bool get _hasController => widget.controller != null;
 
@@ -149,6 +152,7 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     // if (enableHtml) {
@@ -165,132 +169,179 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
     //     borderWidth: borderWidth,
     //   );
     // }
-    return SizedBox(
-      height: widget.height,
-      child: TextFormField(
-        textAlignVertical: TextAlignVertical.top,
-        readOnly: widget.isReadOnly,
-        maxLines: null,
-        scrollPhysics: const BouncingScrollPhysics(),
-        inputFormatters: [
-          ...InputHelper.getInputFormatters(widget.validationType),
-          if (widget.maxLenght != null) LengthLimitingTextInputFormatter(widget.maxLenght),
-        ],
-        keyboardType: InputHelper.getKeyboardType(widget.validationType),
-        textAlign: widget.textAlign,
-        controller: _controller,
-        focusNode: _focusNode,
-        enableInteractiveSelection: !widget.isReadOnly,
-        obscureText: _obscureText,
-        onChanged: widget.onChanged,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        textInputAction: widget.textInputAction,
-        onSaved: _onSave,
-        maxLength: widget.mexLength,
-        onFieldSubmitted: _onSave,
-        onTap: widget.onTap,
-        validator:
-            widget.validation ??
-            (value) {
-              final error = InputHelper.validate(
-                widget.validationType,
-                value,
-                originalPassword: widget.originalPassword?.call(),
-              );
-              // Return the error to show the error border, but return null for the message if showValidationMessage is false
-              return widget.showValidationMessage ? error : (error != null ? '' : null);
-            },
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: widget.height),
+      child: Column(
+        children: [
+          Expanded(
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.top,
+              readOnly: widget.isReadOnly,
+              maxLines: null,
+              scrollPhysics: const BouncingScrollPhysics(),
+              inputFormatters: [
+                ...InputHelper.getInputFormatters(widget.validationType),
+                if (widget.maxLength != null) LengthLimitingTextInputFormatter(widget.maxLength),
+                if (widget.maxWords != null)
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    if (newValue.text.trim().isEmpty) return newValue;
 
-        style: getTheme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500, fontSize: 16.sp),
-       
-        expands: true, // expands to fill parent height
-        decoration: InputDecoration(
-          filled: true,
-          counterText: '',
+                    // Count words by splitting on whitespace and filtering out empty strings
+                    final words = newValue.text
+                        .trim()
+                        .split(' ')
+                        .where((word) => word.isNotEmpty)
+                        .length;
 
-          errorMaxLines: 1,
-          errorStyle: const TextStyle(fontSize: 0, height: 0),
-          fillColor: widget.backgroundColor,
-          hintStyle: TextStyle(
-            fontSize: 16.sp,
-            color: AppColors.outlineColor,
-            fontStyle: FontStyle.italic,
-          ),
-          prefixIcon: Column(
-            children: [
-              widget.prefixText?.isNotEmpty == true
-                  ? Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                    right: 5,
-                  ), // add some right padding to allow hint space
-                  child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
-                )
-              : Padding(
-                  padding: EdgeInsets.only(left: 10.w, right: widget.paddingHorizontal),
-                  child: widget.prefixIcon,
-                ),
-            ],
-          ),
-          suffixIconConstraints: BoxConstraints(
-            maxWidth:
-                widget.suffixIcon == null &&
-                    widget.validationType != ValidationType.validatePassword
-                ? widget.paddingHorizontal
-                : double.infinity,
-          ),
+                    // Allow the change if word count is within limit or if text is being deleted
+                    if (words <= widget.maxWords! || newValue.text.length < oldValue.text.length) {
+                      setState(() {
+                        wordCount = words;
+                        lengthCount = newValue.text.length;
+                      });
+                      return newValue;
+                    }
 
-          prefixIconConstraints: BoxConstraints(
-            maxWidth: widget.prefixIcon == null ? widget.paddingHorizontal : double.infinity,
-          ),
-          suffixIcon: widget.showActionButton
-              ? GestureDetector(
-                  onTap: () {
-                    _onSave(_controller.text.trim());
+                    // Otherwise, prevent the change
+                    return oldValue;
+                  }),
+              ],
+              keyboardType: InputHelper.getKeyboardType(widget.validationType),
+              textAlign: widget.textAlign,
+              controller: _controller,
+              focusNode: _focusNode,
+              enableInteractiveSelection: !widget.isReadOnly,
+              obscureText: _obscureText,
+              onChanged: widget.onChanged,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: widget.textInputAction,
+              onSaved: _onSave,
+              maxLength: widget.maxLength,
+              onFieldSubmitted: _onSave,
+              onTap: widget.onTap,
+              validator:
+                  widget.validation ??
+                  (value) {
+                    String? error = InputHelper.validate(
+                      widget.validationType,
+                      value,
+                      originalPassword: widget.originalPassword?.call(),
+                    );
+
+                    // Check word count if maxWords is set
+                    if (widget.maxWords != null && value != null && value.trim().isNotEmpty) {
+                      final wordCount = value.trim().split(' ').length;
+                      if (wordCount - 1 > widget.maxWords!) {
+                        error = 'Maximum ${widget.maxWords} words allowed';
+                      }
+                    }
+
+                    // Return the error to show the error border, but return null for the message if showValidationMessage is false
+                    return widget.showValidationMessage ? error : (error != null ? '' : null);
                   },
-                  child: widget.actionButtonIcon ?? const Icon(Icons.search),
-                )
-              : widget.validationType == ValidationType.validatePassword
-              ? (_obscureText ? _buildPasswordSuffixIcon() : _buildPasswordSuffixIcon())
-              : Padding(
-                  padding: EdgeInsets.only(right: 10, left: widget.paddingHorizontal),
-                  child: widget.suffixIcon,
+
+              style: getTheme.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+              ),
+
+              expands: true, // expands to fill parent height
+              decoration: InputDecoration(
+                filled: true,
+                counterText: '',
+
+                errorMaxLines: 1,
+                errorStyle: const TextStyle(fontSize: 0, height: 0),
+                fillColor: widget.backgroundColor,
+                hintStyle: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppColors.outlineColor,
+                  fontStyle: FontStyle.italic,
                 ),
-          prefixIconColor: _iconColor(),
-          suffixIconColor: _iconColor(),
+                prefixIcon: Column(
+                  children: [
+                    widget.prefixText?.isNotEmpty == true
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              right: 5,
+                            ), // add some right padding to allow hint space
+                            child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: widget.paddingHorizontal),
+                            child: widget.prefixIcon,
+                          ),
+                  ],
+                ),
+                suffixIconConstraints: BoxConstraints(
+                  maxWidth:
+                      widget.suffixIcon == null &&
+                          widget.validationType != ValidationType.validatePassword
+                      ? widget.paddingHorizontal
+                      : double.infinity,
+                ),
 
-          focusedBorder: OutlineInputBorder(
-            borderSide: getTheme.inputDecorationTheme.focusedBorder!.borderSide.copyWith(
-              color: widget.isReadOnly
-                  ? (widget.borderColor ?? getTheme.dividerColor)
-                  : getTheme.primaryColor,
-              width: widget.borderWidth.w,
-            ),
-            borderRadius: BorderRadius.circular(widget.borderRadius.r),
-          ),
+                prefixIconConstraints: BoxConstraints(
+                  maxWidth: widget.prefixIcon == null ? widget.paddingHorizontal : double.infinity,
+                ),
+                suffixIcon: widget.showActionButton
+                    ? GestureDetector(
+                        onTap: () {
+                          _onSave(_controller.text.trim());
+                        },
+                        child: widget.actionButtonIcon ?? const Icon(Icons.search),
+                      )
+                    : widget.validationType == ValidationType.validatePassword
+                    ? (_obscureText ? _buildPasswordSuffixIcon() : _buildPasswordSuffixIcon())
+                    : Padding(
+                        padding: EdgeInsets.only(right: 10, left: widget.paddingHorizontal),
+                        child: widget.suffixIcon,
+                      ),
+                prefixIconColor: _iconColor(),
+                suffixIconColor: _iconColor(),
 
-          errorBorder: OutlineInputBorder(
-            borderSide: getTheme.inputDecorationTheme.errorBorder!.borderSide.copyWith(
-              color: AppColors.error,
-              width: widget.borderWidth.w,
-            ),
-            borderRadius: BorderRadius.circular(widget.borderRadius.r),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: getTheme.inputDecorationTheme.enabledBorder!.borderSide.copyWith(
-              color: widget.borderColor ?? getTheme.dividerColor,
-              width: widget.borderWidth.w,
-            ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: getTheme.inputDecorationTheme.focusedBorder!.borderSide.copyWith(
+                    color: widget.isReadOnly
+                        ? (widget.borderColor ?? getTheme.dividerColor)
+                        : getTheme.primaryColor,
+                    width: widget.borderWidth.w,
+                  ),
+                  borderRadius: BorderRadius.circular(widget.borderRadius.r),
+                ),
 
-            borderRadius: BorderRadius.circular(widget.borderRadius.r),
+                errorBorder: OutlineInputBorder(
+                  borderSide: getTheme.inputDecorationTheme.errorBorder!.borderSide.copyWith(
+                    color: AppColors.error,
+                    width: widget.borderWidth.w,
+                  ),
+                  borderRadius: BorderRadius.circular(widget.borderRadius.r),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: getTheme.inputDecorationTheme.enabledBorder!.borderSide.copyWith(
+                    color: widget.borderColor ?? getTheme.dividerColor,
+                    width: widget.borderWidth.w,
+                  ),
+
+                  borderRadius: BorderRadius.circular(widget.borderRadius.r),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: widget.paddingHorizontal.w,
+                  vertical: widget.paddingVertical.h,
+                ),
+                hintText: widget.hintText,
+                labelText: widget.labelText,
+              ),
+            ),
           ),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: widget.paddingHorizontal.w,
-            vertical: widget.paddingVertical.h,
-          ),
-          hintText: widget.hintText,
-          labelText: widget.labelText,
-        )
+          if ((widget.maxLength ?? 0) > 0 || (widget.maxWords ?? 0) > 0)
+            Text(
+              (widget.maxLength ?? 0) > 0
+                  ? '$lengthCount/${widget.maxLength}'
+                  : '$wordCount/${widget.maxWords}',
+            ).end,
+        ],
       ),
     );
   }

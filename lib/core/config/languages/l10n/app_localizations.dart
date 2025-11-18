@@ -932,7 +932,7 @@ abstract class AppLocalizations {
   /// No description provided for @aNewTicketEvent.
   ///
   /// In en, this message translates to:
-  /// **'A new Ticket Event'**
+  /// **'A new Event Ticket'**
   String get aNewTicketEvent;
 
   /// No description provided for @create.
@@ -1034,7 +1034,7 @@ abstract class AppLocalizations {
   /// No description provided for @insertEventCode.
   ///
   /// In en, this message translates to:
-  /// **'Insert event code'**
+  /// **'Insert Event Code'**
   String get insertEventCode;
 
   /// No description provided for @history.

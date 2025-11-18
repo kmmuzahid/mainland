@@ -70,6 +70,7 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
                     28.height,
                     CommonText(
                       text: AppString.confirmWithdraw,
+                      textColor: AppColors.primaryColor,
                       fontWeight: FontWeight.w600,
                       fontSize: 24,
                     ),

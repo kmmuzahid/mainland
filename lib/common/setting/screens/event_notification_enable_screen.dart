@@ -45,7 +45,7 @@ class EventNotificationEnableScreen extends StatelessWidget {
                 hintText: AppString.writeYourMessageHere,
                 onSaved: (value, controller) {},
                 validationType: ValidationType.validateRequired,
-                maxLenght: 10,
+                maxLength: 10,
               ),
               20.height,
               Row(

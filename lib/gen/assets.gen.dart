@@ -57,29 +57,24 @@ class $AssetsImagesGen {
   AssetGenImage get locationSampleMap =>
       const AssetGenImage('assets/images/locationSampleMap.png');
 
-  /// File path: assets/images/nav_account.png
-  AssetGenImage get navAccount =>
-      const AssetGenImage('assets/images/nav_account.png');
+  /// File path: assets/images/nav_account.svg
+  String get navAccount => 'assets/images/nav_account.svg';
 
   /// File path: assets/images/nav_chat.png
   AssetGenImage get navChat =>
       const AssetGenImage('assets/images/nav_chat.png');
 
-  /// File path: assets/images/nav_fanClub.png
-  AssetGenImage get navFanClub =>
-      const AssetGenImage('assets/images/nav_fanClub.png');
+  /// File path: assets/images/nav_fanClub.svg
+  String get navFanClub => 'assets/images/nav_fanClub.svg';
 
-  /// File path: assets/images/nav_favorite.png
-  AssetGenImage get navFavorite =>
-      const AssetGenImage('assets/images/nav_favorite.png');
+  /// File path: assets/images/nav_favorite.svg
+  String get navFavorite => 'assets/images/nav_favorite.svg';
 
-  /// File path: assets/images/nav_home.png
-  AssetGenImage get navHome =>
-      const AssetGenImage('assets/images/nav_home.png');
+  /// File path: assets/images/nav_home.svg
+  String get navHome => 'assets/images/nav_home.svg';
 
-  /// File path: assets/images/nav_ticket.png
-  AssetGenImage get navTicket =>
-      const AssetGenImage('assets/images/nav_ticket.png');
+  /// File path: assets/images/nav_ticket.svg
+  String get navTicket => 'assets/images/nav_ticket.svg';
 
   /// File path: assets/images/preference_icon.png
   AssetGenImage get preferenceIcon =>
@@ -107,20 +102,18 @@ class $AssetsImagesGen {
   /// File path: assets/images/user.png
   AssetGenImage get user => const AssetGenImage('assets/images/user.png');
 
-  /// File path: assets/images/venue_history.png
-  AssetGenImage get venueHistory =>
-      const AssetGenImage('assets/images/venue_history.png');
+  /// File path: assets/images/venue_history.svg
+  String get venueHistory => 'assets/images/venue_history.svg';
 
   /// File path: assets/images/venue_home.png
   AssetGenImage get venueHome =>
       const AssetGenImage('assets/images/venue_home.png');
 
-  /// File path: assets/images/venue_setting.png
-  AssetGenImage get venueSetting =>
-      const AssetGenImage('assets/images/venue_setting.png');
+  /// File path: assets/images/venue_setting.svg
+  String get venueSetting => 'assets/images/venue_setting.svg';
 
   /// List of all assets
-  List<AssetGenImage> get values => [
+  List<dynamic> get values => [
     accountBanner,
     appleWallet,
     back,

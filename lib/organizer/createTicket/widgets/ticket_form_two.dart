@@ -76,7 +76,7 @@ class TicketFormTwo extends StatelessWidget {
             ),
             10.height,
             CommonText(
-              text: 'Pre-Sale length: max 3 days. Must end before the Ticket sale start date',
+              text: 'Pre-Sale length: Max 3 days. Must end before the Ticket sale start date',
               textColor: AppColors.greay200,
               fontSize: 16,
               textAlign: TextAlign.left,
@@ -213,7 +213,8 @@ class TicketFormTwo extends StatelessWidget {
                   CommonText(
                     text:
                         'Select the date your ticket becomes available for sale to potential Attendees on Mainland — this must be before your Event Date.',
-                    fontSize: 22,
+                    fontSize: 20,
+                    maxLines: 5,
                     textColor: AppColors.greay400,
                     fontWeight: FontWeight.w400,
                     textAlign: TextAlign.left,
@@ -258,7 +259,7 @@ class TicketFormTwo extends StatelessWidget {
                 cubit.state.createEventModel.isFreeEvent ||
                 !cubit.state.createEventModel.offerPreSale,
             onSaved: (value, controller) {},
-            mexLength: 3,
+            maxLength: 3,
             validationType: ValidationType.validateNumber,
             backgroundColor: AppColors.backgroundWhite,
           ),

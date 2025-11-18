@@ -37,7 +37,12 @@ class VenueSplashScreen extends StatelessWidget {
                 icon: Icon(Icons.close, color: AppColors.iconColorBlack),
               ).end,
               50.height,
-              CommonImage(imageSrc: Assets.icon.venueIcon.path, width: 108.w, height: 126.h),
+              CommonImage(
+                fill: BoxFit.contain,
+                imageSrc: Assets.icon.venueIcon.path,
+                width: 108.w,
+                height: 126.h,
+              ),
               20.height,
               CommonText(
                 text: AppString.insertEventCode,

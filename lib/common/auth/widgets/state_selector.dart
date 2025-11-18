@@ -7,7 +7,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 
 class StateSelector extends StatelessWidget {
-  const StateSelector({super.key});
+  const StateSelector({super.key, this.onChanged});
+  final Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +18,16 @@ class StateSelector extends StatelessWidget {
 
         return DropdownButtonFormField<String>(
           value: currentStateCode.isNotEmpty ? currentStateCode : null,
-          hint: const Text('Select State'),
+          // hint: const Text('Select State'),
           items: usStates.entries.map<DropdownMenuItem<String>>((entry) {
             return DropdownMenuItem<String>(
               value: entry.key,
               child: Text('${entry.value} (${entry.key})'),
             );
           }).toList(),
-          onChanged: (String? newValue) {
+          onChanged:
+              onChanged ??
+              (String? newValue) {
             if (newValue != null) {
               context.read<AuthCubit>().onChangeSignUpModel(
                 state.signUpModel.copyWith(state: newValue),
@@ -49,7 +52,7 @@ class StateSelector extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.primaryColor),
             ),
             hintText: 'Select State',
-            hintStyle: TextStyle(color: AppColors.outlineColor),
+            hintStyle: TextStyle(color: AppColors.disable, fontStyle: FontStyle.italic),
           ),
           style: AppTextStyles.bodyMedium,
           validator: (value) {

@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
@@ -20,7 +21,7 @@ class DioService {
   DioService._(this._dio, this._storageService, {required this.onLogout})
     : _debugMode = AppLogger.enableLogs;
   AuthCubit? authCubit;
-  static final String _baseUrl = 'https://api.example.com';
+  static final String _baseUrl = ApiEndPoint.instance.baseUrl;
   final Dio _dio;
   final StorageService _storageService;
   final bool _debugMode;

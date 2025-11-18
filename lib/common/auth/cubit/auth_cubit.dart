@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
+import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/network/dio_service.dart';
+import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
@@ -20,6 +23,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   AuthCubit() : super(const AuthState());
   final AuthRepository _repository = getIt();
   final StorageService _storageService = getIt();
+  final DioService _dioService = getIt();
   final String _loginInfo = 'login_info_key';
   Role _role = Role.ATTENDEE;
 
@@ -76,6 +80,10 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> signUp(SignUpModel signUpModel) async {
+    final response = await _dioService.request(
+      input: RequestInput(endpoint: ApiEndPoint.instance.signUp, method: RequestMethod.POST),
+      responseBuilder: (data) => data,
+    );
     appRouter.replaceAll([
           PreferenceRoute(
             diableBack: true,

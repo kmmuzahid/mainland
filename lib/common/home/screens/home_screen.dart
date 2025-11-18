@@ -30,6 +30,15 @@ class HomeScreen extends StatelessWidget {
   //user page list
   List<Widget> userPagesList() => [
     const UserHome(),
+TicketsScreen(
+      onTap: (ticketId, ticketFilter) {
+        appRouter.push(TicketSaveRoute(ticketId: ticketId));
+      },
+      filters: const [TicketFilter.Upcoming, TicketFilter.Used],
+      subTitle: AppString.allAvailableTickets,
+    ),
+
+    const FanClubScreen(),
 
     TicketsScreen(
       onTap: (ticketId, ticketFilter) {
@@ -42,15 +51,6 @@ class HomeScreen extends StatelessWidget {
         TicketFilter.Expired,
       ],
       subTitle: AppString.liveAvailableForSaleSoldAndExpired,
-    ),
-    const FanClubScreen(),
-
-    TicketsScreen(
-      onTap: (ticketId, ticketFilter) {
-        appRouter.push(TicketSaveRoute(ticketId: ticketId));
-      },
-      filters: const [TicketFilter.Upcoming, TicketFilter.Used],
-      subTitle: AppString.allAvailableTickets,
     ),
     const ChatListScreen(),
   ];

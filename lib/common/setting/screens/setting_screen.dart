@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/setting/screens/location_screen.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
@@ -18,6 +19,7 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
@@ -195,7 +197,19 @@ class SettingScreen extends StatelessWidget {
                       title: AppString.locations,
                       subTitle: 'Lagos, Nigeria',
                       onTap: () {
-                        appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
+                        // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
+                        appRouter.push(const LocationRoute());
+                      },
+                    ),
+                    Utils.divider(),
+                    _menuItems(
+                      context: context,
+                      title: Utils.getRole() == Role.ORGANIZER
+                          ? 'Switch to Attendee'
+                          : 'Switch to Organizer',
+                      onTap: () {
+                        StorageService.instance.deleteAll();
+                        appRouter.replaceAll([const SplashRoute()]);
                       },
                     ),
                     20.height,
@@ -267,11 +281,7 @@ class SettingScreen extends StatelessWidget {
     String? subTitle,
     bool showInfo = false,
   }) {
-    Widget textWidget = CommonText(
-      fontSize: 14,
-      fontWeight: FontWeight.w400,
-      text: title,
-    );
+    Widget textWidget = CommonText(fontSize: 14, fontWeight: FontWeight.w400, text: title);
     if (subTitle != null) {
       textWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +326,8 @@ class SettingScreen extends StatelessWidget {
                       CommonText(
                         text:
                             'Request Mainland to send urgent updates. Once approved, attendees who purchased your Event ticket will get an email and push notification.',
-                        fontSize: 22,
+                        fontSize: 20,
+                        maxLines: 5,
                         textColor: AppColors.greay400,
                         fontWeight: FontWeight.w400,
                         textAlign: TextAlign.left,

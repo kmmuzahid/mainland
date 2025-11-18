@@ -50,7 +50,7 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget getImage() {
-    if (imageSrc.startsWith('assets/svg')) {
+    if (imageSrc.startsWith('assets/svg') || imageSrc.endsWith('.svg')) {
       return _buildSvgImage();
     } else if (imageSrc.startsWith('assets/')) {
       return _buildPngImage();

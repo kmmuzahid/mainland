@@ -63,12 +63,12 @@ class TicketFormOne extends StatelessWidget {
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(title: value));
               },
-              hintText: 'Event Title',
+              hintText: 'Event Title', 
+              maxWords: 50,
               initalText: createEventModel.title,
-              validationType: ValidationType.validateAlphaNumeric,
+              validationType: ValidationType.validateRequired,
             ),
-            10.height,
-            FormLabel(isRequired: true, label: 'Event Category'),
+            const FormLabel(isRequired: true, label: 'Event Category'),
             CommonButton(
               titleColor: AppColors.primaryColor,
               buttonColor: AppColors.backgroundWhite,
@@ -81,7 +81,7 @@ class TicketFormOne extends StatelessWidget {
                     header: Row(
                       children: [
                         CommonText(
-                          text: 'Select category & sub-category',
+                          text: 'Select Category & Sub-Category',
                           textAlign: TextAlign.left,
                           alignment: MainAxisAlignment.start,
                           fontSize: 18,
@@ -136,7 +136,9 @@ class TicketFormOne extends StatelessWidget {
             FormLabel(isRequired: true, label: 'Event Description'),
             CommonMultilineTextField(
               isReadOnly: isReadOnly,
-              height: 150,
+              height: 200,
+              maxWords: 150,
+              
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(description: value));
               },
@@ -144,8 +146,7 @@ class TicketFormOne extends StatelessWidget {
               validationType: ValidationType.validateRequired,
               initialText: createEventModel.description,
               enableHtml: true,
-            ),
-            10.height,
+            ), 
             FormLabel(isRequired: true, label: 'Event Date'),
             CommonDateInputTextField(
               isReadOnly: isReadOnly,
@@ -291,6 +292,7 @@ class TicketFormOne extends StatelessWidget {
     required String hintText,
     required String? initalText,
     required ValidationType validationType,
+    int? maxWords,
     bool? isReadOnly,
   }) {
     return CommonTextField(
@@ -299,8 +301,10 @@ class TicketFormOne extends StatelessWidget {
       isReadOnly: isReadOnly ?? this.isReadOnly,
       backgroundColor: AppColors.backgroundWhite,
       hintText: hintText,
+      maxWords: maxWords,
       validationType: validationType,
       onSaved: onSaved,
+    
     );
   }
 
@@ -315,7 +319,7 @@ class TicketFormOne extends StatelessWidget {
             fontWeight: FontWeight.bold,
             textHeight: 24,
           ),
-          const CommonText(text: 'a new Ticket Event', fontSize: 18, textHeight: 24),
+          CommonText(text: AppString.aNewTicketEvent, fontSize: 18, textHeight: 24),
         ],
       ),
     );

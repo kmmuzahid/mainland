@@ -26,8 +26,8 @@ class _VenueBottomNavigationBarState extends State<VenueBottomNavigationBar> {
 
   List<Widget> venueItems() => [
     _navBuilder(index: 0, image: Assets.images.venueHome.path),
-    _navBuilder(index: 1, image: Assets.images.venueHistory.path),
-    _navBuilder(index: 2, image: Assets.images.venueSetting.path),
+    _navBuilder(index: 1, image: Assets.images.venueHistory),
+    _navBuilder(index: 2, image: Assets.images.venueSetting),
   ];
 
   @override
@@ -90,7 +90,7 @@ class _VenueBottomNavigationBarState extends State<VenueBottomNavigationBar> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CommonImage(imageSrc: image, imageColor: color, size: 30),
+          CommonImage(size: 25, fill: BoxFit.contain, imageSrc: image, imageColor: color),
           const SizedBox(height: 4),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),

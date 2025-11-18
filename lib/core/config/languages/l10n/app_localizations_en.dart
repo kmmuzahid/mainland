@@ -452,7 +452,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your Event is under review. We’ll reach out if we need more details and notify you once it’s approved to go live on Mainland';
 
   @override
-  String get aNewTicketEvent => 'A new Ticket Event';
+  String get aNewTicketEvent => 'A new Event Ticket';
 
   @override
   String get create => 'Create';
@@ -504,7 +504,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validate => 'Validate';
 
   @override
-  String get insertEventCode => 'Insert event code';
+  String get insertEventCode => 'Insert Event Code';
 
   @override
   String get history => 'History';

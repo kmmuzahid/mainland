@@ -18,7 +18,7 @@ class LocationInitializationUseCase {
   }
 
   Future<Position?> loadLastLocation() async {
-    final jsonString = await StorageService().read(lastLocationKey);
+    final jsonString = await StorageService.instance.read(lastLocationKey);
     if (jsonString != null) {
       return Position.fromMap(json.decode(jsonString));
     }
@@ -63,6 +63,6 @@ class LocationInitializationUseCase {
   }
 
   Future<void> savePosition(Position position) async {
-    await StorageService().write(lastLocationKey, json.encode(position.toJson()));
+    await StorageService.instance.write(lastLocationKey, json.encode(position.toJson()));
   }
 }

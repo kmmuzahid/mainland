@@ -1,6 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageService {
+  StorageService._();
+  static final StorageService instance = StorageService._();
+  
   static const String lastLocationKey = 'last_location';
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();

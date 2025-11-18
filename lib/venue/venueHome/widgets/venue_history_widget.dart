@@ -76,16 +76,17 @@ class VenueHistoryWidget extends StatelessWidget {
         children: [
           CommonText(text: title, fontSize: 14, fontWeight: FontWeight.w600),
           const Spacer(),
-          SizedBox(
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.backgroundWhite,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            alignment: Alignment.center,
             width: 60.w,
             height: 37.h,
             child: CommonText(
-              backgroundColor: AppColors.backgroundWhite,
               text: quantity,
-              borderRadious: 8,
-              top: 2,
               fontSize: 14,
-              alignment: MainAxisAlignment.center,
               fontWeight: FontWeight.w600,
               textColor: AppColors.greay,
             ),
