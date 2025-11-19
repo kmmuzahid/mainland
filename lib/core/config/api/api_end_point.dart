@@ -2,9 +2,9 @@ class ApiEndPoint {
   ApiEndPoint._();
   static final ApiEndPoint instance = ApiEndPoint._();
 
-  final String domain = 'http://10.10.7.23:4000';
-  final String baseUrl = 'http://10.10.7.23:4000/api/v1';
-  final String soketUrl = 'http://10.10.7.23:4000/api/v1';
+  final String domain = 'http://10.10.7.102:4000';
+  final String baseUrl = 'http://10.10.7.102:4000/api/v1';
+  final String soketUrl = 'http://10.10.7.102:4000/api/v1';
 
   //auth
   final String signUp = '/user/create';

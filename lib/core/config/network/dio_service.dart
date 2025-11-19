@@ -159,6 +159,9 @@ class DioService {
               onLogout?.call();
               handler.reject(error); // Reject with the original error
             }
+          } else if (error.response?.statusCode == 404) {
+            // 404 responses should be passed through normally - they contain valid data
+            handler.next(error);
           } else {
             handler.next(error); // For other errors, just pass them on
           }
@@ -186,7 +189,7 @@ class DioService {
 
   Future<ResponseState<T?>> request<T>({
     required RequestInput input,
-    required T Function(dynamic data) responseBuilder,
+    required T? Function(dynamic data) responseBuilder,
     int retryCount = 0,
     int maxRetry = 2,
   }) async {
@@ -208,10 +211,15 @@ class DioService {
         onReceiveProgress: input.onReceiveProgress,
       );
 
-      final parsed = responseBuilder(response.data);
+      final parsed = response.data != null ? responseBuilder(response.data) : null;
+      // Extract message from JSON response, fallback to statusMessage if not present
+      final message = response.data is Map && response.data['message'] != null
+          ? response.data['message'].toString()
+          : response.statusMessage;
+      
       return ResponseState(
         data: parsed,
-        message: response.statusMessage,
+        message: message,
         cancelToken: cancelToken,
         statusCode: response.statusCode,
       );
@@ -224,6 +232,30 @@ class DioService {
           cancelToken: cancelToken,
           statusCode: e.response?.statusCode,
         );
+      }
+
+      // Check if this response contains data that should be parsed
+      // Your server returns meaningful data even with error status codes
+      if (e.response?.data != null) {
+        try {
+          final parsed = e.response?.data['data'] != null
+              ? responseBuilder(e.response?.data['data'])
+              : null;
+          // Extract message from JSON response, fallback to statusMessage if not present
+          final message = e.response!.data is Map && e.response!.data['message'] != null
+              ? e.response!.data['message'].toString()
+              : e.response!.statusMessage;
+
+          return ResponseState(
+            data: parsed,
+            message: message,
+            cancelToken: cancelToken,
+            statusCode: e.response!.statusCode,
+          );
+        } catch (parseError) {
+          AppLogger.apiError('Failed to parse error response: $parseError', tag: input.endpoint);
+          // Fall through to normal error handling if parsing fails
+        }
       }
 
       // Important: The interceptor will handle the 401 re-execution logic.
