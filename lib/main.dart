@@ -16,6 +16,7 @@ import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
+//git remote set-url origin https://ghp_GENERTED_TOKEN@github.com/kmmuzahid/mainland.git
 //flutter pub run build_runner build --delete-conflicting-outputs
 //dart run build_runner watch
 //create a new feature through
@@ -77,7 +78,7 @@ void _diInit() {
 void showSnackBar(String text, {required SnackBarType type}) {
   ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(
     SnackBar(
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1220),
       backgroundColor: type == SnackBarType.success
           ? AppColors.primaryColor
           : type == SnackBarType.error

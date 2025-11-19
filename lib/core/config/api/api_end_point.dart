@@ -17,5 +17,5 @@ class ApiEndPoint {
   final String signOut = '/auth/sign-out';
 
   //user
-  final String getUser = '/user/profile';
+  final String profile = '/user/profile';
 }

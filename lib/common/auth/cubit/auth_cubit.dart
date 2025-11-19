@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
+import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
+import 'package:mainland/common/auth/widgets/terms_and_conditions.dart';
+import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
@@ -31,6 +35,39 @@ class AuthCubit extends SafeCubit<AuthState> {
     emit(state.copyWith(isTermsAndConditonsAccepted: value));
   }
 
+  void acceptTermsAndConditions() async {
+    if (state.userLoginInfoModel.accessToken.isEmpty) {
+      final login = await _dioService.request<UserLoginInfoModel>(
+        input: RequestInput(
+          endpoint: ApiEndPoint.instance.signIn,
+          jsonBody: {'email': state.signUpModel.email, 'password': state.signUpModel.password},
+          method: RequestMethod.POST,
+        ),
+        responseBuilder: (data) => state.userLoginInfoModel.copyWith(
+          accessToken: data['Token'],
+          refreshToken: data['RefreshToken'],
+          role: _role,
+          username: state.signUpModel.email,
+          name: state.signUpModel.fullName,
+        ),
+      );
+      if (login.data != null) {
+        await _saveUserInfo(login.data!);
+      }
+    }
+
+    final responce = await _dioService.request<dynamic>(
+      input: RequestInput(endpoint: ApiEndPoint.instance.profile, method: RequestMethod.PATCH),
+      responseBuilder: (data) => data,
+    );
+
+    if (responce.statusCode == 200) {
+      appRouter.replaceAll([const SplashRoute()]);
+    } else {
+      showSnackBar(responce.message ?? '', type: SnackBarType.error);
+    }
+  }
+
   void onChangeUserRole(Role role) {
     AppLogger.debug(role.name, tag: 'AuthCubit');
     _role = role;
@@ -47,12 +84,17 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> init() async {
+    AppLogger.debug('init auth cubit', tag: 'AuthCubit');
     try {
       final String? data = await _storageService.read(_loginInfo);
+      AppLogger.debug(data ?? '', tag: 'Storage Service');
       if (data != null) {
         _saveUserInfo(UserLoginInfoModel.fromJson(data));
       } else {
         emit(const AuthState());
+      }
+      if (state.userLoginInfoModel.accessToken.isNotEmpty) {
+        appRouter.replaceAll([const HomeRoute()]);
       }
     } catch (e) {
       AppLogger.error(e.toString(), tag: 'Storage Service');
@@ -80,22 +122,23 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> signUp(SignUpModel signUpModel) async {
+    emit(state.copyWith(isLoading: true));
     final response = await _repository.signUp(signUpModel: signUpModel);
-    // if (response.statusCode == 200) {
-    //   AppLogger.debug(response.data.toString(), tag: 'AuthCubit');
-    //   await _saveUserInfo(response.data);
-    //   appRouter.replaceAll([const HomeRoute()]);
-    // } else {
-    //   showSnackBar(response.message ?? '', type: SnackBarType.error);
-    // }
-
-    // appRouter.replaceAll([
-    //       PreferenceRoute(
-    //         diableBack: true,
-    //         successRoute: const HomeRoute(),
-    //         backgroundColor: AppColors.backgroundWhite,
-    //       ),
-    // ]);
+    emit(state.copyWith(isLoading: false));
+    if (response.statusCode == 200) {
+      commonDialog(
+        context: appRouter.navigatorKey.currentState!.context,
+        child: OtpVerifyWidget(
+          email: state.signUpModel.email,
+          onSuccess: () {
+            appRouter.pop();
+            TermsAndConditions.instance.show(this);
+          },
+        ),
+      );
+    } else {
+      showSnackBar(response.message ?? '', type: SnackBarType.error);
+    }
   }
 
   Future<void> signInWithGoogle() async {}

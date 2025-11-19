@@ -84,16 +84,30 @@ class DioService {
         },
         onError: (DioException error, handler) async {
           if (_debugMode) {
-            AppLogger.apiError(
-              'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
-              tag: error.requestOptions.path,
-            );
-            AppLogger.apiError('Error: ${error.message}', tag: error.requestOptions.path);
-            if (error.response?.data != null) {
-              AppLogger.apiError(
-                'Error Data: ${error.response?.data}',
+            if (error.response?.statusCode == 400) {
+              AppLogger.apiDebug(
+                'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
                 tag: error.requestOptions.path,
               );
+              AppLogger.apiDebug('Error: ${error.message}', tag: error.requestOptions.path);
+              if (error.response?.data != null) {
+                AppLogger.apiDebug(
+                  'Error Data: ${error.response?.data}',
+                  tag: error.requestOptions.path,
+                );
+              }
+            } else {
+              AppLogger.apiError(
+                'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
+                tag: error.requestOptions.path,
+              );
+              AppLogger.apiError('Error: ${error.message}', tag: error.requestOptions.path);
+              if (error.response?.data != null) {
+                AppLogger.apiError(
+                  'Error Data: ${error.response?.data}',
+                  tag: error.requestOptions.path,
+                );
+              }
             }
           }
 
@@ -211,12 +225,12 @@ class DioService {
         onReceiveProgress: input.onReceiveProgress,
       );
 
-      final parsed = response.data != null ? responseBuilder(response.data) : null;
+      final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
       // Extract message from JSON response, fallback to statusMessage if not present
       final message = response.data is Map && response.data['message'] != null
           ? response.data['message'].toString()
           : response.statusMessage;
-      
+
       return ResponseState(
         data: parsed,
         message: message,

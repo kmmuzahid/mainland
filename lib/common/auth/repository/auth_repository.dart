@@ -14,7 +14,7 @@ abstract class AuthRepository {
 
   Future<ResponseState<String>> sendOtp({required String username});
 
-  Future<ResponseState<bool>> verifyOtp({required String verificationId, required String otp});
+  Future<ResponseState<dynamic>> verifyOtp({required String verificationId, required String otp});
 
   Future<ResponseState<String>> changePassword({
     required String username,

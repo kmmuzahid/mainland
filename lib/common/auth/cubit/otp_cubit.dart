@@ -30,22 +30,34 @@ class OtpCubit extends SafeCubit<OtpState> {
         type: SnackBarType.warning,
       );
       return;
-    }
-    emit(OtpState(isLoading: true, username: username));
+    } 
+
+    emit(state.copyWith(isLoading: true));
     final response = await _repository.sendOtp(username: username);
     if (response.data.isEmpty) {
-      emit(const OtpState());
+      emit(state.copyWith(isLoading: false));
       return;
     }
     emit(state.copyWith(verificationId: response.data, isLoading: false));
     _startTimer();
   }
 
-  Future<void> verifyOtp({required String otp, required Function onSuccess}) async {
-    if (state.isLoading || state.verificationId.isEmpty) return;
-    final isVerified = await _repository.verifyOtp(verificationId: state.verificationId, otp: otp);
+  Future<void> verifyOtp({
+    required String otp,
+    required String email,
+    required Function onSuccess,
+  }) async {
+    if (state.isLoading || email.isEmpty || otp.length < 6) return;
+    final isVerified = await _repository.verifyOtp(verificationId: email, otp: otp);
     emit(state.copyWith(isVerified: isVerified.data));
-    onSuccess(); // successfully verified
+    AppLogger.debug(isVerified.data.toString(), tag: 'OtpCubit');
+    AppLogger.debug(isVerified.statusCode.toString(), tag: 'OtpCubit');
+    AppLogger.debug(isVerified.message ?? '', tag: 'OtpCubit');
+    if (isVerified.statusCode == 200) {
+      onSuccess(); // successfully verified
+    } else {
+      showSnackBar(isVerified.message ?? '', type: SnackBarType.error);
+    }
   }
 
   void _startTimer() {

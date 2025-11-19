@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with MultipartFile.fromFile
 
-enum RequestMethod { GET, POST, PUT, DELETE }
+enum RequestMethod { GET, POST, PUT, DELETE, PATCH }
 
 class RequestInput { 
 

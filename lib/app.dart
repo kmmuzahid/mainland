@@ -46,10 +46,10 @@ class MyApp extends StatelessWidget {
       // designSize: const Size(428, 926),
       builder: (context, child) => MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => ThemeCubit()..update()),
-          BlocProvider(create: (_) => LanguageCubit()..init()),
-          BlocProvider(create: (_) => AuthCubit()..init()),
-          BlocProvider(create: (_) => NotificationCubit()),
+          BlocProvider(create: (_) => ThemeCubit()..update(), lazy: false),
+          BlocProvider(create: (_) => LanguageCubit()..init(), lazy: false),
+          BlocProvider(create: (_) => AuthCubit()..init(), lazy: false),
+          BlocProvider(create: (_) => NotificationCubit(), lazy: false),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, themeState) {

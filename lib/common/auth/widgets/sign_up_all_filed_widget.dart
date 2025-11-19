@@ -181,25 +181,11 @@ class SignUpAllField extends StatelessWidget {
                     // Submit Button Here
                     CommonButton(
                       titleText: AppString.signUp,
+                      isLoading: state.isLoading,
                       onTap: () {
                         final cubit = context.read<AuthCubit>();
                         formKey.currentState?.save();
-                        commonDialog(
-                          context: context,
-                          child: OtpVerifyWidget(
-                            email: cubit.state.signUpModel.email,
-                            onSuccess: () {
-                              appRouter.pop();
-                              _termsOfconditions(context, cubit);
-                              // appRouter.replaceAll([
-                              //   SignInRoute(
-                              //     ctrUsername: TextEditingController(),
-                              //     ctrPassword: TextEditingController(),
-                              //   ),
-                              // ]);
-                            },
-                          ),
-                        );
+                        cubit.signUp(cubit.state.signUpModel);
                       },
                     ).center,
 
@@ -253,118 +239,7 @@ class SignUpAllField extends StatelessWidget {
     );
   }
 
-  Future<void> _termsOfconditions(BuildContext context, AuthCubit cubit) async {
-    commonDialog(
-      child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CommonText(
-                top: 10,
-                text: 'Terms of Use',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                textColor: AppColors.primaryColor,
-                bottom: 10,
-              ),
-              SizedBox(
-                height: 350.h,
-                child: SingleChildScrollView(
-                  child: CommonText(
-                    fontSize: 16,
-                    textAlign: TextAlign.justify,
-                    textColor: AppColors.greay300,
-
-                    text:
-                        '''<html><body>For Organizers  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets</body></html>''',
-                  ),
-                ),
-              ),
-              10.height,
-              Row(
-                children: [
-                  _buildCheckBox(
-                    isReadOnly: false,
-                    cubit: cubit,
-                    onChanged: (value) {
-                      cubit.updateTermsConditonsStatus(value ?? false);
-                    },
-                  ),
-                  Expanded(
-                    child: CommonRichText(
-                      richTextContent: [
-                        CommonSimpleRichTextContent(
-                          text: 'By ticking this box, you agree to this ',
-                        ),
-                        CommonSimpleRichTextContent(
-                          text: 'Terms of Use',
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primaryColor,
-                            decorationThickness: 2,
-                          ),
-                        ),
-                        CommonSimpleRichTextContent(text: ', and '),
-                        CommonSimpleRichTextContent(
-                          text: 'Privacy Notice',
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primaryColor,
-                            decorationThickness: 2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              10.height,
-              CommonButton(
-                titleText: 'I Agree',
-                onTap: () {
-                  if (cubit.state.isTermsAndConditonsAccepted) {
-                    cubit.signUp(state.signUpModel);
-                  } else {
-                    appRouter.pop();
-                    showSnackBar('Please accept terms and conditions', type: SnackBarType.error);
-                  }
-                },
-              ),
-              30.height,
-            ],
-          );
-        },
-      ),
-      context: context,
-    );
-  }
-
-  Widget _buildCheckBox({
-    required bool isReadOnly,
-    bool? value,
-    required Function(bool?) onChanged,
-    required AuthCubit cubit,
-  }) {
-    return Checkbox(
-      side: BorderSide(
-        width: 2.w,
-        color: cubit.state.isTermsAndConditonsAccepted
-            ? AppColors.primaryColor
-            : AppColors.greay300,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
-      value: value ?? cubit.state.isTermsAndConditonsAccepted,
-      onChanged: (value) {
-        if (isReadOnly) return;
-        onChanged(value);
-      },
-    );
-  }
+  
 
   CommonDateInputTextField _dateOfBirth(BuildContext context, AuthState state) {
     final cubit = context.read<AuthCubit>();

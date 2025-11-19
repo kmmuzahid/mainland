@@ -65,21 +65,21 @@ class MockAuthRepository implements AuthRepository {
         .userLoginInfoModel
         .role;
     return ResponseState(
-        data: UserLoginInfoModel(
-          id: '',
-          name: 'Gbenga Drebak',
+      data: UserLoginInfoModel(
+        id: '',
+        name: 'Gbenga Drebak',
         image: role == Role.ORGANIZER
             ? Assets.images.sampleItem3.path
             : Assets.images.sampleItem2.path,
-          username: username,
+        username: username,
         role: role,
-          accessToken: 'accessToken',
-          refreshToken: 'refreshToken',
-          address: '1901 Thornridge Cir. Shiloh, Hawaii 81063',
-          agentId: '15236612',
-        ),
-        statusCode: 200,
-      );
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+        address: '1901 Thornridge Cir. Shiloh, Hawaii 81063',
+        agentId: '15236612',
+      ),
+      statusCode: 200,
+    );
   }
 
   @override
@@ -92,7 +92,14 @@ class MockAuthRepository implements AuthRepository {
 
   @override
   Future<ResponseState<String>> sendOtp({required String username}) async {
-    await SimulateMocRepo();
+    _dioService.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.verifyEmail,
+        method: RequestMethod.POST,
+        jsonBody: {'username': username},
+      ),
+      responseBuilder: (data) => data,
+    );
     return ResponseState(data: '5555', statusCode: 201);
   }
 
@@ -128,11 +135,21 @@ class MockAuthRepository implements AuthRepository {
     // }
 
     return response;
-  } 
+  }
 
   @override
-  Future<ResponseState<bool>> verifyOtp({
+  Future<ResponseState<dynamic>> verifyOtp({
     required String verificationId,
     required String otp,
-  }) async => ResponseState(data: true, statusCode: 200);
+  }) async {
+    final response = await _dioService.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.verifyEmail,
+        method: RequestMethod.POST,
+        jsonBody: {'email': verificationId, 'oneTimeCode': int.parse(otp)},
+      ),
+      responseBuilder: (data) => data,
+    );
+    return response;
+  }
 }

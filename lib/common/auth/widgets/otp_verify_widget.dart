@@ -75,6 +75,7 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
                   // if (formKey.currentState?.validate() == true) {
                   context.read<OtpCubit>().verifyOtp(
                     otp: controller.text,
+                    email: widget.email,
                     onSuccess: widget.onSuccess,
                   );
                   // }
