@@ -2,6 +2,7 @@
 // ignore_for_file: avoid_annotating_with_dynamic
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -10,6 +11,7 @@ import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with FormData
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/main.dart';
 import '../dependency/dependency_injection.dart';
 import 'request_input.dart'; // Import the updated RequestInput
 import 'response_state.dart';
@@ -52,84 +54,87 @@ class DioService {
       QueuedInterceptorsWrapper(
         onRequest: (options, handler) async {
           authCubit ??= appRouter.navigatorKey.currentContext?.read<AuthCubit>();
+          final requestId = DateTime.now().millisecondsSinceEpoch;
+          options.extra['requestId'] = requestId;
+
+          if (options.extra['requiresToken'] ?? true) {
+            await _injectToken(options);
+          }
+
           if (_debugMode) {
+            final headers = Map<String, dynamic>.from(options.headers)
+              ..removeWhere((key, _) => key == 'authorization');
+
             AppLogger.apiDebug(
-              'REQUEST[${options.method}] => PATH: ${options.path}',
+              '🚀 [REQ:${options.method} ${options.path}] ID: $requestId\n'
+              '🔹 Headers: $headers\n'
+              '🔹 Query: ${options.queryParameters}\n'
+              '🔹 Data: ${options.data?.toString().substring(0, options.data.toString().length > 200 ? 200 : null)}'
+              '${options.data.toString().length > 200 ? '...' : ''}',
               tag: options.path,
             );
-            AppLogger.apiDebug('Headers: ${options.headers}', tag: options.path);
-            if (options.data != null) {
-              final String dataString = options.data.toString();
-              if (dataString.length > 500) {
-                AppLogger.apiDebug(
-                  'Request Data Type: ${options.data.runtimeType}, Size: ${dataString.length} bytes',
-                  tag: options.path,
-                );
-              } else {
-                AppLogger.apiDebug('Request Data: ${options.data}', tag: options.path);
-              }
-            }
           }
-          // The requiresToken check and token injection are now handled in _buildRequestOptions and _injectToken
-          // Only inject if header not already present or explicitly required
-          if (options.extra['requiresToken'] ?? true) {
-            // Make sure this flag is set in requestOptions.extra
-            await _injectToken(options); // Ensure token is fresh before request
-          }
-          handler.next(options);
+          handler.next(options); // Fix: Pass options instead of response
         },
         onResponse: (response, handler) {
-          _logResponse(response); // Use unified logger
+          if (_debugMode) {
+            final requestId = response.requestOptions.extra['requestId'];
+            AppLogger.apiDebug(
+              '✅ [RES:${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.path}] ID: $requestId\n'
+              '🔹 Status: ${response.statusCode} ${response.statusMessage}\n'
+              '🔹 Data: ${response.data.toString().substring(0, response.data.toString().length > 200 ? 200 : null)}'
+              '${response.data.toString().length > 200 ? '...' : ''}',
+              tag: response.requestOptions.path,
+            );
+          }
           handler.next(response);
         },
         onError: (DioException error, handler) async {
+          final requestId = error.requestOptions.extra['requestId'] as int? ?? 0;
+          final statusCode = error.response?.statusCode;
+          final path = error.requestOptions.path;
+
           if (_debugMode) {
-            if (error.response?.statusCode == 400) {
-              AppLogger.apiDebug(
-                'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
-                tag: error.requestOptions.path,
-              );
-              AppLogger.apiDebug('Error: ${error.message}', tag: error.requestOptions.path);
-              if (error.response?.data != null) {
-                AppLogger.apiDebug(
-                  'Error Data: ${error.response?.data}',
-                  tag: error.requestOptions.path,
-                );
-              }
-            } else {
-              AppLogger.apiError(
-                'ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}',
-                tag: error.requestOptions.path,
-              );
-              AppLogger.apiError('Error: ${error.message}', tag: error.requestOptions.path);
-              if (error.response?.data != null) {
+            AppLogger.apiError(
+              '❌ [ERR:$statusCode ${error.requestOptions.method} $path] ID: $requestId\n'
+              '🔹 Error: ${error.message}\n'
+              '🔹 Type: ${error.type}\n'
+              '🔹 Response: ${error.response?.data?.toString() ?? 'No response data'}',
+
+              tag: path,
+            );
                 AppLogger.apiError(
                   'Error Data: ${error.response?.data}',
                   tag: error.requestOptions.path,
-                );
-              }
-            }
+            );
           }
 
-          if (error.response?.statusCode == 401) {
-            // Check if the 401 is NOT from the refresh token endpoint itself
-            if (error.requestOptions.path != '/auth/refresh') {
-              // Replace with your actual refresh endpoint
-              // Only one refresh at a time
-              if (_refreshCompleter == null) {
-                _refreshCompleter = Completer<void>();
-                AppLogger.apiDebug('Attempting to refresh token...', tag: 'Auth');
-                try {
-                  await _refreshTokenIfNeeded();
-                  AppLogger.apiDebug(
-                    'Token refreshed successfully, retrying original request.',
-                    tag: 'Auth',
-                  );
-                  // After successful refresh, retry the original request
-                  handler.resolve(await _dio.fetch(error.requestOptions));
+          if (statusCode == 401 && path != '/auth/refresh') {
+            if (_refreshCompleter == null) {
+              _refreshCompleter = Completer<void>();
+              AppLogger.apiDebug(
+                '🔄 [AUTH] Token expired. Attempting to refresh...\n'
+                '🔹 Request ID: $requestId',
+                tag: 'Auth',
+              );
+
+              try {
+                await _refreshTokenIfNeeded();
+                AppLogger.apiDebug(
+                  '🔄 [AUTH] Token refresh successful\n'
+                  '🔹 Request ID: $requestId',
+                  tag: 'Auth',
+                );
+                final response = await _dio.fetch(error.requestOptions);
+                handler.resolve(response);
                 } catch (e) {
-                  AppLogger.apiError('Failed to refresh token: $e', tag: 'Auth');
-                  await clearTokens(); // Clear tokens on refresh failure
+                AppLogger.apiError(
+                  '❌ [AUTH] Token refresh failed\n'
+                  '🔹 Request ID: $requestId\n'
+                  '🔹 Error: $e',
+                  tag: 'Auth',
+                );
+                await clearTokens();
                   onLogout?.call(); // Trigger logout
                   handler.reject(error); // Reject the original request with the error
                 } finally {
@@ -163,7 +168,7 @@ class DioService {
                   }
                 });
               }
-            } else {
+          } else if (statusCode == 401 && path == '/auth/refresh') {
               // 401 on refresh token endpoint itself, clear tokens and logout
               AppLogger.apiError(
                 '401 received from refresh token endpoint. Logging out.',
@@ -173,7 +178,7 @@ class DioService {
               onLogout?.call();
               handler.reject(error); // Reject with the original error
             }
-          } else if (error.response?.statusCode == 404) {
+           else if (error.response?.statusCode == 404) {
             // 404 responses should be passed through normally - they contain valid data
             handler.next(error);
           } else {
@@ -206,7 +211,16 @@ class DioService {
     required T? Function(dynamic data) responseBuilder,
     int retryCount = 0,
     int maxRetry = 2,
+    bool showMessage = false,
   }) async {
+
+    // if (_debugMode) {
+    //   AppLogger.apiDebug(
+    //     'REQUEST[${input.method}${input.method}] => Input: ${input.toJson()}',
+    //     tag: input.endpoint,
+    //   );
+    // }
+
     final cancelToken = CancelToken(); // Use provided token or create new
 
     try {
@@ -225,11 +239,19 @@ class DioService {
         onReceiveProgress: input.onReceiveProgress,
       );
 
+      if (kDebugMode) {
+        AppLogger.apiDebug(response.data.toString(), tag: input.endpoint);
+      }
+
       final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
+
       // Extract message from JSON response, fallback to statusMessage if not present
       final message = response.data is Map && response.data['message'] != null
           ? response.data['message'].toString()
           : response.statusMessage;
+      if (showMessage && response.statusCode == 200) {
+        showSnackBar(message ?? '', type: SnackBarType.success);
+      }
 
       return ResponseState(
         data: parsed,
@@ -240,6 +262,9 @@ class DioService {
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         AppLogger.apiDebug('Request cancelled: ${e.message}', tag: input.endpoint);
+        if (showMessage) {
+          showSnackBar(e.message ?? '', type: SnackBarType.error);
+        }
         return ResponseState(
           data: null,
           message: e.message,
@@ -259,7 +284,9 @@ class DioService {
           final message = e.response!.data is Map && e.response!.data['message'] != null
               ? e.response!.data['message'].toString()
               : e.response!.statusMessage;
-
+          if (showMessage) {
+            showSnackBar(message ?? '', type: SnackBarType.error);
+          }
           return ResponseState(
             data: parsed,
             message: message,

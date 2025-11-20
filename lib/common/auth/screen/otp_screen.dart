@@ -17,8 +17,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 
 @RoutePage()
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({required this.onSuccess, super.key});
-  final Function() onSuccess;
+  const OtpScreen({super.key});
+ 
 
   @override
   Widget build(BuildContext context) => Scaffold(

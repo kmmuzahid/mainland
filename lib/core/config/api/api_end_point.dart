@@ -13,9 +13,13 @@ class ApiEndPoint {
   final String forgetPassword = '/auth/forget-password';
   final String changePassword = '/auth/change-password';
   final String resetPassword = '/auth/reset-password';
-
+  final String resendOtp = '/auth/resend-otp';
   final String signOut = '/auth/sign-out';
 
   //user
   final String profile = '/user/profile';
+
+  //basic
+  final String privacyPolicy = '/settings/privacyPolicy';
+  final String termsAndConditions = '/settings/termsAdnCondition';
 }

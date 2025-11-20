@@ -38,13 +38,29 @@ class TermsAndConditions {
               SizedBox(
                 height: 350.h,
                 child: SingleChildScrollView(
-                  child: CommonText(
-                    fontSize: 16,
-                    textAlign: TextAlign.justify,
-                    textColor: AppColors.greay300,
-
-                    text:
-                        '''<html><body>For Organizers  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets containing It was popularised in the 1960s with the release of Letraset sheets</body></html>''',
+                  child: Column(
+                    children: [
+                      CommonText(
+                        fontSize: 16,
+                        textAlign: TextAlign.justify,
+                        textColor: AppColors.greay300,
+                        text: state.termsAndConditions ?? '',
+                      ),
+                      CommonText(
+                        text: 'Privacy Notice',
+                        fontSize: 20,
+                        top: 10,
+                        bottom: 10,
+                        fontWeight: FontWeight.bold,
+                        textColor: AppColors.primaryColor,
+                      ),
+                      CommonText(
+                        fontSize: 16,
+                        textAlign: TextAlign.justify,
+                        textColor: AppColors.greay300,
+                        text: state.privacyPolicy ?? '',
+                      ),
+                    ],
                   ),
                 ),
               ),

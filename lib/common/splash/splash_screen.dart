@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -23,11 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Use context safely here
       Utils.deviceSize = MediaQuery.of(context).size;
+      context.read<AuthCubit>().init();
 
       // Optional: Navigate after splash
-      Future.delayed(const Duration(seconds: 1), () {
-        context.router.replace(const OnboardingRoute());
-      });
+      
     });
     super.initState();
   }

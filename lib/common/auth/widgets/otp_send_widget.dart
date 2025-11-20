@@ -52,20 +52,24 @@ class _OtpSendState extends State<OtpSend> {
                   isLoading: false,
                   buttonWidth: 100,
                   onTap: () {
-                    // if (formKey.currentState?.validate() == true) {
-                    // }
-                    commonDialog(
+                    if (formKey.currentState?.validate() == true) {
+                      commonDialog(
                       context: context,
                       child: OtpVerifyWidget(
                         email: controller.text,
-                        onSuccess: () {
+                          onSuccess: (verificationToken) {
                           appRouter.pop();
                           appRouter.push(
-                            ForgetPasswordRoute(newPasswordController: TextEditingController()),
+                              ForgetPasswordRoute(
+                                newPasswordController: TextEditingController(),
+                                verificationToken: verificationToken,
+                              ),
                           );
                         },
                       ),
                     );
+                    }
+                    
                   },
                 ),
               ],

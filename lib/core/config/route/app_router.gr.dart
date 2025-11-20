@@ -585,12 +585,14 @@ class EventNotificationEnableRouteArgs {
 class ForgetPasswordRoute extends _i38.PageRouteInfo<ForgetPasswordRouteArgs> {
   ForgetPasswordRoute({
     required _i39.TextEditingController newPasswordController,
+    required String verificationToken,
     _i39.Key? key,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          ForgetPasswordRoute.name,
          args: ForgetPasswordRouteArgs(
            newPasswordController: newPasswordController,
+           verificationToken: verificationToken,
            key: key,
          ),
          initialChildren: children,
@@ -604,6 +606,7 @@ class ForgetPasswordRoute extends _i38.PageRouteInfo<ForgetPasswordRouteArgs> {
       final args = data.argsAs<ForgetPasswordRouteArgs>();
       return _i13.ForgetPasswordScreen(
         newPasswordController: args.newPasswordController,
+        verificationToken: args.verificationToken,
         key: args.key,
       );
     },
@@ -613,16 +616,19 @@ class ForgetPasswordRoute extends _i38.PageRouteInfo<ForgetPasswordRouteArgs> {
 class ForgetPasswordRouteArgs {
   const ForgetPasswordRouteArgs({
     required this.newPasswordController,
+    required this.verificationToken,
     this.key,
   });
 
   final _i39.TextEditingController newPasswordController;
 
+  final String verificationToken;
+
   final _i39.Key? key;
 
   @override
   String toString() {
-    return 'ForgetPasswordRouteArgs{newPasswordController: $newPasswordController, key: $key}';
+    return 'ForgetPasswordRouteArgs{newPasswordController: $newPasswordController, verificationToken: $verificationToken, key: $key}';
   }
 
   @override
@@ -630,11 +636,15 @@ class ForgetPasswordRouteArgs {
     if (identical(this, other)) return true;
     if (other is! ForgetPasswordRouteArgs) return false;
     return newPasswordController == other.newPasswordController &&
+        verificationToken == other.verificationToken &&
         key == other.key;
   }
 
   @override
-  int get hashCode => newPasswordController.hashCode ^ key.hashCode;
+  int get hashCode =>
+      newPasswordController.hashCode ^
+      verificationToken.hashCode ^
+      key.hashCode;
 }
 
 /// generated route for
@@ -784,49 +794,18 @@ class OrgTicketManageRouteArgs {
 
 /// generated route for
 /// [_i20.OtpScreen]
-class OtpRoute extends _i38.PageRouteInfo<OtpRouteArgs> {
-  OtpRoute({
-    required dynamic Function() onSuccess,
-    _i39.Key? key,
-    List<_i38.PageRouteInfo>? children,
-  }) : super(
-         OtpRoute.name,
-         args: OtpRouteArgs(onSuccess: onSuccess, key: key),
-         initialChildren: children,
-       );
+class OtpRoute extends _i38.PageRouteInfo<void> {
+  const OtpRoute({List<_i38.PageRouteInfo>? children})
+    : super(OtpRoute.name, initialChildren: children);
 
   static const String name = 'OtpRoute';
 
   static _i38.PageInfo page = _i38.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<OtpRouteArgs>();
-      return _i20.OtpScreen(onSuccess: args.onSuccess, key: args.key);
+      return const _i20.OtpScreen();
     },
   );
-}
-
-class OtpRouteArgs {
-  const OtpRouteArgs({required this.onSuccess, this.key});
-
-  final dynamic Function() onSuccess;
-
-  final _i39.Key? key;
-
-  @override
-  String toString() {
-    return 'OtpRouteArgs{onSuccess: $onSuccess, key: $key}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! OtpRouteArgs) return false;
-    return key == other.key;
-  }
-
-  @override
-  int get hashCode => key.hashCode;
 }
 
 /// generated route for

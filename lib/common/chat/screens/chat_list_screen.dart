@@ -74,7 +74,7 @@ class ChatListScreen extends StatelessWidget {
           textColor: AppColors.primaryColor,
         ).start,
         CommonText(
-          text: context.read<AuthCubit>().state.userLoginInfoModel.name,
+          text: context.read<AuthCubit>().state.profileModel?.name ?? '',
           style: AppTextStyles.labelMedium?.copyWith(color: AppColors.secondaryText),
         ).start,
         10.height,

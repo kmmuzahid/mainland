@@ -91,7 +91,7 @@ class SettingScreen extends StatelessWidget {
                     ),
                     CommonText(
                       top: 8,
-                      text: context.read<AuthCubit>().state.userLoginInfoModel.name,
+                      text: context.read<AuthCubit>().state.profileModel?.name ?? '',
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ).start,
@@ -201,17 +201,18 @@ class SettingScreen extends StatelessWidget {
                         appRouter.push(const LocationRoute());
                       },
                     ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: Utils.getRole() == Role.ORGANIZER
-                          ? 'Switch to Attendee'
-                          : 'Switch to Organizer',
-                      onTap: () {
-                        StorageService.instance.deleteAll();
-                        appRouter.replaceAll([const SplashRoute()]);
-                      },
-                    ),
+                    if (context.read<AuthCubit>().state.profileModel?.role == Role.ORGANIZER) ...[
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: Utils.getRole() == Role.ORGANIZER
+                            ? 'Switch to Attendee'
+                            : 'Switch to Organizer',
+                        onTap: () {
+                          context.read<AuthCubit>().switchRole();
+                        },
+                      ),
+                    ],
                     20.height,
                     CommonButton(
                       titleText: AppString.logOut,

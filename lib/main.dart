@@ -74,21 +74,49 @@ void _diInit() {
   final DependencyInjection dI = DependencyInjection();
   dI.dependencies();
 }
+ 
 
 void showSnackBar(String text, {required SnackBarType type}) {
-  ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(
+  // Get the root navigator's context
+  final BuildContext? context = appRouter.navigatorKey.currentContext;
+  if (context == null) {
+    debugPrint('Error: No context available for showing snackbar');
+    return;
+  }
+
+  // Create a new ScaffoldMessenger
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+  // Hide any existing snackbar
+  scaffoldMessenger.hideCurrentSnackBar();
+
+  // Show the new snackbar
+  scaffoldMessenger.showSnackBar(
     SnackBar(
-      duration: const Duration(milliseconds: 1220),
-      backgroundColor: type == SnackBarType.success
-          ? AppColors.primaryColor
-          : type == SnackBarType.error
-          ? AppColors.error
-          : AppColors.warning,
-      content: CommonText(
-        text: text,
-        textColor: AppColors.textWhite,
-        fontWeight: FontWeight.bold,
+      content: Text(
+        text,
+        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold,
+        ),
       ),
+      backgroundColor: _getSnackBarColor(type),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      duration: const Duration(seconds: 2),
+      elevation: 4,
     ),
   );
+}
+
+Color _getSnackBarColor(SnackBarType type) {
+  switch (type) {
+    case SnackBarType.success:
+      return AppColors.primaryColor;
+    case SnackBarType.error:
+      return AppColors.error;
+    case SnackBarType.warning:
+      return AppColors.warning;
+    default:
+      return AppColors.primaryColor;
+  }
 }

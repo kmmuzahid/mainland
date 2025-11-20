@@ -1,9 +1,12 @@
-import 'package:dio/dio.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with MultipartFile.fromFile
+import 'package:dio/dio.dart';
 
 enum RequestMethod { GET, POST, PUT, DELETE, PATCH }
 
-class RequestInput { 
+class RequestInput {
 
   RequestInput({
     required this.endpoint,
@@ -33,4 +36,22 @@ class RequestInput {
   final Function(int, int)? onReceiveProgress;
   final bool requiresToken;
   final CancelToken? cancelToken;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'endpoint': endpoint,
+      'method': method.name,
+      'pathParams': pathParams,
+      'queryParams': queryParams,
+      'headers': headers,
+      'formFields': formFields,
+      'jsonBody': jsonEncode(jsonBody),
+      'files': files,
+      'timeout': timeout.toString(),
+      'requiresToken': requiresToken,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
 }

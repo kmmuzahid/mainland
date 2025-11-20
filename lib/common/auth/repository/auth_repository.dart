@@ -1,10 +1,11 @@
+import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/core/config/network/response_state.dart';
 
 abstract class AuthRepository {
   ///email or phone
-  Future<ResponseState<UserLoginInfoModel>> signIn({
+  Future<ResponseState<UserLoginInfoModel?>> signIn({
     required String username,
     required String password,
     required Role role,
@@ -12,7 +13,7 @@ abstract class AuthRepository {
 
   Future<ResponseState<dynamic>> signUp({required SignUpModel signUpModel});
 
-  Future<ResponseState<String>> sendOtp({required String username});
+  Future<ResponseState<dynamic>> sendOtp({required String username});
 
   Future<ResponseState<dynamic>> verifyOtp({required String verificationId, required String otp});
 
@@ -22,14 +23,12 @@ abstract class AuthRepository {
     required String newPassword,
   });
 
-  Future<ResponseState<bool>> resetPassword({
-    required String username,
-    required String verificationId,
-    required String otp,
+  Future<ResponseState<dynamic>> resetPassword({
+    required String verificationToken, 
     required String newPassword,
   });
 
-  Future<ResponseState<UserLoginInfoModel>> getCurrentUser({required String username});
+  Future<ResponseState<ProfileModel?>> getCurrentUser();
 
   Future<String> signInWithGoogle();
 
@@ -38,4 +37,9 @@ abstract class AuthRepository {
   Future<ResponseState<bool>> signOut();
 
   Future<ResponseState<bool>> deleteAccount();
+
+  Future<ResponseState<String?>> getPrivacyPolicy();
+
+  Future<ResponseState<String?>> getTermsAndConditions();
+ 
 }

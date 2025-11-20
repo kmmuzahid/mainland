@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 
 import '../model/user_login_info_model.dart';
@@ -12,14 +13,9 @@ class AuthState extends Equatable {
         '<html><body>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem </body></html>',
 
     this.userLoginInfoModel = const UserLoginInfoModel(
-      id: '',
-      name: '',
-      image: '',
-      address: '',
-      username: '',
       accessToken: '',
-      refreshToken: '',
-      agentId: '',
+      refreshToken: '', 
+      role: Role.ATTENDEE,
     ),
     this.isLoading = false,
     this.errMessage = '',
@@ -37,11 +33,16 @@ class AuthState extends Equatable {
     ),
     this.isTermsAndConditonsAccepted = false,
     this.age = 0,
+    this.privacyPolicy,
+    this.termsAndConditions,
+    this.profileModel,
   });
 
+  final String? privacyPolicy;
+  final String? termsAndConditions;
+  final String faqHelp;
   // Fields
   final String about;
-  final String faqHelp;
   final bool isLoading;
   final String errMessage;
   final UserLoginInfoModel userLoginInfoModel;
@@ -49,6 +50,7 @@ class AuthState extends Equatable {
   final SignUpModel signUpModel;
   final bool isTermsAndConditonsAccepted;
   final int age;
+  final ProfileModel? profileModel;
 
   AuthState copyWith({
     bool? isLoading,
@@ -58,7 +60,10 @@ class AuthState extends Equatable {
     String? about,
     String? faqHelp,
     bool? isTermsAndConditonsAccepted,
+    String? privacyPolicy,
+    String? termsAndConditions,
     int? age,
+    ProfileModel? profileModel,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -68,7 +73,10 @@ class AuthState extends Equatable {
       about: about ?? this.about,
       faqHelp: faqHelp ?? this.faqHelp,
       isTermsAndConditonsAccepted: isTermsAndConditonsAccepted ?? this.isTermsAndConditonsAccepted,
+      privacyPolicy: privacyPolicy ?? this.privacyPolicy,
+      termsAndConditions: termsAndConditions ?? this.termsAndConditions,
       age: age ?? this.age,
+      profileModel: profileModel ?? this.profileModel,
     );
   }
 
@@ -81,6 +89,9 @@ class AuthState extends Equatable {
     about,
     faqHelp,
     isTermsAndConditonsAccepted,
+    privacyPolicy ?? '',
+    termsAndConditions ?? '',
     age,
+    profileModel ?? '',
   ];
 }

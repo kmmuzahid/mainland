@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
@@ -15,11 +17,17 @@ import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 
 @RoutePage()
 class ForgetPasswordScreen extends StatelessWidget {
-  const ForgetPasswordScreen({required this.newPasswordController, super.key});
+  const ForgetPasswordScreen({
+    required this.newPasswordController,
+    required this.verificationToken,
+    super.key,
+  });
   final TextEditingController newPasswordController;
+  final String verificationToken;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -48,13 +56,13 @@ class ForgetPasswordScreen extends StatelessWidget {
               hintText: AppString.newPassword,
               backgroundColor: AppColors.disable,
               borderColor: AppColors.disable,
+              controller: newPasswordController,
               validationType: ValidationType.validatePassword,
             ),
             10.height,
             CommonTextField(
               backgroundColor: AppColors.disable,
-              borderColor: AppColors.disable,
-              controller: newPasswordController,
+              borderColor: AppColors.disable, 
               hintText: AppString.confirmPassword,
               validationType: ValidationType.validateConfirmPassword,
               originalPassword: () => newPasswordController.text,
@@ -65,9 +73,14 @@ class ForgetPasswordScreen extends StatelessWidget {
             CommonButton(
               titleText: AppString.resetPassword,
               buttonWidth: 100,
-              onTap: () {
-                if (formKey.currentState!.validate()) {}
-                appRouter.popUntilRouteWithName(SignInRoute.name);
+              onTap: () { 
+                
+                if (formKey.currentState!.validate()) {
+                  context.read<AuthCubit>().resetPassword(
+                    verificationToken: verificationToken,
+                    newPassword: newPasswordController.text,
+                  );
+                }
               },
               isLoading: false,
             ).center,

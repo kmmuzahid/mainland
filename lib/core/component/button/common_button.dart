@@ -195,10 +195,7 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                     animation: _animation,
                     builder: (context, child) {
                       return CustomPaint(
-                        painter: _BorderLinePainter(
-                          progress: _animation.value,
-                          borderColor: widget.titleColor ?? AppColors.onPrimaryColor,
-                          borderRadius: widget.buttonRadius.r,
+                        painter: _BorderLoaderPainter(_animation.value, Colors.lightBlueAccent,
                         ),
                       );
                     },
@@ -212,99 +209,38 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
   }
 }
 
-class _BorderLinePainter extends CustomPainter {
-  final double progress;
-  final Color borderColor;
-  final double borderRadius;
-
-  _BorderLinePainter({
-    required this.progress,
-    required this.borderColor,
-    required this.borderRadius,
-  });
+class _BorderLoaderPainter extends CustomPainter {
+  _BorderLoaderPainter(this.progress, this.color);
+  final double progress; // 0.0 to 1.0
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, size.width, size.height),
-      Radius.circular(borderRadius),
-    );
+    final rect = Offset.zero & size;
+    final path = Path()..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)));
 
-    // Calculate the total perimeter
-    final perimeter = 2 * (size.width + size.height);
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
 
-    // Calculate the current position based on progress (0.0 to 1.0)
-    final currentDistance = progress * perimeter;
+    final dashWidth = 50.0;
+    final dashSpace = 1.0;
+    final totalLength = (dashWidth + dashSpace);
+    final pathMetrics = path.computeMetrics();
 
-    // Main moving dot with glow effect
-    final glowPaint = Paint()
-      ..color = borderColor.withOpacity(0.2)
-      ..style = PaintingStyle.fill
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8.0);
+    for (final metric in pathMetrics) {
+      double distance = progress * metric.length;
 
-    final dotPaint = Paint()
-      ..color = borderColor
-      ..style = PaintingStyle.fill;
-
-    final highlightPaint = Paint()
-      ..color = borderColor.withOpacity(0.8)
-      ..style = PaintingStyle.fill;
-
-    // Get the current position on the perimeter
-    final currentPoint = _getPointOnRect(rect, currentDistance, perimeter);
-
-    // Draw trailing dots for motion effect
-    _drawTrailingDots(canvas, rect, currentDistance, perimeter);
-
-    // Draw glow layer (largest, most transparent)
-    canvas.drawCircle(currentPoint, 12.0, glowPaint);
-
-    // Draw main dot
-    canvas.drawCircle(currentPoint, 4.0, dotPaint);
-
-    // Draw highlight (small, bright center)
-    canvas.drawCircle(currentPoint, 1.5, highlightPaint);
-  }
-
-  void _drawTrailingDots(Canvas canvas, RRect rect, double currentDistance, double perimeter) {
-    final trailPaint = Paint()..style = PaintingStyle.fill;
-
-    // Draw 5 trailing dots with decreasing opacity and size
-    for (int i = 1; i <= 5; i++) {
-      final trailDistance = (currentDistance - (i * 8) + perimeter) % perimeter;
-      final trailPoint = _getPointOnRect(rect, trailDistance, perimeter);
-      final opacity = (0.3 / i).clamp(0.0, 0.3); // Decreasing opacity
-      final size = (3.0 - (i * 0.4)).clamp(0.8, 3.0); // Decreasing size
-
-      trailPaint.color = borderColor.withOpacity(opacity);
-      canvas.drawCircle(trailPoint, size, trailPaint);
-    }
-  }
-
-  Offset _getPointOnRect(RRect rect, double distance, double perimeter) {
-    final width = rect.width;
-    final height = rect.height;
-
-    // Normalize distance to [0, perimeter)
-    distance = distance % perimeter;
-
-    if (distance < width) {
-      // Top edge (left to right)
-      return Offset(rect.left + distance, rect.top);
-    } else if (distance < width + height) {
-      // Right edge (top to bottom)
-      return Offset(rect.right, rect.top + (distance - width));
-    } else if (distance < 2 * width + height) {
-      // Bottom edge (right to left)
-      return Offset(rect.right - (distance - width - height), rect.bottom);
-    } else {
-      // Left edge (bottom to top)
-      return Offset(rect.left, rect.bottom - (distance - 2 * width - height));
+      while (distance < metric.length) {
+        final segment = metric.extractPath(distance, distance + dashWidth);
+        canvas.drawPath(segment, paint);
+        distance += totalLength;
+      }
     }
   }
 
   @override
-  bool shouldRepaint(_BorderLinePainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
+  bool shouldRepaint(covariant _BorderLoaderPainter oldDelegate) =>
+      oldDelegate.progress != progress;
 }

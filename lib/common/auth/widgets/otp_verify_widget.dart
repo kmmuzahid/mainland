@@ -19,7 +19,7 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 
 class OtpVerifyWidget extends StatefulWidget {
   const OtpVerifyWidget({required this.onSuccess, required this.email, super.key});
-  final Function onSuccess;
+  final Function(String verificationToken) onSuccess;
   final String email;
 
   @override
@@ -72,13 +72,13 @@ class _OtpVerifyWidgetState extends State<OtpVerifyWidget> {
                 buttonRadius: 12.w,
                 buttonWidth: 100, 
                 onTap: () {
-                  // if (formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                   context.read<OtpCubit>().verifyOtp(
                     otp: controller.text,
                     email: widget.email,
-                    onSuccess: widget.onSuccess,
+                      onSuccess: widget.onSuccess,
                   );
-                  // }
+                  }
                 },
               ),
             ),

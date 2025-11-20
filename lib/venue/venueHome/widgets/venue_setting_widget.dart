@@ -30,7 +30,7 @@ class VenueSettingWidget extends StatelessWidget {
         CommonImage(imageSrc: Assets.images.user.path, size: 36).start,
         CommonText(
           top: 8,
-          text: context.read<AuthCubit>().state.userLoginInfoModel.name,
+          text: context.read<AuthCubit>().state.profileModel?.name ?? '',
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ).start,

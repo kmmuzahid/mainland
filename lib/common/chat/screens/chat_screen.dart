@@ -144,7 +144,7 @@ class ChatScreen extends StatelessWidget {
     final Color isMeBackground = AppColors.primaryColor;
     final Color isMeText = AppColors.textWhite;
     final bool isMe =
-        model.userInfo.userId == context.read<AuthCubit>().state.userLoginInfoModel.id;
+        model.userInfo.userId == context.read<AuthCubit>().state.profileModel?.id;
     return Column(
       children: [
         Align(

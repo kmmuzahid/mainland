@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
@@ -29,39 +31,73 @@ class AuthCubit extends SafeCubit<AuthState> {
   final StorageService _storageService = getIt();
   final DioService _dioService = getIt();
   final String _loginInfo = 'login_info_key';
+  final String _profileInfo = 'profile_info_key';
   Role _role = Role.ATTENDEE;
+
+  void switchRole() async {
+    _role = state.userLoginInfoModel.role == Role.ATTENDEE ? Role.ORGANIZER : Role.ATTENDEE;
+    final model = state.userLoginInfoModel.copyWith(role: _role);
+    emit(state.copyWith(userLoginInfoModel: model));
+    await _saveUserInfo(model);
+    appRouter.replaceAll([const SplashRoute()]);
+  }
+
+  void resetPassword({required String verificationToken, required String newPassword}) async {
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final responce = await _repository.resetPassword(
+      verificationToken: verificationToken,
+      newPassword: newPassword,
+    );
+    emit(state.copyWith(isLoading: false));
+    if (responce.statusCode == 200) {
+      appRouter.popUntilRouteWithName(SignInRoute.name);
+    }
+  }
+
+  void getPolicy() async {
+    if (state.termsAndConditions == null || state.termsAndConditions?.isEmpty == true) {
+      _repository.getTermsAndConditions().then((value) {
+        emit(state.copyWith(termsAndConditions: value.data));
+      });
+    }
+
+    if (state.privacyPolicy == null || state.privacyPolicy?.isEmpty == true) {
+      _repository.getPrivacyPolicy().then((value) {
+        emit(state.copyWith(privacyPolicy: value.data));
+      });
+    }
+  }
 
   void updateTermsConditonsStatus(bool value) async {
     emit(state.copyWith(isTermsAndConditonsAccepted: value));
   }
 
   void acceptTermsAndConditions() async {
+    //need to login if there is no access token to accept terms and conditions
     if (state.userLoginInfoModel.accessToken.isEmpty) {
-      final login = await _dioService.request<UserLoginInfoModel>(
-        input: RequestInput(
-          endpoint: ApiEndPoint.instance.signIn,
-          jsonBody: {'email': state.signUpModel.email, 'password': state.signUpModel.password},
-          method: RequestMethod.POST,
-        ),
-        responseBuilder: (data) => state.userLoginInfoModel.copyWith(
-          accessToken: data['Token'],
-          refreshToken: data['RefreshToken'],
-          role: _role,
-          username: state.signUpModel.email,
-          name: state.signUpModel.fullName,
-        ),
+      final login = await _repository.signIn(
+        username: state.signUpModel.email,
+        password: state.signUpModel.password,
+        role: _role,
       );
       if (login.data != null) {
         await _saveUserInfo(login.data!);
+        getCurrentUser();
       }
     }
-
+    //update terms and conditions
     final responce = await _dioService.request<dynamic>(
-      input: RequestInput(endpoint: ApiEndPoint.instance.profile, method: RequestMethod.PATCH),
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.profile,
+        jsonBody: {'terAndCondition': state.isTermsAndConditonsAccepted},
+        method: RequestMethod.PATCH,
+      ),
       responseBuilder: (data) => data,
     );
 
     if (responce.statusCode == 200) {
+      await getCurrentUser();
       appRouter.replaceAll([const SplashRoute()]);
     } else {
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
@@ -69,7 +105,6 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   void onChangeUserRole(Role role) {
-    AppLogger.debug(role.name, tag: 'AuthCubit');
     _role = role;
   }
 
@@ -84,17 +119,25 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   Future<void> init() async {
-    AppLogger.debug('init auth cubit', tag: 'AuthCubit');
     try {
       final String? data = await _storageService.read(_loginInfo);
+      final String? profileData = await _storageService.read(_profileInfo);
       AppLogger.debug(data ?? '', tag: 'Storage Service');
       if (data != null) {
         _saveUserInfo(UserLoginInfoModel.fromJson(data));
       } else {
         emit(const AuthState());
       }
+      if (profileData != null) {
+        emit(state.copyWith(profileModel: ProfileModel.fromJson(jsonDecode(profileData))));
+      }
       if (state.userLoginInfoModel.accessToken.isNotEmpty) {
         appRouter.replaceAll([const HomeRoute()]);
+        getCurrentUser();
+      } else {
+        Future.delayed(const Duration(seconds: 1), () {
+          appRouter.replace(const OnboardingRoute());
+        });
       }
     } catch (e) {
       AppLogger.error(e.toString(), tag: 'Storage Service');
@@ -109,33 +152,39 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> signIn(String username, String password) async {
     if (state.isLoading) return;
     emit(const AuthState(isLoading: true));
-    AppLogger.debug(_role.name, tag: 'AuthCubit');
     final responce = await _repository.signIn(username: username, password: password, role: _role);
     emit(state.copyWith(isLoading: false));
-    if (responce.statusCode == 200) {
-      AppLogger.debug(responce.data.toString(), tag: 'AuthCubit');
-      await _saveUserInfo(responce.data);
+    if (responce.statusCode == 200 && responce.data != null) {
+      await _saveUserInfo(responce.data!);
+      getCurrentUser();
       appRouter.replaceAll([const HomeRoute()]);
     } else {
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
+      if (responce.message?.contains('verify') ?? false) {
+        _verify(username, password);
+      }
     }
   }
 
+  Future<void> _verify(String email, String password) async {
+    commonDialog(
+      context: appRouter.navigatorKey.currentState!.context,
+      child: OtpVerifyWidget(
+        email: email,
+        onSuccess: (verificationToken) {
+          signIn(email, password);
+        },
+      ),
+    );
+  }
+
   Future<void> signUp(SignUpModel signUpModel) async {
+    getPolicy();
     emit(state.copyWith(isLoading: true));
     final response = await _repository.signUp(signUpModel: signUpModel);
     emit(state.copyWith(isLoading: false));
     if (response.statusCode == 200) {
-      commonDialog(
-        context: appRouter.navigatorKey.currentState!.context,
-        child: OtpVerifyWidget(
-          email: state.signUpModel.email,
-          onSuccess: () {
-            appRouter.pop();
-            TermsAndConditions.instance.show(this);
-          },
-        ),
-      );
+      _verify(signUpModel.email, signUpModel.password);
     } else {
       showSnackBar(response.message ?? '', type: SnackBarType.error);
     }
@@ -146,14 +195,19 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> signInWithFacebook() async {}
 
   Future<void> getCurrentUser() async {
-    final response = await _repository.getCurrentUser(username: state.userLoginInfoModel.username);
-    if (response.data.accessToken.isNotEmpty) {
-      await _saveUserInfo(response.data);
-    } else {
-      await _storageService.deleteAll();
-      appRouter.replaceAll([
-        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
-      ]);
+    if (state.userLoginInfoModel.accessToken.isEmpty) return;
+    final response = await _repository.getCurrentUser();
+
+    if (response.statusCode == 200 && response.data != null) {
+      emit(state.copyWith(profileModel: response.data));
+      await _storageService.write(_profileInfo, jsonEncode(response.data!.toJson()));
+      if (state.userLoginInfoModel.role == null) {
+        await _saveUserInfo(state.userLoginInfoModel.copyWith(role: response.data?.role));
+      }
+      if (state.profileModel?.termsAndCondition == false) {
+        getPolicy();
+        TermsAndConditions.instance.show(this);
+      }
     }
   }
 

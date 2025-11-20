@@ -9,6 +9,7 @@ class OtpState extends Equatable {
     this.isVerified = false,
     this.isLoading = false,
     this.username = '',
+    this.verificationToken,
   });
   final String otp;
   final String verificationId;
@@ -17,6 +18,7 @@ class OtpState extends Equatable {
   final maxCount = 90;
   final bool isLoading;
   final int count;
+  final String? verificationToken;
 
   OtpState copyWith({
     String? otp,
@@ -25,6 +27,7 @@ class OtpState extends Equatable {
     String? username,
     bool? isLoading,
     int? count,
+    String? verificationToken,
   }) {
     return OtpState(
       otp: otp ?? this.otp,
@@ -33,11 +36,12 @@ class OtpState extends Equatable {
       username: username ?? this.username,
       isLoading: isLoading ?? this.isLoading,
       count: count ?? this.count,
+      verificationToken: verificationToken ?? this.verificationToken,
     );
   }
 
   @override
   List<Object> get props {
-    return [otp, verificationId, isVerified, username, isLoading, count];
+    return [otp, verificationId, isVerified, username, isLoading, count, verificationToken ?? ''];
   }
 }

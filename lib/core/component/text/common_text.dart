@@ -148,6 +148,22 @@ class CommonText extends StatelessWidget {
               color: textColor,
               fontWeight: fontWeight,
             ),
+            "p": Style(
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+              textAlign: textAlign,
+              fontSize: FontSize(effectiveTextStyle.fontSize ?? 20),
+              color: textColor,
+              fontWeight: fontWeight,
+            ),
+            "h1,h2,h3,h4,h5,h6": Style(
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+              textAlign: textAlign,
+              fontSize: FontSize(effectiveTextStyle.fontSize ?? 25),
+              color: textColor,
+              fontWeight: fontWeight,
+            ),
           },
         );
       }

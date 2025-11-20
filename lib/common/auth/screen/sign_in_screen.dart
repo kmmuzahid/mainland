@@ -97,13 +97,7 @@ class SignInScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   appRouter.push(
-                    OtpRoute(
-                      onSuccess: () {
-                        appRouter.push(
-                          ForgetPasswordRoute(newPasswordController: TextEditingController()),
-                        );
-                      },
-                    ),
+                    const OtpRoute(),
                   );
                 },
                 child: CommonText(
