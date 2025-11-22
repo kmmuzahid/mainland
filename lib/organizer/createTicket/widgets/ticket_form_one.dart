@@ -53,8 +53,12 @@ class TicketFormOne extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             isExpanded || createEventModel.title?.isNotEmpty == true
-                ? CreateTicketTitlebar(title: 'Event Details', showSaveButton: false)
-                : _title(),
+                ? CreateTicketTitlebar(
+                    title: 'Event Details',
+                    showSaveButton: false,
+                    formKey: formKey,
+                  )
+                : _title(formKey),
             FormLabel(isRequired: true, label: 'Event Images'),
             _imagePickerBuilder(),
             10.height,
@@ -63,7 +67,7 @@ class TicketFormOne extends StatelessWidget {
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(title: value));
               },
-              hintText: 'Event Title', 
+              hintText: 'Event Title',
               maxWords: 50,
               initalText: createEventModel.title,
               validationType: ValidationType.validateRequired,
@@ -93,7 +97,7 @@ class TicketFormOne extends StatelessWidget {
                     buttonTitle: 'Done',
                   ),
                 );
-                if (result is MapEntry<String, List<String>>) {
+                if (result is MapEntry) {
                   AppLogger.debug(result.toString());
                   cubit.updateField(
                     cubit.state.createEventModel.copyWith(
@@ -138,7 +142,7 @@ class TicketFormOne extends StatelessWidget {
               isReadOnly: isReadOnly,
               height: 200,
               maxWords: 150,
-              
+
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(description: value));
               },
@@ -146,9 +150,10 @@ class TicketFormOne extends StatelessWidget {
               validationType: ValidationType.validateRequired,
               initialText: createEventModel.description,
               enableHtml: true,
-            ), 
+            ),
             FormLabel(isRequired: true, label: 'Event Date'),
             CommonDateInputTextField(
+              minDate: DateTime.now(),
               isReadOnly: isReadOnly,
               onSave: (value) {
                 cubit.updateField(
@@ -215,9 +220,9 @@ class TicketFormOne extends StatelessWidget {
               borderColor: AppColors.greay100,
               enableInitalSelection: false,
               backgroundColor: AppColors.backgroundWhite,
-              onChanged: (states) {
-                AppLogger.debug(states.toString());
-                // cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
+              isRequired: true,
+              onChanged: (states) { 
+                cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
               },
               nameBuilder: (states) {
                 return states.value;
@@ -227,7 +232,7 @@ class TicketFormOne extends StatelessWidget {
             FormLabel(isRequired: true, label: 'Country'),
             _textEditor(
               onSaved: (value, controller) {
-                cubit.updateField(cubit.state.createEventModel.copyWith(country: value));
+                cubit.updateField(cubit.state.createEventModel.copyWith(country: 'United States'));
               },
               isReadOnly: true,
               initalText: null,
@@ -236,7 +241,15 @@ class TicketFormOne extends StatelessWidget {
             ),
             if (!isExpanded) ...[
               20.height,
-              CommonButton(titleText: AppString.next, onTap: cubit.nextPage).center,
+              CommonButton(
+                titleText: AppString.next,
+                onTap: () {
+                  formKey.currentState?.save();
+                  if (formKey.currentState?.validate() ?? false) {
+                    cubit.nextPage();
+                  }
+                },
+              ).center,
               30.height,
             ],
           ],
@@ -304,12 +317,12 @@ class TicketFormOne extends StatelessWidget {
       maxWords: maxWords,
       validationType: validationType,
       onSaved: onSaved,
-    
     );
   }
 
-  CreateTicketTitlebar _title() {
+  CreateTicketTitlebar _title(GlobalKey<FormState> formKey) {
     return CreateTicketTitlebar(
+      formKey: formKey,
       titleWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

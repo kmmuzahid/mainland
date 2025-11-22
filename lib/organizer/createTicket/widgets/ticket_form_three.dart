@@ -41,7 +41,11 @@ class TicketFormThree extends StatelessWidget {
       builder: (context, formKey) {
         return Column(
           children: [
-            CreateTicketTitlebar(title: 'Event Organizer details', showSaveButton: !isExpanded),
+            CreateTicketTitlebar(
+              title: 'Event Organizer details',
+              showSaveButton: !isExpanded,
+              formKey: formKey,
+            ),
             CommonMultilineTextField(
               height: 117,
               initialText: createEventModel.organizerName,

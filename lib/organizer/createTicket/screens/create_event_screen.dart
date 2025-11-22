@@ -33,7 +33,7 @@ class CreateEventScreen extends StatelessWidget {
               (state.currentPage == 1 || (state.currentPage == 2 && !state.isExpandedView));
          
           return Scaffold(
-            appBar: CommonAppBar(
+            appBar: CommonAppBar( 
               disableBack: isBackDisabled,
               onBackPress: () {
                 final cubit = context.read<CreateTicketCubit>();

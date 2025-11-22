@@ -201,7 +201,6 @@ class SettingScreen extends StatelessWidget {
                         appRouter.push(const LocationRoute());
                       },
                     ),
-                    if (context.read<AuthCubit>().state.profileModel?.role == Role.ORGANIZER) ...[
                       Utils.divider(),
                       _menuItems(
                         context: context,
@@ -211,8 +210,7 @@ class SettingScreen extends StatelessWidget {
                         onTap: () {
                           context.read<AuthCubit>().switchRole();
                         },
-                      ),
-                    ],
+                    ),
                     20.height,
                     CommonButton(
                       titleText: AppString.logOut,

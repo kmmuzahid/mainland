@@ -83,7 +83,7 @@ class EventFormTicketSelctor extends StatelessWidget {
           ),
           _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.premium),
           _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.vip),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.standard),
+          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.standard), 
           _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.other),
         ],
       ),
@@ -106,7 +106,10 @@ class EventFormTicketSelctor extends StatelessWidget {
                 cubit.updateTicket(ticketName: ticketName, isSelected: value);
               },
             ),
-            CommonText(text: ticketName.name.capitalizeEachWord(), fontSize: 16),
+            CommonText(
+              text: ticketName == TicketName.vip ? 'VIP' : ticketName.name.capitalizeEachWord(),
+              fontSize: 16,
+            ),
           ],
         ),
         Padding(

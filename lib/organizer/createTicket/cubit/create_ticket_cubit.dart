@@ -1,12 +1,14 @@
 // form_cubit.dart
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,11 +25,41 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       );
   final ImagePicker _imagePicker = ImagePicker();
   // Navigate to next page
-  void saveDraft() {
-    appRouter.replaceAll([const HomeRoute()]);
+  void saveDraft() async {
+    AppLogger.debug(state.createEventModel.toJson().toString());
+    // appRouter.replaceAll([const HomeRoute()]);
+  }
+
+  void updatePromoCode({
+    required String code,
+    required int discountPercentage,
+    required String filedId,
+  }) {
+    //if state.createEventModel.discountCodes has filedId already
+    //then update that object
+    //else add new object
+    final List<DiscountCodeModel> discountCodes = List.from(state.createEventModel.discountCodes);
+    final index = discountCodes.indexWhere((element) => element.filedId == filedId);
+    if (index != -1) {
+      discountCodes[index] = DiscountCodeModel(
+        code: code,
+        discountPercentage: discountPercentage,
+        filedId: filedId,
+      );
+    } else {
+      discountCodes.add(
+        DiscountCodeModel(code: code, discountPercentage: discountPercentage, filedId: filedId),
+      );
+    }
+    emit(
+      state.copyWith(
+        createEventModel: state.createEventModel.copyWith(discountCodes: discountCodes),
+      ),
+    );
   }
 
   void submit() async {
+    AppLogger.debug(state.createEventModel.toString());
     appRouter.replaceAll([const HomeRoute()]);
   }
 

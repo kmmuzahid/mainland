@@ -9,6 +9,8 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/user/preferense/cubit/preference_cubit.dart';
+import 'package:mainland/user/preferense/model/category_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart';
 import 'package:mainland/user/preferense/widgets/preference_header_wideget.dart';
 
@@ -30,7 +32,7 @@ class PreferenceScreen extends StatelessWidget {
   final String? buttonTitle;
   final Color? backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
-  final Function(String category, String subCategory)?
+  final Function(CategoryModel category, SubCategoryModel subCategory)?
   onSubscategoryTap; //its dosent allow to mullti select category.
   final bool diableBack;
 
@@ -38,11 +40,11 @@ class PreferenceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CommonAppBar(backgroundColor: AppColors.background, disableBack: diableBack),
+      appBar: CommonAppBar(backgroundColor: AppColors.background, hideBack: diableBack),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<PreferenceCubit>(
-          create: (context) => PreferenceCubit(),
+          create: (context) => PreferenceCubit()..fetchCategory(),
           child: BlocBuilder<PreferenceCubit, PreferenceState>(
             builder: (context, state) {
               return SingleChildScrollView(
@@ -50,7 +52,9 @@ class PreferenceScreen extends StatelessWidget {
                   children: [
                     PreferenceHeaderWideget(header: header),
                     SizedBox(height: 20.h),
-                    _categoryBuilder(state, context.read<PreferenceCubit>()),
+                    state.isCategoryLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _categoryBuilder(state, context.read<PreferenceCubit>()),
                     if (state.selectedSubcategories.isNotEmpty)
                       PreferenceActionsWidget(
                         buttonTitle: buttonTitle,
@@ -72,7 +76,7 @@ class PreferenceScreen extends StatelessWidget {
   Widget _categoryBuilder(PreferenceState state, PreferenceCubit cubit) {
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 10,

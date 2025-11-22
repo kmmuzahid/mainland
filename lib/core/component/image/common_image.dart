@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mainland/core/config/api/api_end_point.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/core/utils/log/error_log.dart';
 import 'package:mainland/gen/assets.gen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -54,7 +56,7 @@ class CommonImage extends StatelessWidget {
       return _buildSvgImage();
     } else if (imageSrc.startsWith('assets/')) {
       return _buildPngImage();
-    } else if (imageSrc.startsWith('http')) {
+    } else if (imageSrc.startsWith('http') || imageSrc.startsWith('/image')) {
       return _buildNetworkImage();
     } else {
       return _buildFileImage();
@@ -65,11 +67,11 @@ class CommonImage extends StatelessWidget {
     return Image.asset(defaultImage ?? Assets.icon.appIcon.path);
   }
 
-  Widget _buildNetworkImage() {
+  Widget _buildNetworkImage() { 
     return CachedNetworkImage(
       height: size ?? height,
       width: size ?? width,
-      imageUrl: imageSrc,
+      imageUrl: '${ApiEndPoint.instance.domain}$imageSrc',
       fit: fill,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(

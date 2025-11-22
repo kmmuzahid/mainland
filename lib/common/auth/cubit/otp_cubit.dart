@@ -53,7 +53,7 @@ class OtpCubit extends SafeCubit<OtpState> {
       state.copyWith(isVerified: isVerified.statusCode == 200, verificationToken: isVerified.data),
     );
     if (isVerified.statusCode == 200) {
-      onSuccess(isVerified.data); // successfully verified
+      onSuccess(isVerified.data ?? ''); // successfully verified
     } else {
       showSnackBar(isVerified.message ?? '', type: SnackBarType.error);
     }

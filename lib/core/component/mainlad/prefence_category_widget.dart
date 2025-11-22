@@ -4,6 +4,8 @@ import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/user/preferense/model/category_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
 
 class PrefenceCategoryWidget extends StatelessWidget {
   const PrefenceCategoryWidget({
@@ -13,9 +15,9 @@ class PrefenceCategoryWidget extends StatelessWidget {
     required this.selectedSubcategories,
   });
 
-  final String category;
+  final CategoryModel category;
   final Function() onTap;
-  final List<String> selectedSubcategories;
+  final List<SubCategoryModel> selectedSubcategories;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,9 @@ class PrefenceCategoryWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            CommonImage(size: 74, imageSrc: Assets.images.preferenceIcon.path),
+            CommonImage(size: 74, imageSrc: category.coverImage),
             Text(
-              category,
+              category.title,
               style: AppTextStyles.titleMedium,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -5,7 +5,9 @@ import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/user/preferense/cubit/preference_state.dart';
+import 'package:mainland/user/preferense/model/category_model.dart';
 
 class PreferenceActionsWidget extends StatelessWidget {
   const PreferenceActionsWidget({
@@ -19,7 +21,7 @@ class PreferenceActionsWidget extends StatelessWidget {
 
   final String? buttonTitle;
   final PageRouteInfo<Object?>? successRoute;
-  final String? category;
+  final CategoryModel? category;
   final PreferenceState state;
   final bool showAllActions;
 
@@ -51,8 +53,9 @@ class PreferenceActionsWidget extends StatelessWidget {
                 if (successRoute != null) {
                   appRouter.replaceAll([successRoute!]);
                 } else {
+                  final data = state.selectedSubcategories[category] ?? []; 
                   appRouter.pop();
-                  appRouter.pop(MapEntry(category, state.selectedSubcategories[category] ?? []));
+                  appRouter.pop(MapEntry(category, data));
                 }
               },
             ),

@@ -18,7 +18,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.isCenterTitle = true,
     this.backgroundColor,
-    this.disableBack = false
+    this.hideBack = false,
+    this.disableBack = false,
   });
   final String? title;
   final Widget? titleWidget;
@@ -27,6 +28,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool isCenterTitle;
   final Color? backgroundColor;
+  final bool hideBack;
   final bool disableBack;
 
   @override
@@ -37,7 +39,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     backgroundColor: backgroundColor ?? AppColors.background,
     centerTitle: isCenterTitle,
     actionsPadding: const EdgeInsets.only(bottom: 10),
-    leading: disableBack
+    leading: hideBack
         ? const SizedBox.shrink()
         :
         leading ??
@@ -46,7 +48,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (onBackPress != null) {
               onBackPress!();
             }
-            if (!disableBack) {
+                  if (!disableBack) {
               appRouter.pop();
             }
           },

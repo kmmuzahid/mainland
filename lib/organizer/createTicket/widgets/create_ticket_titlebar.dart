@@ -7,10 +7,17 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_cubit.dart';
 
 class CreateTicketTitlebar extends StatelessWidget {
-  const CreateTicketTitlebar({this.title, this.titleWidget, this.showSaveButton = true, super.key});
+  const CreateTicketTitlebar({
+    this.title,
+    this.titleWidget,
+    this.showSaveButton = true,
+    required this.formKey,
+    super.key,
+  });
   final String? title;
   final Widget? titleWidget;
   final bool showSaveButton;
+  final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +32,7 @@ class CreateTicketTitlebar extends StatelessWidget {
           titleColor: AppColors.primaryColor,
           titleText: 'Save Draft',
             onTap: () {
+              formKey.currentState?.save();
               context.read<CreateTicketCubit>().saveDraft();
             },
         ),

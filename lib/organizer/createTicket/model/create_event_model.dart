@@ -5,12 +5,18 @@ class DiscountCodeModel {
   final String code;
   final int discountPercentage; // e.g., 10 for 10%
   final bool isActive;
+  final String filedId;
 
-  DiscountCodeModel({required this.code, required this.discountPercentage, this.isActive = true});
+  DiscountCodeModel({
+    required this.code,
+    required this.discountPercentage,
+    this.isActive = true,
+    required this.filedId,
+  });
 
   // Empty Initializer
   static DiscountCodeModel empty() {
-    return DiscountCodeModel(code: '', discountPercentage: 0, isActive: true);
+    return DiscountCodeModel(code: '', discountPercentage: 0, isActive: true, filedId: '');
   }
 
   // Factory constructor for creating an instance from a JSON map
@@ -19,17 +25,23 @@ class DiscountCodeModel {
       code: json['code'] as String? ?? '',
       discountPercentage: json['discountPercentage'] as int? ?? 0,
       isActive: json['isActive'] as bool? ?? true,
+      filedId: json['filedId'] as String? ?? '',
     );
   }
 
   // Method to convert the object to a JSON map
   Map<String, dynamic> toJson() {
-    return {'code': code, 'discountPercentage': discountPercentage, 'isActive': isActive};
+    return {
+      'code': code,
+      'discountPercentage': discountPercentage,
+      'isActive': isActive,
+      'filedId': filedId,
+    };
   }
 }
 
 class TicketTypeModel {
-  final TicketName name;
+  final TicketName? name;
   final double setUnitPrice;
   final int availableUnit;
   final DateTime? saleStartDate;
@@ -46,7 +58,7 @@ class TicketTypeModel {
   // Empty Initializer - all dates null
   static TicketTypeModel empty() {
     return TicketTypeModel(
-      name: TicketName.standard,
+      name: null,
       setUnitPrice: 0.0,
       availableUnit: 0,
       saleStartDate: null,

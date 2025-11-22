@@ -22,4 +22,13 @@ class ApiEndPoint {
   //basic
   final String privacyPolicy = '/settings/privacyPolicy';
   final String termsAndConditions = '/settings/termsAdnCondition';
+
+  //event
+  final String createEvent = '/event';
+  String updateEvent(String id) => '/event/$id';
+
+  //category + subcategory
+  final String category = '/event/allCategory';
+  String subCategory(String id) => '/event/Subcategory?categoryId=$id';
+
 }

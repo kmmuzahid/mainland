@@ -10,7 +10,7 @@ class CommonDropDown<T> extends StatefulWidget {
     required this.items,
     required this.onChanged,
     required this.nameBuilder,
-    this.validator,
+    this.isRequired = false,
     this.borderColor,
     this.backgroundColor,
     this.textStyle,
@@ -28,7 +28,7 @@ class CommonDropDown<T> extends StatefulWidget {
   final TextStyle? textStyle;
   final Function(T? value) onChanged;
   final String Function(T value) nameBuilder;
-  final String? Function(T)? validator;
+  final bool isRequired;
   final bool isLoading;
   final double borderRadius;
   final Widget? prefix;
@@ -41,17 +41,18 @@ class CommonDropDown<T> extends StatefulWidget {
 class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   T? _selectedItem;
+  late List<T> _items;
 
   @override
   void initState() {
     super.initState();
-
+    _items = widget.items;
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
 
     AppLogger.debug(widget.items.length.toString(), tag: 'common drop down');
     // Set first item by default if items are available
-    if (widget.items.isNotEmpty) {
-      _selectedItem = widget.items.first;
+    if (_items.isNotEmpty) {
+      _selectedItem = _items.first;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onChanged(_selectedItem);
       });
@@ -63,8 +64,8 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
     super.didUpdateWidget(oldWidget);
 
     // Update selection when new items come in and none selected
-    if (_selectedItem == null && widget.items.isNotEmpty) {
-      _selectedItem = widget.items.first;
+    if (_selectedItem == null && _items.isNotEmpty) {
+      _selectedItem = _items.first;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onChanged(_selectedItem);
         setState(() {});
@@ -89,10 +90,17 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
       children: [
         DropdownButtonFormField<T>(
           style: widget.textStyle,
+          onSaved: (value) {
+            widget.onChanged(value);
+          },
 
-          validator: (value) => (widget.validator == null || value == null)
-              ? null
-              : widget.validator!(value),
+          validator: (value) {
+            if (widget.isRequired &&
+                (value == null || !widget.items.any((item) => _itemsEqual(item, value)))) {
+              return '${widget.hint} is required';
+            }
+            return null;
+          },
           initialValue: widget.enableInitalSelection ? _selectedItem : null,
           decoration: InputDecoration(
             isDense: true,
@@ -123,7 +131,7 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
           icon: const Icon(Icons.arrow_drop_down),
           dropdownColor: AppColors.serfeceBG,
           isExpanded: true,
-          items: widget.items
+          items: _items
               .map(
                 (item) => DropdownMenuItem<T>(
                   value: item,
@@ -131,11 +139,19 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
                 ),
               )
               .toList(),
-          onChanged: (value) {
+          onChanged: (T? newValue) {
+            if (newValue == null) return;
+
+            // Find the matching item from the original items list
+            final matchingItem = widget.items.firstWhere(
+              (item) => _itemsEqual(item, newValue),
+              orElse: () => newValue,
+            );
+
             setState(() {
-              _selectedItem = value;
+              _selectedItem = matchingItem;
             });
-            widget.onChanged(value);
+            widget.onChanged(matchingItem);
           },
         ),
 
@@ -157,6 +173,13 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
           ),
       ],
     );
+  }
+
+  bool _itemsEqual(T a, T b) {
+    if (a is MapEntry && b is MapEntry) {
+      return a.key == b.key && a.value == b.value;
+    }
+    return a == b;
   }
 }
 

@@ -15,10 +15,12 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_cubit.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/organizer/createTicket/widgets/event_form_ticket_selctor.dart';
 import 'package:mainland/organizer/createTicket/widgets/form_label.dart';
+import 'package:mainland/organizer/createTicket/widgets/promo_builder_widget.dart';
 
 import 'create_ticket_titlebar.dart';
 
@@ -41,7 +43,7 @@ class TicketFormTwo extends StatelessWidget {
       builder: (context, formKey) {
         return Column(
           children: [
-            CreateTicketTitlebar(title: 'Tickets', showSaveButton: !isExpanded),
+            CreateTicketTitlebar(title: 'Tickets', showSaveButton: !isExpanded, formKey: formKey),
             Row(
               children: [
                 _buildCheckBox(
@@ -65,6 +67,7 @@ class TicketFormTwo extends StatelessWidget {
             _ticketStartSaleLabel(context),
             CommonDateInputTextField(
               isReadOnly: isReadOnly,
+              minDate: DateTime.now(),
               onSave: (value) {
                 cubit.updateField(
                   cubit.state.createEventModel.copyWith(
@@ -94,6 +97,7 @@ class TicketFormTwo extends StatelessWidget {
             FormLabel(isRequired: false, label: 'Pre-Sale start date').start,
             2.height,
             CommonDateInputTextField(
+              minDate: DateTime.now(),
               isReadOnly:
                   isReadOnly ||
                   cubit.state.createEventModel.isFreeEvent ||
@@ -108,6 +112,7 @@ class TicketFormTwo extends StatelessWidget {
             10.height,
             FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
             CommonDateInputTextField(
+              minDate: cubit.state.createEventModel.preSaleStartDate,
               isReadOnly:
                   isReadOnly ||
                   cubit.state.createEventModel.isFreeEvent ||
@@ -138,11 +143,30 @@ class TicketFormTwo extends StatelessWidget {
               bottom: 10,
             ),
             10.height,
-            _promoBuilder(),
+            PromoBuilderWidget(
+              cubit: cubit,
+              isReadOnly: isReadOnly,
+              onSaved: (code, discount) {
+                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '1');
+              },
+            ),
             10.height,
-            _promoBuilder(),
+            PromoBuilderWidget(
+              cubit: cubit,
+              isReadOnly: isReadOnly,
+              onSaved: (code, discount) {
+                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '2');
+              },
+            ),
             10.height,
-            _promoBuilder(),
+            PromoBuilderWidget(
+              cubit: cubit,
+              isReadOnly: isReadOnly,
+              onSaved: (code, discount) {
+                AppLogger.debug('code: $code, discount: $discount');
+                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '3');
+              },
+            ),
 
             if (!isExpanded) ...[
               20.height,
@@ -228,41 +252,6 @@ class TicketFormTwo extends StatelessWidget {
             );
           },
           icon: const Icon(Icons.info_outline, size: 16),
-        ),
-      ],
-    );
-  }
-
-  Widget _promoBuilder() {
-    return Row(
-      children: [
-        Expanded(
-          child: CommonTextField(
-            hintText: 'Promo Code',
-            isReadOnly:
-                isReadOnly ||
-                cubit.state.createEventModel.isFreeEvent ||
-                !cubit.state.createEventModel.offerPreSale,
-            onSaved: (value, controller) {},
-            validationType: ValidationType.validateAlphaNumeric,
-            backgroundColor: AppColors.backgroundWhite,
-          ),
-        ),
-        10.width,
-        const CommonText(text: '%', fontSize: 16, fontWeight: FontWeight.bold),
-        SizedBox(
-          width: 70.w,
-          child: CommonTextField(
-            hintText: '10',
-            isReadOnly:
-                isReadOnly ||
-                cubit.state.createEventModel.isFreeEvent ||
-                !cubit.state.createEventModel.offerPreSale,
-            onSaved: (value, controller) {},
-            maxLength: 3,
-            validationType: ValidationType.validateNumber,
-            backgroundColor: AppColors.backgroundWhite,
-          ),
         ),
       ],
     );

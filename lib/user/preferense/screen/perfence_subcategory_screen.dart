@@ -10,6 +10,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/user/preferense/cubit/preference_cubit.dart';
 import 'package:mainland/user/preferense/cubit/preference_state.dart';
+import 'package:mainland/user/preferense/model/category_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
 import 'package:mainland/user/preferense/widgets/preference_actions_widget.dart';
 import 'package:mainland/user/preferense/widgets/preference_header_wideget.dart';
 
@@ -30,11 +32,14 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
   final Widget? header;
   final Color backgroundColor;
   final PageRouteInfo<Object?>? successRoute;
-  final String category;
-  final Function(String category, String subCategory)? onSubscategoryTap;
+  final CategoryModel category;
+  final Function(CategoryModel category, SubCategoryModel subCategory)? onSubscategoryTap;
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      cubit.fetchSubcategory(category.id);
+    });
     return BlocProvider.value(
       value: cubit,
       child: BlocBuilder<PreferenceCubit, PreferenceState>(
@@ -71,7 +76,7 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: state.data[category]?.length ?? 0,
       itemBuilder: (context, index) {
-        final String subCategory = state.data[category]![index];
+        final SubCategoryModel subCategory = state.data[category]![index];
         final isSelected = state.selectedSubcategories[category]?.contains(subCategory) ?? false;
         return GestureDetector(
           onTap: () {
@@ -94,7 +99,7 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: CommonText(text: subCategory, style: AppTextStyles.titleMedium),
+            child: CommonText(text: subCategory.subcategoryTitle, style: AppTextStyles.titleMedium),
           ),
         );
       },

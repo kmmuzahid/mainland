@@ -133,7 +133,7 @@ class UserHome extends StatelessWidget {
                 ],
               ),
               onSubscategoryTap: (category, subCategory) {
-                appRouter.push(AllEventRoute(title: subCategory));
+                appRouter.push(AllEventRoute(title: subCategory.subcategoryTitle));
               },
             ),
           );
