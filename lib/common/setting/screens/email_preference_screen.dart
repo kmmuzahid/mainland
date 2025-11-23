@@ -77,13 +77,15 @@ class EmailPreferenceScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CommonText(
-          text: title,
-          fontSize: 16,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
-          textColor: AppColors.greay400,
-          fontWeight: FontWeight.w400,
+        Expanded(
+          child: CommonText(
+            text: title,
+            fontSize: 16,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            textColor: AppColors.greay400,
+            fontWeight: FontWeight.w400,
+          ),
         ), 
         20.width,
         

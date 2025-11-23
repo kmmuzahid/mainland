@@ -54,7 +54,11 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     PreferenceHeaderWideget(header: header),
-                    Expanded(child: _subCategoryBuilder(state)),
+                    Expanded(
+                      child: cubit.state.isSubcategoryLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _subCategoryBuilder(state),
+                    ),
                     PreferenceActionsWidget(
                       buttonTitle: buttonTitle,
                       successRoute: successRoute,

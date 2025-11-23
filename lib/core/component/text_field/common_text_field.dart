@@ -158,6 +158,9 @@ class _CommonTextFieldState extends State<CommonTextField> {
       textAlign: widget.textAlign,
       controller: _controller,
       focusNode: _focusNode,
+      onTapOutside: (event) {
+        _focusNode.unfocus();
+      },
       enableInteractiveSelection: !widget.isReadOnly,
       obscureText: _obscureText,
       readOnly: widget.isReadOnly,

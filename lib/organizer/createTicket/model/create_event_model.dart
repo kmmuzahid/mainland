@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mainland/user/preferense/model/category_model.dart';
 import 'package:mainland/user/preferense/model/sub_category_model.dart';
 
-enum TicketName { premium, vip, standard, other }
+enum TicketName { Premium, VIP, Standard, Other }
 
 class DiscountCodeModel {
   final String code;
@@ -86,9 +86,9 @@ class TicketTypeModel {
       name: json['name'] != null
           ? TicketName.values.firstWhere(
               (e) => e.toString().split('.').last == json['name'],
-              orElse: () => TicketName.standard,
+              orElse: () => TicketName.Standard,
             )
-          : TicketName.standard,
+          : TicketName.Standard,
       setUnitPrice: (json['setUnitPrice'] as num?)?.toDouble() ?? 0.0,
       availableUnit: json['availableUnit'] as int? ?? 0,
       saleStartDate: json['saleStartDate'] != null

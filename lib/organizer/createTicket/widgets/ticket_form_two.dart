@@ -112,7 +112,7 @@ class TicketFormTwo extends StatelessWidget {
             10.height,
             FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
             CommonDateInputTextField(
-              minDate: cubit.state.createEventModel.preSaleStartDate,
+              minDate: DateTime.now(),
               isReadOnly:
                   isReadOnly ||
                   cubit.state.createEventModel.isFreeEvent ||

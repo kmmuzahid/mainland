@@ -21,7 +21,7 @@ extension StringCasingExtension on String {
 extension EnumDisplayName on Enum {
   String get displayName {
     final raw = name;
-    final spaced = raw.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(0)}');
+    final spaced = raw.replaceAllMapped(RegExp(r'([A-Z])'), (match) => '${match.group(0)}');
 
     return spaced[0].toUpperCase() + spaced.substring(1);
   }

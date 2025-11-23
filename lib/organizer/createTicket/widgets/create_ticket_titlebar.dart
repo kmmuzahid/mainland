@@ -26,7 +26,7 @@ class CreateTicketTitlebar extends StatelessWidget {
         if (titleWidget != null) titleWidget!,
         if (title != null) CommonText(text: title!, fontSize: 18, fontWeight: FontWeight.w600),
         const Spacer(),
-        if (showSaveButton)
+        // if (showSaveButton)
         CommonButton(
           buttonColor: AppColors.background,
           titleColor: AppColors.primaryColor,

@@ -74,7 +74,6 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     //if state.createEventModel.discountCodes has filedId already
     //then update that object
     //else add new object
-    AppLogger.debug(state.createEventModel.discountCodes.toString());
     final List<DiscountCodeModel> discountCodes = List.from(state.createEventModel.discountCodes);
     final index = discountCodes.indexWhere((element) => element.filedId == filedId);
     if (index != -1) {
@@ -97,8 +96,15 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
   }
 
   void submit() async {
-    AppLogger.debug(state.createEventModel.toString());
+    final result = await repository.submit(
+      createEvent: state.createEventModel,
+      category: state.createEventModel.selectedCategory,
+      subCategory: state.createEventModel.selectedSubcategories,
+      image: state.image,
+    );
+    if (result.isSuccess) {
     appRouter.replaceAll([const HomeRoute()]);
+    }
   }
 
   void fetchDraft() {

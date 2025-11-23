@@ -29,15 +29,25 @@ class EventFormTicketSelctor extends StatelessWidget {
     required Function(bool?) onChanged,
     bool? value,
   }) {
+    final Color checkColor = (isReadOnly && value == true)
+        ? AppColors.greay300
+        : AppColors.primaryText;
+    final Color fillColor = (isReadOnly && value == true)
+        ? AppColors.white100
+        : AppColors.primaryColor;
     return Checkbox(
       side: BorderSide(
         width: 2.w,
-        color: (isReadOnly ? false : (value ?? cubit.state.createEventModel.isFreeEvent))
+        color: (isReadOnly && value == true)
+            ? AppColors.greay300
+            : ((isReadOnly ? false : (value ?? cubit.state.createEventModel.isFreeEvent))
             ? AppColors.primaryColor
-            : AppColors.greay300,
+                  : AppColors.greay300),
       ),
+      checkColor: checkColor,
+      fillColor: WidgetStateColor.resolveWith((e) => fillColor),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
-      value: isReadOnly ? false : (value ?? cubit.state.createEventModel.isFreeEvent),
+      value: value ?? cubit.state.createEventModel.isFreeEvent,
       onChanged: (value) {
         if (isReadOnly) return;
         onChanged(value);
@@ -47,16 +57,14 @@ class EventFormTicketSelctor extends StatelessWidget {
 
   Widget _buildTicketForm({required bool isReadOnly}) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h), 
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
         color: AppColors.white400,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Table(
-        
         children: [
           TableRow(
-            
             children: [
               CommonText(
                 text: 'Type',
@@ -81,33 +89,34 @@ class EventFormTicketSelctor extends StatelessWidget {
               ),
             ],
           ),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.premium),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.vip),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.standard), 
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.other),
+          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Premium),
+          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.VIP),
+          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Standard),
+          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Other),
         ],
       ),
     );
   }
 
   TableRow _buildTicketFormRow({required bool isReadOnly, required TicketName ticketName}) {
+    final bool isSelected =
+        cubit.state.createEventModel.ticketTypes.indexWhere((e) {
+          return e.name == ticketName;
+        }) !=
+        -1;
     return TableRow(
       children: [
         Row(
           children: [
             _buildCheckBox(
               isReadOnly: isReadOnly,
-              value:
-                  cubit.state.createEventModel.ticketTypes.indexWhere(
-                    (e) => e.name == ticketName,
-                  ) !=
-                  -1,
+              value: isSelected,
               onChanged: (value) {
                 cubit.updateTicket(ticketName: ticketName, isSelected: value);
               },
             ),
             CommonText(
-              text: ticketName == TicketName.vip ? 'VIP' : ticketName.name.capitalizeEachWord(),
+              text: ticketName == TicketName.VIP ? 'VIP' : ticketName.name.capitalizeEachWord(),
               fontSize: 16,
             ),
           ],
@@ -118,7 +127,11 @@ class EventFormTicketSelctor extends StatelessWidget {
             height: 35.h,
             child: CommonTextField(
               paddingVertical: 0,
-              validationType: ValidationType.validateCurrency,
+              showValidationMessage: false,
+              validationType:
+                  (cubit.state.createEventModel.isFreeEvent || isReadOnly || !isSelected)
+                  ? ValidationType.notRequired
+                  : ValidationType.validateCurrency,
               backgroundColor: cubit.state.createEventModel.isFreeEvent
                   ? AppColors.white100
                   : AppColors.backgroundWhite,
@@ -135,8 +148,12 @@ class EventFormTicketSelctor extends StatelessWidget {
           child: SizedBox(
             height: 35.h,
             child: CommonTextField(
+              showValidationMessage: false,
               paddingVertical: 0,
-              validationType: ValidationType.validateNumber,
+              validationType:
+                  (cubit.state.createEventModel.isFreeEvent || isReadOnly || !isSelected)
+                  ? ValidationType.notRequired
+                  : ValidationType.validateNumber,
               backgroundColor: cubit.state.createEventModel.isFreeEvent
                   ? AppColors.white100
                   : AppColors.backgroundWhite,
