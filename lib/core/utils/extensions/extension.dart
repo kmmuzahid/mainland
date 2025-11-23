@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' as screenutil;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:http_parser/http_parser.dart';
 
 ThemeData get getTheme => Theme.of(appRouter.globalRouterKey.currentContext!);
 
@@ -127,4 +130,168 @@ extension WidgetMarginX on Widget {
 /// Allows you to insert widgets inside a CustomScrollView
 extension WidgetSliverBoxX on Widget {
   Widget get sliverBox => SliverToBoxAdapter(child: this);
+}
+
+
+extension XFileToMultipart on XFile {
+  Future<dio.MultipartFile> toMultipart() {
+    return dio.MultipartFile.fromFile(
+      path,
+      filename: name,
+      contentType: MediaType.parse(_getMimeTypeFromXFile(this) ?? ''),
+    );
+  }
+}
+
+extension ListXFileToMultipart on List<XFile> {
+  Future<List<dio.MultipartFile>> toMultipart() async {
+    return await Future.wait(map((e) => e.toMultipart()));
+  }
+}
+
+String? _getMimeTypeFromXFile(XFile file) {
+  // Get the file extension from the file path
+  String extension = file.path.split('.').last.toLowerCase();
+
+  // Map the extension to MIME type
+  switch (extension) {
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg';
+    case 'png':
+      return 'image/png';
+    case 'gif':
+      return 'image/gif';
+    case 'bmp':
+      return 'image/bmp';
+    case 'webp':
+      return 'image/webp';
+    case 'pdf':
+      return 'application/pdf';
+    case 'txt':
+      return 'text/plain';
+    case 'csv':
+      return 'text/csv';
+    case 'doc':
+    case 'docx':
+      return 'application/msword';
+    case 'xls':
+    case 'xlsx':
+      return 'application/vnd.ms-excel';
+    default:
+      return 'application/octet-stream'; // Default MIME type for unknown extensions
+  }
+}
+
+extension TimeOfDayParser on String {
+  /// Parses a time string that was created with `timeOfDay.format(context)`
+  /// Supports both 12-hour (e.g. "2:30 PM") and 24-hour (e.g. "14:30") formats
+  TimeOfDay toTimeOfDay(BuildContext context) {
+    if (isEmpty) {
+      throw FormatException('Time string is empty');
+    }
+
+    final localizations = MaterialLocalizations.of(context);
+    final is24HourFormat = MediaQuery.of(context).alwaysUse24HourFormat;
+
+    final trimmed = trim();
+
+    if (is24HourFormat) {
+      // 24-hour format: "14:30" or "09:05"
+      final regExp = RegExp(r'^(\d{1,2}):(\d{2})$');
+      final match = regExp.firstMatch(trimmed);
+      if (match == null) {
+        throw FormatException('Invalid 24-hour time format: $trimmed');
+      }
+      return TimeOfDay(hour: int.parse(match.group(1)!), minute: int.parse(match.group(2)!));
+    } else {
+      // 12-hour format: "2:30 PM", "11:45 AM", etc.
+      final regExp = RegExp(r'^(\d{1,2}):(\d{2})\s?([AaPp][Mm])$');
+      final match = regExp.firstMatch(trimmed);
+      if (match == null) {
+        throw FormatException('Invalid 12-hour time format: $trimmed');
+      }
+
+      int hour = int.parse(match.group(1)!);
+      final minute = int.parse(match.group(2)!);
+      final period = match.group(3)!.toUpperCase();
+
+      if (hour == 12) {
+        hour = period == 'AM' ? 0 : 12;
+      } else if (period == 'PM') {
+        hour += 12;
+      }
+
+      return TimeOfDay(hour: hour, minute: minute);
+    }
+  }
+}
+
+extension NullableTimeOfDayParser on String? {
+  /// Safe version that returns null if string is null or invalid
+  TimeOfDay? tryToTimeOfDay(BuildContext context) {
+    if (this == null || this!.trim().isEmpty) return null;
+    try {
+      return this!.toTimeOfDay(context);
+    } catch (_) {
+      return null;
+    }
+  }
+}
+
+/// Context-FREE extensions – work anywhere!
+extension TimeOfDayString on TimeOfDay {
+  /// Returns "14:30" – always 24-hour, zero-padded (perfect for storage, sorting, JSON)
+  String toHHmm() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Returns "2:30 PM" style – 12-hour with AM/PM (you choose the style)
+  String to12HourString({bool includeSpace = true}) {
+    final h = hour == 0
+        ? 12
+        : hour > 12
+        ? hour - 12
+        : hour;
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final space = includeSpace ? ' ' : '';
+    return '$h:${minute.toString().padLeft(2, '0')}$space$period';
+  }
+}
+
+extension StringToTimeOfDay on String {
+  /// "14:30" → TimeOfDay (24-hour format) – most common & safest
+  TimeOfDay toTimeOfDay24() {
+    final parts = trim().split(':');
+    if (parts.length < 2) throw FormatException('Invalid time format: $this');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1].substring(0, 2)));
+  }
+
+  /// "2:30 PM", "02:30pm", "2:30PM" → TimeOfDay (12-hour format)
+  TimeOfDay toTimeOfDay12() {
+    final cleaned = trim().replaceAll(' ', '');
+    final regExp = RegExp(r'^(\d{1,2}):(\d{2})(AM|PM|am|pm)$', caseSensitive: false);
+    final match = regExp.firstMatch(cleaned);
+    if (match == null) {
+      throw FormatException('Invalid 12-hour time format: $this');
+    }
+
+    int h = int.parse(match.group(1)!);
+    final m = int.parse(match.group(2)!);
+    final period = match.group(3)!.toUpperCase();
+
+    if (h == 12) h = 0;
+    if (period == 'PM') h += 12;
+
+    return TimeOfDay(hour: h, minute: m);
+  }
+
+  /// Smart detection: tries 24h first, then 12h
+  TimeOfDay toTimeOfDayAuto() {
+    try {
+      return toTimeOfDay24();
+    } on FormatException {
+      return toTimeOfDay12();
+    }
+  }
 }

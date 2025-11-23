@@ -2,11 +2,13 @@
 // ignore_for_file: avoid_annotating_with_dynamic
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with FormData
 import 'package:dio/dio.dart';
@@ -69,8 +71,8 @@ class DioService {
               '🚀 [REQ:${options.method} ${options.path}] ID: $requestId\n'
               '🔹 Headers: $headers\n'
               '🔹 Query: ${options.queryParameters}\n'
-              '🔹 Data: ${options.data?.toString().substring(0, options.data.toString().length > 200 ? 200 : null)}'
-              '${options.data.toString().length > 200 ? '...' : ''}',
+              '🔹 Data:  ${options.data is FormData ? options.data.fields : options.data?.toString().substring(0, options.data.toString().length > 200 ? 200 : null)}',
+              
               tag: options.path,
             );
           }
@@ -406,25 +408,48 @@ class DioService {
     dynamic body;
     String contentType = 'application/json'; // Default content type
 
-    if (input.files != null && input.files!.isNotEmpty || input.formFields != null) {
+    if (input.files != null && input.files!.isNotEmpty ||
+        input.formFields != null ||
+        input.jsonBody != null) {
       final formData = dio.FormData();
+
+      // 1. Add regular form fields (from formFields map)
       if (input.formFields != null) {
         formData.fields.addAll(
           input.formFields!.entries.map((e) => MapEntry(e.key, e.value.toString())),
         );
       }
-      if (input.files != null) {
-        input.files!.forEach((key, file) {
-          formData.files.add(MapEntry(key, file));
-        });
+
+      // 2. Add JSON body as a field (e.g. as "data" or "payload")
+      if (input.jsonBody != null) {
+        formData.fields.add(
+          MapEntry(
+            'data',
+            jsonEncode(input.jsonBody),
+          ), // or use any key like 'payload', 'body', etc.
+        );
       }
+
+      // 3. Add files (correctly with await!)
+      if (input.files != null && input.files!.isNotEmpty) {
+        for (final entry in input.files!.entries) {
+          final key = entry.key;
+          final file = entry.value;
+
+          final multipartFile = await file.toMultipart(); // assuming this returns MultipartFile
+          formData.files.add(MapEntry(key, multipartFile));
+        }
+      }
+
       body = formData;
-      contentType = 'multipart/form-data';
+      contentType = 'multipart/form-data'; // Dio sets this automatically from FormData
     } else if (input.jsonBody != null) {
+      // Pure JSON request (no files)
       body = input.jsonBody;
       contentType = 'application/json';
     }
 
+     
     return _RequestOptionsData(
       path: url,
       data: body,

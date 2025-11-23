@@ -1,4 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:mainland/user/preferense/model/category_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
+
 enum TicketName { premium, vip, standard, other }
 
 class DiscountCodeModel {
@@ -116,12 +120,13 @@ class TicketTypeModel {
 
 class CreateEventModel {
   // Event Details
+  final String? draftId;
   final String? title;
   final List<String> category;
   final String? description;
   final DateTime? eventDate;
-  final DateTime? startTime;
-  final DateTime? endTime;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
   final String streetAddress1;
   final String? streetAddress2;
   final String? city;
@@ -140,9 +145,8 @@ class CreateEventModel {
 
   // Discount Codes
   final List<DiscountCodeModel> discountCodes;
-  final String selectedCategory;
-  final List<String> selectedSubcategories;
-
+  final CategoryModel? selectedCategory;
+  final List<SubCategoryModel> selectedSubcategories;
 
   // Event Organizer Details
   final String? organizerName;
@@ -155,8 +159,8 @@ class CreateEventModel {
     required this.category,
     this.description,
     this.eventDate,
-    this.startTime,
-    this.endTime,
+    required this.startTime,
+    required this.endTime,
     required this.streetAddress1,
     this.streetAddress2,
     required this.city,
@@ -175,6 +179,7 @@ class CreateEventModel {
     required this.selectedSubcategories,
     this.isFreeEvent = false,
     this.offerDiscountByCode = true,
+    this.draftId
   });
 
   // Empty Initializer - all dates null
@@ -184,8 +189,8 @@ class CreateEventModel {
       category: [],
       description: '',
       eventDate: null,
-      startTime: null,
-      endTime: null,
+      startTime: TimeOfDay.now(),
+      endTime: TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1),
       streetAddress1: '',
       streetAddress2: '',
       city: '',
@@ -200,10 +205,11 @@ class CreateEventModel {
       organizerName: '',
       emailAddress: '',
       phoneNumber: '',
-      selectedCategory: '',
+      selectedCategory: CategoryModel.fromMap({}),
       selectedSubcategories: [],
       isFreeEvent: false,
       offerDiscountByCode: true,
+      draftId: null,
     );
   }
 
@@ -217,8 +223,8 @@ class CreateEventModel {
       category: json['category'] ?? [],
       description: json['description'] as String?,
       eventDate: json['eventDate'] != null ? DateTime.tryParse(json['eventDate'] as String) : null,
-      startTime: json['startTime'] != null ? DateTime.tryParse(json['startTime'] as String) : null,
-      endTime: json['endTime'] != null ? DateTime.tryParse(json['endTime'] as String) : null,
+      startTime: json['startTime'],
+      endTime: json['endTime'],
       streetAddress1: json['streetAddress1'] as String? ?? '',
       streetAddress2: json['streetAddress2'] as String?,
       city: json['city'] as String? ?? '',
@@ -244,10 +250,11 @@ class CreateEventModel {
       organizerName: json['organizerName'] as String? ?? '',
       emailAddress: json['emailAddress'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
-      selectedCategory: json['selectedCategory'] as String? ?? '',
-      selectedSubcategories: json['selectedSubcategories'] as List<String>? ?? [],
       isFreeEvent: json['isFreeEvent'] as bool? ?? false,
       offerDiscountByCode: json['offerDiscountByCode'] as bool? ?? false,
+      selectedCategory: null,
+      selectedSubcategories: [],
+      draftId: json['draftId'] as String? ?? '',
     );
   }
 
@@ -258,8 +265,8 @@ class CreateEventModel {
       'category': category,
       'description': description,
       'eventDate': eventDate?.toIso8601String().split('T').first,
-      'startTime': startTime?.toIso8601String(),
-      'endTime': endTime?.toIso8601String(),
+      'startTime': startTime,
+      'endTime': endTime,
       'streetAddress1': streetAddress1,
       'streetAddress2': streetAddress2,
       'city': city,
@@ -278,6 +285,7 @@ class CreateEventModel {
       'offerDiscountByCode': offerDiscountByCode,
       'selectedCategory': selectedCategory,
       'selectedSubcategories': selectedSubcategories,
+      'draftId': draftId,
     };
   }
 
@@ -286,8 +294,8 @@ class CreateEventModel {
     List<String>? category,
     String? description,
     DateTime? eventDate,
-    DateTime? startTime,
-    DateTime? endTime,
+    TimeOfDay? startTime,
+    TimeOfDay? endTime,
     String? streetAddress1,
     String? streetAddress2,
     String? city,
@@ -304,8 +312,9 @@ class CreateEventModel {
     bool? offerDiscountByCode,
     bool? isFreeEvent,
     DateTime? ticketSaleStartDate,
-    String? selectedCategory,
-    List<String>? selectedSubcategories,
+    CategoryModel? selectedCategory,
+    List<SubCategoryModel>? selectedSubcategories,
+    String? draftId,
   }) {
     return CreateEventModel(
       title: title ?? this.title,
@@ -317,7 +326,7 @@ class CreateEventModel {
       streetAddress1: streetAddress1 ?? this.streetAddress1,
       streetAddress2: streetAddress2 ?? this.streetAddress2,
       city: city ?? this.city,
-      state: state ?? this.state, 
+      state: state ?? this.state,
       country: country ?? this.country,
       ticketTypes: ticketTypes ?? this.ticketTypes,
       offerPreSale: offerPreSale ?? this.offerPreSale,
@@ -332,6 +341,7 @@ class CreateEventModel {
       offerDiscountByCode: offerDiscountByCode ?? this.offerDiscountByCode,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       selectedSubcategories: selectedSubcategories ?? this.selectedSubcategories,
+      draftId: draftId ?? this.draftId,
     );
   }
 }

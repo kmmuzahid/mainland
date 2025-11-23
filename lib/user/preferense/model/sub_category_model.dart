@@ -5,6 +5,7 @@ class SubCategoryModel {
   final String id;
   final String subcategoryTitle;
   SubCategoryModel({required this.id, required this.subcategoryTitle});
+  
 
   SubCategoryModel copyWith({String? id, String? subcategoryTitle}) {
     return SubCategoryModel(
@@ -35,7 +36,7 @@ class SubCategoryModel {
   @override
   bool operator ==(covariant SubCategoryModel other) {
     if (identical(this, other)) return true;
-
+  
     return other.id == id && other.subcategoryTitle == subcategoryTitle;
   }
 

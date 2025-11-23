@@ -6,13 +6,16 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
+import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../repository/create_ticket_repository.dart';
 import 'create_ticket_state.dart';
 
 class CreateTicketCubit extends SafeCubit<CreateTicketState> {
@@ -24,10 +27,42 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
         ),
       );
   final ImagePicker _imagePicker = ImagePicker();
+  final CreateTicketRepository repository = getIt();
   // Navigate to next page
   void saveDraft() async {
-    AppLogger.debug(state.createEventModel.toJson().toString());
-    // appRouter.replaceAll([const HomeRoute()]);
+    if (state.isLoading) return;
+    if (state.createEventModel.startTime.isAfter(state.createEventModel.endTime)) {
+      showSnackBar('Event End Time should be greater than Start Time', type: SnackBarType.error);
+      return;
+    }
+    if (state.image == null ||
+        state.createEventModel.title == null ||
+        state.createEventModel.title?.isEmpty == true ||
+        state.createEventModel.description == null ||
+        state.createEventModel.description?.isEmpty == true) {
+      showSnackBar(
+        'Sorry! Image, Title and Event Description is Mandatory',
+        type: SnackBarType.error,
+      );
+      return;
+    }
+    emit(state.copyWith(isLoading: true));
+    final result = await repository.saveDraft(
+      createEvent: state.createEventModel,
+      category: state.createEventModel.selectedCategory,
+      subCategory: state.createEventModel.selectedSubcategories,
+      image: state.image,
+    );
+    if (result.statusCode == 200) {
+      if (result.data['_id'] != null) {
+        emit(
+          state.copyWith(
+            createEventModel: state.createEventModel.copyWith(draftId: result.data['_id']),
+          ),
+        );
+      }
+    }
+    emit(state.copyWith(isLoading: false));
   }
 
   void updatePromoCode({
@@ -102,7 +137,7 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
   }
 
   void removeSubCategory(int index) {
-    final List<String> list = List.from(state.createEventModel.selectedSubcategories);
+    final List<SubCategoryModel> list = List.from(state.createEventModel.selectedSubcategories);
     list.removeAt(index);
     emit(
       state.copyWith(

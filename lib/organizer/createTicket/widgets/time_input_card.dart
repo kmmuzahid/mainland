@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 class TimeInputCard extends StatefulWidget {
   // The initial time to display.
   final TimeOfDay initialTime;
-  // A callback function that executes when the time is successfully picked.
+  // A callback function that executes when the time is successfully picked or when the form is saved.
   final ValueChanged<TimeOfDay> onChanged;
 
   const TimeInputCard({super.key, required this.initialTime, required this.onChanged});
+  
+  // Add a static method to get the current time from the state
+  static TimeOfDay? of(BuildContext context) {
+    final state = context.findAncestorStateOfType<_TimeInputCardState>();
+    return state?._selectedTime;
+  }
 
   @override
   State<TimeInputCard> createState() => _TimeInputCardState();
@@ -17,11 +23,19 @@ class _TimeInputCardState extends State<TimeInputCard> {
   late TimeOfDay _selectedTime;
 
   @override
-  void initState() {
+void initState() {
     super.initState();
-    // Initialize the internal state from the widget's initialTime parameter
     _selectedTime = widget.initialTime;
   }
+
+  @override
+  void didUpdateWidget(TimeInputCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTime != oldWidget.initialTime) {
+      _selectedTime = widget.initialTime;
+    }
+  }
+    
 
   // Helper function to format TimeOfDay into a display string (09:00 AM)
   String _formatTime(TimeOfDay time) {
@@ -50,12 +64,14 @@ class _TimeInputCardState extends State<TimeInputCard> {
       },
     );
 
-    if (pickedTime != null && pickedTime != _selectedTime) {
+    if (pickedTime != null) {
       setState(() {
         _selectedTime = pickedTime;
       });
-      // Notify the parent widget of the change
-      widget.onChanged(pickedTime);
+      // Only notify parent if the time actually changed
+      if (pickedTime != widget.initialTime) {
+        widget.onChanged(pickedTime);
+      }
     }
   }
 

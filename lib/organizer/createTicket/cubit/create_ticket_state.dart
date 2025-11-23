@@ -10,11 +10,13 @@ class CreateTicketState extends Equatable {
   final CreateEventModel createEventModel;
   final CreateEventModel draftEventModel;
   final XFile? image;
+  final bool isLoading;
 
   const CreateTicketState({
     this.currentPage = 0,
     this.isExpandedView = false,
     this.isReadOnly = false,
+    this.isLoading = false,
     required this.createEventModel,
     required this.draftEventModel,
     this.image,
@@ -27,11 +29,13 @@ class CreateTicketState extends Equatable {
     CreateEventModel? createEventModel,
     CreateEventModel? draftEventModel,
     XFile? image,
+    bool? isLoading,
   }) {
     return CreateTicketState(
       currentPage: currentPage ?? this.currentPage,
       isExpandedView: isExpandedView ?? this.isExpandedView,
       isReadOnly: isReadOnly ?? this.isReadOnly,
+      isLoading: isLoading ?? this.isLoading,
       createEventModel: createEventModel ?? this.createEventModel,
       draftEventModel: draftEventModel ?? this.draftEventModel,
       image: image ?? this.image,
@@ -46,5 +50,6 @@ class CreateTicketState extends Equatable {
     createEventModel,
     draftEventModel,
     image?.path,
+    isLoading,
   ];
 }

@@ -77,8 +77,14 @@ void _diInit() {
  
 
 void showSnackBar(String text, {required SnackBarType type}) {
-  // Get the root navigator's context
-  final BuildContext? context = appRouter.navigatorKey.currentContext;
+  // Use the root navigator key's current state
+  final navigatorState = navigatorRouterKey.currentState;
+  if (navigatorState == null || !navigatorState.mounted) {
+    debugPrint('Error: Navigator is not available for showing snackbar');
+    return;
+  }
+
+  final BuildContext? context = navigatorState.context;
   if (context == null) {
     debugPrint('Error: No context available for showing snackbar');
     return;
@@ -86,7 +92,7 @@ void showSnackBar(String text, {required SnackBarType type}) {
 
   // Create a new ScaffoldMessenger
   final scaffoldMessenger = ScaffoldMessenger.of(context);
-
+  
   // Hide any existing snackbar
   scaffoldMessenger.hideCurrentSnackBar();
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with MultipartFile.fromFile
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 enum RequestMethod { GET, POST, PUT, DELETE, PATCH }
 
@@ -30,7 +31,7 @@ class RequestInput {
   final Map<String, String>? headers;
   final Map<String, dynamic>? formFields;
   final Map<String, dynamic>? jsonBody;
-  final Map<String, dio.MultipartFile>? files; 
+  final Map<String, XFile>? files; 
   final Duration? timeout;
   final Function(int, int)? onSendProgress;
   final Function(int, int)? onReceiveProgress;
@@ -46,7 +47,7 @@ class RequestInput {
       'headers': headers,
       'formFields': formFields,
       'jsonBody': jsonEncode(jsonBody),
-      'files': files,
+      'files': files?.map((key, value) => MapEntry(key, value.name)),
       'timeout': timeout.toString(),
       'requiresToken': requiresToken,
     };

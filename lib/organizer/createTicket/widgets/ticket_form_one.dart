@@ -130,7 +130,7 @@ class TicketFormOne extends StatelessWidget {
                       left: 15,
                       fontSize: 14,
                       borderRadious: 8,
-                      text: subCategory,
+                      text: subCategory.subcategoryTitle,
                     );
                   }).toList(),
                 ),
@@ -166,17 +166,27 @@ class TicketFormOne extends StatelessWidget {
             const Row(
               children: [
                 Expanded(child: FormLabel(isRequired: true, label: 'Start Time')),
-                Expanded(child: FormLabel(isRequired: true, label: 'Start Time')),
+                Expanded(child: FormLabel(isRequired: true, label: 'End Time')),
               ],
             ),
             Row(
               children: [
                 Expanded(
-                  child: TimeInputCard(initialTime: TimeOfDay.now(), onChanged: (value) {}),
+                  child: TimeInputCard(
+                    initialTime: TimeOfDay.now(),
+                    onChanged: (value) {
+                      cubit.updateField(cubit.state.createEventModel.copyWith(startTime: value));
+                    },
+                  ),
                 ),
                 10.width,
                 Expanded(
-                  child: TimeInputCard(initialTime: TimeOfDay.now(), onChanged: (value) {}),
+                  child: TimeInputCard(
+                    initialTime: TimeOfDay.now(),
+                    onChanged: (value) {
+                      cubit.updateField(cubit.state.createEventModel.copyWith(endTime: value));
+                    },
+                  ),
                 ),
               ],
             ),
@@ -221,7 +231,7 @@ class TicketFormOne extends StatelessWidget {
               enableInitalSelection: false,
               backgroundColor: AppColors.backgroundWhite,
               isRequired: true,
-              onChanged: (states) { 
+              onChanged: (states) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
               },
               nameBuilder: (states) {
