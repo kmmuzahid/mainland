@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -16,7 +17,7 @@ class PromoBuilderWidget extends StatefulWidget {
   });
   final CreateTicketCubit cubit;
   final bool isReadOnly;
-  final Function(String code, int discount) onSaved;
+  final Function(String code, int discount, DateTime? expire) onSaved;
 
   @override
   State<PromoBuilderWidget> createState() => _PromoBuilderWidgetState();
@@ -25,6 +26,7 @@ class PromoBuilderWidget extends StatefulWidget {
 class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
   late TextEditingController promoCodeController;
   late TextEditingController promoCodeDiscountController;
+  DateTime? expire;
 
   @override
   void initState() {
@@ -35,8 +37,6 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
 
   @override
   void dispose() {
-    promoCodeController.dispose();
-    promoCodeDiscountController.dispose();
     super.dispose();
   }
 
@@ -60,6 +60,26 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
                 !widget.cubit.state.createEventModel.offerPreSale,
             validationType: ValidationType.validateAlphaNumeric,
             backgroundColor: AppColors.backgroundWhite,
+          ),
+        ),
+        10.width,
+        Expanded(
+          child: Column(
+            children: [
+              CommonDateInputTextField(
+                isReadOnly:
+                    widget.isReadOnly ||
+                    widget.cubit.state.createEventModel.isFreeEvent ||
+                    !widget.cubit.state.createEventModel.offerPreSale,
+                hints: 'Expaire Date',
+                minDate: DateTime.now(),
+                backgroundColor: AppColors.backgroundWhite,
+                onChanged: (date) {
+                  expire = DateTime.tryParse(date);
+                },
+              ),
+              20.height,
+            ],
           ),
         ),
         SizedBox(
@@ -91,7 +111,7 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
                 widget.cubit.state.createEventModel.isFreeEvent ||
                 !widget.cubit.state.createEventModel.offerPreSale,
             onSaved: (value, controller) {
-              widget.onSaved(promoCodeController.text, int.tryParse(value.trim()) ?? 0);
+              widget.onSaved(promoCodeController.text, int.tryParse(value.trim()) ?? 0, expire);
             },
             showValidationMessage: false,
             maxLength: 2,

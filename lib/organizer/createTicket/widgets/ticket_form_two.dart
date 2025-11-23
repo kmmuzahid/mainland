@@ -66,7 +66,7 @@ class TicketFormTwo extends StatelessWidget {
 
             _ticketStartSaleLabel(context),
             CommonDateInputTextField(
-              isReadOnly: isReadOnly,
+              isReadOnly: isReadOnly || cubit.state.createEventModel.isFreeEvent,
               minDate: DateTime.now(),
               onSave: (value) {
                 cubit.updateField(
@@ -146,25 +146,39 @@ class TicketFormTwo extends StatelessWidget {
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
-              onSaved: (code, discount) {
-                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '1');
+              onSaved: (code, discount, expire) {
+                cubit.updatePromoCode(
+                  code: code,
+                  discountPercentage: discount,
+                  filedId: '1',
+                  expireDate: expire,
+                );
               },
             ),
             10.height,
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
-              onSaved: (code, discount) {
-                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '2');
+              onSaved: (code, discount, expire) {
+                cubit.updatePromoCode(
+                  code: code,
+                  discountPercentage: discount,
+                  filedId: '2',
+                  expireDate: expire,
+                );
               },
             ),
             10.height,
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
-              onSaved: (code, discount) {
-                AppLogger.debug('code: $code, discount: $discount');
-                cubit.updatePromoCode(code: code, discountPercentage: discount, filedId: '3');
+              onSaved: (code, discount, expire) {
+                cubit.updatePromoCode(
+                  code: code,
+                  discountPercentage: discount,
+                  filedId: '3',
+                  expireDate: expire,
+                );
               },
             ),
 

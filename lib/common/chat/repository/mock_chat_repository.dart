@@ -29,7 +29,7 @@ class MockChatRepository implements ChatRepository {
       },
     );
     await SimulateMocRepo();
-    return ResponseState(data: [...list, ...list], statusCode: 200);
+    return ResponseState(data: [...list, ...list], isSuccess: true, statusCode: 200);
   }
 
   @override
@@ -80,7 +80,7 @@ class MockChatRepository implements ChatRepository {
       },
     );
     await SimulateMocRepo();
-    return ResponseState(data: [...list, ...list], statusCode: 200);
+    return ResponseState(data: [...list, ...list], isSuccess: true, statusCode: 200);
   }
 
   @override

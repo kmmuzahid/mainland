@@ -53,7 +53,7 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       subCategory: state.createEventModel.selectedSubcategories,
       image: state.image,
     );
-    if (result.statusCode == 200) {
+    if (result.isSuccess) {
       if (result.data['_id'] != null) {
         emit(
           state.copyWith(
@@ -69,16 +69,19 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     required String code,
     required int discountPercentage,
     required String filedId,
+    required DateTime? expireDate,
   }) {
     //if state.createEventModel.discountCodes has filedId already
     //then update that object
     //else add new object
+    AppLogger.debug(state.createEventModel.discountCodes.toString());
     final List<DiscountCodeModel> discountCodes = List.from(state.createEventModel.discountCodes);
     final index = discountCodes.indexWhere((element) => element.filedId == filedId);
     if (index != -1) {
       discountCodes[index] = DiscountCodeModel(
         code: code,
         discountPercentage: discountPercentage,
+        expireDate: expireDate,
         filedId: filedId,
       );
     } else {

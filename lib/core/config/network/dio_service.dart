@@ -251,13 +251,14 @@ class DioService {
       final message = response.data is Map && response.data['message'] != null
           ? response.data['message'].toString()
           : response.statusMessage;
-      if (showMessage && response.statusCode == 200) {
+      if (showMessage && (response.statusCode == 200 || response.statusCode == 201)) {
         showSnackBar(message ?? '', type: SnackBarType.success);
       }
 
       return ResponseState(
         data: parsed,
         message: message,
+        isSuccess: response.data['success'],
         cancelToken: cancelToken,
         statusCode: response.statusCode,
       );
@@ -270,6 +271,7 @@ class DioService {
         return ResponseState(
           data: null,
           message: e.message,
+          isSuccess: false,
           cancelToken: cancelToken,
           statusCode: e.response?.statusCode,
         );
@@ -282,6 +284,7 @@ class DioService {
           final parsed = e.response?.data['data'] != null
               ? responseBuilder(e.response?.data['data'])
               : null;
+          final bool isSuccess = e.response?.data['success'] ?? false;
           // Extract message from JSON response, fallback to statusMessage if not present
           final message = e.response!.data is Map && e.response!.data['message'] != null
               ? e.response!.data['message'].toString()
@@ -291,6 +294,7 @@ class DioService {
           }
           return ResponseState(
             data: parsed,
+            isSuccess: isSuccess,
             message: message,
             cancelToken: cancelToken,
             statusCode: e.response!.statusCode,
@@ -327,6 +331,7 @@ class DioService {
       return ResponseState(
         data: null,
         message: e.message,
+        isSuccess: false,
         cancelToken: cancelToken,
         statusCode: e.response?.statusCode,
       );
@@ -335,6 +340,7 @@ class DioService {
       AppLogger.apiError('Unknown error occurred: $err', tag: input.endpoint);
       return ResponseState(
         data: null,
+        isSuccess: false,
         message: e.toString(),
         cancelToken: cancelToken,
         statusCode: 0,
@@ -358,7 +364,7 @@ class DioService {
           extra: {'requiresToken': false},
         ), // Refresh token request does not require token
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final access = response.data['access_token'];
         final refresh = response.data['refresh_token'];
         await _saveTokens(access, refresh);

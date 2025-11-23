@@ -7,12 +7,6 @@ class TimeInputCard extends StatefulWidget {
   final ValueChanged<TimeOfDay> onChanged;
 
   const TimeInputCard({super.key, required this.initialTime, required this.onChanged});
-  
-  // Add a static method to get the current time from the state
-  static TimeOfDay? of(BuildContext context) {
-    final state = context.findAncestorStateOfType<_TimeInputCardState>();
-    return state?._selectedTime;
-  }
 
   @override
   State<TimeInputCard> createState() => _TimeInputCardState();
@@ -23,19 +17,23 @@ class _TimeInputCardState extends State<TimeInputCard> {
   late TimeOfDay _selectedTime;
 
   @override
-void initState() {
+  void initState() {
     super.initState();
     _selectedTime = widget.initialTime;
   }
 
   @override
   void didUpdateWidget(TimeInputCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  
     if (widget.initialTime != oldWidget.initialTime) {
-      _selectedTime = widget.initialTime;
+      if (mounted) {
+        setState(() {
+          _selectedTime = widget.initialTime;
+          super.didUpdateWidget(oldWidget);
+        });
+      }
     }
   }
-    
 
   // Helper function to format TimeOfDay into a display string (09:00 AM)
   String _formatTime(TimeOfDay time) {
@@ -50,28 +48,22 @@ void initState() {
     return '$hourString:$minute $period';
   }
 
-  // Function to show the time picker and update the state
-  Future<void> _pickTime() async {
+Future<void> _pickTime() async {
+    if (!mounted) return;
+
+    final ctx = context; // safe local copy
+
     final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-      builder: (context, child) {
-        // Force 12-hour format for the picker to match the card design
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
-        );
-      },
+      context: ctx, initialTime: _selectedTime,
     );
+
+    if (!mounted) return;
 
     if (pickedTime != null) {
       setState(() {
         _selectedTime = pickedTime;
       });
-      // Only notify parent if the time actually changed
-      if (pickedTime != widget.initialTime) {
-        widget.onChanged(pickedTime);
-      }
+      widget.onChanged(pickedTime);
     }
   }
 

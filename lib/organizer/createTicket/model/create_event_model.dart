@@ -10,17 +10,25 @@ class DiscountCodeModel {
   final int discountPercentage; // e.g., 10 for 10%
   final bool isActive;
   final String filedId;
+  final DateTime? expireDate;
 
   DiscountCodeModel({
     required this.code,
     required this.discountPercentage,
     this.isActive = true,
     required this.filedId,
+    this.expireDate
   });
 
   // Empty Initializer
   static DiscountCodeModel empty() {
-    return DiscountCodeModel(code: '', discountPercentage: 0, isActive: true, filedId: '');
+    return DiscountCodeModel(
+      code: '',
+      expireDate: DateTime.now(),
+      discountPercentage: 0,
+      isActive: true,
+      filedId: '',
+    );
   }
 
   // Factory constructor for creating an instance from a JSON map
@@ -30,6 +38,7 @@ class DiscountCodeModel {
       discountPercentage: json['discountPercentage'] as int? ?? 0,
       isActive: json['isActive'] as bool? ?? true,
       filedId: json['filedId'] as String? ?? '',
+      expireDate: json['expireDate'] != null ? DateTime.parse(json['expireDate'] as String) : null,
     );
   }
 
@@ -40,6 +49,7 @@ class DiscountCodeModel {
       'discountPercentage': discountPercentage,
       'isActive': isActive,
       'filedId': filedId,
+      'expireDate': expireDate?.toIso8601String(),
     };
   }
 }
@@ -179,7 +189,7 @@ class CreateEventModel {
     required this.selectedSubcategories,
     this.isFreeEvent = false,
     this.offerDiscountByCode = true,
-    this.draftId
+    this.draftId,
   });
 
   // Empty Initializer - all dates null

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -18,6 +16,7 @@ class CommonDateInputTextField extends StatefulWidget {
     this.borderColor,
     this.backgroundColor,
     this.isReadOnly = false,
+    this.hints,
     this.minDate,
     this.maxDate,
   }) : assert(
@@ -44,6 +43,7 @@ class CommonDateInputTextField extends StatefulWidget {
   final Color? backgroundColor;
   final Widget? prefixIcon;
   final bool isReadOnly;
+  final String? hints;
 
   @override
   State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
@@ -113,7 +113,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
       borderRadius: widget.borderRadius,
       onChanged: widget.onChanged,
 
-      hintText: 'YYYY-MM-DD',
+      hintText: widget.hints ?? 'YYYY-MM-DD',
       onSaved: (value, _) {
         if (widget.onSave == null) return;
         widget.onSave!(value);

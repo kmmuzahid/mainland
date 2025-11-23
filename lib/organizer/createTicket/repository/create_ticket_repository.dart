@@ -26,7 +26,7 @@ class CreateTicketRepository {
         files: {if (image != null) 'image': image},
         endpoint:
             '${ApiEndPoint.instance.createEvent}${createEvent.draftId != null ? '/${createEvent.draftId}' : ''}',
-        method: RequestMethod.POST,
+        method: createEvent.draftId != null ? RequestMethod.PATCH : RequestMethod.POST,
         jsonBody: body,
       ),
       responseBuilder: (data) => data,
@@ -40,10 +40,11 @@ class CreateTicketRepository {
     List<SubCategoryModel> subCategory,
   ) {
     return {
-      'eventName': createEvent.title,
-      'title': createEvent.title,
+      'eventName': createEvent.title, 
+      'isFreeEvent': createEvent.isFreeEvent,
+      if (category?.id != null && category?.id.isNotEmpty == true)
       'category': [
-        {'categoryId': category?.id, 'subCategory': subCategory.map((e) => e.id).toList()},
+          {'categoryId': category!.id, 'subCategory': subCategory.map((e) => e.id).toList()},
       ],
       'eventDate': createEvent.eventDate?.millisecondsSinceEpoch,
       'startTime': createEvent.startTime.to12HourString(),
@@ -59,8 +60,18 @@ class CreateTicketRepository {
       'ticketSaleStart': createEvent.ticketSaleStartDate?.millisecondsSinceEpoch,
       'preSaleStart': createEvent.preSaleStartDate?.millisecondsSinceEpoch,
       'preSaleEnd': createEvent.preSaleEndDate?.millisecondsSinceEpoch,
-      'discountCodes': createEvent.discountCodes
-          .map((e) => {'code': e.code, 'percentage': e.discountPercentage})
+
+      'discountCodes': createEvent.isFreeEvent
+          ? []
+          : createEvent.discountCodes
+                .where((e) => e.code.isNotEmpty)
+                .map(
+                  (e) => {
+                    'code': e.code,
+                    'percentage': e.discountPercentage,
+                    'expireDate': e.expireDate?.millisecondsSinceEpoch,
+                  },
+                )
           .toList(),
       'organizerName': createEvent.organizerName,
       'organizerEmail': createEvent.emailAddress,

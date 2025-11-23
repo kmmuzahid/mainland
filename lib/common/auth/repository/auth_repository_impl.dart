@@ -49,10 +49,11 @@ class AuthRepositoryImpl implements AuthRepository {
     required String username,
     required String oldPassword,
     required String newPassword,
-  }) async => ResponseState(data: '', statusCode: 201);
+  }) async => ResponseState(data: '', isSuccess: true, statusCode: 201);
 
   @override
-  Future<ResponseState<bool>> deleteAccount() async => ResponseState(data: true, statusCode: 201);
+  Future<ResponseState<bool>> deleteAccount() async =>
+      ResponseState(data: true, isSuccess: true, statusCode: 201);
   @override
   Future<ResponseState<ProfileModel?>> getCurrentUser() async {
     final response = await _dioService.request<ProfileModel>(
@@ -98,7 +99,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<ResponseState<bool>> signOut() async => ResponseState(data: true, statusCode: 201);
+  Future<ResponseState<bool>> signOut() async =>
+      ResponseState(data: true, isSuccess: true, statusCode: 201);
 
   @override
   Future<ResponseState<dynamic>> signUp({required SignUpModel signUpModel}) async {
