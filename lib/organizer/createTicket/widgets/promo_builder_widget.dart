@@ -71,7 +71,7 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
                     widget.isReadOnly ||
                     widget.cubit.state.createEventModel.isFreeEvent ||
                     !widget.cubit.state.createEventModel.offerPreSale,
-                hints: 'Expaire Date',
+                hints: 'Expire Date',
                 minDate: DateTime.now(),
                 backgroundColor: AppColors.backgroundWhite,
                 onChanged: (date) {

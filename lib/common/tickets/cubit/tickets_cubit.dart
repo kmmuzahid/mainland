@@ -1,35 +1,61 @@
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/tickets/cubit/tickets_state.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
+import 'package:mainland/common/tickets/repository/ticket_repository.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
+import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
 class TicketsCubit extends SafeCubit<TicketsState> {
   TicketsCubit() : super(const TicketsState());
+
+  final TicketRepository _repository = getIt();
 
   void initalize(TicketFilter filter) {
     emit(state.copyWith(selectedFilter: filter));
     fetch();
   }
 
-  void fetch() {
-    emit(
-      state.copyWith(
-        tickets: [
-          for (int i = 0; i < 20; i++)
-            TicketModel(
-              title:
-                  'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1 $i',
-              isAvailable: i % 2 == 0,
-              image: Assets.images.sampleItem.path,
-              eventId: 'event_id_$i',
-            ),
-        ],
-      ),
-    );
+  void fetch({bool isRefresh = false}) async {
+    if (state.selectedFilter == null || state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final role = Utils.getRole();
+    if (role == Role.ORGANIZER) {
+      final result = await _repository.getOranizerEvents(
+        filter: state.selectedFilter!,
+        page: state.page,
+      );
+      emit(
+        state.copyWith(
+          isLoading: false,
+          page: state.page + 1,
+          tickets: isRefresh ? result.data : [...state.tickets, ...result.data ?? []],
+        ),
+      );
+      return;
+    }
+
+    // emit(
+    //   state.copyWith(
+    //     tickets: [
+    //       for (int i = 0; i < 20; i++)
+    //         TicketModel(
+    //           title:
+    //               'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1 $i',
+    //           isAvailable: i % 2 == 0,
+    //           image: Assets.images.sampleItem.path,
+    //           eventId: 'event_id_$i',
+    //         ),
+    //     ],
+    //   ),
+    // );
   }
 
   void filter(TicketFilter filter) {
-    emit(state.copyWith(selectedFilter: filter));
+    if (filter != state.selectedFilter)
+      emit(state.copyWith(selectedFilter: filter, page: 1, tickets: []));
+    fetch();
   }
 }

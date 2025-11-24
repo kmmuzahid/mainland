@@ -133,6 +133,8 @@ class CommonText extends StatelessWidget {
       adjustedMax = adjustedMin;
     }
 
+    final effectiveOverflow = overflow ?? TextOverflow.clip;
+
     Widget buildText() {
       // For HTML content
       if (_isHtml(text)) {
@@ -143,6 +145,7 @@ class CommonText extends StatelessWidget {
               fontFamily: 'Selawik',
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
+              textOverflow: effectiveOverflow,
               textAlign: textAlign,
               fontSize: FontSize(effectiveTextStyle.fontSize ?? 16.0),
               color: textColor,
@@ -152,6 +155,7 @@ class CommonText extends StatelessWidget {
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
               textAlign: textAlign,
+              textOverflow: effectiveOverflow,
               fontSize: FontSize(effectiveTextStyle.fontSize ?? 20),
               color: textColor,
               fontWeight: fontWeight,
@@ -160,6 +164,7 @@ class CommonText extends StatelessWidget {
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
               textAlign: textAlign,
+              textOverflow: effectiveOverflow,
               fontSize: FontSize(effectiveTextStyle.fontSize ?? 25),
               color: textColor,
               fontWeight: fontWeight,
@@ -184,7 +189,7 @@ class CommonText extends StatelessWidget {
             child: Text(
               text,
               maxLines: maxLines,
-              overflow: TextOverflow.fade,
+              overflow: effectiveOverflow,
               textAlign: textAlign,
               softWrap: softWrap ?? true,
               textDirection: textDirection ?? TextDirection.ltr,
@@ -195,7 +200,7 @@ class CommonText extends StatelessWidget {
           return AutoSizeText(
             text,
             maxLines: maxLines,
-            overflow: overflow ?? TextOverflow.ellipsis,
+            overflow: effectiveOverflow,
             textAlign: textAlign,
             softWrap: softWrap ?? true,
             textDirection: textDirection ?? TextDirection.ltr,
@@ -213,7 +218,7 @@ class CommonText extends StatelessWidget {
         return Text(
           text,
           maxLines: 1,
-          overflow: TextOverflow.fade,
+          overflow: effectiveOverflow,
           textAlign: textAlign,
           textDirection: textDirection ?? TextDirection.ltr,
           style: effectiveTextStyle,
@@ -224,7 +229,7 @@ class CommonText extends StatelessWidget {
           child: AutoSizeText(
             text,
             maxLines: 1,
-            overflow: overflow ?? TextOverflow.ellipsis,
+            overflow: effectiveOverflow,
             textAlign: textAlign,
             textDirection: textDirection ?? TextDirection.ltr,
             style: effectiveTextStyle,
@@ -265,7 +270,7 @@ class CommonText extends StatelessWidget {
           fontWeight: fontWeight ?? FontWeight.w400,
           color: textColor ?? getTheme.textTheme.bodyMedium?.color,
           height: height,
-          decoration: decoration,
+          decoration: decoration, 
           decorationColor: decorationColor,
         );
 

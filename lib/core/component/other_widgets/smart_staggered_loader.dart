@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/grid_child_postion.dart';
@@ -25,7 +26,7 @@ class SmartStaggeredLoader extends StatefulWidget {
     this.aspectRatio = 1,
     this.appbar,
     this.onColapsAppbar,
-    this.isSeperated = false,
+    this.isSeperated = false, 
   });
 
   final int itemCount;
@@ -45,7 +46,7 @@ class SmartStaggeredLoader extends StatefulWidget {
   final double aspectRatio;
   final Widget? appbar;
   final Widget? onColapsAppbar;
-  final bool isSeperated;
+  final bool isSeperated; 
 
   @override
   State<SmartStaggeredLoader> createState() => _SmartStaggeredLoaderState();
@@ -93,7 +94,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
       // Only process scroll events when not at the boundaries to prevent bouncing effects
       if (!isAtTop && !isAtBottom) {
         final isScrollingDown = currentScroll > _lastScrollOffset && currentScroll > 0;
-        
+
         if (isScrollingDown && _isAppBarVisible) {
           // Hide app bar when scrolling down
           _isAppBarVisible = false;
@@ -125,6 +126,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
   }
 
   Widget _buildGrid({ScrollController? controller, ScrollPhysics? physics}) {
+ 
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.custom(
@@ -153,7 +155,6 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
                   );
                 }
                 return RepaintBoundary(child: widget.itemBuilder(context, index));
-              
               } else if (widget.isLoadingMore) {
                 // Show load more indicator at the bottom of list
                 return Padding(
@@ -171,7 +172,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
             },
           ),
         );
-      }
+      },
     );
   }
 
@@ -250,7 +251,6 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (widget.appbar != null) {
@@ -297,6 +297,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     }
     return _buildContent();
   }
+
   GridChildInfo calculateGridChildInfo({
     required int index,
     required int totalChildren,
@@ -327,8 +328,8 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
       isItInLastRow: isItInLastRow,
     );
   }
-
 }
+
 class GridChildInfo {
   GridChildInfo({
     required this.childrenInRow,
@@ -343,4 +344,3 @@ class GridChildInfo {
   final bool isLastInRow;
   final bool isItInLastRow;
 }
-

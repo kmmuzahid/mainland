@@ -32,8 +32,9 @@ class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key, this.showBackButton = false});
   final bool showBackButton;
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: Scaffold(
+  Widget build(BuildContext context) {
+    final authCubit = context.read<AuthCubit>();
+    return Scaffold(
       appBar: showBackButton ? const CommonAppBar() : null,
       body: SingleChildScrollView(
         child: Column(
@@ -269,9 +270,9 @@ class SettingScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    ),
+      ), 
   );
+  }
 
   Widget _menuItems({
     required BuildContext context,

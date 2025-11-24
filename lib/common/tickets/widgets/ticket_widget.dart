@@ -7,20 +7,14 @@ import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
 class TicketWidget extends StatelessWidget {
-  const TicketWidget({
-    required this.image,
-    this.title = 'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1',
-    required this.onTap,
-    this.filter,
-    super.key,
-  });
-  final String image;
-  final String title;
+  const TicketWidget({required this.ticketModel, required this.onTap, this.filter, super.key});
+  final TicketModel ticketModel;
   final Function() onTap;
   final TicketFilter? filter;
 
@@ -44,7 +38,7 @@ class TicketWidget extends StatelessWidget {
                         filter == TicketFilter.Used ||
                         filter == TicketFilter.Expired ||
                         filter == TicketFilter.UnderReview,
-                    imageSrc: image,
+                    imageSrc: ticketModel.image,
                     borderRadius: 12,
                   ),
                 ),
@@ -54,17 +48,14 @@ class TicketWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
-                Align(
-                  child: CommonText(
-                    left: 10,
-                    right: 10,
-                    text: title,
-                    autoResize: false,
-                    maxLines: 7,
-                    fontSize: 16.5,
-                    textAlign: TextAlign.left,
-                    style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _textBuilder(ticketModel.eventName, 2),
+                    _textBuilder(Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate), 1),
+                    if (ticketModel.ticketSaleStart.isAfter(DateTime.now())) _textBuilder('', 2),
+                  ],
                 ),
                 if (filter == TicketFilter.Live ||
                     filter == TicketFilter.Upcoming ||
@@ -82,8 +73,7 @@ class TicketWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                  ) 
-             
+                  ),
               ],
             ),
           ),
@@ -110,6 +100,21 @@ class TicketWidget extends StatelessWidget {
           ).start,
         ],
       ),
+    );
+  }
+
+  Widget _textBuilder(String title, int maxLine) {
+    return CommonText(
+      left: 10,
+      right: 10,
+      text: title,
+      preventScaling: maxLine == 1 ? false : true,
+      autoResize: false,
+      overflow: TextOverflow.fade,
+      maxLines: maxLine,
+      fontSize: 16.5,
+      textAlign: TextAlign.left,
+      style: AppTextStyles.titleMedium?.copyWith(color: AppColors.textWhite),
     );
   }
 }

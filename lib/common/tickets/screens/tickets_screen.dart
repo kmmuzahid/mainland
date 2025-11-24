@@ -47,6 +47,7 @@ class TicketsScreen extends StatelessWidget {
             create: (context) => TicketsCubit()..initalize(filters.first),
             child: BlocBuilder<TicketsCubit, TicketsState>(
               builder: (context, state) {
+                final cubit = context.read<TicketsCubit>();
                 return Column(
                   children: [
                     if (appBar == null) 20.height,
@@ -57,23 +58,30 @@ class TicketsScreen extends StatelessWidget {
                       textColor: AppColors.primaryColor,
                     ).start,
                     if (subTitle != null)
-                      CommonText(
-                        text: subTitle!,
-                        style: AppTextStyles.bodyMedium,
-                      ).start,
+                      CommonText(text: subTitle!, style: AppTextStyles.bodyMedium).start,
                     10.height,
                     if (filters.length > 1)
                       TicketFilterWidget(
                         filters: filters,
                         selectedFilter: state.selectedFilter,
-                        onTap: (filter) {
-                          context.read<TicketsCubit>().filter(filter);
-                        },
+                        onTap: context.read<TicketsCubit>().filter,
                       ),
                     10.height,
+
                     Expanded(
-                      child: SmartStaggeredLoader(
-                        itemCount: 20,
+                      child: !state.isLoading && state.tickets.isEmpty
+                          ? const CommonText(
+                              text: 'Oops !\nNo Event Found',
+                              maxLines: 2,
+                              fontSize: 24,
+                            )
+                          : SmartStaggeredLoader(
+                              itemCount: state.tickets.length,
+                              isLoading: state.isLoading,
+                              onLoadMore: cubit.fetch,
+                              onRefresh: () {
+                                cubit.fetch(isRefresh: true);
+                              }, 
                         aspectRatio: 0.6434,
                         isSeperated: true,
                         mainAxisSpacing: 10,
@@ -82,10 +90,9 @@ class TicketsScreen extends StatelessWidget {
                           final ticket = state.tickets[index];
                           return TicketWidget(
                             filter: state.selectedFilter,
-                            image: ticket.image,
-                            title: ticket.title,
+                                  ticketModel: ticket,
                             onTap: () {
-                              onTap(ticket.eventId, state.selectedFilter!);
+                                    onTap(ticket.id, state.selectedFilter!);
                             },
                           );
                         },

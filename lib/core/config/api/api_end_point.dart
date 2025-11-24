@@ -32,9 +32,7 @@ class ApiEndPoint {
   String subCategory(String id) => '/event/Subcategory?categoryId=$id';
 
   //event
-  final String eventLive = '/event?EventStatus=Live';
-  final String eventUnderReview = '/event?EventStatus=UnderReview';
-  final String eventDraft = '/event?isDraft=true';
-  final String eventClosed = '/event/closed';
+  final String orgEvent = '/event'; //only self event
+  final String orgEventClosed = '/event/closed';
 
 }

@@ -79,6 +79,22 @@ class Utils {
     return DateFormat.jm().format(time.toLocal()); // 'jm' = e.g., 8:00 PM
   }
 
+  
+  static String formatDateTimeWithSHortMonth(DateTime dateTime) {
+    final localDate = dateTime.toLocal();
+    final hours = (localDate.hour % 12).toString().padLeft(2, '0');
+    final minutes = localDate.minute.toString().padLeft(2, '0');
+    final amPm = localDate.hour < 12 ? 'AM' : 'PM';
+
+    final shortMonth = DateFormat('MMM').format(localDate);
+    final day = DateFormat('d').format(localDate);
+
+    final shortDay = DateFormat('E').format(localDate).substring(0, 3);
+    return '$day $shortMonth $shortDay $hours:$minutes $amPm';
+  }
+  
+
+
   static String formatDateToShortMonth(DateTime dateTime) {
     final localDate = dateTime.toLocal();
     const List<String> monthAbbr = [
