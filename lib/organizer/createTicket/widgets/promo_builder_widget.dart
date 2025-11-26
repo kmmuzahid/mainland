@@ -7,6 +7,7 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_cubit.dart';
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 
 class PromoBuilderWidget extends StatefulWidget {
   const PromoBuilderWidget({
@@ -14,9 +15,11 @@ class PromoBuilderWidget extends StatefulWidget {
     required this.cubit,
     required this.isReadOnly,
     required this.onSaved,
+    this.initalValue
   });
   final CreateTicketCubit cubit;
   final bool isReadOnly;
+  final DiscountCodeModel? initalValue;
   final Function(String code, int discount, DateTime? expire) onSaved;
 
   @override

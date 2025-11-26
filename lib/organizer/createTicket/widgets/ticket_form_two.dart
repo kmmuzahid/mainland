@@ -48,6 +48,7 @@ class TicketFormTwo extends StatelessWidget {
               children: [
                 _buildCheckBox(
                   isReadOnly: isReadOnly,
+                  value: createEventModel.isFreeEvent,
                   onChanged: (value) {
                     cubit.updateField(
                       cubit.state.createEventModel.copyWith(isFreeEvent: value ?? false),
@@ -67,6 +68,9 @@ class TicketFormTwo extends StatelessWidget {
             _ticketStartSaleLabel(context),
             CommonDateInputTextField(
               isReadOnly: isReadOnly || cubit.state.createEventModel.isFreeEvent,
+              initialValue: createEventModel.ticketSaleStartDate?.toLocal().toString().split(
+                ' ',
+              )[0],
               minDate: DateTime.now(),
               onSave: (value) {
                 cubit.updateField(
@@ -97,6 +101,7 @@ class TicketFormTwo extends StatelessWidget {
             FormLabel(isRequired: false, label: 'Pre-Sale start date').start,
             2.height,
             CommonDateInputTextField(
+              initialValue: createEventModel.preSaleStartDate?.toLocal().toString().split(' ')[0],
               minDate: DateTime.now(),
               isReadOnly:
                   isReadOnly ||
@@ -112,6 +117,7 @@ class TicketFormTwo extends StatelessWidget {
             10.height,
             FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
             CommonDateInputTextField(
+              initialValue: createEventModel.preSaleEndDate?.toLocal().toString().split(' ')[0],
               minDate: DateTime.now(),
               isReadOnly:
                   isReadOnly ||
@@ -146,7 +152,11 @@ class TicketFormTwo extends StatelessWidget {
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
+              initalValue: createEventModel.discountCodes.isNotEmpty
+                  ? createEventModel.discountCodes[0]
+                  : null,
               onSaved: (code, discount, expire) {
+                
                 cubit.updatePromoCode(
                   code: code,
                   discountPercentage: discount,
@@ -159,6 +169,9 @@ class TicketFormTwo extends StatelessWidget {
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
+              initalValue: createEventModel.discountCodes.length > 1
+                  ? createEventModel.discountCodes[1]
+                  : null,
               onSaved: (code, discount, expire) {
                 cubit.updatePromoCode(
                   code: code,
@@ -172,6 +185,9 @@ class TicketFormTwo extends StatelessWidget {
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
+              initalValue: createEventModel.discountCodes.length > 2
+                  ? createEventModel.discountCodes[2]
+                  : null,
               onSaved: (code, discount, expire) {
                 cubit.updatePromoCode(
                   code: code,

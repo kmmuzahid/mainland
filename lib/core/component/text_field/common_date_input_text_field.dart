@@ -15,6 +15,7 @@ class CommonDateInputTextField extends StatefulWidget {
     this.validation,
     this.borderColor,
     this.backgroundColor,
+    this.initialValue,
     this.isReadOnly = false,
     this.hints,
     this.minDate,
@@ -44,6 +45,7 @@ class CommonDateInputTextField extends StatefulWidget {
   final Widget? prefixIcon;
   final bool isReadOnly;
   final String? hints;
+  final String? initialValue;
 
   @override
   State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
@@ -56,6 +58,9 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    if (widget.initialValue != null) {
+      _controller.text = widget.initialValue!;
+    }
   }
 
   DateTime _calculateMinDate() {

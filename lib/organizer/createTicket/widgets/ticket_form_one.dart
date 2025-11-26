@@ -151,9 +151,10 @@ class TicketFormOne extends StatelessWidget {
               initialText: createEventModel.description,
               enableHtml: true,
             ),
-            FormLabel(isRequired: true, label: 'Event Date'),
+            const FormLabel(isRequired: true, label: 'Event Date'),
             CommonDateInputTextField(
               minDate: DateTime.now(),
+              initialValue: createEventModel.eventDate?.toLocal().toString().split(' ')[0],
               isReadOnly: isReadOnly,
               onSave: (value) {
                 cubit.updateField(
@@ -173,7 +174,7 @@ class TicketFormOne extends StatelessWidget {
               children: [
                 Expanded(
                   child: TimeInputCard(
-                    initialTime: TimeOfDay.now(),
+                    initialTime: cubit.state.createEventModel.startTime ?? TimeOfDay.now(),
                     onChanged: (value) {
                       cubit.updateField(cubit.state.createEventModel.copyWith(startTime: value));
                     },
@@ -182,7 +183,7 @@ class TicketFormOne extends StatelessWidget {
                 10.width,
                 Expanded(
                   child: TimeInputCard(
-                    initialTime: TimeOfDay.now(),
+                    initialTime: cubit.state.createEventModel.endTime ?? TimeOfDay.now(),
                     onChanged: (value) {
                       cubit.updateField(cubit.state.createEventModel.copyWith(endTime: value));
                     },
@@ -223,11 +224,19 @@ class TicketFormOne extends StatelessWidget {
             ),
             10.height,
             FormLabel(isRequired: true, label: AppString.state),
-            CommonDropDown<MapEntry<String, String>>(
+            CommonDropDown<MapEntry<String, String>>( 
               hint: AppString.state,
               items: usStates.entries.toList(),
               textStyle: AppTextStyles.bodyMedium,
               borderColor: AppColors.greay100,
+              initalValue:
+                  usStates.isNotEmpty &&
+                      createEventModel.state != null &&
+                      createEventModel.state!.isNotEmpty
+                  ? usStates.entries.firstWhere(
+                      (element) => element.value == createEventModel.state?.trim(),
+                    )
+                  : null,
               enableInitalSelection: false,
               backgroundColor: AppColors.backgroundWhite,
               isRequired: true,
@@ -239,7 +248,7 @@ class TicketFormOne extends StatelessWidget {
               },
             ),
             10.height,
-            FormLabel(isRequired: true, label: 'Country'),
+            const FormLabel(isRequired: true, label: 'Country'),
             _textEditor(
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(country: 'United States'));

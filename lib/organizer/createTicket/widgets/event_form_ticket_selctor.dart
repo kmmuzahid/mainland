@@ -32,7 +32,7 @@ class EventFormTicketSelctor extends StatelessWidget {
     final Color checkColor = (isReadOnly && value == true)
         ? AppColors.greay300
         : AppColors.primaryText;
-    final Color fillColor = (isReadOnly && value == true)
+    final Color fillColor = (isReadOnly && value == true) || value == false
         ? AppColors.white100
         : AppColors.primaryColor;
     return Checkbox(
@@ -41,7 +41,7 @@ class EventFormTicketSelctor extends StatelessWidget {
         color: (isReadOnly && value == true)
             ? AppColors.greay300
             : ((isReadOnly ? false : (value ?? cubit.state.createEventModel.isFreeEvent))
-            ? AppColors.primaryColor
+                  ? AppColors.primaryColor
                   : AppColors.greay300),
       ),
       checkColor: checkColor,
@@ -104,6 +104,7 @@ class EventFormTicketSelctor extends StatelessWidget {
           return e.name == ticketName;
         }) !=
         -1;
+    final TicketTypeModel? ticket = _getTicket(ticketName);
     return TableRow(
       children: [
         Row(
@@ -126,6 +127,7 @@ class EventFormTicketSelctor extends StatelessWidget {
           child: SizedBox(
             height: 35.h,
             child: CommonTextField(
+              initialText: ticket?.setUnitPrice != null ? ticket?.setUnitPrice.toString() : '',
               paddingVertical: 0,
               showValidationMessage: false,
               validationType:
@@ -148,6 +150,7 @@ class EventFormTicketSelctor extends StatelessWidget {
           child: SizedBox(
             height: 35.h,
             child: CommonTextField(
+              initialText: ticket?.availableUnit != null ? ticket?.availableUnit.toString() : '',
               showValidationMessage: false,
               paddingVertical: 0,
               validationType:
@@ -167,5 +170,10 @@ class EventFormTicketSelctor extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  TicketTypeModel? _getTicket(TicketName ticketName) {
+    final index = createEventModel.ticketTypes.indexWhere((e) => e.name == ticketName);
+    return index != -1 ? createEventModel.ticketTypes[index] : null;
   }
 }

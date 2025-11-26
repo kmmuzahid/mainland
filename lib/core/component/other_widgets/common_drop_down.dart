@@ -17,6 +17,7 @@ class CommonDropDown<T> extends StatefulWidget {
     this.isLoading = false,
     this.borderRadius = 12,
     this.prefix,
+    this.initalValue,
     this.enableInitalSelection = true,
     super.key,
   });
@@ -33,6 +34,7 @@ class CommonDropDown<T> extends StatefulWidget {
   final double borderRadius;
   final Widget? prefix;
   final bool enableInitalSelection;
+  final T? initalValue;
 
   @override
   State<CommonDropDown<T>> createState() => _CommonDropDownState<T>();
@@ -43,16 +45,31 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
   T? _selectedItem;
   late List<T> _items;
 
-  @override
+@override
   void initState() {
     super.initState();
     _items = widget.items;
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
 
-    AppLogger.debug(widget.items.length.toString(), tag: 'common drop down');
-    // Set first item by default if items are available
-    if (_items.isNotEmpty) {
+    // For MapEntry, we need to compare keys/values instead of the entire object
+    if (widget.initalValue != null) {
+      if (widget.initalValue is MapEntry) {
+        _selectedItem = _items.firstWhere(
+          (item) =>
+              item is MapEntry && (item as MapEntry).key == (widget.initalValue as MapEntry).key,
+          orElse: () => _items.isNotEmpty ? _items.first : widget.initalValue!,
+        );
+      } else {
+        _selectedItem = _items.contains(widget.initalValue)
+            ? widget.initalValue
+            : (_items.isNotEmpty ? _items.first : null);
+      }
+    } else if (_items.isNotEmpty) {
       _selectedItem = _items.first;
+    }
+
+    // Notify parent if we have a selected item
+    if (_selectedItem != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onChanged(_selectedItem);
       });
@@ -63,15 +80,32 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
   void didUpdateWidget(covariant CommonDropDown<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Update selection when new items come in and none selected
-    if (_selectedItem == null && _items.isNotEmpty) {
-      _selectedItem = _items.first;
+    // Handle items update
+    if (widget.items != oldWidget.items) {
+      _items = widget.items;
+
+      // Try to find the selected item in the new items list
+      if (_selectedItem != null) {
+        if (_selectedItem is MapEntry) {
+          _selectedItem = _items.firstWhere(
+            (item) => item is MapEntry && (item as MapEntry).key == (_selectedItem as MapEntry).key,
+            orElse: () => _items.isNotEmpty ? _items.first : _selectedItem!,
+          );
+        } else if (!_items.contains(_selectedItem) && _items.isNotEmpty) {
+          _selectedItem = _items.first;
+        }
+      } else if (_items.isNotEmpty) {
+        _selectedItem = _items.first;
+      }
+
+      if (_selectedItem != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onChanged(_selectedItem);
         setState(() {});
       });
     }
   }
+}
 
   @override
   void dispose() {
@@ -101,7 +135,9 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
             }
             return null;
           },
-          initialValue: widget.enableInitalSelection ? _selectedItem : null,
+          initialValue: (widget.enableInitalSelection || widget.initalValue != null)
+              ? _selectedItem
+              : null,
           decoration: InputDecoration(
             isDense: true,
             filled: widget.backgroundColor != null,
