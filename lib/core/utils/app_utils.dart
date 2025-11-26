@@ -18,6 +18,15 @@ class Utils {
 
   static Role? getRole() =>
       appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.userLoginInfoModel.role;
+
+  static DateTime? parseDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+    return DateTime.tryParse(dateString);
+  }
+  
+  
   
 
   static DateTime subtractYears(DateTime date, int yearsToSubtract) {

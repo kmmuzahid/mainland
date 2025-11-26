@@ -178,7 +178,7 @@ class CommonText extends StatelessWidget {
         if (preventScaling) {
           return ShaderMask(
             shaderCallback: (Rect bounds) {
-              return LinearGradient(
+              return const LinearGradient(
                 colors: [Colors.black, Colors.transparent],
                 stops: [0.8, 1.0],
                 begin: Alignment.bottomCenter,

@@ -1,9 +1,11 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mainland/common/event/model/event_details_model.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
@@ -39,13 +41,15 @@ class CreateTicketRepository {
     XFile? image,
   ) {
     final body = _buildBody(isDraft, createEvent, category, subCategory);
+    final url =
+        '${ApiEndPoint.instance.createEvent}${createEvent.draftId != null ? '/${createEvent.draftId}' : ''}';
+    AppLogger.debug('url $url', tag: 'CreateTicketRepository');
 
     return dioService.request(
       showMessage: true,
       input: RequestInput(
         files: {if (image != null) 'image': image},
-        endpoint:
-            '${ApiEndPoint.instance.createEvent}${createEvent.draftId != null ? '/${createEvent.draftId}' : ''}',
+        endpoint: url,
         method: createEvent.draftId != null ? RequestMethod.PATCH : RequestMethod.POST,
         jsonBody: body,
       ),
@@ -67,8 +71,8 @@ class CreateTicketRepository {
           {'categoryId': category!.id, 'subCategory': subCategory.map((e) => e.id).toList()},
         ],
       'eventDate': createEvent.eventDate?.millisecondsSinceEpoch,
-      'startTime': createEvent.startTime.to12HourString(),
-      'endTime': createEvent.endTime.to12HourString(),
+      'startTime': createEvent.startTime?.to12HourString(),
+      'endTime': createEvent.endTime?.to12HourString(),
       'streetAddress': createEvent.streetAddress1,
       'streetAddress2': createEvent.streetAddress2,
       'city': createEvent.city,
@@ -103,5 +107,64 @@ class CreateTicketRepository {
       'description': createEvent.description,
       'isDraft': isDraft,
     };
+  }
+
+  CreateEventModel convertEventDetailsToCreateEventModel(EventDetails event) {
+    // Extract category IDs and first Category model and subcategories for CreateEventModel constructor
+    List<String> categoryIds = event.category?.map((cat) => cat.categoryId ?? '').toList() ?? [];
+
+    // For selectedCategory and selectedSubcategories conversion, you need to adapt your CategoryModel and SubCategoryModel classes
+    // Here we set null or empty as placeholders
+    CategoryModel? selectedCategory; // Should convert event.category[0] to CategoryModel if exists
+    List<SubCategoryModel> selectedSubcategories =
+        []; // Convert event.category[0].subCategory to List<SubCategoryModel>
+    AppLogger.debug('event id= ${event.id}', tag: 'CreateTicketRepository');
+
+    return CreateEventModel(
+      image: event.image,
+      title: event.eventName,
+      category: categoryIds,
+      description: event.description,
+      eventDate: event.eventDate,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      streetAddress1: event.streetAddress,
+      streetAddress2: event.streetAddress2,
+      city: event.city,
+      state: event.state,
+      country: event.country,
+      ticketTypes:
+          event.tickets?.map((ticket) {
+            return TicketTypeModel(
+              name: ticket.type,
+              setUnitPrice: ticket.price?.toDouble() ?? 0,
+              availableUnit: ticket.availableUnits ?? 0,
+            );
+          }).toList() ??
+          [],
+      isFreeEvent: event.isFreeEvent ?? false,
+      offerPreSale: true,
+      preSaleStartDate: event.preSaleStart,
+      preSaleEndDate: event.preSaleEnd,
+      ticketSaleStartDate: event.ticketSaleStart,
+      discountCodes:
+          event.discountCodes?.map((code) {
+            return DiscountCodeModel(
+              code: code.code ?? '',
+              discountPercentage: code.percentage ?? 0,
+              expireDate: code.expireDate,
+              filedId: code.id ?? '',
+              isActive: code.expireDate?.isAfter(DateTime.now()) ?? true,
+            );
+          }).toList() ??
+          [],
+      organizerName: event.organizerName,
+      emailAddress: event.organizerEmail,
+      phoneNumber: event.organizerPhone,
+      selectedCategory: selectedCategory,
+      selectedSubcategories: selectedSubcategories,
+      offerDiscountByCode: true,
+      draftId: event.id,
+    );
   }
 }

@@ -198,7 +198,7 @@ class TicketFormOne extends StatelessWidget {
                 cubit.updateField(cubit.state.createEventModel.copyWith(streetAddress1: value));
               },
               hintText: 'Apt. 1A/Suite 1A/Unit 1A',
-              validationType: ValidationType.validateAlphaNumeric,
+              validationType: ValidationType.validateRequired,
               initalText: createEventModel.streetAddress1,
             ),
             10.height,
@@ -269,8 +269,7 @@ class TicketFormOne extends StatelessWidget {
   }
 
   Widget _imagePickerBuilder() {
-    return BlocSelector<CreateTicketCubit, CreateTicketState, XFile?>(
-      selector: (state) => state.image,
+    return BlocBuilder<CreateTicketCubit, CreateTicketState>(
       builder: (context, state) {
         final picker = DashedBorderContainer(
           borderRadius: 12,
@@ -287,20 +286,21 @@ class TicketFormOne extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (state != null)
+                if (state.image != null || state.draftEventModel.image != null)
                   SizedBox(
                     width: 60.h,
                     height: 60.h,
-                    child: CommonImage(imageSrc: state.path),
+                    child: CommonImage(imageSrc: state.image?.path ?? state.draftEventModel.image!),
                   ),
-                if (state == null) Icon(Icons.image_outlined),
+                if (state.image == null && state.draftEventModel.image == null)
+                  const Icon(Icons.image_outlined),
                 CommonText(
                   text: cubit.state.image == null
                       ? 'Choose File'
                       : cubit.state.image!.path.split('/').last,
                   fontSize: 14,
                 ),
-                CommonText(text: 'Image resolution must be 1080 x 1920 px', fontSize: 12),
+                const CommonText(text: 'Image resolution must be 1080 x 1920 px', fontSize: 12),
               ],
             ),
           ),

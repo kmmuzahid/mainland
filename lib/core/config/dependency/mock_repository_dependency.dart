@@ -13,10 +13,7 @@ import 'package:mainland/user/ticket/repository/ticket_purchase_repository.dart'
 class MockRepositoryDependency {
   static void dependencies() {
     getIt.registerLazySingleton<ChatRepository>(MockChatRepository.new);
-    getIt.registerLazySingleton<AuthRepository>(AuthRepositoryImpl.new);
     getIt.registerLazySingleton<TicketPurchaseRepository>(MockTicketPurchaseRepository.new);
-    getIt.registerLazySingleton<CreateTicketRepository>(CreateTicketRepository.new);
-    getIt.registerLazySingleton<TicketRepository>(TicketRepository.new);
 
     AppLogger.debug('Mock repository dependency initalized', tag: 'dependency');
   }

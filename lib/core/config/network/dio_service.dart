@@ -14,9 +14,12 @@ import 'package:dio/dio.dart' as dio; // Alias Dio as dio to avoid conflict with
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/main.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:io';
 import '../dependency/dependency_injection.dart';
 import 'request_input.dart'; // Import the updated RequestInput
 import 'response_state.dart';
+import 'package:http/http.dart' as http;
 
 // Callback for request state changes
 typedef OnRequestStateChange<T> = void Function(ResponseState<T> state);
@@ -32,6 +35,53 @@ class DioService {
   Completer<void>? _refreshCompleter; // Manages the single refresh operation
   final Function()? onLogout;
   final List<_QueuedRequest> _queue = []; // Stores requests waiting for token refresh
+  bool _isServerOff = false;
+  bool _isNetworkOff = false;
+  bool _hasShownServerError = false;
+  bool _hasShownNetworkError = false;
+  static const Duration _timeout = Duration(seconds: 5);
+
+  bool get isServerOff => _isServerOff;
+  bool get isNetworkOff => _isNetworkOff;
+
+  Future<bool> _isNetworkAvailable() async {
+    try {
+      final response = await http
+          .get(Uri.parse("https://clients3.google.com/generate_204"))
+          .timeout(const Duration(seconds: 3));
+
+      return response.statusCode == 204;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _checkAndHandleNetworkStatus() async {
+    final hasNetwork = await _isNetworkAvailable();
+
+    if (!hasNetwork) {
+      if (!_isNetworkOff) {
+        _isNetworkOff = true;
+        if (!_hasShownNetworkError) {
+          _hasShownNetworkError = true;
+          if (appRouter.navigatorKey.currentContext != null) {
+            showSnackBar('No internet connection', type: SnackBarType.error);
+          }
+        }
+      }
+      return;
+    }
+
+    // If we have network but server was down, reset the flags
+    if (_isServerOff) {
+      _isServerOff = false;
+      _hasShownServerError = false;
+    }
+    if (_isNetworkOff) {
+      _isNetworkOff = false;
+      _hasShownNetworkError = false;
+    }
+  }
 
   static Future<DioService> create({Function()? onLogout}) async {
     await getIt.isReady<StorageService>();
@@ -72,7 +122,7 @@ class DioService {
               '🔹 Headers: $headers\n'
               '🔹 Query: ${options.queryParameters}\n'
               '🔹 Data:  ${options.data is FormData ? options.data.fields : options.data?.toString().substring(0, options.data.toString().length > 200 ? 200 : null)}',
-              
+
               tag: options.path,
             );
           }
@@ -105,11 +155,27 @@ class DioService {
 
               tag: path,
             );
-                AppLogger.apiError(
-                  'Error Data: ${error.response?.data}',
-                  tag: error.requestOptions.path,
+            AppLogger.apiError(
+              'Error Data: ${error.response?.data}',
+              tag: error.requestOptions.path,
             );
           }
+
+          // First check network status
+          await _checkAndHandleNetworkStatus();
+
+          // If we have network but got a server error
+          // if (!_isNetworkOff && (statusCode ?? 0) >= 500 && (statusCode ?? 0) < 600) {
+          //   if (!_isServerOff) {
+          //     _isServerOff = true;
+          //     if (!_hasShownServerError) {
+          //       _hasShownServerError = true;
+          //       if (appRouter.navigatorKey.currentContext != null) {
+          //         showSnackBar('Server is currently unavailable', type: SnackBarType.error);
+          //       }
+          //     }
+          //   }
+          // }
 
           if (statusCode == 401 && path != '/auth/refresh') {
             if (_refreshCompleter == null) {
@@ -129,7 +195,7 @@ class DioService {
                 );
                 final response = await _dio.fetch(error.requestOptions);
                 handler.resolve(response);
-                } catch (e) {
+              } catch (e) {
                 AppLogger.apiError(
                   '❌ [AUTH] Token refresh failed\n'
                   '🔹 Request ID: $requestId\n'
@@ -137,50 +203,49 @@ class DioService {
                   tag: 'Auth',
                 );
                 await clearTokens();
-                  onLogout?.call(); // Trigger logout
-                  handler.reject(error); // Reject the original request with the error
-                } finally {
-                  _refreshCompleter?.complete();
-                  _refreshCompleter = null;
-                  _processQueue(); // Process any queued requests
-                }
-              } else {
-                // Token is already being refreshed, queue the current request
-                // This request will be re-executed once the refresh is complete
-                final responseCompleter = Completer<dio.Response>();
-                _queue.add(_QueuedRequest(error.requestOptions, responseCompleter));
-                // Wait for the responseCompleter to be completed (by _processQueue)
-                // and then resolve/reject the original handler with that result.
-                return responseCompleter.future.then(handler.resolve).catchError((
-                  Object err,
-                  StackTrace stackTrace,
-                ) {
-                  if (err is DioException) {
-                    handler.reject(err);
-                  } else {
-                    // If it's not a DioException, wrap it or handle as a generic error
-                    handler.reject(
-                      DioException(
-                        requestOptions: error.requestOptions, // Use original request options
-                        error: err,
-                        stackTrace: stackTrace,
-                        message: err.toString(),
-                      ),
-                    );
-                  }
-                });
+                onLogout?.call(); // Trigger logout
+                handler.reject(error); // Reject the original request with the error
+              } finally {
+                _refreshCompleter?.complete();
+                _refreshCompleter = null;
+                _processQueue(); // Process any queued requests
               }
-          } else if (statusCode == 401 && path == '/auth/refresh') {
-              // 401 on refresh token endpoint itself, clear tokens and logout
-              AppLogger.apiError(
-                '401 received from refresh token endpoint. Logging out.',
-                tag: 'Auth',
-              );
-              await clearTokens();
-              onLogout?.call();
-              handler.reject(error); // Reject with the original error
+            } else {
+              // Token is already being refreshed, queue the current request
+              // This request will be re-executed once the refresh is complete
+              final responseCompleter = Completer<dio.Response>();
+              _queue.add(_QueuedRequest(error.requestOptions, responseCompleter));
+              // Wait for the responseCompleter to be completed (by _processQueue)
+              // and then resolve/reject the original handler with that result.
+              return responseCompleter.future.then(handler.resolve).catchError((
+                Object err,
+                StackTrace stackTrace,
+              ) {
+                if (err is DioException) {
+                  handler.reject(err);
+                } else {
+                  // If it's not a DioException, wrap it or handle as a generic error
+                  handler.reject(
+                    DioException(
+                      requestOptions: error.requestOptions, // Use original request options
+                      error: err,
+                      stackTrace: stackTrace,
+                      message: err.toString(),
+                    ),
+                  );
+                }
+              });
             }
-           else if (error.response?.statusCode == 404) {
+          } else if (statusCode == 401 && path == '/auth/refresh') {
+            // 401 on refresh token endpoint itself, clear tokens and logout
+            AppLogger.apiError(
+              '401 received from refresh token endpoint. Logging out.',
+              tag: 'Auth',
+            );
+            await clearTokens();
+            onLogout?.call();
+            handler.reject(error); // Reject with the original error
+          } else if (error.response?.statusCode == 404) {
             // 404 responses should be passed through normally - they contain valid data
             handler.next(error);
           } else {
@@ -214,8 +279,8 @@ class DioService {
     int retryCount = 0,
     int maxRetry = 2,
     bool showMessage = false,
+    bool isRetry = false, // Internal flag to track retry attempts
   }) async {
-
     // if (_debugMode) {
     //   AppLogger.apiDebug(
     //     'REQUEST[${input.method}${input.method}] => Input: ${input.toJson()}',
@@ -277,8 +342,24 @@ class DioService {
         );
       }
 
+      // Handle server errors with retry logic
+      if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
+        if (retryCount < maxRetry) {
+          // Wait before retrying (exponential backoff)
+          await Future.delayed(Duration(seconds: 1 * (retryCount + 1)));
+
+          return request<T>(
+            input: input,
+            responseBuilder: responseBuilder,
+            retryCount: retryCount + 1,
+            maxRetry: maxRetry,
+            showMessage: showMessage,
+            isRetry: true,
+          );
+        }
+      }
+
       // Check if this response contains data that should be parsed
-      // Your server returns meaningful data even with error status codes
       if (e.response?.data != null) {
         try {
           final parsed = e.response?.data['data'] != null
@@ -324,6 +405,15 @@ class DioService {
           retryCount: retryCount + 1,
           maxRetry: maxRetry,
         );
+      } else if (retryCount == maxRetry && !_isServerOff) {
+        // Only show error message on the last retry attempt
+        if (appRouter.navigatorKey.currentContext != null) {
+          showSnackBar(
+            'Server is currently unavailable. Please try again later.',
+            type: SnackBarType.error,
+          );
+        }
+        _isServerOff = true;
       }
 
       final err = _parseError(e);
@@ -455,7 +545,6 @@ class DioService {
       contentType = 'application/json';
     }
 
-     
     return _RequestOptionsData(
       path: url,
       data: body,

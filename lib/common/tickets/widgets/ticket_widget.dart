@@ -38,7 +38,7 @@ class TicketWidget extends StatelessWidget {
                         filter == TicketFilter.Used ||
                         filter == TicketFilter.Expired ||
                         filter == TicketFilter.UnderReview,
-                    imageSrc: ticketModel.image,
+                    imageSrc: ticketModel.image ?? '',
                     borderRadius: 12,
                   ),
                 ),
@@ -52,9 +52,34 @@ class TicketWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _textBuilder(ticketModel.eventName, 2),
-                    _textBuilder(Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate), 1),
-                    if (ticketModel.ticketSaleStart.isAfter(DateTime.now())) _textBuilder('', 2),
+                    _textBuilder(
+                      title: ticketModel.eventName ?? '',
+                      maxLine: 2,
+                      preventScalling: true,
+                    ),
+                    if (ticketModel.eventDate != null)
+                      _textBuilder(
+                        title: Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate!),
+                      ),
+                    _textBuilder(
+                      title: '${ticketModel.streetAddress}, ${ticketModel.streetAddress2}',
+                      maxLine: 2,
+                      preventScalling: true,
+                    ),
+                    if (ticketModel.ticketSaleStart != null &&
+                        ticketModel.ticketSaleStart!.isAfter(DateTime.now()))
+                      _textBuilder(
+                        title:
+                            'Pre-Order available ${Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate!)}',
+                        maxLine: 2,
+                      ),
+
+                    // if (!(ticketModel.ticketSaleStart.isAfter(DateTime.now())))
+                    //   _textBuilder(
+                    //     title:
+                    //         'available ${Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate)}',
+                    //     maxLine: 2,
+                    //   ),
                   ],
                 ),
                 if (filter == TicketFilter.Live ||
@@ -103,12 +128,12 @@ class TicketWidget extends StatelessWidget {
     );
   }
 
-  Widget _textBuilder(String title, int maxLine) {
+  Widget _textBuilder({required String title, int maxLine = 1, bool preventScalling = false}) {
     return CommonText(
       left: 10,
       right: 10,
       text: title,
-      preventScaling: maxLine == 1 ? false : true,
+      preventScaling: preventScalling,
       autoResize: false,
       overflow: TextOverflow.fade,
       maxLines: maxLine,

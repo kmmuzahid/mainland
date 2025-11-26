@@ -23,7 +23,7 @@ class CreateEventScreen extends StatelessWidget {
       create: (context) {
         final cubit = CreateTicketCubit();
         if (draftId != null) {
-          cubit.fetchDraft();
+          cubit.fetchDraft(id: draftId!);
         }
         return cubit;
       },
@@ -42,7 +42,9 @@ class CreateEventScreen extends StatelessWidget {
                 }
               },
             ),
-            body: Padding(
+            body: state.isDraftFetching
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: LayoutBuilder(
                 builder: (context, constraints) {

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:mainland/common/event/repository/event_details_repository.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
@@ -28,14 +29,17 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       );
   final ImagePicker _imagePicker = ImagePicker();
   final CreateTicketRepository repository = getIt();
+  final EventDetailsRepository eventDetailsRepository = getIt();
   // Navigate to next page
   void saveDraft() async {
     if (state.isLoading) return;
-    if (state.createEventModel.startTime.isAfter(state.createEventModel.endTime)) {
+    if (state.createEventModel.startTime != null &&
+        state.createEventModel.endTime != null &&
+        state.createEventModel.startTime!.isAfter(state.createEventModel.endTime!)) {
       showSnackBar('Event End Time should be greater than Start Time', type: SnackBarType.error);
       return;
     }
-    if (state.image == null ||
+    if ((state.image == null && state.draftEventModel.image == null) ||
         state.createEventModel.title == null ||
         state.createEventModel.title?.isEmpty == true ||
         state.createEventModel.description == null ||
@@ -103,18 +107,26 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
       image: state.image,
     );
     if (result.isSuccess) {
-    appRouter.replaceAll([const HomeRoute()]);
+      appRouter.replaceAll([const HomeRoute()]);
     }
   }
 
-  void fetchDraft() {
-    emit(
-      state.copyWith(
-        draftEventModel: state.createEventModel.copyWith(
-          title: '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''',
-        ),
-      ),
-    );
+  void fetchDraft({required String id}) async {
+    emit(state.copyWith(isDraftFetching: true));
+    final result = await eventDetailsRepository.getDetails(id: id);
+    if (result.isSuccess && result.data != null) {
+      final data = repository.convertEventDetailsToCreateEventModel(result.data!);
+      emit(state.copyWith(isDraftFetching: false, draftEventModel: data, createEventModel: data));
+    } else {
+      emit(state.copyWith(isDraftFetching: false));
+    }
+    // emit(
+    //   state.copyWith(
+    //     draftEventModel: state.createEventModel.copyWith(
+    //       title: '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''',
+    //     ),
+    //   ),
+    // );
   }
 
   void nextPage() {

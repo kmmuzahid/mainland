@@ -92,7 +92,7 @@ class TicketsScreen extends StatelessWidget {
                             filter: state.selectedFilter,
                                   ticketModel: ticket,
                             onTap: () {
-                                    onTap(ticket.id, state.selectedFilter!);
+                                    onTap(ticket.id ?? '', state.selectedFilter!);
                             },
                           );
                         },

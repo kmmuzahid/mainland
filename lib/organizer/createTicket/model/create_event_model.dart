@@ -1,5 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:mainland/core/utils/app_utils.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/user/preferense/model/category_model.dart';
 import 'package:mainland/user/preferense/model/sub_category_model.dart';
 
@@ -17,7 +21,7 @@ class DiscountCodeModel {
     required this.discountPercentage,
     this.isActive = true,
     required this.filedId,
-    this.expireDate
+    this.expireDate,
   });
 
   // Empty Initializer
@@ -58,26 +62,12 @@ class TicketTypeModel {
   final TicketName? name;
   final double setUnitPrice;
   final int availableUnit;
-  final DateTime? saleStartDate;
-  final DateTime? saleEndDate;
 
-  TicketTypeModel({
-    required this.name,
-    required this.setUnitPrice,
-    required this.availableUnit,
-    this.saleStartDate,
-    this.saleEndDate,
-  });
+  TicketTypeModel({required this.name, required this.setUnitPrice, required this.availableUnit});
 
   // Empty Initializer - all dates null
   static TicketTypeModel empty() {
-    return TicketTypeModel(
-      name: null,
-      setUnitPrice: 0.0,
-      availableUnit: 0,
-      saleStartDate: null,
-      saleEndDate: null,
-    );
+    return TicketTypeModel(name: null, setUnitPrice: 0.0, availableUnit: 0);
   }
 
   // Factory constructor for JSON with safe defaults
@@ -91,12 +81,12 @@ class TicketTypeModel {
           : TicketName.Standard,
       setUnitPrice: (json['setUnitPrice'] as num?)?.toDouble() ?? 0.0,
       availableUnit: json['availableUnit'] as int? ?? 0,
-      saleStartDate: json['saleStartDate'] != null
-          ? DateTime.tryParse(json['saleStartDate'] as String)
-          : null,
-      saleEndDate: json['saleEndDate'] != null
-          ? DateTime.tryParse(json['saleEndDate'] as String)
-          : null,
+      // saleStartDate: json['saleStartDate'] != null
+      //     ? DateTime.tryParse(json['saleStartDate'] as String)
+      //     : null,
+      // saleEndDate: json['saleEndDate'] != null
+      //     ? DateTime.tryParse(json['saleEndDate'] as String)
+      //     : null,
     );
   }
 
@@ -106,8 +96,8 @@ class TicketTypeModel {
       'name': name.toString().split('.').last,
       'setUnitPrice': setUnitPrice,
       'availableUnit': availableUnit,
-      'saleStartDate': saleStartDate?.toIso8601String(),
-      'saleEndDate': saleEndDate?.toIso8601String(),
+      // 'saleStartDate': saleStartDate?.toIso8601String(),
+      // 'saleEndDate': saleEndDate?.toIso8601String(),
     };
   }
 
@@ -122,22 +112,23 @@ class TicketTypeModel {
       name: name ?? this.name,
       setUnitPrice: setUnitPrice ?? this.setUnitPrice,
       availableUnit: availableUnit ?? this.availableUnit,
-      saleStartDate: saleStartDate ?? this.saleStartDate,
-      saleEndDate: saleEndDate ?? this.saleEndDate,
+      // saleStartDate: saleStartDate ?? this.saleStartDate,
+      // saleEndDate: saleEndDate ?? this.saleEndDate,
     );
   }
 }
 
 class CreateEventModel {
+  final String? image;
   // Event Details
   final String? draftId;
   final String? title;
   final List<String> category;
   final String? description;
   final DateTime? eventDate;
-  final TimeOfDay startTime;
-  final TimeOfDay endTime;
-  final String streetAddress1;
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
+  final String? streetAddress1;
   final String? streetAddress2;
   final String? city;
   final String? state;
@@ -165,6 +156,7 @@ class CreateEventModel {
   final bool offerDiscountByCode;
 
   CreateEventModel({
+    this.image,
     required this.title,
     required this.category,
     this.description,
@@ -206,6 +198,7 @@ class CreateEventModel {
       city: '',
       state: '',
       country: '',
+      image: null,
       ticketTypes: [],
       offerPreSale: true,
       preSaleStartDate: null,
@@ -218,23 +211,27 @@ class CreateEventModel {
       selectedCategory: CategoryModel.fromMap({}),
       selectedSubcategories: [],
       isFreeEvent: false,
-      offerDiscountByCode: true,
-      draftId: null,
+      offerDiscountByCode: true, 
     );
   }
 
   // Factory constructor with safe defaults for all fields
   factory CreateEventModel.fromJson(Map<String, dynamic> json) {
     return CreateEventModel(
+      image: json['image'] ?? '',
       title: json['title'] as String? ?? '',
       ticketSaleStartDate: json['ticketSaleStartDate'] != null
-          ? DateTime.tryParse(json['ticketSaleStartDate'] as String)
+          ? Utils.parseDate(json['ticketSaleStartDate'] as String)
           : null,
       category: json['category'] ?? [],
       description: json['description'] as String?,
-      eventDate: json['eventDate'] != null ? DateTime.tryParse(json['eventDate'] as String) : null,
-      startTime: json['startTime'],
-      endTime: json['endTime'],
+      eventDate: json['eventDate'] != null ? Utils.parseDate(json['eventDate'] as String) : null,
+      startTime: json['startTime'] != null
+          ? (json['startTime'] as String).toTimeOfDay12()
+          : TimeOfDay.now(),
+      endTime: json['endTime'] != null
+          ? (json['endTime'] as String).toTimeOfDay12()
+          : TimeOfDay.now(),
       streetAddress1: json['streetAddress1'] as String? ?? '',
       streetAddress2: json['streetAddress2'] as String?,
       city: json['city'] as String? ?? '',
@@ -247,10 +244,10 @@ class CreateEventModel {
           : [],
       offerPreSale: json['offerPreSale'] as bool? ?? false,
       preSaleStartDate: json['preSaleStartDate'] != null
-          ? DateTime.tryParse(json['preSaleStartDate'] as String)
+          ? Utils.parseDate(json['preSaleStartDate'] as String)
           : null,
       preSaleEndDate: json['preSaleEndDate'] != null
-          ? DateTime.tryParse(json['preSaleEndDate'] as String)
+          ? Utils.parseDate(json['preSaleEndDate'] as String)
           : null,
       discountCodes: json['discountCodes'] != null
           ? (json['discountCodes'] as List<dynamic>)
@@ -271,6 +268,7 @@ class CreateEventModel {
   // Method to convert the object to a JSON map
   Map<String, dynamic> toJson() {
     return {
+      'image': image,
       'title': title,
       'category': category,
       'description': description,
@@ -309,6 +307,7 @@ class CreateEventModel {
     String? streetAddress1,
     String? streetAddress2,
     String? city,
+    String? image,
     String? state,
     String? country,
     List<TicketTypeModel>? ticketTypes,
@@ -328,6 +327,7 @@ class CreateEventModel {
   }) {
     return CreateEventModel(
       title: title ?? this.title,
+      image: image ?? this.image,
       category: category ?? this.category,
       description: description ?? this.description,
       eventDate: eventDate ?? this.eventDate,
@@ -353,5 +353,67 @@ class CreateEventModel {
       selectedSubcategories: selectedSubcategories ?? this.selectedSubcategories,
       draftId: draftId ?? this.draftId,
     );
+  }
+
+  @override
+  bool operator ==(covariant CreateEventModel other) {
+    if (identical(this, other)) return true;
+
+    return other.image == image &&
+        other.draftId == draftId &&
+        other.title == title &&
+        listEquals(other.category, category) &&
+        other.description == description &&
+        other.eventDate == eventDate &&
+        other.startTime == startTime &&
+        other.endTime == endTime &&
+        other.streetAddress1 == streetAddress1 &&
+        other.streetAddress2 == streetAddress2 &&
+        other.city == city &&
+        other.state == state &&
+        other.country == country &&
+        listEquals(other.ticketTypes, ticketTypes) &&
+        other.isFreeEvent == isFreeEvent &&
+        other.offerPreSale == offerPreSale &&
+        other.preSaleStartDate == preSaleStartDate &&
+        other.preSaleEndDate == preSaleEndDate &&
+        other.ticketSaleStartDate == ticketSaleStartDate &&
+        listEquals(other.discountCodes, discountCodes) &&
+        other.selectedCategory == selectedCategory &&
+        listEquals(other.selectedSubcategories, selectedSubcategories) &&
+        other.organizerName == organizerName &&
+        other.emailAddress == emailAddress &&
+        other.phoneNumber == phoneNumber &&
+        other.offerDiscountByCode == offerDiscountByCode;
+  }
+
+  @override
+  int get hashCode {
+    return image.hashCode ^
+        draftId.hashCode ^
+        title.hashCode ^
+        category.hashCode ^
+        description.hashCode ^
+        eventDate.hashCode ^
+        startTime.hashCode ^
+        endTime.hashCode ^
+        streetAddress1.hashCode ^
+        streetAddress2.hashCode ^
+        city.hashCode ^
+        state.hashCode ^
+        country.hashCode ^
+        ticketTypes.hashCode ^
+        isFreeEvent.hashCode ^
+        offerPreSale.hashCode ^
+        preSaleStartDate.hashCode ^
+        preSaleEndDate.hashCode ^
+        ticketSaleStartDate.hashCode ^
+        discountCodes.hashCode ^
+        selectedCategory.hashCode ^
+        selectedSubcategories.hashCode ^
+        organizerName.hashCode ^
+        emailAddress.hashCode ^
+        phoneNumber.hashCode ^
+        offerDiscountByCode.hashCode;
   }
 }
