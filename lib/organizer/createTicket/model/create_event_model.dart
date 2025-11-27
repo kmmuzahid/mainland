@@ -13,14 +13,14 @@ class DiscountCodeModel {
   final String code;
   final int discountPercentage; // e.g., 10 for 10%
   final bool isActive;
-  final String filedId;
+  final int? filedId;
   final DateTime? expireDate;
 
   DiscountCodeModel({
     required this.code,
     required this.discountPercentage,
     this.isActive = true,
-    required this.filedId,
+    this.filedId,
     this.expireDate,
   });
 
@@ -31,7 +31,7 @@ class DiscountCodeModel {
       expireDate: DateTime.now(),
       discountPercentage: 0,
       isActive: true,
-      filedId: '',
+      filedId: 1,
     );
   }
 
@@ -41,7 +41,7 @@ class DiscountCodeModel {
       code: json['code'] as String? ?? '',
       discountPercentage: json['discountPercentage'] as int? ?? 0,
       isActive: json['isActive'] as bool? ?? true,
-      filedId: json['filedId'] as String? ?? '',
+      filedId: 1,
       expireDate: json['expireDate'] != null ? DateTime.parse(json['expireDate'] as String) : null,
     );
   }
@@ -55,6 +55,22 @@ class DiscountCodeModel {
       'filedId': filedId,
       'expireDate': expireDate?.toIso8601String(),
     };
+  }
+
+  DiscountCodeModel copyWith({
+    String? code,
+    int? discountPercentage,
+    bool? isActive,
+    int? filedId,
+    DateTime? expireDate,
+  }) {
+    return DiscountCodeModel(
+      code: code ?? this.code,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
+      isActive: isActive ?? this.isActive,
+      filedId: filedId ?? this.filedId,
+      expireDate: expireDate ?? this.expireDate,
+    );
   }
 }
 

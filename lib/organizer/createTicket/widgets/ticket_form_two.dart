@@ -38,7 +38,8 @@ class TicketFormTwo extends StatelessWidget {
   final bool isExpanded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
+    // print(createEventModel.discountCodes.isEmpty);
     return CustomForm(
       builder: (context, formKey) {
         return Column(
@@ -48,7 +49,7 @@ class TicketFormTwo extends StatelessWidget {
               children: [
                 _buildCheckBox(
                   isReadOnly: isReadOnly,
-                  value: createEventModel.isFreeEvent,
+                  value: cubit.state.createEventModel.isFreeEvent,
                   onChanged: (value) {
                     cubit.updateField(
                       cubit.state.createEventModel.copyWith(isFreeEvent: value ?? false),
@@ -75,7 +76,7 @@ class TicketFormTwo extends StatelessWidget {
               onSave: (value) {
                 cubit.updateField(
                   cubit.state.createEventModel.copyWith(
-                    ticketSaleStartDate: DateTime.tryParse(value),
+                    ticketSaleStartDate: value,
                   ),
                 );
               },
@@ -92,7 +93,7 @@ class TicketFormTwo extends StatelessWidget {
             ),
             _enablerBuilder(
               label: 'Offer Pre-Sale',
-              onChange: (value) {
+              onChange: (value) { 
                 cubit.updateField(cubit.state.createEventModel.copyWith(offerPreSale: value));
               },
               initalValue: createEventModel.offerPreSale,
@@ -109,7 +110,7 @@ class TicketFormTwo extends StatelessWidget {
                   !cubit.state.createEventModel.offerPreSale,
               onSave: (value) {
                 cubit.updateField(
-                  cubit.state.createEventModel.copyWith(preSaleStartDate: DateTime.tryParse(value)),
+                  cubit.state.createEventModel.copyWith(preSaleStartDate: value),
                 );
               },
               backgroundColor: AppColors.backgroundWhite,
@@ -125,7 +126,7 @@ class TicketFormTwo extends StatelessWidget {
                   !cubit.state.createEventModel.offerPreSale,
               onSave: (value) {
                 cubit.updateField(
-                  cubit.state.createEventModel.copyWith(preSaleEndDate: DateTime.tryParse(value)),
+                  cubit.state.createEventModel.copyWith(preSaleEndDate: value),
                 );
               },
               backgroundColor: AppColors.backgroundWhite,
@@ -138,7 +139,7 @@ class TicketFormTwo extends StatelessWidget {
                   cubit.state.createEventModel.copyWith(offerDiscountByCode: value),
                 );
               },
-              initalValue: createEventModel.offerDiscountByCode,
+              initalValue: createEventModel.discountCodes.isNotEmpty,
             ),
             CommonText(
               text: 'Max 3 unique Promo Codes; specify a % Discount for each.',
@@ -156,11 +157,10 @@ class TicketFormTwo extends StatelessWidget {
                   ? createEventModel.discountCodes[0]
                   : null,
               onSaved: (code, discount, expire) {
-                
                 cubit.updatePromoCode(
                   code: code,
                   discountPercentage: discount,
-                  filedId: '1',
+                  filedId: 1,
                   expireDate: expire,
                 );
               },
@@ -176,7 +176,7 @@ class TicketFormTwo extends StatelessWidget {
                 cubit.updatePromoCode(
                   code: code,
                   discountPercentage: discount,
-                  filedId: '2',
+                  filedId: 2,
                   expireDate: expire,
                 );
               },
@@ -192,7 +192,7 @@ class TicketFormTwo extends StatelessWidget {
                 cubit.updatePromoCode(
                   code: code,
                   discountPercentage: discount,
-                  filedId: '3',
+                  filedId: 3,
                   expireDate: expire,
                 );
               },
@@ -302,6 +302,7 @@ class TicketFormTwo extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
       value: value ?? cubit.state.createEventModel.isFreeEvent,
       onChanged: (value) {
+        print(value);
         if (isReadOnly) return;
         onChanged(value);
       },

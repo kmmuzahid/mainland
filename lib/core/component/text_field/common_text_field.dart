@@ -133,6 +133,16 @@ class _CommonTextFieldState extends State<CommonTextField> {
     widget.onSaved!(value?.trim() ?? '', _controller);
   }
 
+  String _cleanText(String text) {
+    if (text.trim().isEmpty) return text;
+    // Remove HTML tags
+    String cleaned = text.replaceAll(RegExp(r'<[^>]*>'), '');
+    // Replace multiple spaces with a single space
+    cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
+    return cleaned;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -168,53 +178,65 @@ class _CommonTextFieldState extends State<CommonTextField> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: InputHelper.getKeyboardType(widget.validationType),
       textInputAction: widget.textInputAction,
-      onSaved: _onSave,
+      onSaved: (v) {
+        _onSave(v?.trim() ?? '');
+      },
       maxLength: widget.maxLength,
       inputFormatters: [
         ...InputHelper.getInputFormatters(widget.validationType),
         if (widget.maxWords != null || widget.maxLength != null)
           TextInputFormatter.withFunction((oldValue, newValue) {
-            if (newValue.text.trim().isEmpty) return newValue;
+            // Clean the text before processing
+            final cleanedText = _cleanText(newValue.text);
 
             if (widget.maxLength != null) {
-              final int length = newValue.text.length;
+              final int length = cleanedText.length;
               if (length <= widget.maxLength!) {
                 setState(() {
-                  lengthCount = newValue.text.length;
+                  lengthCount = length;
                 });
-                return newValue;
+                // Return the cleaned text
+                return TextEditingValue(
+                  text: cleanedText,
+                  selection: TextSelection.collapsed(offset: cleanedText.length),
+                );
               }
               return oldValue;
             }
 
             // Count words by splitting on whitespace and filtering out empty strings
-            final words = newValue.text.trim().split(' ').where((word) => word.isNotEmpty).length;
+            final words = cleanedText.split(' ').where((word) => word.isNotEmpty).length;
 
             // Allow the change if word count is within limit or if text is being deleted
             if (words <= widget.maxWords! || newValue.text.length < oldValue.text.length) {
               setState(() {
                 wordCount = words;
               });
-              return newValue;
+              // Return the cleaned text
+              return TextEditingValue(
+                text: cleanedText,
+                selection: TextSelection.collapsed(offset: cleanedText.length),
+              );
             }
-
-            // Otherwise, prevent the change
             return oldValue;
           }),
       ],
-      onFieldSubmitted: _onSave,
+      onFieldSubmitted: (v) {
+        _onSave(v.trim());
+      },
       onTap: widget.onTap,
       validator:
           widget.validation ??
           (value) {
+            final newValue = _cleanText(value?.trim() ?? '');
             String? error = InputHelper.validate(
               widget.validationType,
-              value,
+              newValue,
               originalPassword: widget.originalPassword?.call(),
             );
           
             // Check word count if maxWords is set
-            if (widget.maxWords != null && value != null && value.trim().isNotEmpty) {
+            if (widget.maxWords != null && newValue.trim().isNotEmpty) {
               if (wordCount - 1 > widget.maxWords!) {
                 error = 'Maximum ${widget.maxWords} words allowed';
               }

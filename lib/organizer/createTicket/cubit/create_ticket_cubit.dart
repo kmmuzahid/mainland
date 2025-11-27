@@ -1,5 +1,6 @@
 // form_cubit.dart
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -69,32 +70,37 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     emit(state.copyWith(isLoading: false));
   }
 
-  void updatePromoCode({
+void updatePromoCode({
     required String code,
     required int discountPercentage,
-    required String filedId,
+    required int filedId,
     required DateTime? expireDate,
   }) {
-    //if state.createEventModel.discountCodes has filedId already
-    //then update that object
-    //else add new object
-    final List<DiscountCodeModel> discountCodes = List.from(state.createEventModel.discountCodes);
-    final index = discountCodes.indexWhere((element) => element.filedId == filedId);
-    if (index != -1) {
-      discountCodes[index] = DiscountCodeModel(
-        code: code,
-        discountPercentage: discountPercentage,
-        expireDate: expireDate,
-        filedId: filedId,
-      );
+    final currentDiscounts = List<DiscountCodeModel>.from(state.createEventModel.discountCodes);
+    final existingIndex = currentDiscounts.indexWhere((element) => element.filedId == filedId);
+
+    final updatedDiscount = existingIndex != -1
+        ? currentDiscounts[existingIndex].copyWith(
+            code: code,
+            discountPercentage: discountPercentage,
+            expireDate: expireDate,
+          )
+        : DiscountCodeModel(
+            code: code,
+            discountPercentage: discountPercentage,
+            filedId: filedId,
+            expireDate: expireDate,
+          );
+
+    if (existingIndex != -1) {
+      currentDiscounts[existingIndex] = updatedDiscount;
     } else {
-      discountCodes.add(
-        DiscountCodeModel(code: code, discountPercentage: discountPercentage, filedId: filedId),
-      );
+      currentDiscounts.add(updatedDiscount);
     }
+
     emit(
       state.copyWith(
-        createEventModel: state.createEventModel.copyWith(discountCodes: discountCodes),
+        createEventModel: state.createEventModel.copyWith(discountCodes: currentDiscounts),
       ),
     );
   }
@@ -116,6 +122,7 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     final result = await eventDetailsRepository.getDetails(id: id);
     if (result.isSuccess && result.data != null) {
       final data = repository.convertEventDetailsToCreateEventModel(result.data!);
+
       emit(state.copyWith(isDraftFetching: false, draftEventModel: data, createEventModel: data));
     } else {
       emit(state.copyWith(isDraftFetching: false));
@@ -165,13 +172,6 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
         createEventModel: state.createEventModel.copyWith(selectedSubcategories: list),
       ),
     );
-  }
-
-  // Submit form
-  Future<void> submitForm() async {
-    print('Form Data: ${state.createEventModel}');
-    // Add your submission logic here
-    // Example: await apiService.submitForm(state.createEventModel);
   }
 
   Future<void> updateTicket({

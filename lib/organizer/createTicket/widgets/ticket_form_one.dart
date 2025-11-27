@@ -158,7 +158,7 @@ class TicketFormOne extends StatelessWidget {
               isReadOnly: isReadOnly,
               onSave: (value) {
                 cubit.updateField(
-                  cubit.state.createEventModel.copyWith(eventDate: DateTime.tryParse(value)),
+                  cubit.state.createEventModel.copyWith(eventDate: value),
                 );
               },
               backgroundColor: AppColors.backgroundWhite,

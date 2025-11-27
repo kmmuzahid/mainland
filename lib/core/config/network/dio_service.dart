@@ -279,6 +279,7 @@ class DioService {
     int retryCount = 0,
     int maxRetry = 2,
     bool showMessage = false,
+    bool debug = false,
     bool isRetry = false, // Internal flag to track retry attempts
   }) async {
     // if (_debugMode) {
@@ -290,42 +291,21 @@ class DioService {
 
     final cancelToken = CancelToken(); // Use provided token or create new
 
-    try {
-      final requestOptions = await _buildRequestOptions(input);
-
-      dio.Response response;
-      // Use _dio.request for consistency in method calls
-      // The actual method (GET, POST, etc.) is set in requestOptions.options.method
-      response = await _dio.request(
-        requestOptions.path,
-        data: requestOptions.data,
-        queryParameters: requestOptions.queryParameters,
-        options: requestOptions.options,
+    if (debug) {
+      return await _requestBuilder(
+        input: input,
+        responseBuilder: responseBuilder,
         cancelToken: cancelToken,
-        onSendProgress: input.onSendProgress,
-        onReceiveProgress: input.onReceiveProgress,
+        showMessage: showMessage,
       );
+    }
 
-      if (kDebugMode) {
-        AppLogger.apiDebug(response.data.toString(), tag: input.endpoint);
-      }
-
-      final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
-
-      // Extract message from JSON response, fallback to statusMessage if not present
-      final message = response.data is Map && response.data['message'] != null
-          ? response.data['message'].toString()
-          : response.statusMessage;
-      if (showMessage && (response.statusCode == 200 || response.statusCode == 201)) {
-        showSnackBar(message ?? '', type: SnackBarType.success);
-      }
-
-      return ResponseState(
-        data: parsed,
-        message: message,
-        isSuccess: response.data['success'],
+    try {
+      return await _requestBuilder(
+        showMessage: showMessage,
+        input: input,
+        responseBuilder: responseBuilder,
         cancelToken: cancelToken,
-        statusCode: response.statusCode,
       );
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
@@ -436,6 +416,50 @@ class DioService {
         statusCode: 0,
       );
     }
+  }
+
+  Future<ResponseState<T?>> _requestBuilder<T>({
+    required RequestInput input,
+    required T? Function(dynamic data) responseBuilder,
+    required CancelToken cancelToken,
+    required bool showMessage,
+  }) async {
+    final requestOptions = await _buildRequestOptions(input);
+
+    dio.Response response;
+    // Use _dio.request for consistency in method calls
+    // The actual method (GET, POST, etc.) is set in requestOptions.options.method
+    response = await _dio.request(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: requestOptions.options,
+      cancelToken: cancelToken,
+      onSendProgress: input.onSendProgress,
+      onReceiveProgress: input.onReceiveProgress,
+    );
+
+    if (kDebugMode) {
+      AppLogger.apiDebug(response.data.toString(), tag: input.endpoint);
+    }
+
+    final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
+
+    // Extract message from JSON response, fallback to statusMessage if not present
+    final message = response.data is Map && response.data['message'] != null
+        ? response.data['message'].toString()
+        : response.statusMessage;
+    if (showMessage && (response.statusCode == 200 || response.statusCode == 201)) {
+      showSnackBar(message ?? '', type: SnackBarType.success);
+    }
+
+    return ResponseState(
+      data: parsed,
+      message: message,
+      isSuccess: response.data['success'],
+      cancelToken: cancelToken,
+      statusCode: response.statusCode,
+    );
   }
 
   // Refactored refresh logic to be called directly by the interceptor

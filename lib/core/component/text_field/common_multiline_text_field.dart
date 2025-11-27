@@ -107,6 +107,16 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
     });
   }
 
+  // Add this helper method to clean the text
+  String _cleanText(String text) {
+    if (text.trim().isEmpty) return text;
+    // Remove HTML tags
+    String cleaned = text.replaceAll(RegExp(r'<[^>]*>'), '');
+    // Replace multiple spaces with a single space
+    cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
+    return cleaned;
+  }
+
   @override
   void dispose() {
     try {
@@ -181,28 +191,40 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
               scrollPhysics: const BouncingScrollPhysics(),
               inputFormatters: [
                 ...InputHelper.getInputFormatters(widget.validationType),
-                if (widget.maxLength != null) LengthLimitingTextInputFormatter(widget.maxLength),
-                if (widget.maxWords != null)
+                if (widget.maxWords != null || widget.maxLength != null)
                   TextInputFormatter.withFunction((oldValue, newValue) {
-                    if (newValue.text.trim().isEmpty) return newValue;
+                    // Clean the text before processing
+                    final cleanedText = _cleanText(newValue.text);
+
+                    if (widget.maxLength != null) {
+                      final int length = cleanedText.length;
+                      if (length <= widget.maxLength!) {
+                        setState(() {
+                          lengthCount = length;
+                        });
+                        // Return the cleaned text
+                        return TextEditingValue(
+                          text: cleanedText,
+                          selection: TextSelection.collapsed(offset: cleanedText.length),
+                        );
+                      }
+                      return oldValue;
+                    }
 
                     // Count words by splitting on whitespace and filtering out empty strings
-                    final words = newValue.text
-                        .trim()
-                        .split(' ')
-                        .where((word) => word.isNotEmpty)
-                        .length;
+                    final words = cleanedText.split(' ').where((word) => word.isNotEmpty).length;
 
                     // Allow the change if word count is within limit or if text is being deleted
                     if (words <= widget.maxWords! || newValue.text.length < oldValue.text.length) {
                       setState(() {
                         wordCount = words;
-                        lengthCount = newValue.text.length;
                       });
-                      return newValue;
+                      // Return the cleaned text
+                      return TextEditingValue(
+                        text: cleanedText,
+                        selection: TextSelection.collapsed(offset: cleanedText.length),
+                      );
                     }
-
-                    // Otherwise, prevent the change
                     return oldValue;
                   }),
               ],
@@ -215,22 +237,27 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
               onChanged: widget.onChanged,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               textInputAction: widget.textInputAction,
-              onSaved: _onSave,
+              onSaved: (v) {
+                _onSave(v?.trim() ?? '');
+              },
               maxLength: widget.maxLength,
-              onFieldSubmitted: _onSave,
+              onFieldSubmitted: (v) {
+                _onSave(v.trim());
+              },
               onTap: widget.onTap,
               validator:
                   widget.validation ??
                   (value) {
+                    final newValue = _cleanText(value?.trim() ?? '');
                     String? error = InputHelper.validate(
                       widget.validationType,
-                      value,
+                      newValue,
                       originalPassword: widget.originalPassword?.call(),
                     );
 
                     // Check word count if maxWords is set
-                    if (widget.maxWords != null && value != null && value.trim().isNotEmpty) {
-                      final wordCount = value.trim().split(' ').length;
+                    if (widget.maxWords != null && newValue.isNotEmpty) {
+                      final wordCount = newValue.split(' ').length;
                       if (wordCount - 1 > widget.maxWords!) {
                         error = 'Maximum ${widget.maxWords} words allowed';
                       }

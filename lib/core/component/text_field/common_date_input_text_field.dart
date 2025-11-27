@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 
 class CommonDateInputTextField extends StatefulWidget {
   CommonDateInputTextField({
@@ -36,9 +37,9 @@ class CommonDateInputTextField extends StatefulWidget {
   final double paddingHorizontal;
   final double paddingVertical;
   final double borderRadius;
-  final Function(String date)? onSave;
+  final Function(DateTime? date)? onSave;
   final Widget? suffix;
-  final Function(String date)? onChanged;
+  final Function(DateTime? date)? onChanged;
   final String? Function(String? value)? validation;
   final Color? borderColor;
   final Color? backgroundColor;
@@ -104,7 +105,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
 
     if (picked != null) {
       _controller.text = '${picked.toLocal()}'.split(' ')[0];
-      widget.onChanged?.call(_controller.text);
+      widget.onChanged?.call(picked.toLocal());
     }
   }
 
@@ -116,12 +117,14 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
       paddingHorizontal: widget.paddingHorizontal,
       paddingVertical: widget.paddingVertical,
       borderRadius: widget.borderRadius,
-      onChanged: widget.onChanged,
+      onChanged: (value) {
+        widget.onChanged?.call(Utils.parseDate(value));
+      },
 
       hintText: widget.hints ?? 'YYYY-MM-DD',
       onSaved: (value, _) {
         if (widget.onSave == null) return;
-        widget.onSave!(value);
+        widget.onSave!(Utils.parseDate(value));
       },
       suffixIcon: GestureDetector(
         onTap: () {

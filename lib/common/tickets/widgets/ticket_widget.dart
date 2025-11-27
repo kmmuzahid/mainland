@@ -59,7 +59,8 @@ class TicketWidget extends StatelessWidget {
                     ),
                     if (ticketModel.eventDate != null)
                       _textBuilder(
-                        title: Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate!),
+                        title:
+                            '${Utils.formatDateToShortMonth(ticketModel.eventDate!)} ${ticketModel.startTime?.to12HourString()}',
                       ),
                     _textBuilder(
                       title: '${ticketModel.streetAddress}, ${ticketModel.streetAddress2}',
@@ -70,7 +71,7 @@ class TicketWidget extends StatelessWidget {
                         ticketModel.ticketSaleStart!.isAfter(DateTime.now()))
                       _textBuilder(
                         title:
-                            'Pre-Order available ${Utils.formatDateTimeWithSHortMonth(ticketModel.eventDate!)}',
+                            'Pre-Order available ${Utils.formatDateToShortMonth(ticketModel.eventDate!)}',
                         maxLine: 2,
                       ),
 
@@ -106,7 +107,7 @@ class TicketWidget extends StatelessWidget {
             onTap: () {
               appRouter.push(
                 EventDetailsRoute(
-                  eventId: '',
+                  eventId: ticketModel.id ?? '',
                   showEventActions: false,
                   isEventAvailable:
                       filter != TicketFilter.Closed &&

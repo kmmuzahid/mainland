@@ -6,14 +6,17 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/event/cubit/event_details_cubit.dart';
 import 'package:mainland/common/event/cubit/event_details_state.dart';
+import 'package:mainland/common/event/model/event_details_model.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/app_utils.dart';
+import 'package:mainland/core/utils/common_share.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -43,25 +46,31 @@ class EventDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showButton = showEventActions == false ? false : Utils.getRole() == Role.ATTENDEE;
-    final String title =
-        '''Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1''';
-    return Scaffold(
-      appBar: CommonAppBar(
-        actions: [
-          IconButton(
-            onPressed: appRouter.pop,
-            icon: Icon(Icons.ios_share_outlined, color: AppColors.primaryColor),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: BlocProvider(
-            create: (context) => EventDetailsCubit(),
-            child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
-              builder: (context, state) {
-                return Column(
+    return BlocProvider(
+      create: (context) => EventDetailsCubit()..fetch(eventId: eventId),
+      child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
+        builder: (context, state) {
+          return Scaffold(
+            appBar: CommonAppBar(
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    if (state.eventDetails?.eventName != null && state.eventDetails?.image != null)
+                      CommonShare.instance.shareContent(
+                        title: state.eventDetails!.eventName ?? '',
+                        imageUrl: state.eventDetails!.image!,
+                        deepLinkUrl:
+                            '${ApiEndPoint.instance.domain}/event/${state.eventDetails!.id}',
+                      );
+                  },
+                  icon: Icon(Icons.ios_share_outlined, color: AppColors.primaryColor),
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
                   children: [
                     if (state.showDetails)
                       SizedBox(
@@ -86,24 +95,26 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: AnimatedCrossFade(
-                          duration: const Duration(milliseconds: 300),
-                          sizeCurve: Curves.easeInToLinear,
-                          firstChild: _firstChild(title, context, showButton),
-                          secondChild: _scondChild(context, state, showButton),
-                          crossFadeState: state.showDetails
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                        ),
-                      ),
+                      child: state.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : SingleChildScrollView(
+                              child: AnimatedCrossFade(
+                                duration: const Duration(milliseconds: 300),
+                                sizeCurve: Curves.easeInToLinear,
+                                firstChild: _firstChild(state.eventDetails, context, showButton),
+                                secondChild: _scondChild(context, state, showButton),
+                                crossFadeState: state.showDetails
+                                    ? CrossFadeState.showSecond
+                                    : CrossFadeState.showFirst,
+                              ),
+                            ),
                     ),
                   ],
-                );
-              },
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
@@ -111,7 +122,12 @@ class EventDetailsScreen extends StatelessWidget {
   Widget _scondChild(BuildContext context, EventDetailsState state, bool showButton) {
     return Column(
       children: [
-        CommonText(text: details ?? state.details, isDescription: true, textAlign: TextAlign.left),
+        CommonText(
+          text: details ?? (state.eventDetails?.description ?? ''),
+          isDescription: true,
+          textAlign: TextAlign.left,
+          fontSize: 16,
+        ),
         10.height,
         if (showButton) Divider(color: AppColors.disable, thickness: 2),
         10.height,
@@ -124,7 +140,7 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-  Column _firstChild(String title, BuildContext context, bool showButton) {
+  Column _firstChild(EventDetailsModel? eventDetails, BuildContext context, bool showButton) {
     return Column(
       children: [
         AspectRatio(
@@ -133,34 +149,57 @@ class EventDetailsScreen extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: CommonImage(
-                  imageSrc: image ?? Assets.images.sampleItem.path,
+                  imageSrc: image ?? (eventDetails?.image ?? Assets.images.sampleItem.path),
                   enableGrayscale: !isEventAvailable,
                   borderRadius: 12,
                 ),
               ),
 
-              if (isEventAvailable)
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryText.withValues(alpha: isEventAvailable ? .5 : 1),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primaryText.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
+              ),
 
               Positioned(
                 left: 10.w,
                 top: 30.h,
-                width: Utils.deviceSize.width * .5,
-                child: CommonText(
-                  text: title,
-                  maxLines: 10,
-                  autoResize: false,
-                  textAlign: TextAlign.left,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20.16,
-                  textColor: AppColors.textWhite,
+                width: Utils.deviceSize.width * .7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _textBuilder(
+                      title: eventDetails?.eventName ?? '',
+                      maxLine: 7,
+                      preventScalling: true,
+                    ),
+                    if (eventDetails?.eventDate != null)
+                      _textBuilder(
+                        title:
+                            '${Utils.formatDateToShortMonth(eventDetails!.eventDate!)} ${eventDetails.startTime?.to12HourString()}',
+                      ),
+                    _textBuilder(
+                      title: '${eventDetails?.streetAddress}',
+                      maxLine: 2,
+                      preventScalling: true,
+                    ),
+                    if (eventDetails?.streetAddress2 != null &&
+                        eventDetails?.streetAddress?.isNotEmpty == true)
+                      _textBuilder(
+                        title: '${eventDetails?.streetAddress2}',
+                        maxLine: 2,
+                        preventScalling: true,
+                      ),
+                    if (eventDetails?.ticketSaleStart != null &&
+                        eventDetails!.ticketSaleStart!.isAfter(DateTime.now()) &&
+                        eventDetails.eventDate != null)
+                      _textBuilder(
+                        title:
+                            'Pre-Order available ${Utils.formatDateToShortMonth(eventDetails.eventDate!)}',
+                        maxLine: 2,
+                      ),
+                  ],
                 ),
               ),
               if (isEventUnderReview)
@@ -198,6 +237,21 @@ class EventDetailsScreen extends StatelessWidget {
         ),
         Utils.divider(),
       ],
+    );
+  }
+
+  Widget _textBuilder({required String title, int maxLine = 1, bool preventScalling = false}) {
+    return CommonText(
+      left: 10,
+      right: 10,
+      text: title,
+      preventScaling: preventScalling,
+      autoResize: false,
+      overflow: TextOverflow.fade,
+      maxLines: maxLine,
+      fontSize: 20.5,
+      textAlign: TextAlign.left,
+      textColor: AppColors.textWhite,
     );
   }
 

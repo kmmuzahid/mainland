@@ -8,13 +8,13 @@ import 'package:mainland/core/config/network/response_state.dart';
 
 class EventDetailsRepository {
   final DioService _dioService = getIt();
-  Future<ResponseState<EventDetails?>> getDetails({required String id}) async {
-    return _dioService.request<EventDetails>(
+  Future<ResponseState<EventDetailsModel?>> getDetails({required String id}) async {
+    return _dioService.request<EventDetailsModel>(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.eventDetails(id: id),
         method: RequestMethod.GET,
-      ),
-      responseBuilder: (data) => EventDetails.fromJson(data),
+      ),  
+      responseBuilder: (data) => EventDetailsModel.fromJson(data),
     );
   }
 }

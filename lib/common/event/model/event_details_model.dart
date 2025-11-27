@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
+import 'package:mainland/user/preferense/model/sub_category_model.dart';
 
-class EventDetails {
+class EventDetailsModel {
   final String? id;
   final String? userId;
   final String? eventName;
@@ -36,7 +37,7 @@ class EventDetails {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  EventDetails({
+  EventDetailsModel({
     this.id,
     this.userId,
     this.eventName,
@@ -70,8 +71,8 @@ class EventDetails {
     this.updatedAt,
   });
 
-  factory EventDetails.fromJson(Map<String, dynamic> json) {
-    return EventDetails(
+  factory EventDetailsModel.fromJson(Map<String, dynamic> json) {
+    return EventDetailsModel(
       id: json['_id'],
       userId: json['userId'],
       eventName: json['eventName'],
@@ -110,20 +111,34 @@ class EventDetails {
 }
 
 class Category {
-  final String? categoryId;
-  final List<String>? subCategory;
-  final String? id;
 
-  Category({this.categoryId, this.subCategory, this.id});
+  Category({this.categoryId, this.subCategory});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      categoryId: json['categoryId'],
-      subCategory: List<String?>.from(json['subCategory']).cast<String>(),
-      id: json['_id'],
+      categoryId: json['categoryId'] != null ? CategoryIdModel.fromJson(json['categoryId']) : null,
+      subCategory: (json['subCategory'] as List?)
+          ?.map((e) => SubCategoryModel.fromJson(e))
+          .toList(),
     );
   }
+  final CategoryIdModel? categoryId;
+  final List<SubCategoryModel>? subCategory;
 }
+
+class CategoryIdModel {
+  CategoryIdModel({this.id, this.title});
+
+  factory CategoryIdModel.fromJson(Map<String, dynamic> json) {
+    return CategoryIdModel(
+      id: json['_id'],
+      title: json['title'],
+    );
+  }
+  final String? id;
+  final String? title;
+}
+
 
 class Ticket {
   final TicketName? type;

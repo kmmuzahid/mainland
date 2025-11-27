@@ -23,17 +23,24 @@ class CreateEventScreen extends StatelessWidget {
       create: (context) {
         final cubit = CreateTicketCubit();
         if (draftId != null) {
-          cubit.fetchDraft(id: draftId!);
+          //needed it to smooth transitions from the parent screen.
+          Future.delayed(const Duration(milliseconds: 300)).then((v) {
+            cubit.fetchDraft(id: draftId!);
+          });
         }
         return cubit;
       },
       child: BlocBuilder<CreateTicketCubit, CreateTicketState>(
-        builder: (context, state) {
+        builder: (context, state) { 
+          if (state.isDraftFetching) {
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+
           final bool isBackDisabled =
               (state.currentPage == 1 || (state.currentPage == 2 && !state.isExpandedView));
-         
+
           return Scaffold(
-            appBar: CommonAppBar( 
+            appBar: CommonAppBar(
               disableBack: isBackDisabled,
               onBackPress: () {
                 final cubit = context.read<CreateTicketCubit>();
@@ -42,48 +49,62 @@ class CreateEventScreen extends StatelessWidget {
                 }
               },
             ),
-            body: state.isDraftFetching
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
+            body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final firstForm = TicketFormOne(
-                    createEventModel: state.draftEventModel,
-                    isReadOnly: state.isReadOnly,
-                    isExpanded: state.isExpandedView,
-                    cubit: context.read(),
-                  );
-                  final secondForm = TicketFormTwo(
-                    createEventModel: state.draftEventModel,
-                    isReadOnly: state.isReadOnly,
-                    isExpanded: state.isExpandedView,
-                    cubit: context.read(),
-                  );
-                  final thirdForm = TicketFormThree(
-                    createEventModel: state.draftEventModel,
-                    isReadOnly: state.isReadOnly,
-                    isExpanded: state.isExpandedView,
-                    cubit: context.read(),
-                  );
+                  return FutureBuilder(
+                    future: Future.wait([
+                      Future.microtask(
+                        () => TicketFormOne(
+                          createEventModel: state.draftEventModel,
+                          isReadOnly: state.isReadOnly,
+                          isExpanded: state.isExpandedView,
+                          cubit: context.read(),
+                        ),
+                      ),
+                      Future.microtask(
+                        () => TicketFormTwo(
+                          createEventModel: state.draftEventModel,
+                          isReadOnly: state.isReadOnly,
+                          isExpanded: state.isExpandedView,
+                          cubit: context.read(),
+                        ),
+                      ),
+                      Future.microtask(
+                        () => TicketFormThree(
+                          createEventModel: state.draftEventModel,
+                          isReadOnly: state.isReadOnly,
+                          isExpanded: state.isExpandedView,
+                          cubit: context.read(),
+                        ),
+                      ),
+                    ]),
+                    builder: (context, AsyncSnapshot<List<Widget>> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Offstage(
-                          offstage: !(state.currentPage == 0 || state.isExpandedView),
-                          child: firstForm,
+                      final forms = snapshot.data!;
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Offstage(
+                              offstage: !(state.currentPage == 0 || state.isExpandedView),
+                              child: forms[0],
+                            ),
+                            Offstage(
+                              offstage: !(state.currentPage == 1 || state.isExpandedView),
+                              child: forms[1],
+                            ),
+                            Offstage(
+                              offstage: !(state.currentPage == 2 || state.isExpandedView),
+                              child: forms[2],
+                            ),
+                          ],
                         ),
-                        Offstage(
-                          offstage: !(state.currentPage == 1 || state.isExpandedView),
-                          child: secondForm,
-                        ),
-                        Offstage(
-                          offstage: !(state.currentPage == 2 || state.isExpandedView),
-                          child: thirdForm,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               ),

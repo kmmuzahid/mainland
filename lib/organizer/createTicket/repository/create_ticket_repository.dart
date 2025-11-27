@@ -86,8 +86,12 @@ class CreateTicketRepository {
         };
       }).toList(),
       'ticketSaleStart': createEvent.ticketSaleStartDate?.millisecondsSinceEpoch,
-      'preSaleStart': createEvent.preSaleStartDate?.millisecondsSinceEpoch,
-      'preSaleEnd': createEvent.preSaleEndDate?.millisecondsSinceEpoch,
+      'preSaleStart': createEvent.offerPreSale
+          ? createEvent.preSaleStartDate?.millisecondsSinceEpoch
+          : null,
+      'preSaleEnd': createEvent.offerPreSale
+          ? createEvent.preSaleEndDate?.millisecondsSinceEpoch
+          : null,
 
       'discountCodes': createEvent.isFreeEvent
           ? []
@@ -109,16 +113,22 @@ class CreateTicketRepository {
     };
   }
 
-  CreateEventModel convertEventDetailsToCreateEventModel(EventDetails event) {
-    // Extract category IDs and first Category model and subcategories for CreateEventModel constructor
-    List<String> categoryIds = event.category?.map((cat) => cat.categoryId ?? '').toList() ?? [];
+  CreateEventModel convertEventDetailsToCreateEventModel(EventDetailsModel event) {
+    final List<String> categoryIds =
+        event.category?.map((cat) => cat.categoryId?.id ?? '').toList() ?? [];
 
-    // For selectedCategory and selectedSubcategories conversion, you need to adapt your CategoryModel and SubCategoryModel classes
-    // Here we set null or empty as placeholders
-    CategoryModel? selectedCategory; // Should convert event.category[0] to CategoryModel if exists
-    List<SubCategoryModel> selectedSubcategories =
-        []; // Convert event.category[0].subCategory to List<SubCategoryModel>
-    AppLogger.debug('event id= ${event.id}', tag: 'CreateTicketRepository');
+    final CategoryModel? selectedCategory = event.category?.first.categoryId != null
+        ? CategoryModel(
+            id: event.category?.first.categoryId?.id ?? '',
+            title: event.category?.first.categoryId?.title ?? '',
+            coverImage: '',
+          )
+        : null;
+    final List<SubCategoryModel> selectedSubcategories = [];
+    event.category?.forEach((e) {
+      selectedSubcategories.addAll(e.subCategory ?? []);
+    });
+    int index = 0;
 
     return CreateEventModel(
       image: event.image,
@@ -151,9 +161,9 @@ class CreateTicketRepository {
           event.discountCodes?.map((code) {
             return DiscountCodeModel(
               code: code.code ?? '',
+              filedId: ++index,
               discountPercentage: code.percentage ?? 0,
               expireDate: code.expireDate,
-              filedId: code.id ?? '',
               isActive: code.expireDate?.isAfter(DateTime.now()) ?? true,
             );
           }).toList() ??

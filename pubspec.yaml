@@ -59,6 +59,8 @@ dependencies:
   firebase_messaging: ^16.0.2
   flutter_html:
   # quill_html_editor_v3: ^2.2.13
+#SHARE
+  share_plus:    
 
 dev_dependencies:
   flutter_test:

@@ -21,17 +21,16 @@ class SubCategoryModel {
   factory SubCategoryModel.fromMap(Map<String, dynamic> map) {
     return SubCategoryModel(
       id: map['_id'] as String,
-      subcategoryTitle: map['subcategoryTitle'] as String,
+      subcategoryTitle: map['title'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SubCategoryModel.fromJson(String source) =>
-      SubCategoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SubCategoryModel.fromJson(dynamic source) => SubCategoryModel.fromMap(source);
 
   @override
-  String toString() => 'SubCategoryModel(id: $id, subcategoryTitle: $subcategoryTitle)';
+  String toString() => 'SubCategoryModel(id: $id, title: $subcategoryTitle)';
 
   @override
   bool operator ==(covariant SubCategoryModel other) {

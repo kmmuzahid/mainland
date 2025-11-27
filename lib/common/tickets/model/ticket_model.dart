@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:mainland/core/utils/app_utils.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 
 enum TicketFilter { Live, Available, Sold, Expired, Upcoming, Used, UnderReview, Draft, Closed }
 
@@ -12,6 +14,7 @@ class TicketModel {
   final DateTime? ticketSaleStart;
   final DateTime? preSaleStart;
   final bool? isFreeEvent;
+  final TimeOfDay? startTime;
 
   TicketModel({
     this.id,
@@ -22,15 +25,17 @@ class TicketModel {
     this.streetAddress2,
     this.ticketSaleStart,
     this.preSaleStart,
+    this.startTime,
     this.isFreeEvent,
   });
 
   // From JSON
-  factory TicketModel.fromJson(Map<String, dynamic> json) { 
+  factory TicketModel.fromJson(Map<String, dynamic> json) {
     return TicketModel(
       id: json['_id'] ?? '',
       eventName: json['eventName'] ?? '',
       image: json['image'] ?? '',
+      startTime: json['startTime'] != null ? (json['startTime'] as String).toTimeOfDay12() : null,
       eventDate: Utils.parseDate(json['eventDate']),
       streetAddress: json['streetAddress'] ?? '',
       streetAddress2: json['streetAddress2'] ?? '',
@@ -47,6 +52,7 @@ class TicketModel {
       'eventName': eventName,
       'image': image,
       'eventDate': eventDate?.toIso8601String(),
+      'startTime': startTime?.to12HourString(),
       'streetAddress': streetAddress,
       'streetAddress2': streetAddress2,
       'ticketSaleStart': ticketSaleStart?.toIso8601String(),

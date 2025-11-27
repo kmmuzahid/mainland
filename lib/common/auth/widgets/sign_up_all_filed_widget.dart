@@ -250,7 +250,7 @@ class SignUpAllField extends StatelessWidget {
       borderColor: AppColors.disable,
       backgroundColor: AppColors.disable,
       onChanged: (date) {
-        final finalDate = DateTime.tryParse(date) ?? DateTime.now();
+        final finalDate = date ?? DateTime.now();
         AppLogger.debug(finalDate.toString());
         cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: finalDate));
         cubit.calculateAge(finalDate);
@@ -298,7 +298,7 @@ class SignUpAllField extends StatelessWidget {
       ),
       onSave: (date) {
         final cubit = context.read<AuthCubit>();
-        final dateTime = DateTime.tryParse(date);
+        final dateTime = date;
         if (dateTime != null) {
           cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: dateTime));
           cubit.calculateAge(dateTime);
