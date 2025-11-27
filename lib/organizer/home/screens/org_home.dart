@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/home/widgets/home_top_widget.dart';
@@ -13,6 +14,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/organizer/home/cubit/org_home_cubit.dart';
+import 'package:mainland/organizer/home/cubit/org_home_state.dart';
 
 class OrgHome extends StatelessWidget {
   const OrgHome({super.key});
@@ -21,29 +24,47 @@ class OrgHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 10.h, left: 20.w, right: 20.w),
-      child: SmartStaggeredLoader(
-        onRefresh: () {},
-        itemCount: 20,
-        appbar: PreferredSize(preferredSize: Size(double.infinity, 240.h), child: _topChild()),
-        onColapsAppbar: Column(
-          children: [
-            Divider(color: AppColors.primaryColor, thickness: 1.h, height: 2.h),
-            CommonText(
-              top: 10,
-              bottom: 10,
-              text: AppString.upcomingEvents,
-              style: AppTextStyles.titleLarge,
-            ).start,
-          ],
-        ),
-        crossAxisSpacing: 10,
-        aspectRatio: 0.6434,
-        mainAxisSpacing: 10,
-        isSeperated: true,
-        itemBuilder: (context, index) => EventWidget(
-          image: Assets.images.sampleItem.path,
-          onTap: () {
-            appRouter.push(EventDetailsRoute(eventId: '1'));
+      child: BlocProvider<OrgHomeCubit>(
+        create: (context) => OrgHomeCubit()..fetch(),
+        child: BlocBuilder<OrgHomeCubit, OrgHomeState>(
+          builder: (context, state) {
+            final cubit = context.read<OrgHomeCubit>();
+            return SmartStaggeredLoader(
+              onRefresh: () {
+                cubit.fetch(isRefresh: true);
+              },
+              onLoadMore: cubit.fetch,
+              isLoading: state.isLoading,
+              itemCount: state.events.length,
+              appbar: PreferredSize(
+                preferredSize: Size(double.infinity, 240.h),
+                child: _topChild(),
+              ),
+              onColapsAppbar: Column(
+                children: [
+                  Divider(color: AppColors.primaryColor, thickness: 1.h, height: 2.h),
+                  CommonText(
+                    top: 10,
+                    bottom: 10,
+                    text: AppString.upcomingEvents,
+                    style: AppTextStyles.titleLarge,
+                  ).start,
+                ],
+              ),
+              crossAxisSpacing: 10,
+              aspectRatio: 0.6434,
+              mainAxisSpacing: 10,
+              isSeperated: true,
+              itemBuilder: (context, index) {
+                final event = state.events[index];
+                return EventWidget(
+                  image: event.image ?? '',
+                  onTap: () {
+                    appRouter.push(EventDetailsRoute(eventId: event.id ?? ''));
+                  },
+                );
+              },
+            );
           },
         ),
       ),

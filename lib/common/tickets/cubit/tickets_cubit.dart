@@ -20,7 +20,7 @@ class TicketsCubit extends SafeCubit<TicketsState> {
 
   void fetch({bool isRefresh = false}) async {
     if (state.selectedFilter == null || state.isLoading) return;
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : null));
     final role = Utils.getRole();
     if (role == Role.ORGANIZER) {
       final result = await _repository.getOranizerEvents(
