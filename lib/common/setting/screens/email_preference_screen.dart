@@ -27,7 +27,10 @@ class EmailPreferenceScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<EmailPreferenceCubit>(
-          create: (context) => EmailPreferenceCubit(context.read<AuthCubit>()),
+          create: (context) {
+            final AuthCubit authCubit = context.read<AuthCubit>();
+            return EmailPreferenceCubit(authCubit)..init();
+          },
           child: BlocBuilder<EmailPreferenceCubit, EmailPreferenceState>(
             builder: (context, state) {
               final cubit = context.read<EmailPreferenceCubit>();
@@ -91,7 +94,11 @@ class EmailPreferenceScreen extends StatelessWidget {
                     },
                   ),
                   20.height,
-                  CommonButton(titleText: AppString.save, onTap: cubit.updateEmailPreference),
+                  CommonButton(
+                    isLoading: state.isSaving,
+                    titleText: AppString.save,
+                    onTap: cubit.updateEmailPreference,
+                  ),
                 ],
               );
             },

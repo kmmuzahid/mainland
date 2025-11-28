@@ -163,14 +163,14 @@ class AuthRepositoryImpl implements AuthRepository {
         endpoint: ApiEndPoint.instance.profile,
         method: RequestMethod.PATCH,
         files: {if (image != null) 'image': image},
-        formFields: profileModel == null
+        jsonBody: profileModel == null
             ? {}
             : {
                 'name': profileModel.name,
                 'personalInfo': {
                   'phone': profileModel.personalInfo.phone,
                   if (profileModel.personalInfo.dateOfBirth != null)
-                    'dateOfBirth': profileModel.personalInfo.dateOfBirth?.microsecondsSinceEpoch,
+                    'dateOfBirth': profileModel.personalInfo.dateOfBirth?.millisecondsSinceEpoch,
                 },
                 'address': {
                   // 'country': 'United States',

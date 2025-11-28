@@ -6,10 +6,9 @@ import 'email_preference_state.dart';
 
 class EmailPreferenceCubit extends SafeCubit<EmailPreferenceState> {
   EmailPreferenceCubit(this.authCubit) : super(const EmailPreferenceState());
-  late AuthCubit authCubit;
+  final AuthCubit authCubit;
 
-  Future<void> init({required AuthCubit authCubit}) async {
-    authCubit = authCubit;
+  Future<void> init() async {
     emit(
       state.copyWith(notificationPreference: authCubit.state.profileModel?.notificationPreference),
     );
@@ -22,7 +21,7 @@ class EmailPreferenceCubit extends SafeCubit<EmailPreferenceState> {
   Future<void> updateEmailPreference() async {
     final ProfileModel? profile = authCubit.state.profileModel;
     if (profile == null) return;
-    emit(state.copyWith(isSaving: true));
+    emit(state.copyWith(isSaving: true)); 
     await authCubit.updateProfile(
       profileModel: profile.copyWith(notificationPreference: state.notificationPreference),
     );

@@ -47,7 +47,7 @@ class DioService {
   Future<bool> _isNetworkAvailable() async {
     try {
       final response = await http
-          .get(Uri.parse("https://clients3.google.com/generate_204"))
+          .get(Uri.parse('https://clients3.google.com/generate_204'))
           .timeout(const Duration(seconds: 3));
 
       return response.statusCode == 204;
@@ -528,26 +528,27 @@ class DioService {
     dynamic body;
     String contentType = 'application/json'; // Default content type
 
-    if (input.files != null &&
-        input.files!.isNotEmpty &&
-        (input.formFields != null || input.jsonBody != null)) {
+    if ((input.files != null && input.files!.isNotEmpty || input.formFields != null) ||
+        ((input.files != null && input.files!.isNotEmpty) && input.jsonBody != null)) {
       final formData = dio.FormData();
 
       // 1. Add regular form fields (from formFields map)
       if (input.formFields != null) {
-        formData.fields.addAll(
-          input.formFields!.entries.map((e) => MapEntry(e.key, e.value.toString())),
-        );
-      }
+        formData.fields.addAll(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)));
+      } 
 
       // 2. Add JSON body as a field (e.g. as "data" or "payload")
       if (input.jsonBody != null) {
-        formData.fields.add(
+        formData.files.add(
           MapEntry(
             'data',
-            jsonEncode(input.jsonBody),
-          ), // or use any key like 'payload', 'body', etc.
+            dio.MultipartFile.fromString(
+              jsonEncode(input.jsonBody),
+              contentType: dio.DioMediaType('application', 'json'),
+            ),
+          ),
         );
+
       }
 
       // 3. Add files (correctly with await!)

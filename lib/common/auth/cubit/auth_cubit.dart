@@ -33,7 +33,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Role _role = Role.ATTENDEE;
 
   Future<void> updateProfile({ProfileModel? profileModel, XFile? image}) async {
-    if (profileModel == null && image == null) return;
+    if (profileModel == null && image == null) return; 
     final response = await _repository.updateUser(profileModel: profileModel, image: image);
     emit(state.copyWith(profileModel: response.data));
   }
