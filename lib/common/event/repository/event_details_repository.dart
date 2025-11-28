@@ -14,6 +14,7 @@ class EventDetailsRepository {
         endpoint: ApiEndPoint.instance.eventDetails(id: id),
         method: RequestMethod.GET,
       ),  
+      debug: true,
       responseBuilder: (data) => EventDetailsModel.fromJson(data),
     );
   }

@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl_phone_field_v2/countries.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
@@ -61,7 +62,11 @@ class SettingScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               24.height,
-                              CommonImage(imageSrc: Assets.images.user.path, size: 63),
+                              CommonImage(
+                                imageSrc:
+                                    authCubit.state.profileModel?.image ?? Assets.images.user.path,
+                                size: 63,
+                              ),
                               22.height,
                               CommonButton(
                                 buttonWidth: 150.w,
@@ -88,7 +93,10 @@ class SettingScreen extends StatelessWidget {
                           context: context,
                         );
                       },
-                      child: CommonImage(imageSrc: Assets.images.user.path, size: 36).start,
+                      child: CommonImage(
+                        imageSrc: authCubit.state.profileModel?.image ?? Assets.images.user.path,
+                        size: 36,
+                      ).start,
                     ),
                     CommonText(
                       top: 8,
@@ -196,7 +204,8 @@ class SettingScreen extends StatelessWidget {
                     _menuItems(
                       context: context,
                       title: AppString.locations,
-                      subTitle: 'Lagos, Nigeria',
+                      subTitle:
+                          '${authCubit.state.profileModel?.address.city ?? ''}, ${authCubit.state.profileModel?.address.street ?? ''}, ${authCubit.state.profileModel?.address.country ?? ''}',
                       onTap: () {
                         // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
                         appRouter.push(const LocationRoute());

@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
@@ -19,7 +18,6 @@ import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
-import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 
@@ -33,6 +31,12 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _loginInfo = 'login_info_key';
   final String _profileInfo = 'profile_info_key';
   Role _role = Role.ATTENDEE;
+
+  Future<void> updateProfile({ProfileModel? profileModel, XFile? image}) async {
+    if (profileModel == null && image == null) return;
+    final response = await _repository.updateUser(profileModel: profileModel, image: image);
+    emit(state.copyWith(profileModel: response.data));
+  }
 
   void switchRole() async {
     _role = state.userLoginInfoModel.role == Role.ATTENDEE ? Role.ORGANIZER : Role.ATTENDEE;

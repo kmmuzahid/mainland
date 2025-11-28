@@ -1,10 +1,7 @@
 class ApiEndPoint {
   ApiEndPoint._();
   static final ApiEndPoint instance = ApiEndPoint._();
-
-  // final String domain = 'http://10.10.7.102:4001';
-  // final String baseUrl = 'http://10.10.7.102:4001/api/v1';
-  // final String soketUrl = 'http://10.10.7.102:4001/api/v1';
+ 
   final String domain = 'http://10.10.7.102:4000';
   final String baseUrl = 'http://10.10.7.102:4000/api/v1';
   final String soketUrl = 'http://10.10.7.102:4000/api/v1';

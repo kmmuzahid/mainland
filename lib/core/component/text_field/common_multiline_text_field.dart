@@ -204,8 +204,8 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
                         });
                         // Return the cleaned text
                         return TextEditingValue(
-                          text: cleanedText,
-                          selection: TextSelection.collapsed(offset: cleanedText.length),
+                          text: newValue.text,
+                          selection: TextSelection.collapsed(offset: newValue.text.length),
                         );
                       }
                       return oldValue;
@@ -221,8 +221,8 @@ class _CommonMultilineTextFieldState extends State<CommonMultilineTextField> {
                       });
                       // Return the cleaned text
                       return TextEditingValue(
-                        text: cleanedText,
-                        selection: TextSelection.collapsed(offset: cleanedText.length),
+                        text: newValue.text,
+                        selection: TextSelection.collapsed(offset: newValue.text.length),
                       );
                     }
                     return oldValue;

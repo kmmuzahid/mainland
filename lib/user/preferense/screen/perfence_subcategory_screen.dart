@@ -103,7 +103,7 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: CommonText(text: subCategory.subcategoryTitle, style: AppTextStyles.titleMedium),
+            child: CommonText(text: subCategory.title, style: AppTextStyles.titleMedium),
           ),
         );
       },

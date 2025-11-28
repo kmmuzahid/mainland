@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/mainlad/common_switch.dart';
@@ -9,7 +12,9 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../cubit/email_preference_state.dart';
+import '../cubit/email_prefernce_cubit.dart';
 
 @RoutePage()
 class EmailPreferenceScreen extends StatelessWidget {
@@ -21,49 +26,76 @@ class EmailPreferenceScreen extends StatelessWidget {
       appBar: const CommonAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            CommonText(
-              text: AppString.emailPreferences,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-            ).start,
-            10.height,
-            CommonText(
-              text: '${AppString.receiveEmailNotificationsFor}:',
-              fontSize: 16,
-              textColor: AppColors.greay400,
-              fontWeight: FontWeight.w400,
-            ).start,
-            _itemBuilder(
-              title: AppString.whenYouSellYourTicket,
-              isActive: true,
-              onChanged: (value) {},
-            ),
-            _itemBuilder(
-              title: AppString.whenYouReceiveAMessage,
-              isActive: true,
-              onChanged: (value) {},
-            ),
-            _itemBuilder(
-              title: AppString.whenAFavoritePublishAnEvent,
-              isActive: false,
-              onChanged: (value) {},
-            ),
-            _itemBuilder(
-              title: AppString.whenYouCanWithdrawFromYourWallet,
-              isActive: true,
-              onChanged: (value) {},
-            ),
-            20.height,
-            CommonButton(
-              titleText: AppString.save,
-              onTap: () {
-                appRouter.pop();
-              },
-            ),
-          ],
+        child: BlocProvider<EmailPreferenceCubit>(
+          create: (context) => EmailPreferenceCubit(context.read<AuthCubit>()),
+          child: BlocBuilder<EmailPreferenceCubit, EmailPreferenceState>(
+            builder: (context, state) {
+              final cubit = context.read<EmailPreferenceCubit>();
+              return Column(
+                children: [
+                  CommonText(
+                    text: AppString.emailPreferences,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
+                  ).start,
+                  10.height,
+                  CommonText(
+                    text: '${AppString.receiveEmailNotificationsFor}:',
+                    fontSize: 16,
+                    textColor: AppColors.greay400,
+                    fontWeight: FontWeight.w400,
+                  ).start,
+                  _itemBuilder(
+                    title: AppString.whenYouSellYourTicket,
+                    isActive: state.notificationPreference.isSellTicketNotificationEnabled ?? false,
+                    onChanged: (value) {
+                      cubit.onSelectionChange(
+                        state.notificationPreference.copyWith(
+                          isSellTicketNotificationEnabled: value,
+                        ),
+                      );
+                    },
+                  ),
+                  _itemBuilder(
+                    title: AppString.whenYouReceiveAMessage,
+                    isActive: state.notificationPreference.isMessageNotificationEnabled ?? false,
+                    onChanged: (value) {
+                      cubit.onSelectionChange(
+                        state.notificationPreference.copyWith(isMessageNotificationEnabled: value),
+                      );
+                    },
+                  ),
+                  _itemBuilder(
+                    title: AppString.whenAFavoritePublishAnEvent,
+                    isActive:
+                        state.notificationPreference.isPublishEventNotificationEnabled ?? false,
+                    onChanged: (value) {
+                      cubit.onSelectionChange(
+                        state.notificationPreference.copyWith(
+                          isPublishEventNotificationEnabled: value,
+                        ),
+                      );
+                    },
+                  ),
+                  _itemBuilder(
+                    title: AppString.whenYouCanWithdrawFromYourWallet,
+                    isActive:
+                        state.notificationPreference.isWithdrawMoneyNotificationEnabled ?? false,
+                    onChanged: (value) {
+                      cubit.onSelectionChange(
+                        state.notificationPreference.copyWith(
+                          isWithdrawMoneyNotificationEnabled: value,
+                        ),
+                      );
+                    },
+                  ),
+                  20.height,
+                  CommonButton(titleText: AppString.save, onTap: cubit.updateEmailPreference),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -86,9 +118,9 @@ class EmailPreferenceScreen extends StatelessWidget {
             textColor: AppColors.greay400,
             fontWeight: FontWeight.w400,
           ),
-        ), 
+        ),
         20.width,
-        
+
         CommonSwitch(isActive: isActive, onChanged: onChanged),
       ],
     );

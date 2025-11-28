@@ -528,9 +528,9 @@ class DioService {
     dynamic body;
     String contentType = 'application/json'; // Default content type
 
-    if (input.files != null && input.files!.isNotEmpty ||
-        input.formFields != null ||
-        input.jsonBody != null) {
+    if (input.files != null &&
+        input.files!.isNotEmpty &&
+        (input.formFields != null || input.jsonBody != null)) {
       final formData = dio.FormData();
 
       // 1. Add regular form fields (from formFields map)

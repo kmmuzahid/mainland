@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Flutter model class for 'Profile'
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 
@@ -17,6 +18,7 @@ class ProfileModel {
   final DateTime joinedDate;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final NotificationPreferenceModel notificationPreference;
 
   ProfileModel({
     required this.id,
@@ -34,10 +36,14 @@ class ProfileModel {
     required this.joinedDate,
     required this.createdAt,
     required this.updatedAt,
+    required this.notificationPreference,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
+      notificationPreference: json['notification'] != null
+          ? NotificationPreferenceModel.fromJson(json['notification'])
+          : const NotificationPreferenceModel(),
       id: json['_id'] ?? '',
       name: json['name'] ?? '',
       role: json['role'] == 'USER' ? Role.ATTENDEE : Role.ORGANIZER,
@@ -62,6 +68,7 @@ class ProfileModel {
       'name': name,
       'role': role.name,
       'email': email,
+      'notification': notificationPreference.toJson(),
       'contact': contact,
       'image': image,
       'status': status,
@@ -74,6 +81,86 @@ class ProfileModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
+  }
+
+  @override
+  bool operator ==(covariant ProfileModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.name == name &&
+        other.role == role &&
+        other.email == email &&
+        other.contact == contact &&
+        other.image == image &&
+        other.status == status &&
+        other.verified == verified &&
+        other.termsAndCondition == termsAndCondition &&
+        other.stripeAccountInfo == stripeAccountInfo &&
+        other.personalInfo == personalInfo &&
+        other.address == address &&
+        other.joinedDate == joinedDate &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.notificationPreference == notificationPreference;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        role.hashCode ^
+        email.hashCode ^
+        contact.hashCode ^
+        image.hashCode ^
+        status.hashCode ^
+        verified.hashCode ^
+        termsAndCondition.hashCode ^
+        stripeAccountInfo.hashCode ^
+        personalInfo.hashCode ^
+        address.hashCode ^
+        joinedDate.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode ^
+        notificationPreference.hashCode;
+  }
+
+  ProfileModel copyWith({
+    String? id,
+    String? name,
+    Role? role,
+    String? email,
+    String? contact,
+    String? image,
+    String? status,
+    bool? verified,
+    bool? termsAndCondition,
+    StripeAccountInfo? stripeAccountInfo,
+    PersonalInfo? personalInfo,
+    Address? address,
+    DateTime? joinedDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    NotificationPreferenceModel? notificationPreference,
+  }) {
+    return ProfileModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      role: role ?? this.role,
+      email: email ?? this.email,
+      contact: contact ?? this.contact,
+      image: image ?? this.image,
+      status: status ?? this.status,
+      verified: verified ?? this.verified,
+      termsAndCondition: termsAndCondition ?? this.termsAndCondition,
+      stripeAccountInfo: stripeAccountInfo ?? this.stripeAccountInfo,
+      personalInfo: personalInfo ?? this.personalInfo,
+      address: address ?? this.address,
+      joinedDate: joinedDate ?? this.joinedDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      notificationPreference: notificationPreference ?? this.notificationPreference,
+    );
   }
 }
 
@@ -146,5 +233,70 @@ class Address {
 
   Map<String, dynamic> toJson() {
     return {'city': city, 'street': street, 'country': country, 'postalCode': postalCode};
+  }
+}
+class NotificationPreferenceModel {
+  final bool? isSellTicketNotificationEnabled;
+  final bool? isMessageNotificationEnabled;
+  final bool? isPublishEventNotificationEnabled;
+  final bool? isWithdrawMoneyNotificationEnabled;
+
+  const NotificationPreferenceModel({
+    this.isSellTicketNotificationEnabled,
+    this.isMessageNotificationEnabled,
+    this.isPublishEventNotificationEnabled,
+    this.isWithdrawMoneyNotificationEnabled,
+  });
+
+  factory NotificationPreferenceModel.fromJson(Map<String, dynamic> json) {
+    return NotificationPreferenceModel(
+      isSellTicketNotificationEnabled: json['isSellTicketNotificationEnabled'],
+      isMessageNotificationEnabled: json['isMessageNotificationEnabled'],
+      isPublishEventNotificationEnabled: json['isPublishEventNotificationEnabled'],
+      isWithdrawMoneyNotificationEnabled: json['isWithdrawMoneyNotificationEnabled'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "isSellTicketNotificationEnabled": isSellTicketNotificationEnabled,
+    "isMessageNotificationEnabled": isMessageNotificationEnabled,
+    "isPublishEventNotificationEnabled": isPublishEventNotificationEnabled,
+    "isWithdrawMoneyNotificationEnabled": isWithdrawMoneyNotificationEnabled,
+  };
+
+  NotificationPreferenceModel copyWith({
+    bool? isSellTicketNotificationEnabled,
+    bool? isMessageNotificationEnabled,
+    bool? isPublishEventNotificationEnabled,
+    bool? isWithdrawMoneyNotificationEnabled,
+  }) {
+    return NotificationPreferenceModel(
+      isSellTicketNotificationEnabled:
+          isSellTicketNotificationEnabled ?? this.isSellTicketNotificationEnabled,
+      isMessageNotificationEnabled:
+          isMessageNotificationEnabled ?? this.isMessageNotificationEnabled,
+      isPublishEventNotificationEnabled:
+          isPublishEventNotificationEnabled ?? this.isPublishEventNotificationEnabled,
+      isWithdrawMoneyNotificationEnabled:
+          isWithdrawMoneyNotificationEnabled ?? this.isWithdrawMoneyNotificationEnabled,
+    );
+  }
+
+  @override
+  bool operator ==(covariant NotificationPreferenceModel other) {
+    if (identical(this, other)) return true;
+
+    return other.isSellTicketNotificationEnabled == isSellTicketNotificationEnabled &&
+        other.isMessageNotificationEnabled == isMessageNotificationEnabled &&
+        other.isPublishEventNotificationEnabled == isPublishEventNotificationEnabled &&
+        other.isWithdrawMoneyNotificationEnabled == isWithdrawMoneyNotificationEnabled;
+  }
+
+  @override
+  int get hashCode {
+    return isSellTicketNotificationEnabled.hashCode ^
+        isMessageNotificationEnabled.hashCode ^
+        isPublishEventNotificationEnabled.hashCode ^
+        isWithdrawMoneyNotificationEnabled.hashCode;
   }
 }

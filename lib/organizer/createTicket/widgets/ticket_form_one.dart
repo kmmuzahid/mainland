@@ -130,7 +130,7 @@ class TicketFormOne extends StatelessWidget {
                       left: 15,
                       fontSize: 14,
                       borderRadious: 8,
-                      text: subCategory.subcategoryTitle,
+                      text: subCategory.title,
                     );
                   }).toList(),
                 ),

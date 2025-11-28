@@ -74,7 +74,7 @@ void selectSubcategory({required SubCategoryModel subcategory, required Category
 
   Future<void> fetchSubcategory(String categoryId) async {
     emit(state.copyWith(isSubcategoryLoading: true));
-    final response = await dioService.request<List<SubCategoryModel>>(
+    final response = await dioService.request<List<SubCategoryModel>>( 
       input: RequestInput(
         endpoint: ApiEndPoint.instance.subCategory(categoryId),
         method: RequestMethod.GET,

@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
@@ -24,11 +25,13 @@ abstract class AuthRepository {
   });
 
   Future<ResponseState<dynamic>> resetPassword({
-    required String verificationToken, 
+    required String verificationToken,
     required String newPassword,
   });
 
   Future<ResponseState<ProfileModel?>> getCurrentUser();
+
+  Future<ResponseState<ProfileModel?>> updateUser({ProfileModel? profileModel, XFile? image});
 
   Future<String> signInWithGoogle();
 
@@ -41,5 +44,4 @@ abstract class AuthRepository {
   Future<ResponseState<String?>> getPrivacyPolicy();
 
   Future<ResponseState<String?>> getTermsAndConditions();
- 
 }

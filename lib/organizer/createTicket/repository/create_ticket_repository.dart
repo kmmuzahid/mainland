@@ -117,7 +117,7 @@ class CreateTicketRepository {
     final List<String> categoryIds =
         event.category?.map((cat) => cat.categoryId?.id ?? '').toList() ?? [];
 
-    final CategoryModel? selectedCategory = event.category?.first.categoryId != null
+    final CategoryModel? selectedCategory = event.category?.isNotEmpty == true
         ? CategoryModel(
             id: event.category?.first.categoryId?.id ?? '',
             title: event.category?.first.categoryId?.title ?? '',

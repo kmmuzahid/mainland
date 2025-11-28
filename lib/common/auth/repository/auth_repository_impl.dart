@@ -1,5 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:image_picker/image_picker.dart' show XFile;
 import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
@@ -9,11 +8,6 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
-import 'package:mainland/core/config/route/app_router.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
-import 'package:mainland/gen/assets.gen.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final DioService _dioService = getIt();
@@ -159,6 +153,45 @@ class AuthRepositoryImpl implements AuthRepository {
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => data['termsAdnCondition'],
+    );
+  }
+
+  @override
+  Future<ResponseState<ProfileModel?>> updateUser({ProfileModel? profileModel, XFile? image}) {
+    return _dioService.request<ProfileModel>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.profile,
+        method: RequestMethod.PATCH,
+        files: {if (image != null) 'image': image},
+        formFields: profileModel == null
+            ? {}
+            : {
+                'name': profileModel.name,
+                'personalInfo': {
+                  'phone': profileModel.personalInfo.phone,
+                  if (profileModel.personalInfo.dateOfBirth != null)
+                    'dateOfBirth': profileModel.personalInfo.dateOfBirth?.microsecondsSinceEpoch,
+                },
+                'address': {
+                  // 'country': 'United States',
+                  'city': profileModel.address.city,
+                  'postalCode': profileModel.address.postalCode,
+                  'street': profileModel.address.street,
+                },
+                'notification': {
+                  'isSellTicketNotificationEnabled':
+                      profileModel.notificationPreference.isSellTicketNotificationEnabled,
+                  'isMessageNotificationEnabled':
+                      profileModel.notificationPreference.isMessageNotificationEnabled,
+                  'isPublishEventNotificationEnabled':
+                      profileModel.notificationPreference.isPublishEventNotificationEnabled,
+                  'isWithdrawMoneyNotificationEnabled':
+                      profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
+                },
+              },
+      ),
+      showMessage: true,
+      responseBuilder: (data) => ProfileModel.fromJson(data),
     );
   }
 }

@@ -52,7 +52,7 @@ class AllSelectedPreferenceScreen extends StatelessWidget {
           ...List.generate(
             category.value.length,
             (index) =>
-                CommonText(left: 10, fontSize: 16, text: category.value[index].subcategoryTitle),
+                CommonText(left: 10, fontSize: 16, text: category.value[index].title),
           ),
           Utils.divider(),
         ],

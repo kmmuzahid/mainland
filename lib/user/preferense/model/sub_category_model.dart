@@ -3,25 +3,25 @@ import 'dart:convert';
 
 class SubCategoryModel {
   final String id;
-  final String subcategoryTitle;
-  SubCategoryModel({required this.id, required this.subcategoryTitle});
+  final String title;
+  SubCategoryModel({required this.id, required this.title});
   
 
-  SubCategoryModel copyWith({String? id, String? subcategoryTitle}) {
+  SubCategoryModel copyWith({String? id, String? title}) {
     return SubCategoryModel(
       id: id ?? this.id,
-      subcategoryTitle: subcategoryTitle ?? this.subcategoryTitle,
+      title: title ?? this.title,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'id': id, 'subcategoryTitle': subcategoryTitle};
+    return <String, dynamic>{'id': id, 'title': title};
   }
 
   factory SubCategoryModel.fromMap(Map<String, dynamic> map) {
     return SubCategoryModel(
       id: map['_id'] as String,
-      subcategoryTitle: map['title'] as String,
+      title: map['title'] as String,
     );
   }
 
@@ -30,15 +30,15 @@ class SubCategoryModel {
   factory SubCategoryModel.fromJson(dynamic source) => SubCategoryModel.fromMap(source);
 
   @override
-  String toString() => 'SubCategoryModel(id: $id, title: $subcategoryTitle)';
+  String toString() => 'SubCategoryModel(id: $id, title: $title)';
 
   @override
   bool operator ==(covariant SubCategoryModel other) {
     if (identical(this, other)) return true;
   
-    return other.id == id && other.subcategoryTitle == subcategoryTitle;
+    return other.id == id && other.title == title;
   }
 
   @override
-  int get hashCode => id.hashCode ^ subcategoryTitle.hashCode;
+  int get hashCode => id.hashCode ^ title.hashCode;
 }

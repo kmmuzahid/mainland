@@ -2,11 +2,9 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/tickets/cubit/tickets_state.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/repository/ticket_repository.dart';
-import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/utils/app_utils.dart';
-import 'package:mainland/gen/assets.gen.dart';
 
 class TicketsCubit extends SafeCubit<TicketsState> {
   TicketsCubit() : super(const TicketsState());
