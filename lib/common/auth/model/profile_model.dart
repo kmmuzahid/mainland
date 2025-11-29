@@ -222,6 +222,15 @@ class Address {
     required this.postalCode,
   });
 
+  Address copyWith({String? city, String? street, String? country, String? postalCode}) {
+    return Address(
+      city: city ?? this.city,
+      street: street ?? this.street,
+      country: country ?? this.country,
+      postalCode: postalCode ?? this.postalCode,
+    );
+  }
+
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
       city: json['city'] ?? '',

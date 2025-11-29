@@ -80,5 +80,6 @@ RouteType get defaultRouteType => const RouteType.cupertino();
     AutoRoute(page: LocationRoute.page),
     AutoRoute(page: AllSelectedPreferenceRoute.page),
     AutoRoute(page: CustomMapRoute.page),
+    AutoRoute(page: FaqRoute.page),
   ];
 }

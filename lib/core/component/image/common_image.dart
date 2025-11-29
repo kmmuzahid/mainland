@@ -4,8 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
-import 'package:mainland/core/utils/log/error_log.dart';
+import 'package:mainland/core/utils/log/app_log.dart'; 
 import 'package:mainland/gen/assets.gen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -86,7 +85,7 @@ class CommonImage extends StatelessWidget {
         );
       },
       errorWidget: (context, url, error) {
-        errorLog(error, source: 'Common Image');
+        AppLogger.error(error.toString(), tag: 'Common Image');
 
         return _buildErrorWidget();
       },
@@ -123,7 +122,7 @@ class CommonImage extends StatelessWidget {
         width: size ?? width,
         fit: fill,
         errorBuilder: (context, error, stackTrace) {
-          errorLog(error, source: 'Common Image');
+          AppLogger.error(error.toString(), tag: 'Common Image');
           return _buildErrorWidget();
         },
       ),

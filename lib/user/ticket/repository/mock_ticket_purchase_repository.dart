@@ -1,4 +1,5 @@
 import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticket/model/available_ticket_model.dart';
 import 'package:mainland/user/ticket/repository/ticket_purchase_repository.dart';
 
@@ -9,7 +10,7 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
   //filter type is is it 
   @override
   Future<List<TicketPickerModel>> getTicketPurchaseState({
-    TicketType? ticketType,
+    TicketName? ticketType,
 
     required TicketOwnerType ticketOwnerType,
   }) async {
@@ -62,11 +63,10 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
   @override
   Future<List<AvailableTicketModel>> getAvailableTicket() async {
     return [
-      AvailableTicketModel(ticketType: TicketType.standard, availableUnits: 5),
-      AvailableTicketModel(ticketType: TicketType.gold, availableUnits: 6),
-      AvailableTicketModel(ticketType: TicketType.premium, availableUnits: 7),
-      AvailableTicketModel(ticketType: TicketType.vip, availableUnits: 8),
-      AvailableTicketModel(ticketType: TicketType.free, availableUnits: 9),
+      AvailableTicketModel(ticketType: TicketName.Premium, availableUnits: 5),
+      AvailableTicketModel(ticketType: TicketName.VIP, availableUnits: 6),
+      AvailableTicketModel(ticketType: TicketName.Standard, availableUnits: 7),
+      AvailableTicketModel(ticketType: TicketName.Other, availableUnits: 8), 
     ];
   } 
 }

@@ -10,6 +10,7 @@ import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/common/auth/widgets/state_selector.dart';
+import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -201,7 +202,10 @@ class SignUpAllField extends StatelessWidget {
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => appRouter.push(
-                                ShowInfoRoute(title: AppString.termsOfuse, content: state.about),
+                                ShowInfoRoute(
+                                  title: AppString.termsOfuse,
+                                  infoType: InfoType.terms,
+                                ),
                               ),
                             text: AppString.termsOfuse,
                             style: AppTextStyles.labelSmall?.copyWith(
@@ -215,7 +219,10 @@ class SignUpAllField extends StatelessWidget {
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => appRouter.push(
-                                ShowInfoRoute(title: AppString.privacyNotice, content: state.about),
+                                ShowInfoRoute(
+                                  title: AppString.privacyNotice,
+                                  infoType: InfoType.privacy,
+                                ),
                               ),
                             text: AppString.privacyNotice,
                             style: AppTextStyles.labelSmall?.copyWith(

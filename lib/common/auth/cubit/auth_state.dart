@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
 
@@ -34,6 +35,7 @@ class AuthState extends Equatable {
     this.isTermsAndConditonsAccepted = false,
     this.age = 0,
     this.privacyPolicy,
+    this.pickedImage,
     this.termsAndConditions,
     this.profileModel,
   });
@@ -51,6 +53,7 @@ class AuthState extends Equatable {
   final bool isTermsAndConditonsAccepted;
   final int age;
   final ProfileModel? profileModel;
+  final XFile? pickedImage;
 
   AuthState copyWith({
     bool? isLoading,
@@ -64,6 +67,7 @@ class AuthState extends Equatable {
     String? termsAndConditions,
     int? age,
     ProfileModel? profileModel,
+    XFile? pickedImage
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -76,6 +80,7 @@ class AuthState extends Equatable {
       privacyPolicy: privacyPolicy ?? this.privacyPolicy,
       termsAndConditions: termsAndConditions ?? this.termsAndConditions,
       age: age ?? this.age,
+      pickedImage: pickedImage,
       profileModel: profileModel ?? this.profileModel,
     );
   }
@@ -90,6 +95,7 @@ class AuthState extends Equatable {
     faqHelp,
     isTermsAndConditonsAccepted,
     privacyPolicy ?? '',
+    pickedImage?.path ?? '',
     termsAndConditions ?? '',
     age,
     profileModel ?? '',

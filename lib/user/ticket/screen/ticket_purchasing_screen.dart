@@ -16,6 +16,7 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticket/cubit/ticket_purchase_state.dart';
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
@@ -30,7 +31,7 @@ import '../cubit/ticket_purchase_cubit.dart';
 class TicketPurchaseScreen extends StatelessWidget {
   const TicketPurchaseScreen({super.key, required this.type, this.filterTicket});
   final TicketOwnerType type;
-  final TicketType? filterTicket;
+  final TicketName? filterTicket;
 
   @override
   Widget build(BuildContext context) {

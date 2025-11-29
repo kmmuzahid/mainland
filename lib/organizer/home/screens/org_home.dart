@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/home/widgets/home_top_widget.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
+import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
@@ -57,11 +59,11 @@ class OrgHome extends StatelessWidget {
               isSeperated: true,
               itemBuilder: (context, index) {
                 final event = state.events[index];
-                return EventWidget(
-                  image: event.image ?? '',
+                return TicketWidget( 
                   onTap: () {
                     appRouter.push(EventDetailsRoute(eventId: event.id ?? ''));
                   },
+                  ticketModel: event,
                 );
               },
             );

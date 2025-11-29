@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
+import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
@@ -89,8 +91,8 @@ class UserHome extends StatelessWidget {
           padding: EdgeInsets.only(right: 10.w),
           child: AspectRatio(
             aspectRatio: 0.6434,
-            child: EventWidget(
-              image: Assets.images.sampleItem.path,
+            child: TicketWidget(
+              ticketModel: TicketModel(),
               onTap: () {
                 appRouter.push(EventDetailsRoute(eventId: '1'));
               },

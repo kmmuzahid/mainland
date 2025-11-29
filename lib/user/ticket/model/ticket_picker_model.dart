@@ -3,7 +3,7 @@ import 'dart:convert';
 
 enum TicketOwnerType { organizer, attendee }
 
-enum TicketType { standard, gold, premium, vip, free }
+// enum TicketType { standard, gold, premium, vip, free }
 
 
 class TicketPickerModel {

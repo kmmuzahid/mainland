@@ -20,8 +20,11 @@ class ApiEndPoint {
   final String profile = '/user/profile';
 
   //basic
-  final String privacyPolicy = '/settings/privacyPolicy';
-  final String termsAndConditions = '/settings/termsAdnCondition';
+  final String privacyPolicy = '/settings/privacy_policy';
+  final String termsAndConditions = '/settings/terms_and_conditions';
+  final String about_us = '/settings/about_us';
+  final String contact_us = '/settings/contact';
+  final String faq = '/settings/faq';
 
   //event
   final String createEvent = '/event';
@@ -36,7 +39,6 @@ class ApiEndPoint {
   final String orgEventClosed = '/event/closed';
   String eventDetails({required String id}) => '/event/$id';
 
-  //settings
-  final String about_us = '/settings/about_us';
-  final String contact_us = '/settings/contact_us';
+  //organization
+  String orgLiveEventDetails({required String id}) => '/event/event-ticket-history/$id';
 }

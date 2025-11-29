@@ -1,24 +1,20 @@
 // File: home_screen.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
-import 'package:mainland/common/auth/widgets/terms_and_conditions.dart';
 import 'package:mainland/common/chat/screens/chat_list_screen.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:mainland/common/setting/screens/setting_screen.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/screens/tickets_screen.dart';
-import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/home/screens/org_home.dart';
 import 'package:mainland/user/fanclub/screens/fan_club_screen.dart';
 import 'package:mainland/user/home/screens/user_home.dart';
@@ -33,8 +29,8 @@ class HomeScreen extends StatelessWidget {
   List<Widget> userPagesList() => [
     const UserHome(),
     TicketsScreen(
-      onTap: (ticketId, ticketFilter) {
-        appRouter.push(TicketSaveRoute(ticketId: ticketId));
+      onTap: (event, ticketFilter) {
+        appRouter.push(TicketSaveRoute(ticketId: event.id ?? ''));
       },
       filters: const [TicketFilter.Upcoming, TicketFilter.Used],
       subTitle: AppString.allAvailableTickets,
@@ -43,8 +39,8 @@ class HomeScreen extends StatelessWidget {
     const FanClubScreen(),
 
     TicketsScreen(
-      onTap: (ticketId, ticketFilter) {
-        appRouter.push(UserTicketManageRoute(ticketId: ticketId, ticketFilter: ticketFilter));
+      onTap: (event, ticketFilter) {
+        appRouter.push(UserTicketManageRoute(ticketId: event.id ?? '', ticketFilter: ticketFilter));
       },
       filters: const [
         TicketFilter.Live,
@@ -61,15 +57,21 @@ class HomeScreen extends StatelessWidget {
   List<Widget> oranizerPageList() => [
     const OrgHome(),
     TicketsScreen(
-      onTap: (ticketId, ticketFilter) {
+      onTap: (event, ticketFilter) {
         if (ticketFilter == TicketFilter.Live) {
-          appRouter.push(OrgTicketManageRoute(ticketId: ticketId, ticketFilter: ticketFilter));
+          appRouter.push(
+            OrgTicketManageRoute(
+              ticketFilter: ticketFilter,
+              eventId: event.id ?? '',
+              eventName: event.eventName ?? '',
+            ),
+          );
         } else if (ticketFilter == TicketFilter.Draft) {
-          appRouter.push(CreateEventRoute(draftId: ticketId));
+          appRouter.push(CreateEventRoute(draftId: event.id));
         } else {
           appRouter.push(
             EventDetailsRoute(
-              eventId: ticketId,
+              eventId: event.id ?? '',
               showEventActions: false,
               isEventAvailable: false,
               isEventUnderReview: ticketFilter == TicketFilter.UnderReview,

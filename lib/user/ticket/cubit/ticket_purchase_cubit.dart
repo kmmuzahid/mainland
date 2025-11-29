@@ -1,6 +1,7 @@
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticket/cubit/ticket_purchase_state.dart';
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 import 'package:mainland/user/ticket/repository/ticket_purchase_repository.dart';
@@ -11,7 +12,7 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
 
   Future<void> fetchTicketPurchase({
     TicketOwnerType? ticketOwnerType,
-    TicketType? ticketType,
+    TicketName? ticketType,
   }) async {
     final response = await repository.getTicketPurchaseState(
       ticketType: ticketType,

@@ -39,11 +39,24 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> signInWithGoogle() async => '';
 
   @override
-  Future<ResponseState<String>> changePassword({
-    required String username,
+  Future<ResponseState<dynamic>> changePassword({
     required String oldPassword,
     required String newPassword,
-  }) async => ResponseState(data: '', isSuccess: true, statusCode: 201);
+  }) async {
+    return _dioService.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.changePassword,
+        method: RequestMethod.POST,
+        jsonBody: {
+          'currentPassword': oldPassword,
+          'newPassword': newPassword,
+          'confirmPassword': newPassword,
+        },
+      ),
+      responseBuilder: (data) => data,
+    );
+  }
 
   @override
   Future<ResponseState<bool>> deleteAccount() async =>
@@ -157,16 +170,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<ResponseState<ProfileModel?>> updateUser({ProfileModel? profileModel, XFile? image}) {
-    return _dioService.request<ProfileModel>(
-      input: RequestInput(
-        endpoint: ApiEndPoint.instance.profile,
-        method: RequestMethod.PATCH,
-        files: {if (image != null) 'image': image},
-        jsonBody: profileModel == null
-            ? {}
-            : {
+  Future<ResponseState<ProfileModel?>> updateUser({
+    required bool isDeleteImage,
+    ProfileModel? profileModel,
+    XFile? image,
+  }) {
+    final Map<String, dynamic> body = profileModel == null
+        ? {}
+        : {
                 'name': profileModel.name,
+            // if (isDeleteImage && image == null) 'image': '',
                 'personalInfo': {
                   'phone': profileModel.personalInfo.phone,
                   if (profileModel.personalInfo.dateOfBirth != null)
@@ -188,7 +201,14 @@ class AuthRepositoryImpl implements AuthRepository {
                   'isWithdrawMoneyNotificationEnabled':
                       profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
                 },
-              },
+          };
+
+    return _dioService.request<ProfileModel>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.profile,
+        method: RequestMethod.PATCH,
+        files: {if (image != null) 'image': image},
+        jsonBody: body,
       ),
       showMessage: true,
       responseBuilder: (data) => ProfileModel.fromJson(data),

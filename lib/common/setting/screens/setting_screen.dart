@@ -3,12 +3,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl_phone_field_v2/countries.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
-import 'package:mainland/common/setting/screens/location_screen.dart';
-import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
+import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
@@ -20,7 +19,6 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
-import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
@@ -35,6 +33,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
+    final authState = context.watch<AuthCubit>().state;
     return Scaffold(
       appBar: showBackButton ? const CommonAppBar() : null,
       body: SingleChildScrollView(
@@ -57,43 +56,62 @@ class SettingScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         commonDialog(
-                          isDismissible: true,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              24.height,
-                              CommonImage(
-                                imageSrc:
-                                    authCubit.state.profileModel?.image ?? Assets.images.user.path,
-                                size: 63,
-                              ),
-                              22.height,
-                              CommonButton(
-                                buttonWidth: 150.w,
-                                titleText: AppString.uploadImage,
-                                onTap: () {},
-                              ),
-                              8.height,
-                              CommonButton(
-                                buttonWidth: 150.w,
-                                titleText: AppString.removeImage,
-                                onTap: () {},
-                              ),
-                              14.height,
-                              CommonButton(
-                                titleText: AppString.cancel,
-                                borderColor: AppColors.error,
-                                titleColor: AppColors.error,
-                                onTap: appRouter.pop,
-                                buttonColor: AppColors.backgroundWhite,
-                              ),
-                              24.height,
-                            ],
+                          child: BlocBuilder<AuthCubit, AuthState>(
+                            builder: (context, state) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  24.height,
+                                  GestureDetector(
+                                    onTap: authCubit.pickImage,
+                                    child: CommonImage(
+                                      imageSrc:
+                                          state.pickedImage?.path ??
+                                          (authCubit.state.profileModel?.image ??
+                                              Assets.images.user.path),
+                                      size: 63,
+                                    ),
+                                  ),
+                                  22.height,
+                                  CommonButton(
+                                    buttonWidth: 150.w,
+                                    isLoading: state.isLoading,
+                                    titleText: AppString.uploadImage,
+                                    onTap: () {
+                                      if (authCubit.state.pickedImage != null)
+                                        authCubit.updateProfile(image: state.pickedImage);
+                                      appRouter.pop();
+                                    },
+                                  ),
+                                  8.height,
+                                  CommonButton(
+                                    buttonWidth: 150.w,
+                                    titleText: AppString.removeImage,
+                                    onTap: () {
+                                      authCubit.updateProfile(isDeleteImage: true);
+                                    },
+                                  ),
+                                  14.height,
+                                  CommonButton(
+                                    titleText: AppString.cancel,
+                                    borderColor: AppColors.error,
+                                    titleColor: AppColors.error,
+                                    onTap: () {
+                                      authCubit.clearImage();
+                                      appRouter.pop();
+                                    },
+                                    buttonColor: AppColors.backgroundWhite,
+                                  ),
+                                  24.height,
+                                ],
+                              );
+                            },
                           ),
                           context: context,
                         );
                       },
                       child: CommonImage(
+                        borderRadius: 4,
                         imageSrc: authCubit.state.profileModel?.image ?? Assets.images.user.path,
                         size: 36,
                       ).start,
@@ -131,7 +149,7 @@ class SettingScreen extends StatelessWidget {
                       title: AppString.aboutUs,
                       onTap: () {
                         appRouter.push(
-                          ShowInfoRoute(title: AppString.aboutUs, content: 'About Us'),
+                          ShowInfoRoute(title: AppString.aboutUs, infoType: InfoType.about_us),
                         );
                       },
                     ),
@@ -141,7 +159,7 @@ class SettingScreen extends StatelessWidget {
                       title: AppString.faqHelp,
                       onTap: () {
                         appRouter.push(
-                          ShowInfoRoute(title: AppString.faqHelp, content: 'FAQ/Help'),
+                          const FaqRoute(),
                         );
                       },
                     ),
@@ -205,21 +223,21 @@ class SettingScreen extends StatelessWidget {
                       context: context,
                       title: AppString.locations,
                       subTitle:
-                          '${authCubit.state.profileModel?.address.city ?? ''}, ${authCubit.state.profileModel?.address.street ?? ''}, ${authCubit.state.profileModel?.address.country ?? ''}',
+                          '${authState.profileModel?.address.city ?? ''}, ${authState.profileModel?.address.street ?? ''}, ${authState.profileModel?.address.country ?? ''}',
                       onTap: () {
                         // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
                         appRouter.push(const LocationRoute());
                       },
                     ),
-                      Utils.divider(),
-                      _menuItems(
-                        context: context,
-                        title: Utils.getRole() == Role.ORGANIZER
-                            ? 'Switch to Attendee'
-                            : 'Switch to Organizer',
-                        onTap: () {
-                          context.read<AuthCubit>().switchRole();
-                        },
+                    Utils.divider(),
+                    _menuItems(
+                      context: context,
+                      title: Utils.getRole() == Role.ORGANIZER
+                          ? 'Switch to Attendee'
+                          : 'Switch to Organizer',
+                      onTap: () {
+                        context.read<AuthCubit>().switchRole();
+                      },
                     ),
                     20.height,
                     CommonButton(
@@ -245,7 +263,9 @@ class SettingScreen extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            appRouter.push(const TermsConditionRoute());
+                            appRouter.push(
+                              ShowInfoRoute(title: AppString.termsOfuse, infoType: InfoType.terms),
+                            );
                           },
                           child: CommonText(
                             text: AppString.termsOfuse,
@@ -259,7 +279,12 @@ class SettingScreen extends StatelessWidget {
                         const CommonText(text: ' & ', fontSize: 12, fontWeight: FontWeight.w400),
                         GestureDetector(
                           onTap: () {
-                            appRouter.push(const PrivacyPolicyRoute());
+                            appRouter.push(
+                              ShowInfoRoute(
+                                title: AppString.privacyNotice,
+                                infoType: InfoType.privacy,
+                              ),
+                            );
                           },
                           child: CommonText(
                             text: AppString.privacyNotice,
@@ -279,8 +304,8 @@ class SettingScreen extends StatelessWidget {
             ),
           ],
         ),
-      ), 
-  );
+      ),
+    );
   }
 
   Widget _menuItems({

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
+import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
@@ -78,8 +80,8 @@ class FanClubScreen extends StatelessWidget {
                 aspectRatio: 0.6434,
                 isSeperated: true,
                 mainAxisSpacing: 10,
-                itemBuilder: (context, index) => EventWidget(
-                  image: Assets.images.sampleItem.path,
+                itemBuilder: (context, index) => TicketWidget(
+                  ticketModel: TicketModel(),
                   onTap: () {
                     appRouter.push(EventDetailsRoute(eventId: '1'));
                   },

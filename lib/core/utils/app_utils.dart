@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
   static late Size deviceSize;
+
+
 
   static RepaintBoundary divider() => RepaintBoundary(
     child: Divider(color: AppColors.greay100, thickness: 1.w),
@@ -25,9 +30,7 @@ class Utils {
     }
     return DateTime.tryParse(dateString);
   }
-  
-  
-  
+
 
   static DateTime subtractYears(DateTime date, int yearsToSubtract) {
     // Handle edge case for leap year (Feb 29 to non-leap year)
@@ -65,8 +68,6 @@ class Utils {
     return newDate;
   }
 
-
-
   static String formatDateTimeToHms(DateTime dateTime) {
     final localDate = dateTime.toLocal();
     final hours = localDate.hour.toString().padLeft(2, '0');
@@ -88,7 +89,6 @@ class Utils {
     return DateFormat.jm().format(time.toLocal()); // 'jm' = e.g., 8:00 PM
   }
 
-  
   static String formatDateTimeWithSHortMonth(DateTime dateTime) {
     final localDate = dateTime.toLocal();
     final hours = (localDate.hour % 12).toString().padLeft(2, '0');
@@ -101,8 +101,6 @@ class Utils {
     final shortDay = DateFormat('E').format(localDate).substring(0, 3);
     return '$day $shortMonth $shortDay $hours:$minutes $amPm';
   }
-  
-
 
   static String formatDateToShortMonth(DateTime dateTime) {
     final localDate = dateTime.toLocal();
@@ -142,7 +140,6 @@ class Utils {
     }
   }
 }
-
 
 String sampleHtmlDetails = '''<!DOCTYPE html>
 <html lang="en">

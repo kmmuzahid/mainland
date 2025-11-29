@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../constants/app_colors.dart';
 
 class OtherHelper {
+  static ImagePicker picker = ImagePicker();
   static Future<String> openDatePickerDialog(TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       builder: (context, child) => Theme(
@@ -26,25 +29,18 @@ class OtherHelper {
     return '';
   }
 
-  static Future<String?> openGallery() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-    return image?.path;
-  }
+  // static Future<String?> openGallery() async {
 
-  static Future<String?> openGalleryForProfile() async {
-    final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+  //   return image?.path;
+  // }
+
+  static Future<XFile?> openGallery() async {
+    final status = await const PermissionHandlerHelper(permission: Permission.photos).getStatus();
+    if (status == false) return null;
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-      );
-
-      return croppedFile?.path;
-    }
-    return null;
+ 
+    return pickedFile;
   }
 
   static Future<String?> pickVideoFromGallery() async {
@@ -66,14 +62,14 @@ class OtherHelper {
     );
 
     if (picked != null) {
-      final String formattedTime = formatTime(picked);
+      final String formattedTime = _formatTime(picked);
       controller?.text = formattedTime;
       return formattedTime;
     }
     return '';
   }
 
-  static String formatTime(TimeOfDay time) {
+  static String _formatTime(TimeOfDay time) {
     return "${time.hour > 12 ? (time.hour - 12).toString().padLeft(2, '0') : (time.hour == 0 ? 12 : time.hour).toString().padLeft(2, '0')}:"
         "${time.minute.toString().padLeft(2, '0')} ${time.hour >= 12 ? "PM" : "AM"}";
   }

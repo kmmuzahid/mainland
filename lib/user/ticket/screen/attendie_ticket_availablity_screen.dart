@@ -15,6 +15,7 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticket/cubit/ticket_purchase_cubit.dart';
 import 'package:mainland/user/ticket/model/available_ticket_model.dart';
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
@@ -73,7 +74,7 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
     );
   }
 
-  Widget itemBuilder(TicketType ticketType, String value) {
+  Widget itemBuilder(TicketName ticketType, String value) {
     return GestureDetector(
       onTap: () {
         appRouter.push(

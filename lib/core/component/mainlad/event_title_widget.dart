@@ -10,11 +10,11 @@ class EventTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Utils.deviceSize.width * .6,
+      width: Utils.deviceSize.width * .7,
       child: CommonText(
         text: title ?? 'Juice WRLD Eko Hotel & Suites Monday, November 04',
         autoResize: false,
-        maxLines: 10,
+        maxLines: 12,
         textAlign: TextAlign.left,
         textColor: AppColors.primaryColor,
         fontSize: 22,

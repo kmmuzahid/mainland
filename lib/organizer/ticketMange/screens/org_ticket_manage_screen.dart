@@ -9,9 +9,15 @@ import 'package:mainland/organizer/ticketMange/widgets/org_live_ticket_widget.da
 
 @RoutePage()
 class OrgTicketManageScreen extends StatelessWidget {
-  const OrgTicketManageScreen({super.key, required this.ticketFilter, required this.ticketId});
+  const OrgTicketManageScreen({
+    required this.ticketFilter,
+    required this.eventId,
+    required this.eventName,
+    super.key,
+  });
   final TicketFilter ticketFilter;
-  final String ticketId;
+  final String eventId;
+  final String eventName;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +32,7 @@ class OrgTicketManageScreen extends StatelessWidget {
 
   Widget getContent() {
     if (ticketFilter == TicketFilter.Live) {
-      return const OrgLiveTicketWidget(
-        eventName: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
+      return OrgLiveTicketWidget(eventName: eventName, id: eventId,
       );
     }
     if (ticketFilter == TicketFilter.Draft) {

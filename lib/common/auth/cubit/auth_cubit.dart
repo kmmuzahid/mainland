@@ -18,6 +18,7 @@ import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
+import 'package:mainland/core/utils/helpers/other_helper.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 
@@ -32,10 +33,19 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _profileInfo = 'profile_info_key';
   Role _role = Role.ATTENDEE;
 
-  Future<void> updateProfile({ProfileModel? profileModel, XFile? image}) async {
-    if (profileModel == null && image == null) return; 
-    final response = await _repository.updateUser(profileModel: profileModel, image: image);
-    emit(state.copyWith(profileModel: response.data));
+  Future<void> updateProfile({
+    ProfileModel? profileModel,
+    XFile? image,
+    bool isDeleteImage = false,
+  }) async {
+    if ((profileModel == null && image == null) || state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final response = await _repository.updateUser(
+      profileModel: profileModel,
+      image: image,
+      isDeleteImage: isDeleteImage,
+    );
+    emit(state.copyWith(profileModel: response.data, isLoading: false));
   }
 
   void switchRole() async {
@@ -217,10 +227,23 @@ class AuthCubit extends SafeCubit<AuthState> {
 
   Future<void> forgetPassword(String username, String otp) async {}
 
-  Future<void> changePassword(String newPassword) async {
-    appRouter.replace(
-      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+  Future<void> changePassword({required String newPassword, required String oldPassword}) async {
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final result = await _repository.changePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
     );
+    if (result.isSuccess) {
+      _role = Role.ATTENDEE;
+      await _storageService.deleteAll();
+      appRouter.replaceAll([
+        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+      ]);
+      emit(const AuthState());
+    } else {
+      emit(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateToken({required String? accessToken, required String? refreshToken}) async {
@@ -252,5 +275,20 @@ class AuthCubit extends SafeCubit<AuthState> {
     }
     if (age < 0) age = 0; // Ensure age is not negative
     emit(state.copyWith(age: age));
+  }
+
+  bool isPicking = false;
+  Future<void> pickImage() async {
+    if (isPicking) return;
+    isPicking = true;
+    final result = await OtherHelper.openGallery();
+    isPicking = false;
+    if (result != null) {
+      emit(state.copyWith(pickedImage: result));
+    }
+  }
+
+  Future<void> clearImage() async {
+    emit(state.copyWith());
   }
 }

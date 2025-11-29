@@ -29,7 +29,7 @@ class TicketsScreen extends StatelessWidget {
     this.titleSize,
     this.appBar,
   });
-  final Function(String ticketId, TicketFilter ticketFilter) onTap;
+  final Function(TicketModel event, TicketFilter ticketFilter) onTap;
   final List<TicketFilter> filters;
   final String? subTitle;
   final String? title;
@@ -92,7 +92,7 @@ class TicketsScreen extends StatelessWidget {
                             filter: state.selectedFilter,
                                   ticketModel: ticket,
                             onTap: () {
-                                    onTap(ticket.id ?? '', state.selectedFilter!);
+                                    onTap(ticket, state.selectedFilter!);
                             },
                           );
                         },

@@ -18,8 +18,7 @@ abstract class AuthRepository {
 
   Future<ResponseState<dynamic>> verifyOtp({required String verificationId, required String otp});
 
-  Future<ResponseState<String>> changePassword({
-    required String username,
+  Future<ResponseState<dynamic>> changePassword({ 
     required String oldPassword,
     required String newPassword,
   });
@@ -31,7 +30,11 @@ abstract class AuthRepository {
 
   Future<ResponseState<ProfileModel?>> getCurrentUser();
 
-  Future<ResponseState<ProfileModel?>> updateUser({ProfileModel? profileModel, XFile? image});
+  Future<ResponseState<ProfileModel?>> updateUser({
+    ProfileModel? profileModel,
+    XFile? image,
+    required bool isDeleteImage,
+  });
 
   Future<String> signInWithGoogle();
 
