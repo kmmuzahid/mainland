@@ -1,7 +1,7 @@
 class ApiEndPoint {
   ApiEndPoint._();
   static final ApiEndPoint instance = ApiEndPoint._();
- 
+
   final String domain = 'http://10.10.7.102:4000';
   final String baseUrl = 'http://10.10.7.102:4000/api/v1';
   final String soketUrl = 'http://10.10.7.102:4000/api/v1';
@@ -36,4 +36,7 @@ class ApiEndPoint {
   final String orgEventClosed = '/event/closed';
   String eventDetails({required String id}) => '/event/$id';
 
+  //settings
+  final String about_us = '/settings/about_us';
+  final String contact_us = '/settings/contact_us';
 }

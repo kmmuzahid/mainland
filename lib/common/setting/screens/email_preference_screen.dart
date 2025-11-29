@@ -8,7 +8,6 @@ import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/mainlad/common_switch.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';

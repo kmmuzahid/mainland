@@ -1,8 +1,8 @@
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 
 class SafeCubit<State> extends Cubit<State> {
-  SafeCubit(State initialState) : super(initialState);
+  SafeCubit(super.initialState);
 
   @override
   void emit(State state) {
@@ -13,8 +13,4 @@ class SafeCubit<State> extends Cubit<State> {
     }
   }
 
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 }
