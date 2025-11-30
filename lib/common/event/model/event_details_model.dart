@@ -35,6 +35,7 @@ class EventDetailsModel {
   final List<dynamic>? totalReview;
   final bool? isDraft;
   final DateTime? createdAt;
+  final String? notification;
   final DateTime? updatedAt;
 
   EventDetailsModel({
@@ -67,6 +68,7 @@ class EventDetailsModel {
     this.totalEarned,
     this.totalReview,
     this.isDraft,
+    this.notification,
     this.createdAt,
     this.updatedAt,
   });
@@ -74,6 +76,7 @@ class EventDetailsModel {
   factory EventDetailsModel.fromJson(Map<String, dynamic> json) {
     return EventDetailsModel(
       id: json['_id'],
+      notification: json['notification'] ?? '',
       userId: json['userId'],
       eventName: json['eventName'],
       image: json['image'],
@@ -111,7 +114,6 @@ class EventDetailsModel {
 }
 
 class Category {
-
   Category({this.categoryId, this.subCategory});
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -130,15 +132,11 @@ class CategoryIdModel {
   CategoryIdModel({this.id, this.title});
 
   factory CategoryIdModel.fromJson(Map<String, dynamic> json) {
-    return CategoryIdModel(
-      id: json['_id'],
-      title: json['title'],
-    );
+    return CategoryIdModel(id: json['_id'], title: json['title']);
   }
   final String? id;
   final String? title;
 }
-
 
 class Ticket {
   final TicketName? type;

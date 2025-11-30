@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/setting/cubit/faq_cubit.dart';
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/mainlad/common_switch.dart';
@@ -53,7 +54,7 @@ class VenueSettingWidget extends StatelessWidget {
         _menuItems(
           title: AppString.faqHelp,
           onTap: () {
-            // appRouter.push(ShowInfoRoute(title: AppString.faqHelp, content: faqHelp));
+            appRouter.push(FaqRoute(faqType: FaqType.venue));
           },
           trailing: Icon(Icons.arrow_forward_ios, color: AppColors.primaryColor),
         ),

@@ -585,6 +585,17 @@ class DioService {
       ),
     );
   }
+  dynamic _getFieldValue(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return dio.MultipartFile.fromString(
+        jsonEncode(value),
+        contentType: dio.DioMediaType('application', 'json'),
+      );
+    } else if (value is int || value is double) {
+      return value.toString();
+    }
+    return value.toString();
+  }
 
   String _parseError(DioException e) {
     if (e.response?.data != null && e.response!.data is Map) {

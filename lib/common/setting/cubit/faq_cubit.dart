@@ -6,16 +6,24 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 
+enum FaqType { venue, user }
+
 class FaqCubit extends SafeCubit<FaqState> {
-  FaqCubit() : super(const FaqState());
+  FaqCubit({required this.faqType}) : super(const FaqState());
   final DioService _dioService = getIt();
+  final FaqType faqType;
 
   void fetch({bool isRefresh = false}) async {
     emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : null));
 
-    final result = await _dioService.request<List<FaqModel>>(
-      input: RequestInput(endpoint: ApiEndPoint.instance.faq, method: RequestMethod.GET),
-      responseBuilder: (data) => (data as List<dynamic>).map((e) => FaqModel.fromJson(e)).toList(),
+    final result = await _dioService.request<List<FaqModel>>( 
+      input: RequestInput(
+        endpoint: faqType == FaqType.venue
+            ? ApiEndPoint.instance.faqVenue
+            : ApiEndPoint.instance.faqUser,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => FaqModel.fromMap(e)).toList(),
     );
     emit(
       state.copyWith(

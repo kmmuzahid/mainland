@@ -7,6 +7,7 @@ import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/setting/cubit/faq_cubit.dart';
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
@@ -134,7 +135,9 @@ class SettingScreen extends StatelessWidget {
                           appRouter.push(
                             AllEventRoute(
                               onTap: (eventId, title) {
-                                appRouter.push(EventNotificationEnableRoute(title: title));
+                                appRouter.push(
+                                  EventNotificationEnableRoute(title: title, id: eventId),
+                                );
                               },
                               title: 'Select an Event to send a Notification',
                             ),
@@ -159,7 +162,7 @@ class SettingScreen extends StatelessWidget {
                       title: AppString.faqHelp,
                       onTap: () {
                         appRouter.push(
-                          const FaqRoute(),
+                           FaqRoute(faqType: FaqType.user),
                         );
                       },
                     ),

@@ -33,22 +33,21 @@ class TicketsCubit extends SafeCubit<TicketsState> {
         ),
       );
       return;
+    } else {
+      final result = await _repository.getUserEventsOnTicket(
+        filter: state.selectedFilter!,
+        page: state.page,
+      );
+      emit(
+        state.copyWith(
+          isLoading: false,
+          page: state.page + 1,
+          tickets: isRefresh ? result.data : [...state.tickets, ...result.data ?? []],
+        ),
+      );
     }
 
-    // emit(
-    //   state.copyWith(
-    //     tickets: [
-    //       for (int i = 0; i < 20; i++)
-    //         TicketModel(
-    //           title:
-    //               'Juice WRLD Mon. Jan. 12, 8pm Eko Hotel & Suites Pre Order available Nov. 1 $i',
-    //           isAvailable: i % 2 == 0,
-    //           image: Assets.images.sampleItem.path,
-    //           eventId: 'event_id_$i',
-    //         ),
-    //     ],
-    //   ),
-    // );
+    
   }
 
   void filter(TicketFilter filter) {

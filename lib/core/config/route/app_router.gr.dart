@@ -34,6 +34,7 @@ import 'package:mainland/common/notifications/screen/notifications_screen.dart'
     as _i18;
 import 'package:mainland/common/onboarding_screen/onboarding_screen.dart'
     as _i19;
+import 'package:mainland/common/setting/cubit/faq_cubit.dart' as _i46;
 import 'package:mainland/common/setting/screens/contact_us_screen.dart' as _i7;
 import 'package:mainland/common/setting/screens/email_preference_screen.dart'
     as _i10;
@@ -46,21 +47,21 @@ import 'package:mainland/common/setting/screens/privacy_policy_screen.dart'
 import 'package:mainland/common/setting/screens/setting_screen.dart' as _i26;
 import 'package:mainland/common/setting/screens/terms_condition_screen.dart'
     as _i31;
-import 'package:mainland/common/show_info/cubit/info_state.dart' as _i48;
+import 'package:mainland/common/show_info/cubit/info_state.dart' as _i49;
 import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i27;
 import 'package:mainland/common/splash/splash_screen.dart' as _i30;
-import 'package:mainland/common/tickets/model/ticket_model.dart' as _i46;
+import 'package:mainland/common/tickets/model/ticket_model.dart' as _i47;
 import 'package:mainland/common/tickets/screens/tickets_screen.dart' as _i35;
-import 'package:mainland/core/app_bar/common_app_bar.dart' as _i51;
+import 'package:mainland/core/app_bar/common_app_bar.dart' as _i52;
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart'
-    as _i50;
+    as _i51;
 import 'package:mainland/organizer/createTicket/screens/create_event_screen.dart'
     as _i8;
 import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage_screen.dart'
     as _i20;
 import 'package:mainland/user/fanclub/screens/modify_favorite_fan_club.dart'
     as _i17;
-import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i47;
+import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i48;
 import 'package:mainland/user/preferense/model/category_model.dart' as _i41;
 import 'package:mainland/user/preferense/model/sub_category_model.dart' as _i42;
 import 'package:mainland/user/preferense/screen/all_selected_preference_screen.dart'
@@ -68,7 +69,7 @@ import 'package:mainland/user/preferense/screen/all_selected_preference_screen.d
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart'
     as _i22;
 import 'package:mainland/user/preferense/screen/preference_screen.dart' as _i23;
-import 'package:mainland/user/ticket/model/ticket_picker_model.dart' as _i49;
+import 'package:mainland/user/ticket/model/ticket_picker_model.dart' as _i50;
 import 'package:mainland/user/ticket/screen/attendie_ticket_availablity_screen.dart'
     as _i3;
 import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart'
@@ -540,12 +541,13 @@ class EventDetailsRouteArgs {
 class EventNotificationEnableRoute
     extends _i39.PageRouteInfo<EventNotificationEnableRouteArgs> {
   EventNotificationEnableRoute({
-    _i40.Key? key,
+    required String id,
     required String title,
+    _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          EventNotificationEnableRoute.name,
-         args: EventNotificationEnableRouteArgs(key: key, title: title),
+         args: EventNotificationEnableRouteArgs(id: id, title: title, key: key),
          initialChildren: children,
        );
 
@@ -556,50 +558,88 @@ class EventNotificationEnableRoute
     builder: (data) {
       final args = data.argsAs<EventNotificationEnableRouteArgs>();
       return _i12.EventNotificationEnableScreen(
-        key: args.key,
+        id: args.id,
         title: args.title,
+        key: args.key,
       );
     },
   );
 }
 
 class EventNotificationEnableRouteArgs {
-  const EventNotificationEnableRouteArgs({this.key, required this.title});
+  const EventNotificationEnableRouteArgs({
+    required this.id,
+    required this.title,
+    this.key,
+  });
 
-  final _i40.Key? key;
+  final String id;
 
   final String title;
 
+  final _i40.Key? key;
+
   @override
   String toString() {
-    return 'EventNotificationEnableRouteArgs{key: $key, title: $title}';
+    return 'EventNotificationEnableRouteArgs{id: $id, title: $title, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! EventNotificationEnableRouteArgs) return false;
-    return key == other.key && title == other.title;
+    return id == other.id && title == other.title && key == other.key;
   }
 
   @override
-  int get hashCode => key.hashCode ^ title.hashCode;
+  int get hashCode => id.hashCode ^ title.hashCode ^ key.hashCode;
 }
 
 /// generated route for
 /// [_i13.FaqScreen]
-class FaqRoute extends _i39.PageRouteInfo<void> {
-  const FaqRoute({List<_i39.PageRouteInfo>? children})
-    : super(FaqRoute.name, initialChildren: children);
+class FaqRoute extends _i39.PageRouteInfo<FaqRouteArgs> {
+  FaqRoute({
+    required _i46.FaqType faqType,
+    _i40.Key? key,
+    List<_i39.PageRouteInfo>? children,
+  }) : super(
+         FaqRoute.name,
+         args: FaqRouteArgs(faqType: faqType, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'FaqRoute';
 
   static _i39.PageInfo page = _i39.PageInfo(
     name,
     builder: (data) {
-      return const _i13.FaqScreen();
+      final args = data.argsAs<FaqRouteArgs>();
+      return _i13.FaqScreen(faqType: args.faqType, key: args.key);
     },
   );
+}
+
+class FaqRouteArgs {
+  const FaqRouteArgs({required this.faqType, this.key});
+
+  final _i46.FaqType faqType;
+
+  final _i40.Key? key;
+
+  @override
+  String toString() {
+    return 'FaqRouteArgs{faqType: $faqType, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! FaqRouteArgs) return false;
+    return faqType == other.faqType && key == other.key;
+  }
+
+  @override
+  int get hashCode => faqType.hashCode ^ key.hashCode;
 }
 
 /// generated route for
@@ -754,7 +794,7 @@ class OnboardingRoute extends _i39.PageRouteInfo<void> {
 class OrgTicketManageRoute
     extends _i39.PageRouteInfo<OrgTicketManageRouteArgs> {
   OrgTicketManageRoute({
-    required _i46.TicketFilter ticketFilter,
+    required _i47.TicketFilter ticketFilter,
     required String eventId,
     required String eventName,
     _i40.Key? key,
@@ -794,7 +834,7 @@ class OrgTicketManageRouteArgs {
     this.key,
   });
 
-  final _i46.TicketFilter ticketFilter;
+  final _i47.TicketFilter ticketFilter;
 
   final String eventId;
 
@@ -849,7 +889,7 @@ class PerfenceSubcategoryRoute
     _i40.Key? key,
     required _i40.Color backgroundColor,
     String? buttonTitle,
-    required _i47.PreferenceCubit cubit,
+    required _i48.PreferenceCubit cubit,
     _i40.Widget? header,
     _i39.PageRouteInfo<Object?>? successRoute,
     dynamic Function(_i41.CategoryModel, _i42.SubCategoryModel)?
@@ -909,7 +949,7 @@ class PerfenceSubcategoryRouteArgs {
 
   final String? buttonTitle;
 
-  final _i47.PreferenceCubit cubit;
+  final _i48.PreferenceCubit cubit;
 
   final _i40.Widget? header;
 
@@ -1140,7 +1180,7 @@ class ShowInfoRoute extends _i39.PageRouteInfo<ShowInfoRouteArgs> {
   ShowInfoRoute({
     _i40.Key? key,
     required String title,
-    required _i48.InfoType infoType,
+    required _i49.InfoType infoType,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          ShowInfoRoute.name,
@@ -1174,7 +1214,7 @@ class ShowInfoRouteArgs {
 
   final String title;
 
-  final _i48.InfoType infoType;
+  final _i49.InfoType infoType;
 
   @override
   String toString() {
@@ -1312,7 +1352,7 @@ class TermsConditionRoute extends _i39.PageRouteInfo<void> {
 class TicketCheckoutRoute extends _i39.PageRouteInfo<TicketCheckoutRouteArgs> {
   TicketCheckoutRoute({
     _i40.Key? key,
-    required _i49.TicketOwnerType type,
+    required _i50.TicketOwnerType type,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketCheckoutRoute.name,
@@ -1336,7 +1376,7 @@ class TicketCheckoutRouteArgs {
 
   final _i40.Key? key;
 
-  final _i49.TicketOwnerType type;
+  final _i50.TicketOwnerType type;
 
   @override
   String toString() {
@@ -1359,8 +1399,8 @@ class TicketCheckoutRouteArgs {
 class TicketPurchaseRoute extends _i39.PageRouteInfo<TicketPurchaseRouteArgs> {
   TicketPurchaseRoute({
     _i40.Key? key,
-    required _i49.TicketOwnerType type,
-    _i50.TicketName? filterTicket,
+    required _i50.TicketOwnerType type,
+    _i51.TicketName? filterTicket,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketPurchaseRoute.name,
@@ -1396,9 +1436,9 @@ class TicketPurchaseRouteArgs {
 
   final _i40.Key? key;
 
-  final _i49.TicketOwnerType type;
+  final _i50.TicketOwnerType type;
 
-  final _i50.TicketName? filterTicket;
+  final _i51.TicketName? filterTicket;
 
   @override
   String toString() {
@@ -1470,12 +1510,12 @@ class TicketSaveRouteArgs {
 class TicketsRoute extends _i39.PageRouteInfo<TicketsRouteArgs> {
   TicketsRoute({
     _i40.Key? key,
-    required dynamic Function(_i46.TicketModel, _i46.TicketFilter) onTap,
-    required List<_i46.TicketFilter> filters,
+    required dynamic Function(_i47.TicketModel, _i47.TicketFilter) onTap,
+    required List<_i47.TicketFilter> filters,
     String? subTitle,
     String? title,
     double? titleSize,
-    _i51.CommonAppBar? appBar,
+    _i52.CommonAppBar? appBar,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketsRoute.name,
@@ -1523,9 +1563,9 @@ class TicketsRouteArgs {
 
   final _i40.Key? key;
 
-  final dynamic Function(_i46.TicketModel, _i46.TicketFilter) onTap;
+  final dynamic Function(_i47.TicketModel, _i47.TicketFilter) onTap;
 
-  final List<_i46.TicketFilter> filters;
+  final List<_i47.TicketFilter> filters;
 
   final String? subTitle;
 
@@ -1533,7 +1573,7 @@ class TicketsRouteArgs {
 
   final double? titleSize;
 
-  final _i51.CommonAppBar? appBar;
+  final _i52.CommonAppBar? appBar;
 
   @override
   String toString() {
@@ -1567,7 +1607,7 @@ class TicketsRouteArgs {
 class UserTicketManageRoute
     extends _i39.PageRouteInfo<UserTicketManageRouteArgs> {
   UserTicketManageRoute({
-    required _i46.TicketFilter ticketFilter,
+    required _i47.TicketFilter ticketFilter,
     required String ticketId,
     _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
@@ -1603,7 +1643,7 @@ class UserTicketManageRouteArgs {
     this.key,
   });
 
-  final _i46.TicketFilter ticketFilter;
+  final _i47.TicketFilter ticketFilter;
 
   final String ticketId;
 

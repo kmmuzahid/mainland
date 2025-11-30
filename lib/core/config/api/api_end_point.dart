@@ -24,7 +24,8 @@ class ApiEndPoint {
   final String termsAndConditions = '/settings/terms_and_conditions';
   final String about_us = '/settings/about_us';
   final String contact_us = '/settings/contact';
-  final String faq = '/settings/faq';
+  final String faqUser = '/settings/faq/user';
+  final String faqVenue = '/settings/faq/vanue';
 
   //event
   final String createEvent = '/event';
@@ -41,4 +42,8 @@ class ApiEndPoint {
 
   //organization
   String orgLiveEventDetails({required String id}) => '/event/event-ticket-history/$id';
+
+  //user
+  final String userLiveEvent = '/ticket/getAllTicket';
+  final String userExpiredEvent = '/ticket/expiredTicket'; 
 }

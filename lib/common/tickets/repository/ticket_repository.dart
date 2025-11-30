@@ -15,23 +15,18 @@ class TicketRepository {
     required TicketFilter filter,
     required int page,
   }) async {
-    final role = Utils.getRole();
-
     String path = '';
     String eventStatus = '';
     bool isDraft = false;
-
-    if (role == Role.ORGANIZER) {
-      path = ApiEndPoint.instance.orgEvent;
-      if (filter == TicketFilter.Live) {
-        eventStatus = 'Live';
-      } else if (filter == TicketFilter.UnderReview) {
-        eventStatus = 'UnderReview';
-      } else if (filter == TicketFilter.Draft) {
-        isDraft = true;
-      } else if (filter == TicketFilter.Closed) {
-        path = ApiEndPoint.instance.orgEventClosed;
-      }
+    path = ApiEndPoint.instance.orgEvent;
+    if (filter == TicketFilter.Live) {
+      eventStatus = 'Live';
+    } else if (filter == TicketFilter.UnderReview) {
+      eventStatus = 'UnderReview';
+    } else if (filter == TicketFilter.Draft) {
+      isDraft = true;
+    } else if (filter == TicketFilter.Closed) {
+      path = ApiEndPoint.instance.orgEventClosed;
     }
 
     final result = await _dioService.request<List<TicketModel>>(
@@ -43,6 +38,35 @@ class TicketRepository {
           if (eventStatus.isNotEmpty) 'EventStatus': eventStatus,
           if (isDraft) 'isDraft': isDraft,
         },
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => TicketModel.fromJson(e)).toList(),
+    );
+    return result;
+  }
+
+  Future<ResponseState<List<TicketModel>?>> getUserEventsOnTicket({
+    required TicketFilter filter,
+    required int page,
+  }) async {
+    String path = '';
+    String eventStatus = '';
+
+    path = ApiEndPoint.instance.userLiveEvent;
+    if (filter == TicketFilter.Live) {
+      eventStatus = 'onsell';
+    } else if (filter == TicketFilter.Available) {
+      eventStatus = 'available';
+    } else if (filter == TicketFilter.Sold) {
+      eventStatus = 'sold';
+    } else if (filter == TicketFilter.Expired) {
+      path = ApiEndPoint.instance.userExpiredEvent;
+    }
+
+    final result = await _dioService.request<List<TicketModel>>(
+      input: RequestInput(
+        endpoint: path,
+        queryParams: {'limit': 20, 'page': page, if (eventStatus.isNotEmpty) 'status': eventStatus},
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => TicketModel.fromJson(e)).toList(),
