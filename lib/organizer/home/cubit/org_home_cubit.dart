@@ -11,7 +11,8 @@ class OrgHomeCubit extends SafeCubit<OrgHomeState> {
   final TicketRepository _repository = getIt();
 
   void fetch({bool isRefresh = false}) async {
-    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : null));
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : state.page));
 
     final result = await _repository.getOranizerEvents(filter: TicketFilter.Live, page: state.page);
     if (result.isSuccess)

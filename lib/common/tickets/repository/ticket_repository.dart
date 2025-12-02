@@ -1,12 +1,9 @@
-import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
-import 'package:mainland/core/utils/app_utils.dart';
-import 'package:mainland/gen/assets.gen.dart';
 
 class TicketRepository {
   final DioService _dioService = getIt();
@@ -55,7 +52,7 @@ class TicketRepository {
     path = ApiEndPoint.instance.userLiveEvent;
     if (filter == TicketFilter.Live) {
       eventStatus = 'onsell';
-    } else if (filter == TicketFilter.Available) {
+    } else if (filter == TicketFilter.Available || filter == TicketFilter.Upcoming) {
       eventStatus = 'available';
     } else if (filter == TicketFilter.Sold) {
       eventStatus = 'sold';

@@ -44,6 +44,6 @@ class ApiEndPoint {
   String orgLiveEventDetails({required String id}) => '/event/event-ticket-history/$id';
 
   //user
-  final String userLiveEvent = '/ticket/getAllTicket';
+  final String userLiveEvent = '/ticket/unique-event';
   final String userExpiredEvent = '/ticket/expiredTicket'; 
 }

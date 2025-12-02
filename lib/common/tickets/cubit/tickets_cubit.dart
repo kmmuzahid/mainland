@@ -18,13 +18,14 @@ class TicketsCubit extends SafeCubit<TicketsState> {
 
   void fetch({bool isRefresh = false}) async {
     if (state.selectedFilter == null || state.isLoading) return;
-    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : null));
+    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : state.page));
     final role = Utils.getRole();
     if (role == Role.ORGANIZER) {
       final result = await _repository.getOranizerEvents(
         filter: state.selectedFilter!,
         page: state.page,
       );
+
       emit(
         state.copyWith(
           isLoading: false,
@@ -46,13 +47,11 @@ class TicketsCubit extends SafeCubit<TicketsState> {
         ),
       );
     }
-
-    
   }
 
   void filter(TicketFilter filter) {
     if (filter != state.selectedFilter)
       emit(state.copyWith(selectedFilter: filter, page: 1, tickets: []));
-    fetch();
+    fetch(isRefresh: true);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -26,7 +27,7 @@ class SmartStaggeredLoader extends StatefulWidget {
     this.aspectRatio = 1,
     this.appbar,
     this.onColapsAppbar,
-    this.isSeperated = false, 
+    this.isSeperated = false,
   });
 
   final int itemCount;
@@ -46,7 +47,7 @@ class SmartStaggeredLoader extends StatefulWidget {
   final double aspectRatio;
   final Widget? appbar;
   final Widget? onColapsAppbar;
-  final bool isSeperated; 
+  final bool isSeperated;
 
   @override
   State<SmartStaggeredLoader> createState() => _SmartStaggeredLoaderState();
@@ -58,6 +59,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
   late AnimationController _animationController;
   bool _isAppBarVisible = true;
   double _lastScrollOffset = 0;
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -73,9 +75,23 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
     _animationController.forward();
   }
 
-  void _onScroll() {
-    // Handle load more
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 &&
+void _onScroll() {
+    if (isRefreshing) return; // block while refreshing
+
+    final position = _scrollController.position;
+
+    // ↓↓↓ NEW: scroll direction check
+    final isScrollingDown = position.userScrollDirection == ScrollDirection.reverse;
+
+    // ↓↓↓ NEW: top bounce protection (prevents pull-to-refresh from triggering loadMore)
+    if (position.pixels < 100) return;
+
+    // ↓↓↓ NEW: bottom check
+    final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
+
+    // ↓↓↓ FIXED load more logic
+    if (isScrollingDown &&
+        isNearBottom &&
         widget.onLoadMore != null &&
         !widget.isLoading &&
         !widget.isLoadingMore &&
@@ -84,30 +100,26 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
       widget.onLoadMore!();
     }
 
-    // Handle app bar visibility if appbar is provided
+    // ------- AppBar Logic (unchanged) -------
     if (widget.appbar != null) {
-      final currentScroll = _scrollController.position.pixels;
-      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = position.pixels;
+      final maxScroll = position.maxScrollExtent;
       final isAtBottom = currentScroll >= maxScroll;
-      final isAtTop = currentScroll <= _scrollController.position.minScrollExtent;
+      final isAtTop = currentScroll <= position.minScrollExtent;
 
-      // Only process scroll events when not at the boundaries to prevent bouncing effects
       if (!isAtTop && !isAtBottom) {
         final isScrollingDown = currentScroll > _lastScrollOffset && currentScroll > 0;
 
         if (isScrollingDown && _isAppBarVisible) {
-          // Hide app bar when scrolling down
           _isAppBarVisible = false;
           setState(() {});
           _animationController.reverse();
         } else if (!isScrollingDown && !_isAppBarVisible) {
-          // Show app bar when scrolling up
           _isAppBarVisible = true;
           setState(() {});
           _animationController.forward();
         }
       } else if (isAtTop && !_isAppBarVisible) {
-        // Ensure app bar is visible when at top
         _isAppBarVisible = true;
         setState(() {});
         _animationController.forward();
@@ -115,6 +127,19 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
 
       _lastScrollOffset = currentScroll;
     }
+}
+
+Future<void> _onRefresh() async {
+    if (isRefreshing) return;
+
+    isRefreshing = true;
+    setState(() {});
+
+    await widget.onRefresh?.call();
+
+    // reset flags instantly — no delay hacks
+    isRefreshing = false;
+    setState(() {});
   }
 
   @override
@@ -126,7 +151,6 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
   }
 
   Widget _buildGrid({ScrollController? controller, ScrollPhysics? physics}) {
- 
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.custom(
@@ -194,13 +218,13 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
 
       return widget.onRefresh != null
           ? RefreshIndicator(
-              onRefresh: () async {
-                await widget.onRefresh?.call();
-              },
+              onRefresh: _onRefresh,
               child: placeholder,
             )
           : placeholder;
     }
+  
+    
 
     // Show staggered grid with optional pull-to-refresh
     final grid = widget.topWidget == null
@@ -217,9 +241,7 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
 
     return widget.onRefresh != null
         ? RefreshIndicator(
-            onRefresh: () async {
-              await widget.onRefresh?.call();
-            },
+            onRefresh: _onRefresh,
             child: grid,
           )
         : grid;

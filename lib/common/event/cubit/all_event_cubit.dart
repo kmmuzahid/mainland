@@ -10,7 +10,7 @@ class AllEventCubit extends SafeCubit<AllEventState> {
 
   void fetch({bool isRefresh = false}) async {
     if (state.isLoading) return;
-    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : null));
+    emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : state.page));
     final result = await _repository.getOranizerEvents(filter: TicketFilter.Live, page: state.page);
     emit(
       state.copyWith(
