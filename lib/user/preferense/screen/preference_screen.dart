@@ -27,7 +27,10 @@ class PreferenceScreen extends StatelessWidget {
     this.backgroundColor,
     this.onSubscategoryTap,
     this.diableBack = false,
+    this.includeSelectedSubcategory = true,
   });
+  
+  final bool includeSelectedSubcategory;
   final Widget? header;
   final String? buttonTitle;
   final Color? backgroundColor;
@@ -44,7 +47,9 @@ class PreferenceScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<PreferenceCubit>(
-          create: (context) => PreferenceCubit()..fetchCategory(),
+          create: (context) =>
+              PreferenceCubit()
+                ..fetchCategory(includeSelectedSubcategory: includeSelectedSubcategory),
           child: BlocBuilder<PreferenceCubit, PreferenceState>(
             builder: (context, state) {
               return SingleChildScrollView(
@@ -62,6 +67,7 @@ class PreferenceScreen extends StatelessWidget {
                         category: null,
                         state: state,
                         showAllActions: onSubscategoryTap == null,
+                        cubit: context.read<PreferenceCubit>(),
                       ),
                   ],
                 ),

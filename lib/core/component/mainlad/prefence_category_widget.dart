@@ -20,7 +20,7 @@ class PrefenceCategoryWidget extends StatelessWidget {
   final List<SubCategoryModel> selectedSubcategories;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return GestureDetector(
       onTap: onTap,
       child: Container(

@@ -13,7 +13,7 @@ class TicketsCubit extends SafeCubit<TicketsState> {
 
   void initalize(TicketFilter filter) {
     emit(state.copyWith(selectedFilter: filter));
-    fetch();
+    fetch(isRefresh: true);
   }
 
   void fetch({bool isRefresh = false}) async {

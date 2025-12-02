@@ -10,7 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i39;
-import 'package:collection/collection.dart' as _i43;
+import 'package:collection/collection.dart' as _i44;
 import 'package:flutter/material.dart' as _i40;
 import 'package:mainland/common/auth/screen/change_password_screen.dart' as _i4;
 import 'package:mainland/common/auth/screen/forget_password_screen.dart'
@@ -19,11 +19,11 @@ import 'package:mainland/common/auth/screen/otp_screen.dart' as _i21;
 import 'package:mainland/common/auth/screen/profile_info_screen.dart' as _i25;
 import 'package:mainland/common/auth/screen/sign_in_screen.dart' as _i28;
 import 'package:mainland/common/auth/screen/sign_up_screen.dart' as _i29;
-import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i44;
+import 'package:mainland/common/chat/model/chat_list_item_model.dart' as _i45;
 import 'package:mainland/common/chat/screens/chat_list_screen.dart' as _i5;
 import 'package:mainland/common/chat/screens/chat_screen.dart' as _i6;
 import 'package:mainland/common/custom_google_map/model/place_details.dart'
-    as _i45;
+    as _i46;
 import 'package:mainland/common/custom_google_map/screen/custom_map_screen.dart'
     as _i9;
 import 'package:mainland/common/event/screens/all_event_screen.dart' as _i1;
@@ -34,7 +34,7 @@ import 'package:mainland/common/notifications/screen/notifications_screen.dart'
     as _i18;
 import 'package:mainland/common/onboarding_screen/onboarding_screen.dart'
     as _i19;
-import 'package:mainland/common/setting/cubit/faq_cubit.dart' as _i46;
+import 'package:mainland/common/setting/cubit/faq_cubit.dart' as _i47;
 import 'package:mainland/common/setting/screens/contact_us_screen.dart' as _i7;
 import 'package:mainland/common/setting/screens/email_preference_screen.dart'
     as _i10;
@@ -50,7 +50,7 @@ import 'package:mainland/common/setting/screens/terms_condition_screen.dart'
 import 'package:mainland/common/show_info/cubit/info_state.dart' as _i49;
 import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i27;
 import 'package:mainland/common/splash/splash_screen.dart' as _i30;
-import 'package:mainland/common/tickets/model/ticket_model.dart' as _i47;
+import 'package:mainland/common/tickets/model/ticket_model.dart' as _i41;
 import 'package:mainland/common/tickets/screens/tickets_screen.dart' as _i35;
 import 'package:mainland/core/app_bar/common_app_bar.dart' as _i52;
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart'
@@ -62,8 +62,8 @@ import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage_screen.
 import 'package:mainland/user/fanclub/screens/modify_favorite_fan_club.dart'
     as _i17;
 import 'package:mainland/user/preferense/cubit/preference_cubit.dart' as _i48;
-import 'package:mainland/user/preferense/model/category_model.dart' as _i41;
-import 'package:mainland/user/preferense/model/sub_category_model.dart' as _i42;
+import 'package:mainland/user/preferense/model/category_model.dart' as _i42;
+import 'package:mainland/user/preferense/model/sub_category_model.dart' as _i43;
 import 'package:mainland/user/preferense/screen/all_selected_preference_screen.dart'
     as _i2;
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart'
@@ -91,11 +91,17 @@ class AllEventRoute extends _i39.PageRouteInfo<AllEventRouteArgs> {
   AllEventRoute({
     _i40.Key? key,
     required String title,
+    _i41.TicketFilter? ticketFilter,
     dynamic Function(String, String)? onTap,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          AllEventRoute.name,
-         args: AllEventRouteArgs(key: key, title: title, onTap: onTap),
+         args: AllEventRouteArgs(
+           key: key,
+           title: title,
+           ticketFilter: ticketFilter,
+           onTap: onTap,
+         ),
          initialChildren: children,
        );
 
@@ -108,6 +114,7 @@ class AllEventRoute extends _i39.PageRouteInfo<AllEventRouteArgs> {
       return _i1.AllEventScreen(
         key: args.key,
         title: args.title,
+        ticketFilter: args.ticketFilter,
         onTap: args.onTap,
       );
     },
@@ -115,28 +122,37 @@ class AllEventRoute extends _i39.PageRouteInfo<AllEventRouteArgs> {
 }
 
 class AllEventRouteArgs {
-  const AllEventRouteArgs({this.key, required this.title, this.onTap});
+  const AllEventRouteArgs({
+    this.key,
+    required this.title,
+    this.ticketFilter,
+    this.onTap,
+  });
 
   final _i40.Key? key;
 
   final String title;
 
+  final _i41.TicketFilter? ticketFilter;
+
   final dynamic Function(String, String)? onTap;
 
   @override
   String toString() {
-    return 'AllEventRouteArgs{key: $key, title: $title, onTap: $onTap}';
+    return 'AllEventRouteArgs{key: $key, title: $title, ticketFilter: $ticketFilter, onTap: $onTap}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AllEventRouteArgs) return false;
-    return key == other.key && title == other.title;
+    return key == other.key &&
+        title == other.title &&
+        ticketFilter == other.ticketFilter;
   }
 
   @override
-  int get hashCode => key.hashCode ^ title.hashCode;
+  int get hashCode => key.hashCode ^ title.hashCode ^ ticketFilter.hashCode;
 }
 
 /// generated route for
@@ -145,7 +161,7 @@ class AllSelectedPreferenceRoute
     extends _i39.PageRouteInfo<AllSelectedPreferenceRouteArgs> {
   AllSelectedPreferenceRoute({
     _i40.Key? key,
-    required Map<_i41.CategoryModel, List<_i42.SubCategoryModel>> categoryData,
+    required Map<_i42.CategoryModel, List<_i43.SubCategoryModel>> categoryData,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          AllSelectedPreferenceRoute.name,
@@ -175,7 +191,7 @@ class AllSelectedPreferenceRouteArgs {
 
   final _i40.Key? key;
 
-  final Map<_i41.CategoryModel, List<_i42.SubCategoryModel>> categoryData;
+  final Map<_i42.CategoryModel, List<_i43.SubCategoryModel>> categoryData;
 
   @override
   String toString() {
@@ -187,12 +203,12 @@ class AllSelectedPreferenceRouteArgs {
     if (identical(this, other)) return true;
     if (other is! AllSelectedPreferenceRouteArgs) return false;
     return key == other.key &&
-        const _i43.MapEquality().equals(categoryData, other.categoryData);
+        const _i44.MapEquality().equals(categoryData, other.categoryData);
   }
 
   @override
   int get hashCode =>
-      key.hashCode ^ const _i43.MapEquality().hash(categoryData);
+      key.hashCode ^ const _i44.MapEquality().hash(categoryData);
 }
 
 /// generated route for
@@ -247,7 +263,7 @@ class ChatListRoute extends _i39.PageRouteInfo<void> {
 /// [_i6.ChatScreen]
 class ChatRoute extends _i39.PageRouteInfo<ChatRouteArgs> {
   ChatRoute({
-    required _i44.ChatListItemModel chatListItemModel,
+    required _i45.ChatListItemModel chatListItemModel,
     _i40.Key? key,
     _i40.Widget? action,
     List<_i39.PageRouteInfo>? children,
@@ -279,7 +295,7 @@ class ChatRoute extends _i39.PageRouteInfo<ChatRouteArgs> {
 class ChatRouteArgs {
   const ChatRouteArgs({required this.chatListItemModel, this.key, this.action});
 
-  final _i44.ChatListItemModel chatListItemModel;
+  final _i45.ChatListItemModel chatListItemModel;
 
   final _i40.Key? key;
 
@@ -374,7 +390,7 @@ class CreateEventRouteArgs {
 class CustomMapRoute extends _i39.PageRouteInfo<CustomMapRouteArgs> {
   CustomMapRoute({
     _i40.Key? key,
-    void Function(_i45.PlaceDetails)? onPositionChange,
+    void Function(_i46.PlaceDetails)? onPositionChange,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          CustomMapRoute.name,
@@ -403,7 +419,7 @@ class CustomMapRouteArgs {
 
   final _i40.Key? key;
 
-  final void Function(_i45.PlaceDetails)? onPositionChange;
+  final void Function(_i46.PlaceDetails)? onPositionChange;
 
   @override
   String toString() {
@@ -599,7 +615,7 @@ class EventNotificationEnableRouteArgs {
 /// [_i13.FaqScreen]
 class FaqRoute extends _i39.PageRouteInfo<FaqRouteArgs> {
   FaqRoute({
-    required _i46.FaqType faqType,
+    required _i47.FaqType faqType,
     _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
   }) : super(
@@ -622,7 +638,7 @@ class FaqRoute extends _i39.PageRouteInfo<FaqRouteArgs> {
 class FaqRouteArgs {
   const FaqRouteArgs({required this.faqType, this.key});
 
-  final _i46.FaqType faqType;
+  final _i47.FaqType faqType;
 
   final _i40.Key? key;
 
@@ -794,7 +810,7 @@ class OnboardingRoute extends _i39.PageRouteInfo<void> {
 class OrgTicketManageRoute
     extends _i39.PageRouteInfo<OrgTicketManageRouteArgs> {
   OrgTicketManageRoute({
-    required _i47.TicketFilter ticketFilter,
+    required _i41.TicketFilter ticketFilter,
     required String eventId,
     required String eventName,
     _i40.Key? key,
@@ -834,7 +850,7 @@ class OrgTicketManageRouteArgs {
     this.key,
   });
 
-  final _i47.TicketFilter ticketFilter;
+  final _i41.TicketFilter ticketFilter;
 
   final String eventId;
 
@@ -892,9 +908,9 @@ class PerfenceSubcategoryRoute
     required _i48.PreferenceCubit cubit,
     _i40.Widget? header,
     _i39.PageRouteInfo<Object?>? successRoute,
-    dynamic Function(_i41.CategoryModel, _i42.SubCategoryModel)?
+    dynamic Function(_i42.CategoryModel, _i43.SubCategoryModel)?
     onSubscategoryTap,
-    required _i41.CategoryModel category,
+    required _i42.CategoryModel category,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          PerfenceSubcategoryRoute.name,
@@ -955,10 +971,10 @@ class PerfenceSubcategoryRouteArgs {
 
   final _i39.PageRouteInfo<Object?>? successRoute;
 
-  final dynamic Function(_i41.CategoryModel, _i42.SubCategoryModel)?
+  final dynamic Function(_i42.CategoryModel, _i43.SubCategoryModel)?
   onSubscategoryTap;
 
-  final _i41.CategoryModel category;
+  final _i42.CategoryModel category;
 
   @override
   String toString() {
@@ -998,9 +1014,10 @@ class PreferenceRoute extends _i39.PageRouteInfo<PreferenceRouteArgs> {
     _i40.Widget? header,
     String? buttonTitle,
     _i40.Color? backgroundColor,
-    dynamic Function(_i41.CategoryModel, _i42.SubCategoryModel)?
+    dynamic Function(_i42.CategoryModel, _i43.SubCategoryModel)?
     onSubscategoryTap,
     bool diableBack = false,
+    bool includeSelectedSubcategory = true,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          PreferenceRoute.name,
@@ -1012,6 +1029,7 @@ class PreferenceRoute extends _i39.PageRouteInfo<PreferenceRouteArgs> {
            backgroundColor: backgroundColor,
            onSubscategoryTap: onSubscategoryTap,
            diableBack: diableBack,
+           includeSelectedSubcategory: includeSelectedSubcategory,
          ),
          initialChildren: children,
        );
@@ -1032,6 +1050,7 @@ class PreferenceRoute extends _i39.PageRouteInfo<PreferenceRouteArgs> {
         backgroundColor: args.backgroundColor,
         onSubscategoryTap: args.onSubscategoryTap,
         diableBack: args.diableBack,
+        includeSelectedSubcategory: args.includeSelectedSubcategory,
       );
     },
   );
@@ -1046,6 +1065,7 @@ class PreferenceRouteArgs {
     this.backgroundColor,
     this.onSubscategoryTap,
     this.diableBack = false,
+    this.includeSelectedSubcategory = true,
   });
 
   final _i39.PageRouteInfo<Object?>? successRoute;
@@ -1058,14 +1078,16 @@ class PreferenceRouteArgs {
 
   final _i40.Color? backgroundColor;
 
-  final dynamic Function(_i41.CategoryModel, _i42.SubCategoryModel)?
+  final dynamic Function(_i42.CategoryModel, _i43.SubCategoryModel)?
   onSubscategoryTap;
 
   final bool diableBack;
 
+  final bool includeSelectedSubcategory;
+
   @override
   String toString() {
-    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor, onSubscategoryTap: $onSubscategoryTap, diableBack: $diableBack}';
+    return 'PreferenceRouteArgs{successRoute: $successRoute, key: $key, header: $header, buttonTitle: $buttonTitle, backgroundColor: $backgroundColor, onSubscategoryTap: $onSubscategoryTap, diableBack: $diableBack, includeSelectedSubcategory: $includeSelectedSubcategory}';
   }
 
   @override
@@ -1077,7 +1099,8 @@ class PreferenceRouteArgs {
         header == other.header &&
         buttonTitle == other.buttonTitle &&
         backgroundColor == other.backgroundColor &&
-        diableBack == other.diableBack;
+        diableBack == other.diableBack &&
+        includeSelectedSubcategory == other.includeSelectedSubcategory;
   }
 
   @override
@@ -1087,7 +1110,8 @@ class PreferenceRouteArgs {
       header.hashCode ^
       buttonTitle.hashCode ^
       backgroundColor.hashCode ^
-      diableBack.hashCode;
+      diableBack.hashCode ^
+      includeSelectedSubcategory.hashCode;
 }
 
 /// generated route for
@@ -1510,8 +1534,8 @@ class TicketSaveRouteArgs {
 class TicketsRoute extends _i39.PageRouteInfo<TicketsRouteArgs> {
   TicketsRoute({
     _i40.Key? key,
-    required dynamic Function(_i47.TicketModel, _i47.TicketFilter) onTap,
-    required List<_i47.TicketFilter> filters,
+    required dynamic Function(_i41.TicketModel, _i41.TicketFilter) onTap,
+    required List<_i41.TicketFilter> filters,
     String? subTitle,
     String? title,
     double? titleSize,
@@ -1563,9 +1587,9 @@ class TicketsRouteArgs {
 
   final _i40.Key? key;
 
-  final dynamic Function(_i47.TicketModel, _i47.TicketFilter) onTap;
+  final dynamic Function(_i41.TicketModel, _i41.TicketFilter) onTap;
 
-  final List<_i47.TicketFilter> filters;
+  final List<_i41.TicketFilter> filters;
 
   final String? subTitle;
 
@@ -1585,7 +1609,7 @@ class TicketsRouteArgs {
     if (identical(this, other)) return true;
     if (other is! TicketsRouteArgs) return false;
     return key == other.key &&
-        const _i43.ListEquality().equals(filters, other.filters) &&
+        const _i44.ListEquality().equals(filters, other.filters) &&
         subTitle == other.subTitle &&
         title == other.title &&
         titleSize == other.titleSize &&
@@ -1595,7 +1619,7 @@ class TicketsRouteArgs {
   @override
   int get hashCode =>
       key.hashCode ^
-      const _i43.ListEquality().hash(filters) ^
+      const _i44.ListEquality().hash(filters) ^
       subTitle.hashCode ^
       title.hashCode ^
       titleSize.hashCode ^
@@ -1607,7 +1631,7 @@ class TicketsRouteArgs {
 class UserTicketManageRoute
     extends _i39.PageRouteInfo<UserTicketManageRouteArgs> {
   UserTicketManageRoute({
-    required _i47.TicketFilter ticketFilter,
+    required _i41.TicketFilter ticketFilter,
     required String ticketId,
     _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
@@ -1643,7 +1667,7 @@ class UserTicketManageRouteArgs {
     this.key,
   });
 
-  final _i47.TicketFilter ticketFilter;
+  final _i41.TicketFilter ticketFilter;
 
   final String ticketId;
 

@@ -3,15 +3,12 @@ import 'dart:convert';
 
 class SubCategoryModel {
   final String id;
-  final String title;
+  final String title; 
+
   SubCategoryModel({required this.id, required this.title});
-  
 
   SubCategoryModel copyWith({String? id, String? title}) {
-    return SubCategoryModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-    );
+    return SubCategoryModel(id: id ?? this.id, title: title ?? this.title);
   }
 
   Map<String, dynamic> toMap() {
@@ -35,7 +32,7 @@ class SubCategoryModel {
   @override
   bool operator ==(covariant SubCategoryModel other) {
     if (identical(this, other)) return true;
-  
+
     return other.id == id && other.title == title;
   }
 

@@ -60,6 +60,7 @@ class PerfenceSubcategoryScreen extends StatelessWidget {
                           : _subCategoryBuilder(state),
                     ),
                     PreferenceActionsWidget(
+                      cubit: cubit,
                       buttonTitle: buttonTitle,
                       successRoute: successRoute,
                       category: category,

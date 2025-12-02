@@ -52,12 +52,16 @@ class TicketRepository {
     path = ApiEndPoint.instance.userLiveEvent;
     if (filter == TicketFilter.Live) {
       eventStatus = 'onsell';
+    } else if (filter == TicketFilter.Used) {
+      eventStatus = 'used';
     } else if (filter == TicketFilter.Available || filter == TicketFilter.Upcoming) {
       eventStatus = 'available';
     } else if (filter == TicketFilter.Sold) {
-      eventStatus = 'sold';
+      path = ApiEndPoint.instance.userSoldEvent;
     } else if (filter == TicketFilter.Expired) {
       path = ApiEndPoint.instance.userExpiredEvent;
+    } else if (filter == TicketFilter.fanClub) {
+      path = ApiEndPoint.instance.userFavourite;
     }
 
     final result = await _dioService.request<List<TicketModel>>(

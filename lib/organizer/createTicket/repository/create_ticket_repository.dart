@@ -122,6 +122,7 @@ class CreateTicketRepository {
             id: event.category?.first.categoryId?.id ?? '',
             title: event.category?.first.categoryId?.title ?? '',
             coverImage: '',
+            subCategories: event.category?.first.subCategory ?? [],
           )
         : null;
     final List<SubCategoryModel> selectedSubcategories = [];

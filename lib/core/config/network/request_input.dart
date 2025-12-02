@@ -23,6 +23,7 @@ class RequestInput {
     this.onReceiveProgress,
     this.requiresToken = true,
     this.cancelToken,
+    this.listBody
   });
   final String endpoint; 
   final RequestMethod method;
@@ -31,6 +32,7 @@ class RequestInput {
   final Map<String, String>? headers;
   final Map<String, dynamic>? formFields;
   final Map<String, dynamic>? jsonBody;
+  final List<Map<String, dynamic>>? listBody;
   final Map<String, XFile>? files; 
   final Duration? timeout;
   final Function(int, int)? onSendProgress;
@@ -47,6 +49,7 @@ class RequestInput {
       'headers': headers,
       'formFields': formFields,
       'jsonBody': jsonEncode(jsonBody),
+      'listBody': listBody,
       'files': files?.map((key, value) => MapEntry(key, value.name)),
       'timeout': timeout.toString(),
       'requiresToken': requiresToken,

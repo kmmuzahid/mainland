@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -58,14 +60,14 @@ class FanClubScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  icon: Icon(Icons.add, color: AppColors.iconColorBlack, size: 30),
+                  icon: Icon(Icons.edit_outlined, color: AppColors.iconColorBlack, size: 30),
                 ),
-                IconButton(
-                  onPressed: () {
-                    appRouter.push(const ModifyFavoriteFanClub());
-                  },
-                  icon: Icon(Icons.edit_outlined, color: AppColors.iconColorBlack, size: 25),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     appRouter.push(const ModifyFavoriteFanClub());
+                //   },
+                //   icon: Icon(Icons.edit_outlined, color: AppColors.iconColorBlack, size: 25),
+                // ),
               ],
             ),
             CommonText(
@@ -73,17 +75,28 @@ class FanClubScreen extends StatelessWidget {
               style: AppTextStyles.bodyLarge,
             ).start,
             10.height,
-            Expanded(
-              child: SmartStaggeredLoader(
-                itemCount: 20,
-                crossAxisSpacing: 10,
-                aspectRatio: 0.6434,
-                isSeperated: true,
-                mainAxisSpacing: 10,
-                itemBuilder: (context, index) => TicketWidget(
-                  ticketModel: TicketModel(),
-                  onTap: () {
-                    appRouter.push(EventDetailsRoute(eventId: '1'));
+            CubitScope(
+              create: () => TicketsCubit()..initalize(TicketFilter.fanClub),
+              builder: (context, cubit, state) => Expanded(
+                child: SmartStaggeredLoader(
+                  itemCount: state.tickets.length,
+                  crossAxisSpacing: 10,
+                  aspectRatio: 0.6434,
+                  isLoading: state.isLoading,
+                  isSeperated: true,
+                  mainAxisSpacing: 10,
+                  onLoadMore: cubit.fetch,
+                  onRefresh: () {
+                    cubit.fetch(isRefresh: true);
+                  },
+                  itemBuilder: (context, index) {
+                    final ticket = state.tickets[index];
+                    return TicketWidget(
+                      ticketModel: ticket,
+                      onTap: () {
+                        appRouter.push(EventDetailsRoute(eventId: ticket.id ?? ''));
+                      },
+                    );
                   },
                 ),
               ),

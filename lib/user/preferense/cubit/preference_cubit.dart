@@ -3,6 +3,7 @@ import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
+import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/user/preferense/model/category_model.dart';
@@ -21,7 +22,7 @@ class PreferenceCubit extends SafeCubit<PreferenceState> {
       );
   final DioService dioService = getIt<DioService>();
 
-void selectSubcategory({required SubCategoryModel subcategory, required CategoryModel category}) {
+  void selectSubcategory({required SubCategoryModel subcategory, required CategoryModel category}) {
     // Create a new map to avoid mutating the current state
     final Map<CategoryModel, List<SubCategoryModel>> updatedMap = Map.from(
       state.selectedSubcategories,
@@ -38,8 +39,8 @@ void selectSubcategory({required SubCategoryModel subcategory, required Category
           'You can select maximum 3 subcategories per category',
           type: SnackBarType.warning,
         );
-      return;
-    }
+        return;
+      }
       currentSubcategories.add(subcategory);
     }
 
@@ -48,33 +49,39 @@ void selectSubcategory({required SubCategoryModel subcategory, required Category
       updatedMap.remove(category);
     } else {
       updatedMap[category] = currentSubcategories;
-  }
+    }
 
     // Emit the new state
     emit(state.copyWith(selectedSubcategories: updatedMap));
   }
 
-  Future<void> fetchCategory() async {
+  Future<void> fetchCategory({required bool includeSelectedSubcategory}) async {
     emit(state.copyWith(isCategoryLoading: true));
     final response = await dioService.request<Map<CategoryModel, List<SubCategoryModel>>>(
-      input: RequestInput(endpoint: ApiEndPoint.instance.category, method: RequestMethod.GET),
+      input: RequestInput(
+        endpoint: includeSelectedSubcategory
+            ? ApiEndPoint.instance.categoryWithSubCategory
+            : ApiEndPoint.instance.category,
+        method: RequestMethod.GET,
+      ),
       responseBuilder: (data) {
         final categoryMap = (data as List).map((element) {
           final category = CategoryModel.fromMap(element);
-          return MapEntry(category, <SubCategoryModel>[]);
+          return MapEntry(category, category.subCategories);
         });
         return Map.fromEntries(categoryMap);
       },
     );
     emit(state.copyWith(isCategoryLoading: false));
-    if (response.statusCode == 200) {
-      emit(state.copyWith(data: response.data));
+    if (response.isSuccess) {
+      emit(state.copyWith(data: response.data, selectedSubcategories: response.data)); 
+      
     }
   }
 
   Future<void> fetchSubcategory(String categoryId) async {
     emit(state.copyWith(isSubcategoryLoading: true));
-    final response = await dioService.request<List<SubCategoryModel>>( 
+    final response = await dioService.request<List<SubCategoryModel>>(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.subCategory(categoryId),
         method: RequestMethod.GET,
@@ -98,5 +105,26 @@ void selectSubcategory({required SubCategoryModel subcategory, required Category
     }
   }
 
-
+  Future<void> setFavourite() async {
+    if (state.isSaving) return;
+    emit(state.copyWith(isSaving: true));
+    final response = await dioService.request<dynamic>(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.userFavourite,
+        method: RequestMethod.POST,
+        listBody: state.selectedSubcategories.entries.map((entry) {
+          return {
+            'categoryId': entry.key.id,
+            'subCategoryId': entry.value.map((subCategory) => subCategory.id).toList(),
+          };
+        }).toList(),
+      ),
+      responseBuilder: (data) => data,
+    );
+    emit(state.copyWith(isSaving: false));
+    if (response.isSuccess) {
+      appRouter.pop();
+    }
+  }
 }

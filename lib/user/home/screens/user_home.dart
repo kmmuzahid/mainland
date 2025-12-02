@@ -11,6 +11,7 @@ import 'package:mainland/common/home/widgets/home_top_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -18,6 +19,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/user/home/cubit/user_home_cubit.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class UserHome extends StatelessWidget {
   const UserHome({super.key});
@@ -28,36 +31,52 @@ class UserHome extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: Padding(
         padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.h),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _topChild(),
-              10.height,
-              CommonTextField(
-                backgroundColor: AppColors.backgroundWhite,
-                prefixIcon: const Icon(Icons.search),
-                hintText: AppString.searchEventsHere,
-                validationType: ValidationType.notRequired,
+        child: CubitScope(
+          create: () => UserHomeCubit()..fetch(),
+          builder: (context, cubit, state) => RefreshIndicator(
+            onRefresh: () => cubit.fetch(isRefresh: true),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _topChild(),
+                  10.height,
+                  CommonTextField(
+                    backgroundColor: AppColors.backgroundWhite,
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: AppString.searchEventsHere,
+                    validationType: ValidationType.notRequired,
+                  ),
+                  10.height,
+                  _header(
+                    title: AppString.newlyAddedEvents,
+                    onTap: () {
+                      appRouter.push(
+                        AllEventRoute(
+                          title: AppString.newlyAddedEvents,
+                          ticketFilter: TicketFilter.newlyAdded,
+                        ),
+                      );
+                    },
+                  ),
+                  10.height,
+                  _suggestions(data: state.newlyAddedEvents, isLoading: state.isNewlyAddedLoading),
+                  Divider(color: AppColors.outlineColor),
+                  _header(
+                    title: AppString.popularEvents,
+                    onTap: () {
+                      appRouter.push(
+                        AllEventRoute(
+                          title: AppString.popularEvents,
+                          ticketFilter: TicketFilter.popular,
+                        ),
+                      );
+                    },
+                  ),
+                  10.height,
+                  _suggestions(data: state.popularEvents, isLoading: state.isPopularLoading),
+                ],
               ),
-              10.height,
-              _header(
-                title: AppString.newlyAddedEvents,
-                onTap: () {
-                  appRouter.push(AllEventRoute(title: AppString.newlyAddedEvents));
-                },
-              ),
-              10.height,
-              _suggestions(count: 8),
-              Divider(color: AppColors.outlineColor),
-              _header(
-                title: AppString.popularEvents,
-                onTap: () {
-                  appRouter.push(AllEventRoute(title: AppString.popularEvents));
-                },
-              ),
-              10.height,
-              _suggestions(count: 8),
-            ],
+            ),
           ),
         ),
       ),
@@ -80,28 +99,52 @@ class UserHome extends StatelessWidget {
     );
   }
 
-  Widget _suggestions({required int count}) {
-    // Give the horizontal list a fixed height when used inside SingleChildScrollView
-    return SizedBox(
+  Widget _suggestions({required List<TicketModel> data, required bool isLoading}) {
+    return Skeletonizer(
+      enabled: isLoading,
+      child: SizedBox(
       height: 272.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: count,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.only(right: 10.w),
-          child: AspectRatio(
-            aspectRatio: 0.6434,
-            child: TicketWidget(
-              ticketModel: TicketModel(),
-              onTap: () {
-                appRouter.push(EventDetailsRoute(eventId: '1'));
-              },
-            ),
-          ),
+          itemCount: isLoading || data.isEmpty ? 3 : data.length,
+          itemBuilder: (context, index) {
+            if (isLoading || data.isEmpty) {
+              return Padding(
+                padding: EdgeInsets.only(right: 10.w),
+                child: AspectRatio(
+                  aspectRatio: 0.6434,
+                  child: Skeleton.leaf(
+                    enabled: isLoading,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white60,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            final ticket = data[index];
+            return Padding(
+              padding: EdgeInsets.only(right: 10.w),
+              child: AspectRatio(
+                aspectRatio: 0.6434,
+                child: TicketWidget(
+                  ticketModel: ticket,
+                  onTap: () {
+                    appRouter.push(EventDetailsRoute(eventId: ticket.id ?? ''));
+                  },
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
+
 
   Widget _topChild() {
     return HomeTopWidget(
@@ -120,7 +163,8 @@ class UserHome extends StatelessWidget {
         titleText: AppString.categories,
         onTap: () {
           appRouter.push(
-            PreferenceRoute( 
+            PreferenceRoute(
+              includeSelectedSubcategory: false,
               backgroundColor: AppColors.background,
               header: Row(
                 children: [
@@ -142,6 +186,5 @@ class UserHome extends StatelessWidget {
         },
       ),
     );
-   
   }
 }

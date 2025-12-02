@@ -6,6 +6,7 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:mainland/user/preferense/cubit/preference_cubit.dart';
 import 'package:mainland/user/preferense/cubit/preference_state.dart';
 import 'package:mainland/user/preferense/model/category_model.dart';
 
@@ -17,6 +18,7 @@ class PreferenceActionsWidget extends StatelessWidget {
     required this.category,
     required this.state,
     this.showAllActions = false,
+    required this.cubit,
   });
 
   final String? buttonTitle;
@@ -24,6 +26,7 @@ class PreferenceActionsWidget extends StatelessWidget {
   final CategoryModel? category;
   final PreferenceState state;
   final bool showAllActions;
+  final PreferenceCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,8 @@ class PreferenceActionsWidget extends StatelessWidget {
               titleText: buttonTitle ?? 'Next',
               onTap: () {
                 if (successRoute != null) {
-                  appRouter.replaceAll([successRoute!]);
+                  cubit.setFavourite();
+                  // appRouter.replaceAll([successRoute!]);
                 } else {
                   final data = state.selectedSubcategories[category] ?? []; 
                   appRouter.pop();

@@ -2,7 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
-enum TicketFilter { Live, Available, Sold, Expired, Upcoming, Used, UnderReview, Draft, Closed }
+enum TicketFilter {
+  Live,
+  Available,
+  Sold,
+  Expired,
+  Upcoming,
+  Used,
+  UnderReview,
+  Draft,
+  Closed,
+  fanClub,
+  popular,
+  newlyAdded,
+}
 
 class TicketModel {
   final String? id;

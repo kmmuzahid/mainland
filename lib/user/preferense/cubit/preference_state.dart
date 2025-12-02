@@ -8,18 +8,21 @@ class PreferenceState extends Equatable {
     required this.selectedSubcategories,
     required this.isCategoryLoading,
     required this.isSubcategoryLoading,
+    this.isSaving = false,
     this.data = const {},
   });
 
   final Map<CategoryModel, List<SubCategoryModel>> data;
   final bool isCategoryLoading;
   final bool isSubcategoryLoading;
+  final bool isSaving;
 
   final Map<CategoryModel, List<SubCategoryModel>> selectedSubcategories;
 
   @override
   List<Object> get props => [
     selectedSubcategories,
+    isSaving,
     isCategoryLoading,
     isSubcategoryLoading,
     data.hashCode,
@@ -29,9 +32,11 @@ class PreferenceState extends Equatable {
     Map<CategoryModel, List<SubCategoryModel>>? selectedSubcategories,
     bool? isCategoryLoading,
     bool? isSubcategoryLoading,
+    bool? isSaving,
     Map<CategoryModel, List<SubCategoryModel>>? data,
   }) {
     return PreferenceState(
+      isSaving: isSaving ?? this.isSaving,
       selectedSubcategories: selectedSubcategories ?? this.selectedSubcategories,
       isCategoryLoading: isCategoryLoading ?? this.isCategoryLoading,
       isSubcategoryLoading: isSubcategoryLoading ?? this.isSubcategoryLoading,

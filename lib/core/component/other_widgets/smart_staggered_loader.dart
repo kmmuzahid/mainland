@@ -76,20 +76,16 @@ class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
   }
 
 void _onScroll() {
-    if (isRefreshing) return; // block while refreshing
+    if (isRefreshing) return; 
 
     final position = _scrollController.position;
 
-    // ↓↓↓ NEW: scroll direction check
     final isScrollingDown = position.userScrollDirection == ScrollDirection.reverse;
 
-    // ↓↓↓ NEW: top bounce protection (prevents pull-to-refresh from triggering loadMore)
     if (position.pixels < 100) return;
 
-    // ↓↓↓ NEW: bottom check
     final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
-
-    // ↓↓↓ FIXED load more logic
+ 
     if (isScrollingDown &&
         isNearBottom &&
         widget.onLoadMore != null &&
@@ -136,8 +132,7 @@ Future<void> _onRefresh() async {
     setState(() {});
 
     await widget.onRefresh?.call();
-
-    // reset flags instantly — no delay hacks
+ 
     isRefreshing = false;
     setState(() {});
   }
@@ -183,12 +178,12 @@ Future<void> _onRefresh() async {
                 // Show load more indicator at the bottom of list
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: const Center(child: CircularProgressIndicator()),
                 );
               } else if (widget.isLoadDone) {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: Center(child: Text('All data loaded')),
+                  child: const Center(child: Text('All data loaded')),
                 );
               } else {
                 return const SizedBox.shrink();

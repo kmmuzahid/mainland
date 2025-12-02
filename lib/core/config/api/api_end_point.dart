@@ -33,6 +33,7 @@ class ApiEndPoint {
 
   //category + subcategory
   final String category = '/event/allCategory';
+  final String categoryWithSubCategory = '/event/allCategory?includeSelectedSubcategory';
   String subCategory(String id) => '/event/Subcategory?categoryId=$id';
 
   //event
@@ -45,5 +46,10 @@ class ApiEndPoint {
 
   //user
   final String userLiveEvent = '/ticket/unique-event';
-  final String userExpiredEvent = '/ticket/expiredTicket'; 
+  final String userExpiredEvent = '/ticket/expired-ticket';
+  final String userSoldEvent = '/ticket/sold-event';
+  final String userFavourite = '/favourite';
+  final String userNewlyAdded = '/event/all-live-event';
+  final String userPopularEvent = '/event/popular-event'; 
+
 }
