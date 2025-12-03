@@ -52,4 +52,9 @@ class ApiEndPoint {
   final String userNewlyAdded = '/event/all-live-event';
   final String userPopularEvent = '/event/popular-event'; 
 
+  //user ticket history
+  String userLiveDetails({required String id}) => '/ticket/sellHistory/$id?status=onsell';
+  String userAvailableDetails({required String id}) => '/ticket/sellHistory/$id?status=available';
+  String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id'; 
+
 }

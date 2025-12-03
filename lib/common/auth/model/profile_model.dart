@@ -18,6 +18,7 @@ class ProfileModel {
   final DateTime joinedDate;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int mainlandFee;
   final NotificationPreferenceModel notificationPreference;
 
   ProfileModel({
@@ -36,11 +37,13 @@ class ProfileModel {
     required this.joinedDate,
     required this.createdAt,
     required this.updatedAt,
+    required this.mainlandFee,
     required this.notificationPreference,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
+      mainlandFee: json['mainlandFee'] ?? 0,
       notificationPreference: json['notification'] != null
           ? NotificationPreferenceModel.fromJson(json['notification'])
           : const NotificationPreferenceModel(),
@@ -80,6 +83,7 @@ class ProfileModel {
       'joinedDate': joinedDate.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'mainlandFee': mainlandFee,
     };
   }
 
@@ -92,6 +96,7 @@ class ProfileModel {
         other.role == role &&
         other.email == email &&
         other.contact == contact &&
+        other.mainlandFee == mainlandFee &&
         other.image == image &&
         other.status == status &&
         other.verified == verified &&
@@ -112,6 +117,7 @@ class ProfileModel {
         role.hashCode ^
         email.hashCode ^
         contact.hashCode ^
+        mainlandFee.hashCode ^
         image.hashCode ^
         status.hashCode ^
         verified.hashCode ^
@@ -132,6 +138,7 @@ class ProfileModel {
     String? email,
     String? contact,
     String? image,
+    int? mainlandFee,
     String? status,
     bool? verified,
     bool? termsAndCondition,
@@ -144,6 +151,7 @@ class ProfileModel {
     NotificationPreferenceModel? notificationPreference,
   }) {
     return ProfileModel(
+      mainlandFee: mainlandFee ?? this.mainlandFee,
       id: id ?? this.id,
       name: name ?? this.name,
       role: role ?? this.role,
@@ -244,6 +252,7 @@ class Address {
     return {'city': city, 'street': street, 'country': country, 'postalCode': postalCode};
   }
 }
+
 class NotificationPreferenceModel {
   final bool? isSellTicketNotificationEnabled;
   final bool? isMessageNotificationEnabled;

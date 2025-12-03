@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
@@ -11,42 +16,44 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
+import 'package:mainland/user/ticketManage/cubit/user_ticket_manage_cubit.dart';
+import 'package:mainland/user/ticketManage/model/ticket_details_model.dart';
 import 'package:mainland/user/ticketManage/widgets/ticket_summery_view_widget.dart';
 
 class SellAvailableTicketWidget extends StatefulWidget {
-  const SellAvailableTicketWidget({
-    super.key,
-    required this.eventName,
-    required this.type,
-    required this.unit,
-    required this.price,
-    required this.onSell,
-  });
-  final String eventName;
-  final String type;
-  final int unit;
-  final double price;
-  final Function(int unit, double price) onSell;
+  const SellAvailableTicketWidget({super.key, required this.tickets, required this.cubit});
+
+  final List<TicketDetailsModel> tickets;
+  final UserTicketManageCubit cubit;
 
   @override
   State<SellAvailableTicketWidget> createState() => _SellAvailableTicketWidgetState();
 }
 
 class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
-  int unit = 0;
-  double price = 0;
+  List<TicketDetailsModel> sellInfo = [];
   bool isWantToSell = false;
-  late TextEditingController unitController;
-  late TextEditingController priceController;
   bool isAgree = false;
   bool isDisAgree = false;
+  late AuthCubit authCubit;
 
   @override
   void initState() {
+    if (sellInfo.isEmpty) {
+      sellInfo = widget.tickets
+          .map(
+            (e) => TicketDetailsModel(
+              ticketType: e.ticketType,
+              totalPurchaseTicket: 0,
+              totalPurchaseAmount: 0,
+            ),
+          )
+          .toList();
+    }
+    authCubit = context.read();
     super.initState();
-    unitController = TextEditingController(text: '0');
-    priceController = TextEditingController(text: '0');
   }
 
   @override
@@ -54,24 +61,23 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
     super.dispose();
   }
 
+  Future<void> upadate() async {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomForm(
       builder: (contex, formKey) => Column(
         children: [
-          EventTitleWidget(title: widget.eventName).start,
           10.height,
           CommonText(text: AppString.ticketDetails, style: AppTextStyles.titleMedium).start,
           10.height,
-          TicketSummeryViewWidget(
-            backgroundColor: AppColors.primary50,
-            summery: {
-              'Type': widget.type,
-              'Unit': isWantToSell ? unitPicker() : widget.unit.toString(),
-              'Set Price': isWantToSell ? pricePicker() : widget.price.toString(),
-            },
-          ),
-          10.height,
+
+          ...List.generate(widget.tickets.length, _ticketInfoBuilder),
+
           if (isWantToSell)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,18 +90,19 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                   value: isAgree,
                   onChanged: (value) {
-                    setState(() {
-                      isDisAgree = false;
-                      isAgree = value ?? false;
-                    });
+                    isDisAgree = false;
+                    isAgree = value ?? false;
+                    upadate();
                   },
                 ),
                 CommonText(top: 8, text: '*', textColor: AppColors.error, fontSize: 18),
                 Expanded(
                   child: CommonText(
                     textAlign: TextAlign.left,
-                    text: AppString
-                        .mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer,
+                    text:
+                        AppString.mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer(
+                          authCubit.state.profileModel?.mainlandFee ?? 0,
+                        ),
                     fontSize: 12,
                     autoResize: false,
                     maxLines: 10,
@@ -109,24 +116,38 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
           10.height,
 
           CommonButton(
+            isLoading: widget.cubit.state.isSaving,
             titleText: isWantToSell ? AppString.sellNow : AppString.sellTicket,
             onTap: () {
               if (isWantToSell) {
                 if (!isAgree) {
                   isDisAgree = true;
-                }
+                } 
                 if (isAgree && formKey.currentState!.validate()) {
-                  final unit = int.tryParse(unitController.text);
-                  final price = double.tryParse(priceController.text);
-                  if (unit != null && unit > 0 && price != null && price > 0) {
-                    widget.onSell(unit, price);
+                  final List<TicketDetailsModel> sellList = sellInfo
+                      .where(
+                        (element) =>
+                            element.totalPurchaseTicket > 0 && element.totalPurchaseAmount > 0,
+                      )
+                      .toList();
+                  if (sellList.isEmpty) {
+                    if (mounted)
+                      showSnackBar(
+                        'Sorry!! Please check price and units',
+                        type: SnackBarType.warning,
+                      );
+                    return;
                   }
+                  widget.cubit.sellNow(sellList);
                 } else {
-                  showSnackBar('Please ensure all required field', type: SnackBarType.error);
+                  isAgree = false;
+                  upadate();
+                  if (mounted)
+                    showSnackBar('Please ensure all required field', type: SnackBarType.error);
                 }
               }
               isWantToSell = true;
-              setState(() {});
+              upadate();
             },
           ),
         ],
@@ -134,41 +155,67 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
     );
   }
 
-  Widget unitPicker() {
+  Widget _ticketInfoBuilder(int index) {
+    final ticketModel = widget.tickets[index];
+    return Column(
+      children: [
+        TicketSummeryViewWidget(
+          backgroundColor: AppColors.primary50,
+          summery: {
+            'Type': ticketModel.ticketType.name,
+            'Unit': isWantToSell
+                ? unitPicker(index, ticketModel)
+                : ticketModel.totalPurchaseTicket.toString(),
+            'Set Price': isWantToSell
+                ? pricePicker(index)
+                : ticketModel.totalPurchaseAmount.toString(),
+          },
+        ),
+        10.height,
+      ],
+    );
+  }
+
+  Widget unitPicker(int index, TicketDetailsModel ticketModel) {
+    final updatetedModel = sellInfo[index];
+
     return SizedBox(
-      width: 77.w,
+      width: 100.w,
       height: 35.h,
       child: CommonTextField(
+        key: Key('picker_1111111_${updatetedModel.totalPurchaseTicket.toString()}'),
+        initialText: updatetedModel.totalPurchaseTicket.toString(),
         prefixIcon: GestureDetector(
-          child: CommonText(
-            text: '-',
-            fontSize: 24,
-            textColor: unit > 0 ? null : AppColors.greay300,
-            fontWeight: FontWeight.w600,
+          child: Icon(
+            Icons.remove,
+            color: updatetedModel.totalPurchaseTicket > 0
+                ? AppColors.primaryColor
+                : AppColors.greay300,
           ),
           onTap: () {
-            setState(() {
-              if (unit > 0) {
-                unit--;
-                unitController.text = unit.toString();
-              }
-            });
+            if (updatetedModel.totalPurchaseTicket > 0) {
+              sellInfo[index] = updatetedModel.copyWith(
+                totalPurchaseTicket: updatetedModel.totalPurchaseTicket - 1,
+              );
+            }
+            upadate();
           },
         ),
         suffixIcon: GestureDetector(
-          child: CommonText(
-            text: '+',
-            fontSize: 24,
-            textColor: unit < widget.unit ? null : AppColors.greay300,
-            fontWeight: FontWeight.w600,
+          child: Icon(
+            Icons.add,
+            color: updatetedModel.totalPurchaseTicket < ticketModel.totalPurchaseTicket
+                ? AppColors.primaryColor
+                : AppColors.greay300,
           ),
           onTap: () {
-            setState(() {
-              if (unit < widget.unit) {
-                unit++;
-                unitController.text = unit.toString();
-              }
-            });
+            if (updatetedModel.totalPurchaseTicket < ticketModel.totalPurchaseTicket) {
+              sellInfo[index] = updatetedModel.copyWith(
+                totalPurchaseTicket: updatetedModel.totalPurchaseTicket + 1,
+              );
+            }
+
+            upadate();
           },
         ),
         borderRadius: 0,
@@ -180,23 +227,28 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
         isReadOnly: true,
         paddingHorizontal: 0,
         validationType: ValidationType.validateNumber,
-        controller: unitController,
       ),
     );
   }
 
-  Widget pricePicker() {
+  Widget pricePicker(int index) {
     return SizedBox(
-      width: 77.w,
+      width: 100.w,
       height: 35.h,
       child: CommonTextField(
+        initialText: sellInfo[index].totalPurchaseAmount.toString(),
         prefixIcon: const Text('\$'),
         paddingVertical: 0,
         paddingHorizontal: 0,
         backgroundColor: AppColors.backgroundWhite,
+        onChanged: (value) {
+          sellInfo[index] = sellInfo[index].copyWith(
+            totalPurchaseAmount: double.tryParse(value) ?? 0,
+          );
+          upadate();
+        },
         showValidationMessage: false,
         validationType: ValidationType.validateCurrency,
-        controller: priceController,
       ),
     );
   }

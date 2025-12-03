@@ -1203,9 +1203,11 @@ abstract class AppLocalizations {
   /// No description provided for @mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer.
   ///
   /// In en, this message translates to:
-  /// **'Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer'**
+  /// **'Mainland charges {mainlandFee}% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer'**
   String
-  get mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer;
+  mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer(
+    Object mainlandFee,
+  );
 }
 
 class _AppLocalizationsDelegate

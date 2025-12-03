@@ -45,7 +45,7 @@ class TicketModel {
   // From JSON
   factory TicketModel.fromJson(Map<String, dynamic> json) {
     return TicketModel(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? (json['eventId'] ?? ''),
       eventName: json['eventName'] ?? '',
       image: json['image'] ?? '',
       startTime: json['startTime'] != null ? (json['startTime'] as String).toTimeOfDay12() : null,

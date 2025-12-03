@@ -16,16 +16,12 @@ import 'package:mainland/user/ticketManage/widgets/ticket_summery_view_widget.da
 
 class LiveAndExpiredTicketWidget extends StatelessWidget {
   const LiveAndExpiredTicketWidget({
-    super.key,
-    required this.eventName,
+    super.key, 
     required this.summery,
-    required this.ticketFilter,
-    required this.onWithdrew,
-  });
-  final String eventName;
+    required this.ticketFilter, 
+  }); 
   final Map<String, String> summery;
-  final TicketFilter ticketFilter;
-  final void Function() onWithdrew;
+  final TicketFilter ticketFilter; 
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +29,7 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            EventTitleWidget(title: eventName).start,
+          children: [ 
             const Spacer(),
             if (ticketFilter == TicketFilter.Live)
               Container(
@@ -58,56 +53,7 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
           summery: summery,
         ),
         20.height,
-        if (ticketFilter == TicketFilter.Live)
-          CommonButton(
-            titleText: AppString.withdrawTicket,
-            onTap: () {
-              commonDialog(
-                isDismissible: true,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    28.height,
-                    CommonText(
-                      text: AppString.confirmWithdraw,
-                      textColor: AppColors.primaryColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
-                    ),
-                    CommonText(
-                      fontWeight: FontWeight.w400,
-                      top: 25,
-                      bottom: 25,
-                      fontSize: 18,
-                      text: AppString.withdrawnTicketsMustBeRelistedToSellAgain,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CommonButton(
-                          buttonRadius: 12,
-                          titleText: AppString.confirm,
-                          onTap: () {
-                            appRouter.pop();
-                            onWithdrew();
-                          },
-                        ),
-                        24.width,
-                        CommonButton(
-                          buttonRadius: 12,
-                          buttonColor: AppColors.disable,
-                          titleText: AppString.cancel,
-                          onTap: appRouter.pop,
-                        ),
-                      ],
-                    ),
-                    28.height,
-                  ],
-                ),
-                context: context,
-              );
-            },
-          ),
+        
       ],
     );
   }

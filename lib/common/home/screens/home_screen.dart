@@ -39,8 +39,14 @@ class HomeScreen extends StatelessWidget {
     const FanClubScreen(),
 
     TicketsScreen(
-      onTap: (event, ticketFilter) {
-        appRouter.push(UserTicketManageRoute(ticketId: event.id ?? '', ticketFilter: ticketFilter));
+      onTap: (event, ticketFilter) { 
+        appRouter.push(
+          UserTicketManageRoute(
+            ticketId: event.id ?? '',
+            ticketFilter: ticketFilter,
+            eventName: event.eventName ?? '',
+          ),
+        );
       },
       filters: const [
         TicketFilter.Live,

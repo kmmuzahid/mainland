@@ -1632,6 +1632,7 @@ class UserTicketManageRoute
     extends _i39.PageRouteInfo<UserTicketManageRouteArgs> {
   UserTicketManageRoute({
     required _i41.TicketFilter ticketFilter,
+    required String eventName,
     required String ticketId,
     _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
@@ -1639,6 +1640,7 @@ class UserTicketManageRoute
          UserTicketManageRoute.name,
          args: UserTicketManageRouteArgs(
            ticketFilter: ticketFilter,
+           eventName: eventName,
            ticketId: ticketId,
            key: key,
          ),
@@ -1653,6 +1655,7 @@ class UserTicketManageRoute
       final args = data.argsAs<UserTicketManageRouteArgs>();
       return _i36.UserTicketManageScreen(
         ticketFilter: args.ticketFilter,
+        eventName: args.eventName,
         ticketId: args.ticketId,
         key: args.key,
       );
@@ -1663,11 +1666,14 @@ class UserTicketManageRoute
 class UserTicketManageRouteArgs {
   const UserTicketManageRouteArgs({
     required this.ticketFilter,
+    required this.eventName,
     required this.ticketId,
     this.key,
   });
 
   final _i41.TicketFilter ticketFilter;
+
+  final String eventName;
 
   final String ticketId;
 
@@ -1675,7 +1681,7 @@ class UserTicketManageRouteArgs {
 
   @override
   String toString() {
-    return 'UserTicketManageRouteArgs{ticketFilter: $ticketFilter, ticketId: $ticketId, key: $key}';
+    return 'UserTicketManageRouteArgs{ticketFilter: $ticketFilter, eventName: $eventName, ticketId: $ticketId, key: $key}';
   }
 
   @override
@@ -1683,12 +1689,17 @@ class UserTicketManageRouteArgs {
     if (identical(this, other)) return true;
     if (other is! UserTicketManageRouteArgs) return false;
     return ticketFilter == other.ticketFilter &&
+        eventName == other.eventName &&
         ticketId == other.ticketId &&
         key == other.key;
   }
 
   @override
-  int get hashCode => ticketFilter.hashCode ^ ticketId.hashCode ^ key.hashCode;
+  int get hashCode =>
+      ticketFilter.hashCode ^
+      eventName.hashCode ^
+      ticketId.hashCode ^
+      key.hashCode;
 }
 
 /// generated route for

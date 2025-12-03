@@ -45,14 +45,14 @@ class TicketSummeryViewWidget extends StatelessWidget {
                 textAlign: TextAlign.left,
                 text: summery.keys.elementAt(index),
               ), 
-              enableSpacer: false,
               right: summery.values.elementAt(index) is Widget
                   ? summery.values.elementAt(index)
                   : CommonText(
                       textColor: AppColors.greay400,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.left,
+                      maxLines: index == 0 ? 5 : 1,
                       text: summery.values.elementAt(index).toString(),
                       alignment: MainAxisAlignment.end,
                     ),

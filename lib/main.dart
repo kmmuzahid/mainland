@@ -91,13 +91,13 @@ void showSnackBar(String text, {required SnackBarType type}) {
   }
 
   // Create a new ScaffoldMessenger
-  final scaffoldMessenger = ScaffoldMessenger.of(context);
+  final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
   
   // Hide any existing snackbar
-  scaffoldMessenger.hideCurrentSnackBar();
+  scaffoldMessenger?.hideCurrentSnackBar();
 
   // Show the new snackbar
-  scaffoldMessenger.showSnackBar(
+  scaffoldMessenger?.showSnackBar(
     SnackBar(
       content: Text(
         text,

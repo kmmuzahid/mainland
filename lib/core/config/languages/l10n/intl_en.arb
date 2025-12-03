@@ -188,7 +188,7 @@
 
 
     "whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent": "When you Withdraw your Payout from Wallet, Payouts are sent to your linked account 14 days after the event. ",
-    "mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer": "Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer"
+    "mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer": "Mainland charges {mainlandFee}% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer"
 
 
 }

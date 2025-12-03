@@ -592,6 +592,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String
-  get mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer =>
-      'Mainland charges 10% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer';
+  mainlandCharges10CommissionOnAllSaleYourTicketWillBecomeAvailableUnderAttendeeTicketSaleIfSoldItWillBeInvalidatedAndReissuedToTheBuyer(
+    Object mainlandFee,
+  ) {
+    return 'Mainland charges $mainlandFee% Commission on all sale. Your Ticket will become available under Attendee Ticket sale. If sold, it will be invalidated, and reissued to the Buyer';
+  }
 }
