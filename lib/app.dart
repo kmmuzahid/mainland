@@ -10,6 +10,7 @@ import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/languages/cubit/language_state.dart';
 import 'package:mainland/core/config/languages/l10n/app_localizations.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router_observer.dart';
 
 import 'package:mainland/core/config/theme/cubit/theme_cubit.dart';
 import 'package:mainland/core/config/theme/cubit/theme_state.dart';
@@ -60,10 +61,10 @@ class MyApp extends StatelessWidget {
             return BlocBuilder<LanguageCubit, LanguageState>(
               builder: (context, languageState) {
                 return SystemThemeListener(
-                  child: MaterialApp.router(
+                  child: MaterialApp.router( 
                     scrollBehavior: CustomScrollBehavior(),
                     debugShowCheckedModeBanner: false,
-                    routerConfig: appRouter.config(),
+                    routerConfig: appRouter.config(navigatorObservers: () => [AppRouterObserver()]),
                     themeMode: ThemeMode.light,
                     theme: themeState.themeData,
                     supportedLocales: const [

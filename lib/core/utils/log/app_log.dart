@@ -97,7 +97,7 @@ class AppLogger {
     _log('API ERROR', message, tag: tag);
   }
 
-  static void mock(String message, {String? tag}) {
-    _log('MOCK', message, tag: tag);
+  static void screen(String message, {String? tag}) {
+    _log('SCREEN', message, tag: tag);
   }
 }
