@@ -16,7 +16,9 @@ import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 
-//git remote set-url origin https://ghp_GENERTED_TOKEN@github.com/kmmuzahid/mainland.git
+//git add remote client
+//git remote set-url client https://githubAccessToken@github.com/gallorobbie7-cmd/The-Leaderboard-App.git
+
 //flutter pub run build_runner build --delete-conflicting-outputs
 //dart run build_runner watch
 //create a new feature through
@@ -42,6 +44,8 @@ import 'package:mainland/core/utils/extensions/extension.dart';
 //mason add bloc_feature
 // mason make getx_feature --name packageName
 // mason make bloc_feature --name packageName
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 enum SnackBarType { success, error, warning }
 
@@ -77,32 +81,17 @@ void _diInit() {
  
 
 void showSnackBar(String text, {required SnackBarType type}) {
-  // Use the root navigator key's current state
-  final navigatorState = navigatorRouterKey.currentState;
-  if (navigatorState == null || !navigatorState.mounted) {
-    debugPrint('Error: Navigator is not available for showing snackbar');
-    return;
-  }
+  final scaffoldMessenger = rootScaffoldMessengerKey.currentState;
 
-  final BuildContext? context = navigatorState.context;
-  if (context == null) {
-    debugPrint('Error: No context available for showing snackbar');
-    return;
-  }
+  if (scaffoldMessenger == null) return; 
 
-  // Create a new ScaffoldMessenger
-  final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
-  
-  // Hide any existing snackbar
-  scaffoldMessenger?.hideCurrentSnackBar();
+  scaffoldMessenger.hideCurrentSnackBar();
 
-  // Show the new snackbar
-  scaffoldMessenger?.showSnackBar(
+  scaffoldMessenger.showSnackBar(
     SnackBar(
       content: Text(
         text,
-        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
       ),
       backgroundColor: _getSnackBarColor(type),
       behavior: SnackBarBehavior.floating,
@@ -113,6 +102,8 @@ void showSnackBar(String text, {required SnackBarType type}) {
     ),
   );
 }
+
+
 
 Color _getSnackBarColor(SnackBarType type) {
   switch (type) {

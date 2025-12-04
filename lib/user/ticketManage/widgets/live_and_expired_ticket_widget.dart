@@ -27,24 +27,7 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [ 
-            const Spacer(),
-            if (ticketFilter == TicketFilter.Live)
-              Container(
-                width: 12.w,
-                height: 12.w,
-                margin: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-          ],
-        ),
-        10.height,
-        CommonText(text: AppString.ticketDetails, style: AppTextStyles.titleMedium).start,
+        
         10.height,
         TicketSummeryViewWidget(
           backgroundColor: ticketFilter == TicketFilter.Expired
@@ -52,7 +35,6 @@ class LiveAndExpiredTicketWidget extends StatelessWidget {
               : AppColors.primary50,
           summery: summery,
         ),
-        20.height,
         
       ],
     );

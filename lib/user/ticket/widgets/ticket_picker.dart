@@ -40,7 +40,6 @@ class _TicketPickerState extends State<TicketPicker> {
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 

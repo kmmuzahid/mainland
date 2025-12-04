@@ -52,9 +52,9 @@ import 'package:mainland/common/show_info/screen/show_info_screen.dart' as _i27;
 import 'package:mainland/common/splash/splash_screen.dart' as _i30;
 import 'package:mainland/common/tickets/model/ticket_model.dart' as _i41;
 import 'package:mainland/common/tickets/screens/tickets_screen.dart' as _i35;
-import 'package:mainland/core/app_bar/common_app_bar.dart' as _i52;
+import 'package:mainland/core/app_bar/common_app_bar.dart' as _i53;
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart'
-    as _i51;
+    as _i52;
 import 'package:mainland/organizer/createTicket/screens/create_event_screen.dart'
     as _i8;
 import 'package:mainland/organizer/ticketMange/screens/org_ticket_manage_screen.dart'
@@ -69,12 +69,13 @@ import 'package:mainland/user/preferense/screen/all_selected_preference_screen.d
 import 'package:mainland/user/preferense/screen/perfence_subcategory_screen.dart'
     as _i22;
 import 'package:mainland/user/preferense/screen/preference_screen.dart' as _i23;
+import 'package:mainland/user/ticket/cubit/ticket_purchase_cubit.dart' as _i51;
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart' as _i50;
 import 'package:mainland/user/ticket/screen/attendie_ticket_availablity_screen.dart'
     as _i3;
 import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart'
     as _i32;
-import 'package:mainland/user/ticket/screen/ticket_purchasing_screen.dart'
+import 'package:mainland/user/ticket/screen/ticket_purchase_screen.dart'
     as _i33;
 import 'package:mainland/user/ticketManage/screens/ticket_save_screen.dart'
     as _i34;
@@ -213,18 +214,67 @@ class AllSelectedPreferenceRouteArgs {
 
 /// generated route for
 /// [_i3.AttendieTicketAvailablityScreen]
-class AttendieTicketAvailablityRoute extends _i39.PageRouteInfo<void> {
-  const AttendieTicketAvailablityRoute({List<_i39.PageRouteInfo>? children})
-    : super(AttendieTicketAvailablityRoute.name, initialChildren: children);
+class AttendieTicketAvailablityRoute
+    extends _i39.PageRouteInfo<AttendieTicketAvailablityRouteArgs> {
+  AttendieTicketAvailablityRoute({
+    required String eventId,
+    required String eventName,
+    _i40.Key? key,
+    List<_i39.PageRouteInfo>? children,
+  }) : super(
+         AttendieTicketAvailablityRoute.name,
+         args: AttendieTicketAvailablityRouteArgs(
+           eventId: eventId,
+           eventName: eventName,
+           key: key,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'AttendieTicketAvailablityRoute';
 
   static _i39.PageInfo page = _i39.PageInfo(
     name,
     builder: (data) {
-      return const _i3.AttendieTicketAvailablityScreen();
+      final args = data.argsAs<AttendieTicketAvailablityRouteArgs>();
+      return _i3.AttendieTicketAvailablityScreen(
+        eventId: args.eventId,
+        eventName: args.eventName,
+        key: args.key,
+      );
     },
   );
+}
+
+class AttendieTicketAvailablityRouteArgs {
+  const AttendieTicketAvailablityRouteArgs({
+    required this.eventId,
+    required this.eventName,
+    this.key,
+  });
+
+  final String eventId;
+
+  final String eventName;
+
+  final _i40.Key? key;
+
+  @override
+  String toString() {
+    return 'AttendieTicketAvailablityRouteArgs{eventId: $eventId, eventName: $eventName, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AttendieTicketAvailablityRouteArgs) return false;
+    return eventId == other.eventId &&
+        eventName == other.eventName &&
+        key == other.key;
+  }
+
+  @override
+  int get hashCode => eventId.hashCode ^ eventName.hashCode ^ key.hashCode;
 }
 
 /// generated route for
@@ -1375,12 +1425,21 @@ class TermsConditionRoute extends _i39.PageRouteInfo<void> {
 /// [_i32.TicketCheckoutScreen]
 class TicketCheckoutRoute extends _i39.PageRouteInfo<TicketCheckoutRouteArgs> {
   TicketCheckoutRoute({
-    _i40.Key? key,
     required _i50.TicketOwnerType type,
+    required _i51.TicketPurchaseCubit cubit,
+    required String title,
+    required _i50.TicketOwnerType ticketOwnerType,
+    _i40.Key? key,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketCheckoutRoute.name,
-         args: TicketCheckoutRouteArgs(key: key, type: type),
+         args: TicketCheckoutRouteArgs(
+           type: type,
+           cubit: cubit,
+           title: title,
+           ticketOwnerType: ticketOwnerType,
+           key: key,
+         ),
          initialChildren: children,
        );
 
@@ -1390,47 +1449,80 @@ class TicketCheckoutRoute extends _i39.PageRouteInfo<TicketCheckoutRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<TicketCheckoutRouteArgs>();
-      return _i32.TicketCheckoutScreen(key: args.key, type: args.type);
+      return _i32.TicketCheckoutScreen(
+        type: args.type,
+        cubit: args.cubit,
+        title: args.title,
+        ticketOwnerType: args.ticketOwnerType,
+        key: args.key,
+      );
     },
   );
 }
 
 class TicketCheckoutRouteArgs {
-  const TicketCheckoutRouteArgs({this.key, required this.type});
-
-  final _i40.Key? key;
+  const TicketCheckoutRouteArgs({
+    required this.type,
+    required this.cubit,
+    required this.title,
+    required this.ticketOwnerType,
+    this.key,
+  });
 
   final _i50.TicketOwnerType type;
 
+  final _i51.TicketPurchaseCubit cubit;
+
+  final String title;
+
+  final _i50.TicketOwnerType ticketOwnerType;
+
+  final _i40.Key? key;
+
   @override
   String toString() {
-    return 'TicketCheckoutRouteArgs{key: $key, type: $type}';
+    return 'TicketCheckoutRouteArgs{type: $type, cubit: $cubit, title: $title, ticketOwnerType: $ticketOwnerType, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! TicketCheckoutRouteArgs) return false;
-    return key == other.key && type == other.type;
+    return type == other.type &&
+        cubit == other.cubit &&
+        title == other.title &&
+        ticketOwnerType == other.ticketOwnerType &&
+        key == other.key;
   }
 
   @override
-  int get hashCode => key.hashCode ^ type.hashCode;
+  int get hashCode =>
+      type.hashCode ^
+      cubit.hashCode ^
+      title.hashCode ^
+      ticketOwnerType.hashCode ^
+      key.hashCode;
 }
 
 /// generated route for
 /// [_i33.TicketPurchaseScreen]
 class TicketPurchaseRoute extends _i39.PageRouteInfo<TicketPurchaseRouteArgs> {
   TicketPurchaseRoute({
-    _i40.Key? key,
     required _i50.TicketOwnerType type,
-    _i51.TicketName? filterTicket,
+    required String id,
+    required String title,
+    required _i50.TicketOwnerType ticketOwnerType,
+    _i40.Key? key,
+    _i52.TicketName? filterTicket,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketPurchaseRoute.name,
          args: TicketPurchaseRouteArgs(
-           key: key,
            type: type,
+           id: id,
+           title: title,
+           ticketOwnerType: ticketOwnerType,
+           key: key,
            filterTicket: filterTicket,
          ),
          initialChildren: children,
@@ -1443,8 +1535,11 @@ class TicketPurchaseRoute extends _i39.PageRouteInfo<TicketPurchaseRouteArgs> {
     builder: (data) {
       final args = data.argsAs<TicketPurchaseRouteArgs>();
       return _i33.TicketPurchaseScreen(
-        key: args.key,
         type: args.type,
+        id: args.id,
+        title: args.title,
+        ticketOwnerType: args.ticketOwnerType,
+        key: args.key,
         filterTicket: args.filterTicket,
       );
     },
@@ -1453,33 +1548,51 @@ class TicketPurchaseRoute extends _i39.PageRouteInfo<TicketPurchaseRouteArgs> {
 
 class TicketPurchaseRouteArgs {
   const TicketPurchaseRouteArgs({
-    this.key,
     required this.type,
+    required this.id,
+    required this.title,
+    required this.ticketOwnerType,
+    this.key,
     this.filterTicket,
   });
 
-  final _i40.Key? key;
-
   final _i50.TicketOwnerType type;
 
-  final _i51.TicketName? filterTicket;
+  final String id;
+
+  final String title;
+
+  final _i50.TicketOwnerType ticketOwnerType;
+
+  final _i40.Key? key;
+
+  final _i52.TicketName? filterTicket;
 
   @override
   String toString() {
-    return 'TicketPurchaseRouteArgs{key: $key, type: $type, filterTicket: $filterTicket}';
+    return 'TicketPurchaseRouteArgs{type: $type, id: $id, title: $title, ticketOwnerType: $ticketOwnerType, key: $key, filterTicket: $filterTicket}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! TicketPurchaseRouteArgs) return false;
-    return key == other.key &&
-        type == other.type &&
+    return type == other.type &&
+        id == other.id &&
+        title == other.title &&
+        ticketOwnerType == other.ticketOwnerType &&
+        key == other.key &&
         filterTicket == other.filterTicket;
   }
 
   @override
-  int get hashCode => key.hashCode ^ type.hashCode ^ filterTicket.hashCode;
+  int get hashCode =>
+      type.hashCode ^
+      id.hashCode ^
+      title.hashCode ^
+      ticketOwnerType.hashCode ^
+      key.hashCode ^
+      filterTicket.hashCode;
 }
 
 /// generated route for
@@ -1539,7 +1652,7 @@ class TicketsRoute extends _i39.PageRouteInfo<TicketsRouteArgs> {
     String? subTitle,
     String? title,
     double? titleSize,
-    _i52.CommonAppBar? appBar,
+    _i53.CommonAppBar? appBar,
     List<_i39.PageRouteInfo>? children,
   }) : super(
          TicketsRoute.name,
@@ -1597,7 +1710,7 @@ class TicketsRouteArgs {
 
   final double? titleSize;
 
-  final _i52.CommonAppBar? appBar;
+  final _i53.CommonAppBar? appBar;
 
   @override
   String toString() {

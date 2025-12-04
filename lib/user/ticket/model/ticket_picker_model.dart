@@ -5,22 +5,23 @@ enum TicketOwnerType { organizer, attendee }
 
 // enum TicketType { standard, gold, premium, vip, free }
 
-
 class TicketPickerModel {
   final String id;
   final String? userName;
-  final String title;
+  final String type;
   final int limit;
   final double price;
   final int count;
+  final String sellerId;
 
   TicketPickerModel({
     required this.id,
-    required this.title,
+    required this.type,
     required this.limit,
     this.userName,
     required this.price,
     required this.count,
+    required this.sellerId,
   });
 
   TicketPickerModel copyWith({
@@ -30,36 +31,40 @@ class TicketPickerModel {
     int? limit,
     double? price,
     int? count,
+    String? sellerId,
   }) {
     return TicketPickerModel(
       id: id ?? this.id,
-      title: title ?? this.title,
+      type: title ?? this.type,
       limit: limit ?? this.limit,
       price: price ?? this.price,
       userName: userName ?? this.userName,
       count: count ?? this.count,
+      sellerId: sellerId ?? this.sellerId,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'title': title,
+      'title': type,
       'limit': limit,
       'price': price,
       'count': count,
       'userName': userName,
+      'sellerId': sellerId,
     };
   }
 
   factory TicketPickerModel.fromMap(Map<String, dynamic> map) {
     return TicketPickerModel(
-      title: map['title'] as String,
-      id: map['id'] as String,
-      userName: map['userName'] as String,
-      limit: map['limit'] as int,
-      price: map['price'] as double,
-      count: map['count'] as int,
+      type: map['title'] ?? '',
+      id: map['id'] ?? '',
+      userName: map['userName'] ?? '',
+      limit: map['limit']?.toInt() ?? 0,
+      price: map['price']?.toDouble() ?? 0,
+      count: map['count']?.toInt() ?? 0,
+      sellerId: map['sellerId'] ?? '',
     );
   }
 
@@ -70,28 +75,30 @@ class TicketPickerModel {
 
   @override
   String toString() {
-    return 'TicketPickerModel(title: $title, limit: $limit, price: $price, count: $count, userName: $userName)';
+    return 'TicketPickerModel(title: $type, limit: $limit, price: $price, count: $count, userName: $userName)';
   }
 
   @override
   bool operator ==(covariant TicketPickerModel other) {
     if (identical(this, other)) return true;
 
-    return other.title == title &&
+    return other.type == type &&
         other.limit == limit &&
         other.price == price &&
         other.userName == userName &&
         other.count == count &&
-        other.id == id;
+        other.id == id &&
+        other.sellerId == sellerId;
   }
 
   @override
   int get hashCode {
-    return title.hashCode ^
+    return type.hashCode ^
         limit.hashCode ^
         price.hashCode ^
         count.hashCode ^
         userName.hashCode ^
-        id.hashCode;
+        id.hashCode ^
+        sellerId.hashCode;
   }
 }

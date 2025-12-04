@@ -25,13 +25,19 @@ import '../cubit/ticket_purchase_state.dart';
 
 @RoutePage()
 class AttendieTicketAvailablityScreen extends StatelessWidget {
-  const AttendieTicketAvailablityScreen({super.key});
+  const AttendieTicketAvailablityScreen({
+    required this.eventId,
+    required this.eventName,
+    super.key,
+  });
+  final String eventId;
+  final String eventName;
 
   @override
   Widget build(BuildContext context) {
     // final list = {'Premium': 5, 'Standard': 10, 'VIP': 15, 'Free': 20};
     return BlocProvider(
-      create: (context) => TicketPurchaseCubit()..fetchAvailableTicket(),
+      create: (context) => TicketPurchaseCubit()..fetchAvailableTicketSummery(),
       child: Scaffold(
         appBar: const CommonAppBar(),
         body: Padding(
@@ -60,7 +66,7 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
                         ),
                         ...List.generate(state.length, (index) {
                           final item = state[index];
-                          return itemBuilder(item.ticketType, item.availableUnits.toString());
+                          return itemBuilder(item);
                         }),
                       ],
                     ),
@@ -74,11 +80,17 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
     );
   }
 
-  Widget itemBuilder(TicketName ticketType, String value) {
+  Widget itemBuilder(AvailableTicketModel availableTicketModel) {
     return GestureDetector(
       onTap: () {
         appRouter.push(
-          TicketPurchaseRoute(type: TicketOwnerType.attendee, filterTicket: ticketType),
+          TicketPurchaseRoute(
+            type: TicketOwnerType.attendee,
+            ticketOwnerType: TicketOwnerType.attendee,
+            filterTicket: availableTicketModel.ticketType,
+            id: eventId,
+            title: eventName,
+          ),
         );
       },
       child: Container(
@@ -94,7 +106,7 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
             SizedBox(
               width: 70.w,
               child: CommonText(
-                text: ticketType.name.capitalizeEachWord(),
+                text: availableTicketModel.ticketType.name.capitalizeEachWord(),
                 style: AppTextStyles.bodyMedium,
               ),
             ),
@@ -107,7 +119,7 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: CommonText( 
-                text: value,
+                text: availableTicketModel.availableUnits.toString(),
                 textColor: AppColors.greay, 
                 fontWeight: FontWeight.w600,
                 fontSize: 14,  

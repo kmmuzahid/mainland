@@ -6,6 +6,7 @@ import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/other_widgets/dual_field_row_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/bloc/cubit_scope_value.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -13,14 +14,24 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/user/ticket/cubit/ticket_purchase_cubit.dart';
+import 'package:mainland/user/ticket/cubit/ticket_purchase_state.dart';
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
-
 
 @RoutePage()
 class TicketCheckoutScreen extends StatelessWidget {
-  const TicketCheckoutScreen({super.key, required this.type});
+  const TicketCheckoutScreen({
+    required this.type,
+    required this.cubit,
+    required this.title,
+    required this.ticketOwnerType,
+    super.key,
+  });
 
   final TicketOwnerType type;
+  final TicketPurchaseCubit cubit;
+  final String title;
+  final TicketOwnerType ticketOwnerType;
 
   @override
   Widget build(BuildContext context) {
@@ -28,33 +39,61 @@ class TicketCheckoutScreen extends StatelessWidget {
       appBar: const CommonAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            EventTitleWidget(title: null).start,
-            CommonText(
-              text: AppString.attendeeInformation,
-              style: AppTextStyles.bodyMedium,
-              top: 10,
-              bottom: 10,
-            ).start,
-            _Summery({
-              'Full Name': 'Gbenga Drebak',
-              'Email Address': 'gbenga123@gmail.com',
-              'Phone Number': '+011 245 7893',
-            }),
-            CommonText(text: 'Summary', style: AppTextStyles.bodyMedium, top: 10, bottom: 10).start,
-            _Summery({'Premium (x1)': '500', 'Mainland Fee': '2', 'Subtotal': '502'}),
-            10.height,
-            CommonButton(
-              titleText: AppString.checkout,
-              onTap: () {
-                appRouter.popUntilRouteWithName(EventDetailsRoute.name);
-              },
+        child: CubitScopeValue(
+          cubit: cubit,
+          builder: (context, cubit, state) => SingleChildScrollView(
+            child: Column(
+              children: [
+                EventTitleWidget(title: title).start,
+                CommonText(
+                  text: AppString.attendeeInformation,
+                  style: AppTextStyles.bodyMedium,
+                  top: 10,
+                  bottom: 10,
+                ).start,
+                _Summery({
+                  'Full Name': state.userName,
+                  'Email Address': state.email,
+                  'Phone Number': state.phoneNumber,
+                }),
+                CommonText(
+                  text: 'Summary',
+                  style: AppTextStyles.bodyMedium,
+                  top: 10,
+                  bottom: 10,
+                ).start,
+                _buildSummery(state),
+                20.height,
+                CommonButton(
+                  titleText: AppString.checkout,
+                  onTap: () {
+                    cubit.checkout(ticketOwnerType);
+                  },
+                ),
+                50.height,
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildSummery(TicketPurchaseState state) {
+    final data = state.tickets.map(
+      (e) => MapEntry('${e.type} (x${e.count})', '\$${e.price * e.count}'),
+    );
+
+    final Map<String, dynamic> value = Map<String, dynamic>.fromEntries(data);
+    value.addAll({
+      'Subtotal': '\$${state.subtotal}',
+      'Mainland Fee': '\$${state.mainlandFee}',
+      if (ticketOwnerType == TicketOwnerType.organizer)
+        '${AppString.discount} (${state.promoPercentage}%)': '\$${state.discount}',
+      'Total': '\$${state.total}',
+    });
+
+    return _Summery(value);
   }
 
   Widget _Summery(Map<String, dynamic> data) {

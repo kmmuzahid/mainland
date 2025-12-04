@@ -134,7 +134,7 @@ class EventDetailsScreen extends StatelessWidget {
         if (showButton)
           Padding(
             padding: EdgeInsets.only(bottom: 50.h),
-            child: _buttons(),
+            child: _buttons(state.eventDetails),
           ),
       ],
     );
@@ -216,7 +216,8 @@ class EventDetailsScreen extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-              if (showButton) Positioned(left: 0, right: 0, bottom: 50.h, child: _buttons()),
+              if (showButton)
+                Positioned(left: 0, right: 0, bottom: 50.h, child: _buttons(eventDetails)),
             ],
           ),
         ),
@@ -255,7 +256,7 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buttons() {
+  Widget _buttons(EventDetailsModel? eventDetails) {
     return Column(
       children: [
         CommonButton(
@@ -263,7 +264,14 @@ class EventDetailsScreen extends StatelessWidget {
           titleText: AppString.getOrganizerTicket,
           borderColor: AppColors.primaryColor,
           onTap: () {
-            appRouter.push(TicketPurchaseRoute(type: TicketOwnerType.organizer));
+            appRouter.push(
+              TicketPurchaseRoute(
+                ticketOwnerType: TicketOwnerType.organizer,
+                id: eventDetails?.id ?? '',
+                title: eventDetails?.eventName ?? '',
+                type: TicketOwnerType.organizer,
+              ),
+            );
           },
         ),
         10.height,
@@ -272,7 +280,12 @@ class EventDetailsScreen extends StatelessWidget {
           titleText: AppString.viewAttendeeTickets,
           borderColor: AppColors.primaryColor,
           onTap: () {
-            appRouter.push(const AttendieTicketAvailablityRoute());
+            appRouter.push(
+              AttendieTicketAvailablityRoute(
+                eventId: eventId,
+                eventName: eventDetails?.eventName ?? '',
+              ),
+            );
           },
         ),
         10.height,

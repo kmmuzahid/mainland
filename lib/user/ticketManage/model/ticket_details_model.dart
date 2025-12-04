@@ -6,12 +6,12 @@ import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 class TicketDetailsModel {
   //enum
   final TicketName ticketType;
-  final int totalPurchaseTicket;
-  final double totalPurchaseAmount;
+  final int unit;
+  final double sellPrice;
+
   const TicketDetailsModel({
     required this.ticketType,
-    required this.totalPurchaseTicket,
-    required this.totalPurchaseAmount,
+    required this.unit, required this.sellPrice,
   });
 
   TicketDetailsModel copyWith({
@@ -21,24 +21,24 @@ class TicketDetailsModel {
   }) {
     return TicketDetailsModel(
       ticketType: ticketType ?? this.ticketType,
-      totalPurchaseTicket: totalPurchaseTicket ?? this.totalPurchaseTicket,
-      totalPurchaseAmount: totalPurchaseAmount ?? this.totalPurchaseAmount,
+      unit: totalPurchaseTicket ?? this.unit,
+      sellPrice: totalPurchaseAmount ?? this.sellPrice,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'ticketType': ticketType.index,
-      'totalPurchaseTicket': totalPurchaseTicket,
-      'totalPurchaseAmount': totalPurchaseAmount,
+      'totalPurchaseTicket': unit,
+      'totalPurchaseAmount': sellPrice,
     };
   }
 
   factory TicketDetailsModel.fromMap(Map<String, dynamic> map) {
     return TicketDetailsModel(
       ticketType: TicketName.values.byName(map['ticketType']),
-      totalPurchaseTicket: map['totalPurchaseTicket']?.toInt() ?? 0,
-      totalPurchaseAmount: map['totalPurchaseAmount']?.toDouble() ?? 0,
+      unit: map['unit']?.toInt() ?? 0,
+      sellPrice: map['sellPrice']?.toDouble() ?? 0,
     );
   }
 
@@ -49,18 +49,17 @@ class TicketDetailsModel {
 
   @override
   String toString() =>
-      'TicketDetailsModel(ticketType: $ticketType, totalPurchaseTicket: $totalPurchaseTicket, totalPurchaseAmount: $totalPurchaseAmount)';
+      'TicketDetailsModel(ticketType: $ticketType, totalPurchaseTicket: $unit, totalPurchaseAmount: $sellPrice)';
 
   @override
   bool operator ==(covariant TicketDetailsModel other) {
     if (identical(this, other)) return true;
 
     return other.ticketType == ticketType &&
-        other.totalPurchaseTicket == totalPurchaseTicket &&
-        other.totalPurchaseAmount == totalPurchaseAmount;
+        other.unit == unit && other.sellPrice == sellPrice;
   }
 
   @override
   int get hashCode =>
-      ticketType.hashCode ^ totalPurchaseTicket.hashCode ^ totalPurchaseAmount.hashCode;
+      ticketType.hashCode ^ unit.hashCode ^ sellPrice.hashCode;
 }

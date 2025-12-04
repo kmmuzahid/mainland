@@ -48,11 +48,30 @@ class UserTicketManageCubit extends SafeCubit<UserTicketManageState> {
             .map(
               (e) => {
                 'ticketType': e.ticketType.name,
-                'quantity': e.totalPurchaseTicket,
-                'resellAmount': e.totalPurchaseAmount,
+                'quantity': e.unit,
+                'resellAmount': e.sellPrice,
               },
             )
             .toList(),
+      ),
+
+      responseBuilder: (data) => data,
+    );
+    emit(state.copyWith(isSaving: false));
+    if (result.isSuccess) {
+      appRouter.pop();
+    }
+  }
+
+  Future<void> withdrewTickets() async {
+    if (state.isSaving) return;
+    emit(state.copyWith(isSaving: true));
+
+    final result = await _dioService.request<dynamic>(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.withdrawTickets(id: state.eventId),
+        method: RequestMethod.GET,
       ),
 
       responseBuilder: (data) => data,

@@ -113,6 +113,16 @@ class CommonText extends StatelessWidget {
     }
   }
 
+  String _formatNumbersInText(String text) {
+    // This regex matches decimal numbers with one or more digits before and after the decimal point
+    return text.replaceAllMapped(RegExp(r'\d+\.\d+'), (match) {
+      final number = double.tryParse(match.group(0) ?? '0') ?? 0;
+      // Always format to exactly 2 decimal places for decimal numbers
+      return number.toStringAsFixed(2);
+    });
+  }
+
+
   Widget _textField(BuildContext context) {
     final effectiveTextStyle = getStyle();
     final double step = stepGranularity > 0 ? stepGranularity : 1.0;
@@ -134,12 +144,14 @@ class CommonText extends StatelessWidget {
     }
 
     final effectiveOverflow = overflow ?? TextOverflow.clip;
+    final formattedData = _formatNumbersInText(text);
 
     Widget buildText() {
+
       // For HTML content
       if (_isHtml(text)) {
         return Html(
-          data: text,
+          data: formattedData,
           style: {
             "body": Style(
               fontFamily: 'Selawik',
@@ -187,7 +199,7 @@ class CommonText extends StatelessWidget {
             },
             blendMode: BlendMode.dstIn,
             child: Text(
-              text,
+              formattedData,
               maxLines: maxLines,
               overflow: effectiveOverflow,
               textAlign: textAlign,
@@ -198,7 +210,7 @@ class CommonText extends StatelessWidget {
           );
         } else {
           return AutoSizeText(
-            text,
+            formattedData,
             maxLines: maxLines,
             overflow: effectiveOverflow,
             textAlign: textAlign,
@@ -216,7 +228,7 @@ class CommonText extends StatelessWidget {
       // For single line text
       if (preventScaling) {
         return Text(
-          text,
+          formattedData,
           maxLines: 1,
           overflow: effectiveOverflow,
           textAlign: textAlign,
@@ -227,7 +239,7 @@ class CommonText extends StatelessWidget {
         return FittedBox(
           fit: BoxFit.scaleDown,
           child: AutoSizeText(
-            text,
+            formattedData,
             maxLines: 1,
             overflow: effectiveOverflow,
             textAlign: textAlign,

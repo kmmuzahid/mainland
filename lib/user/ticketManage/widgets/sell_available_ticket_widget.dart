@@ -46,8 +46,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
           .map(
             (e) => TicketDetailsModel(
               ticketType: e.ticketType,
-              totalPurchaseTicket: 0,
-              totalPurchaseAmount: 0,
+              unit: 0, sellPrice: 0,
             ),
           )
           .toList();
@@ -127,7 +126,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
                   final List<TicketDetailsModel> sellList = sellInfo
                       .where(
                         (element) =>
-                            element.totalPurchaseTicket > 0 && element.totalPurchaseAmount > 0,
+                            element.unit > 0 && element.sellPrice > 0,
                       )
                       .toList();
                   if (sellList.isEmpty) {
@@ -165,10 +164,10 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
             'Type': ticketModel.ticketType.name,
             'Unit': isWantToSell
                 ? unitPicker(index, ticketModel)
-                : ticketModel.totalPurchaseTicket.toString(),
+                : ticketModel.unit.toString(),
             'Set Price': isWantToSell
                 ? pricePicker(index)
-                : ticketModel.totalPurchaseAmount.toString(),
+                : ticketModel.sellPrice.toString(),
           },
         ),
         10.height,
@@ -183,19 +182,19 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
       width: 100.w,
       height: 35.h,
       child: CommonTextField(
-        key: Key('picker_1111111_${updatetedModel.totalPurchaseTicket.toString()}'),
-        initialText: updatetedModel.totalPurchaseTicket.toString(),
+        key: Key('picker_1111111_${updatetedModel.unit.toString()}'),
+        initialText: updatetedModel.unit.toString(),
         prefixIcon: GestureDetector(
           child: Icon(
             Icons.remove,
-            color: updatetedModel.totalPurchaseTicket > 0
+            color: updatetedModel.unit > 0
                 ? AppColors.primaryColor
                 : AppColors.greay300,
           ),
           onTap: () {
-            if (updatetedModel.totalPurchaseTicket > 0) {
+            if (updatetedModel.unit > 0) {
               sellInfo[index] = updatetedModel.copyWith(
-                totalPurchaseTicket: updatetedModel.totalPurchaseTicket - 1,
+                totalPurchaseTicket: updatetedModel.unit - 1,
               );
             }
             upadate();
@@ -204,14 +203,14 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
         suffixIcon: GestureDetector(
           child: Icon(
             Icons.add,
-            color: updatetedModel.totalPurchaseTicket < ticketModel.totalPurchaseTicket
+            color: updatetedModel.unit < ticketModel.unit
                 ? AppColors.primaryColor
                 : AppColors.greay300,
           ),
           onTap: () {
-            if (updatetedModel.totalPurchaseTicket < ticketModel.totalPurchaseTicket) {
+            if (updatetedModel.unit < ticketModel.unit) {
               sellInfo[index] = updatetedModel.copyWith(
-                totalPurchaseTicket: updatetedModel.totalPurchaseTicket + 1,
+                totalPurchaseTicket: updatetedModel.unit + 1,
               );
             }
 
@@ -236,7 +235,7 @@ class _SellAvailableTicketWidgetState extends State<SellAvailableTicketWidget> {
       width: 100.w,
       height: 35.h,
       child: CommonTextField(
-        initialText: sellInfo[index].totalPurchaseAmount.toString(),
+        initialText: sellInfo[index].sellPrice.toString(),
         prefixIcon: const Text('\$'),
         paddingVertical: 0,
         paddingHorizontal: 0,

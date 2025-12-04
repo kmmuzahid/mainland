@@ -16,6 +16,7 @@ import 'package:mainland/core/config/theme/cubit/theme_cubit.dart';
 import 'package:mainland/core/config/theme/cubit/theme_state.dart';
 import 'package:mainland/core/config/theme/dark_theme.dart';
 import 'package:mainland/core/config/theme/system_theme_listener.dart';
+import 'package:mainland/main.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
               builder: (context, languageState) {
                 return SystemThemeListener(
                   child: MaterialApp.router( 
+                    scaffoldMessengerKey: rootScaffoldMessengerKey,
                     scrollBehavior: CustomScrollBehavior(),
                     debugShowCheckedModeBanner: false,
                     routerConfig: appRouter.config(navigatorObservers: () => [AppRouterObserver()]),

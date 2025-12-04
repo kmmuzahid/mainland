@@ -50,11 +50,23 @@ class ApiEndPoint {
   final String userSoldEvent = '/ticket/sold-event';
   final String userFavourite = '/favourite';
   final String userNewlyAdded = '/event/all-live-event';
-  final String userPopularEvent = '/event/popular-event'; 
+  final String userPopularEvent = '/event/popular-event';
 
   //user ticket history
   String userLiveDetails({required String id}) => '/ticket/sellHistory/$id?status=onsell';
   String userAvailableDetails({required String id}) => '/ticket/sellHistory/$id?status=available';
-  String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id'; 
+  String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id';
+  String withdrawTickets({required String id}) => '/ticket/withdrawTicket/$id';
 
+  //user purchase tickets
+  String getAvailableTicketFromOrg({required String id}) =>
+      '/ticket/event-summary?sellerType=organizer&eventId=$id';
+
+  String getAvailableTicketFromUser({required String id}) =>
+      '/ticket/sell-history-onsell/$id?status=onsell';
+
+  String checkPromoCode(String id) => '/ticket/promocode/$id';
+
+  String purchaseFromOrganizer({required String id}) => '/event/payment/$id';
+  String purchaseFromUser({required String id}) => '/event/ticketPurchase/$id';
 }
