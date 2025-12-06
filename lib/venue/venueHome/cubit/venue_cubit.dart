@@ -37,6 +37,7 @@ class VenueCubit extends SafeCubit<VenueState> {
           final model = QrCodeModel.fromJson(qr);
           final result = await repository.getDetails(id: model.eventId);
           if (result.isSuccess) {
+            scannerController.stop();
             emit(
               state.copyWith(
                 eventDetailsModel: result.data,

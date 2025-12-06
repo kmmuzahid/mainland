@@ -33,7 +33,22 @@ class VenueHomeWidget extends StatelessWidget {
               ],
             ),
           ),
-        
+
+          Offstage(
+            offstage: venueState.image != null,
+            child: SizedBox(
+                    height: Utils.deviceSize.height * .5,
+                    width: double.infinity,
+                    child: MobileScanner(
+                      controller: venueCubit.scannerController,
+                      onDetect: (capture) {
+                        final barcode = capture.barcodes.first;
+                         
+                      },
+                    ),
+            ),
+          ),
+
           GestureDetector(
             onTap: venueCubit.scanQR,
             child: venueState.image != null
@@ -41,17 +56,7 @@ class VenueHomeWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 20.w),
                     child: CommonImage(imageSrc: venueState.image!.path),
                   )
-                : SizedBox(
-                    height: Utils.deviceSize.height * .5,
-                    width: double.infinity,
-                    child: MobileScanner(
-                      controller: venueCubit.scannerController,
-                      onDetect: (capture) {
-                        final barcode = capture.barcodes.first;
-                        print("QR: ${barcode.rawValue}");
-                      },
-                    ),
-                  ),
+                : const SizedBox.shrink(),
           ),
           const SizedBox(height: 10),
           if (venueState.isEventDetailsLoading)
