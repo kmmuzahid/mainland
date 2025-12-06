@@ -19,9 +19,8 @@ import 'package:mainland/venue/venueHome/widgets/venue_app_bar_widget.dart';
 import 'venue_validate_dialogue_widget.dart';
 
 class VenueSettingWidget extends StatelessWidget {
-  const VenueSettingWidget({super.key, required this.about, required this.faqHelp});
-  final String about;
-  final String faqHelp;
+  const VenueSettingWidget({super.key});
+ 
 
   @override
   Widget build(BuildContext context) {

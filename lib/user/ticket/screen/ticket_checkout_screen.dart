@@ -65,6 +65,7 @@ class TicketCheckoutScreen extends StatelessWidget {
                 _buildSummery(state),
                 20.height,
                 CommonButton(
+                  isLoading: state.isCheckedOut,
                   titleText: AppString.checkout,
                   onTap: () {
                     cubit.checkout(ticketOwnerType);
@@ -80,7 +81,9 @@ class TicketCheckoutScreen extends StatelessWidget {
   }
 
   Widget _buildSummery(TicketPurchaseState state) {
-    final data = state.tickets.map(
+    final data = state.tickets
+        .where((e) => e.count > 0 && e.price > 0)
+        .map(
       (e) => MapEntry('${e.type} (x${e.count})', '\$${e.price * e.count}'),
     );
 

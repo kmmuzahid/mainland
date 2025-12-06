@@ -9,26 +9,30 @@ class CommonShare {
   CommonShare._();
   static final CommonShare instance = CommonShare._();
 
-  // Future<void> shareContent({
-  //   required String title,
-  //   required String imageAssetPath,
-  //   required String deepLinkUrl, // this will open your app
-  // }) async {
-  //   try {
-  //     // Load image from assets
-  //     final byteData = await rootBundle.load(imageAssetPath);
+  Future<void> shareByteContent({
+    required String title,
+    required ByteData imageUrl, // <-- URL instead of asset
+    required String deepLinkUrl,
+  }) async {
+    try {
+      // Save to temporary folder
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/shared_image.jpg');
+      await file.writeAsBytes(imageUrl.buffer.asUint8List());
+      final xFile = XFile(file.path);
+      final params = ShareParams(
+        text: '$title\n$deepLinkUrl',
+        files: [xFile],
+        title: title,
+        previewThumbnail: xFile,
+      );
+      await SharePlus.instance.share(params);
 
-  //     // Save to temporary directory
-  //     final tempDir = await getTemporaryDirectory();
-  //     final file = File('${tempDir.path}/shared_image.png');
-  //     await file.writeAsBytes(byteData.buffer.asUint8List());
-
-  //     // Share text + deep link + image
-  //     await Share.shareXFiles([XFile(file.path)], text: '$title\n$deepLinkUrl', subject: title);
-  //   } catch (e) {
-  //     print("Error sharing: $e");
-  //   }
-  // }
+      file.delete();
+    } catch (e) {
+      print("Error sharing: $e");
+    }
+  }
 
   Future<void> shareContent({
     required String title,

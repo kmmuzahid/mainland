@@ -61,6 +61,12 @@ dependencies:
   # quill_html_editor_v3: ^2.2.13
 #SHARE
   share_plus:    
+  webview_flutter: 
+  
+#QR CODE
+  pretty_qr_code:
+  mobile_scanner:
+  zxing2:
 
 dev_dependencies:
   flutter_test:

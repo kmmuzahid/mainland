@@ -37,6 +37,7 @@ class EventDetailsModel {
   final DateTime? createdAt;
   final String? notification;
   final DateTime? updatedAt;
+  final String? eventCode;
 
   EventDetailsModel({
     this.id,
@@ -69,6 +70,7 @@ class EventDetailsModel {
     this.totalReview,
     this.isDraft,
     this.notification,
+    this.eventCode,
     this.createdAt,
     this.updatedAt,
   });
@@ -107,6 +109,7 @@ class EventDetailsModel {
       totalEarned: json['totalEarned'],
       totalReview: json['totalReview'],
       isDraft: json['isDraft'],
+      eventCode: json['eventCode'],
       createdAt: Utils.parseDate(json['createdAt']),
       updatedAt: Utils.parseDate(json['updatedAt']),
     );

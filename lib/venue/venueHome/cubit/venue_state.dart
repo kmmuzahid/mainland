@@ -1,26 +1,49 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'venue_cubit.dart';
 
-class VenueState extends Equatable {
+class VenueState {
   const VenueState({
-    required this.currentIndex,
-    this.about =
-        '<html><body>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem </body></html>',
-    this.faqHelp =
-        '<html><body>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem </body></html>',
+    this.currentIndex = 0,
+    this.eventDetailsModel,
+    this.image,
+    this.isEventDetailsLoading = false,
   });
+
   final int currentIndex;
-  final String about;
-  final String faqHelp;
+  final EventDetailsModel? eventDetailsModel;
+  final bool isEventDetailsLoading;
+  final XFile? image;
+ 
 
-  @override
-  List<Object?> get props => [currentIndex, about, faqHelp];
-
-  VenueState copyWith({int? currentIndex, String? about, String? faqHelp}) {
+  VenueState copyWith({
+    int? currentIndex,
+    EventDetailsModel? eventDetailsModel,
+    bool? isEventDetailsLoading,
+    XFile? image,
+  }) {
     return VenueState(
       currentIndex: currentIndex ?? this.currentIndex,
-      about: about ?? this.about,
-      faqHelp: faqHelp ?? this.faqHelp,
+      eventDetailsModel: eventDetailsModel,
+      isEventDetailsLoading: isEventDetailsLoading ?? this.isEventDetailsLoading,
+      image: image,
     );
+  }
+
+  @override
+  bool operator ==(covariant VenueState other) {
+    if (identical(this, other)) return true;
+
+    return other.currentIndex == currentIndex &&
+        other.eventDetailsModel == eventDetailsModel &&
+        other.isEventDetailsLoading == isEventDetailsLoading &&
+        other.image == image;
+  }
+
+  @override
+  int get hashCode {
+    return currentIndex.hashCode ^
+        eventDetailsModel.hashCode ^
+        isEventDetailsLoading.hashCode ^
+        image.hashCode;
   }
 }

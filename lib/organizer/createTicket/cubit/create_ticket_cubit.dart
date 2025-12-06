@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -70,7 +71,7 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
     emit(state.copyWith(isLoading: false));
   }
 
-void updatePromoCode({
+  void updatePromoCode({
     required String code,
     required int discountPercentage,
     required int filedId,
@@ -240,6 +241,7 @@ void updatePromoCode({
   }
 
   bool checkImageResolution(String path) {
+    if (kDebugMode) return true;
     final image = img.decodeImage(File(path).readAsBytesSync());
     if (image != null) {
       return (image.width == 1080 && image.height == 1920);

@@ -94,6 +94,7 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
           'email': email,
           'phone': phoneNumber,
           'tickets': tickets
+              .where((e) => e.count > 0 && e.price > 0)
               .map(
                 (e) => {
                   'ticketType': e.type,
@@ -105,7 +106,7 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
               .toList(),
         },
       ),
-      responseBuilder: (response) => response['percentage']?.toInt() ?? 0,
+      responseBuilder: (response) => response['url'] ?? '',
     );
     return result;
   }

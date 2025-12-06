@@ -60,8 +60,10 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
       0,
       (previousValue, element) => previousValue + (element.count * element.price),
     );
+    
     final discount = subTotal * (state.promoPercentage > 0 ? (state.promoPercentage / 100) : 0);
-    final mainlandFee = subTotal * (state.percentage > 0 ? (state.percentage / 100) : 0);
+    final mainlandFee =
+        (subTotal - discount) * (state.percentage > 0 ? (state.percentage / 100) : 0);
 
     final double total = subTotal == 0 ? 0 : (subTotal + mainlandFee) - discount;
 
@@ -96,7 +98,8 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
       );
       final discount = subTotal * (response.data! > 0 ? (response.data! / 100) : 0);
 
-      final mainlandFee = subTotal * (state.percentage > 0 ? (state.percentage / 100) : 0);
+      final mainlandFee =
+          (subTotal - discount) * (state.percentage > 0 ? (state.percentage / 100) : 0);
 
       final double total = subTotal == 0 ? 0 : (subTotal + mainlandFee) - discount;
 
@@ -125,6 +128,21 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
       tickets: state.tickets,
     );
     emit(state.copyWith(isCheckedOut: false));
-    if (response.isSuccess) appRouter.popUntilRouteWithName(EventDetailsRoute.name);
+    if (response.isSuccess && (response.data as String).isNotEmpty) {
+      final String url = response.data;
+      appRouter.push(
+        PaymentWebView(
+          checkoutUrl: url,
+          onCancel: () {
+            showSnackBar('Payment canceled.', type: SnackBarType.warning);
+          },
+          onSuccess: () {
+            showSnackBar('Ticket purchase successful', type: SnackBarType.success);
+            appRouter.popUntilRouteWithName(EventDetailsRoute.name);
+          },
+        ),
+      );
+    }
+    //  appRouter.popUntilRouteWithName(EventDetailsRoute.name);
   }
 }

@@ -44,9 +44,9 @@ class CategoryModel {
 
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
     return CategoryModel(
-      id: map['_id'] as String,
-      title: map['title'] as String,
-      coverImage: map['coverImage'] as String,
+      id: map['_id']?.toString() ?? '',
+      title: map['title']?.toString() ?? '',
+      coverImage: map['coverImage']?.toString() ?? '',
       subCategories: List<SubCategoryModel>.from(
         ((map['subCategories'] ?? []) as List<dynamic>).map<SubCategoryModel>(
           (x) => SubCategoryModel.fromMap(x as Map<String, dynamic>),

@@ -366,14 +366,6 @@ class DioService {
         }
       }
 
-      // Important: The interceptor will handle the 401 re-execution logic.
-      // We still re-throw the error here so the interceptor gets a chance to catch it.
-      // The `onStateChange` will be triggered by the initial 401, but the subsequent
-      // successful retry (if any) will not update this specific `onStateChange`
-      // because it's a new `dio.fetch` call from the interceptor.
-      // To fully reflect retries on UI, consider a more complex state, or let interceptor
-      // handle all `onStateChange` updates for retried requests.
-      // For now, this structure correctly handles the 401 re-execution flow.
 
       if (_shouldRetry(e) && retryCount < maxRetry) {
         AppLogger.apiDebug('Retrying request (attempt ${retryCount + 1})...', tag: input.endpoint);
@@ -605,116 +597,6 @@ class DioService {
     );
   }
 
-  // Future<_RequestOptionsData> _buildRequestOptions(RequestInput input) async {
-  //     final accessToken = authCubit?.state.userLoginInfoModel.accessToken;
-
-  //     String url = input.endpoint;
-  //     input.pathParams?.forEach(
-  //       (k, v) => url = url.replaceAll('{$k}', Uri.encodeComponent(v.toString())),
-  //     );
-
-  //     final headers = {
-  //       if (input.requiresToken && accessToken?.isNotEmpty == true)
-  //         'Authorization': 'Bearer $accessToken',
-  //       ...?input.headers,
-  //     };
-
-  //     dynamic body;
-  //     String contentType = 'application/json';
-
-  //     final hasFiles = input.files != null && input.files!.isNotEmpty;
-  //     final hasFormFields = input.formFields != null;
-  //     final hasJson = input.jsonBody != null;
-  //     final hasListBody = input.listBody != null;
-
-  //     final needsMultipart = hasFiles || hasFormFields || (hasFiles && (hasJson || hasListBody));
-
-  //     // ---------------------------------------------------------------------------
-  //     // ⚡ MULTIPART (form-data) CASE
-  //     // ---------------------------------------------------------------------------
-  //     if (needsMultipart) {
-  //       final formData = dio.FormData();
-
-  //       // Add regular form fields
-  //       if (hasFormFields) {
-  //         formData.fields.addAll(
-  //           input.formFields!.entries.map((e) => MapEntry(e.key, e.value.toString())),
-  //         );
-  //       }
-
-  //       // Add JSON body as a multipart field
-  //       if (hasJson) {
-  //         formData.files.add(
-  //           MapEntry(
-  //             'jsonBody',
-  //             dio.MultipartFile.fromString(
-  //               jsonEncode(input.jsonBody),
-  //               contentType: dio.DioMediaType('application', 'json'),
-  //             ),
-  //           ),
-  //         );
-  //       }
-
-  //       // -----------------------------------------------------------------------
-  //       // ✅ NEW: Add ListBody as multipart field (JSON encoded)
-  //       // -----------------------------------------------------------------------
-  //       if (hasListBody) {
-  //         formData.files.add(
-  //           MapEntry(
-  //             'listBody',
-  //             dio.MultipartFile.fromString(
-  //               jsonEncode(input.listBody),
-  //               contentType: dio.DioMediaType('application', 'json'),
-  //             ),
-  //           ),
-  //         );
-  //       }
-
-  //       // Add files
-  //       if (hasFiles) {
-  //         for (final entry in input.files!.entries) {
-  //           final key = entry.key;
-  //           final xfile = entry.value;
-
-  //           final multipartFile = await xfile.toMultipart();
-  //           formData.files.add(MapEntry(key, multipartFile));
-  //         }
-  //       }
-
-  //       body = formData;
-  //       contentType = 'multipart/form-data';
-  //     }
-  //     // ---------------------------------------------------------------------------
-  //     // ⚡ PURE JSON CASE (no multipart)
-  //     // ---------------------------------------------------------------------------
-  //     else {
-  //       body = {if (hasJson) ...input.jsonBody!, if (hasListBody) 'listBody': input.listBody};
-
-  //       // If only listBody exists (jsonBody null)
-  //       if (!hasJson && hasListBody) {
-  //         body = {'listBody': input.listBody};
-  //       }
-
-  //       contentType = 'application/json';
-  //     }
-
-  //     // ---------------------------------------------------------------------------
-  //     // FINAL RETURN
-  //     // ---------------------------------------------------------------------------
-  //     return _RequestOptionsData(
-  //       path: url,
-  //       data: body,
-  //       queryParameters: input.queryParams,
-  //       options: dio.Options(
-  //         method: input.method.name.toUpperCase(),
-  //         headers: headers,
-  //         contentType: contentType,
-  //         sendTimeout: input.timeout,
-  //         receiveTimeout: input.timeout,
-  //         extra: {'requiresToken': input.requiresToken},
-  //       ),
-  //     );
-  //   }
 
   dynamic _getFieldValue(dynamic value) {
     if (value is Map<String, dynamic>) {
