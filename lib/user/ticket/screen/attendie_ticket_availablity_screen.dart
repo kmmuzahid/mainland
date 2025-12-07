@@ -37,17 +37,24 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // final list = {'Premium': 5, 'Standard': 10, 'VIP': 15, 'Free': 20};
     return BlocProvider(
-      create: (context) => TicketPurchaseCubit()..fetchAvailableTicketSummery(),
+      create: (context) => TicketPurchaseCubit(eventId: eventId)..fetchAvailableTicketSummery(),
       child: Scaffold(
         appBar: const CommonAppBar(),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: BlocSelector<TicketPurchaseCubit, TicketPurchaseState, List<AvailableTicketModel>>(
-            selector: (state) => state.availableTickets,
+          child: BlocBuilder<TicketPurchaseCubit, TicketPurchaseState>( 
             builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 100),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
               return Column(
                 children: [
-                  const EventTitleWidget(title: null).start,
+                  EventTitleWidget(title: eventName).start,
 
                   Container(
                     margin: EdgeInsets.only(top: 10.h),
@@ -64,8 +71,8 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
                           text: AppString.availableunits,
                           style: AppTextStyles.bodyLarge,
                         ),
-                        ...List.generate(state.length, (index) {
-                          final item = state[index];
+                        ...List.generate(state.availableTickets.length, (index) {
+                          final item = state.availableTickets[index];
                           return itemBuilder(item);
                         }),
                       ],

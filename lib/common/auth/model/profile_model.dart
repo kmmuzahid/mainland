@@ -20,6 +20,8 @@ class ProfileModel {
   final DateTime updatedAt;
   final int mainlandFee;
   final NotificationPreferenceModel notificationPreference;
+  final double withDrawAmount;
+  final double sellAmount;
 
   ProfileModel({
     required this.id,
@@ -39,6 +41,8 @@ class ProfileModel {
     required this.updatedAt,
     required this.mainlandFee,
     required this.notificationPreference,
+    required this.withDrawAmount,
+    required this.sellAmount,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +66,8 @@ class ProfileModel {
       joinedDate: DateTime.tryParse(json['joinedDate'] ?? '') ?? DateTime(1970),
       createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime(1970),
       updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime(1970),
+      sellAmount: json['sellAmount']?.toDouble() ?? 0,
+      withDrawAmount: json['withDrawAmount']?.toDouble() ?? 0,
     );
   }
 
@@ -84,6 +90,7 @@ class ProfileModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'mainlandFee': mainlandFee,
+      'withDrawAmount': withDrawAmount,
     };
   }
 
@@ -107,7 +114,9 @@ class ProfileModel {
         other.joinedDate == joinedDate &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
-        other.notificationPreference == notificationPreference;
+        other.notificationPreference == notificationPreference &&
+        other.withDrawAmount == withDrawAmount &&
+        other.sellAmount == sellAmount;
   }
 
   @override
@@ -128,7 +137,9 @@ class ProfileModel {
         joinedDate.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
-        notificationPreference.hashCode;
+        notificationPreference.hashCode ^
+        withDrawAmount.hashCode ^
+        sellAmount.hashCode;
   }
 
   ProfileModel copyWith({
@@ -148,6 +159,8 @@ class ProfileModel {
     DateTime? joinedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
+    double? sellAmount,
+    double? withDrawAmount,
     NotificationPreferenceModel? notificationPreference,
   }) {
     return ProfileModel(
@@ -168,6 +181,8 @@ class ProfileModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       notificationPreference: notificationPreference ?? this.notificationPreference,
+      withDrawAmount: withDrawAmount ?? this.withDrawAmount,
+      sellAmount: sellAmount ?? this.sellAmount,
     );
   }
 }

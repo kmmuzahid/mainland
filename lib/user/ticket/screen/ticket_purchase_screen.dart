@@ -50,8 +50,9 @@ class TicketPurchaseScreen extends StatelessWidget {
       appBar: const CommonAppBar(),
       backgroundColor: AppColors.background,
       body: BlocProvider(
-        create: (context) => TicketPurchaseCubit()
-          ..fetchTicketPurchase(id: id, ticketType: filterTicket, ticketOwnerType: ticketOwnerType),
+        create: (context) =>
+            TicketPurchaseCubit(eventId: id)
+              ..fetchTicketPurchase(ticketType: filterTicket, ticketOwnerType: ticketOwnerType),
         child: CustomForm(
           builder: (context, formKey) => Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),

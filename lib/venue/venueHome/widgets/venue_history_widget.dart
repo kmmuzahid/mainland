@@ -7,11 +7,14 @@ import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:mainland/venue/venueHome/cubit/venue_cubit.dart';
 import 'package:mainland/venue/venueHome/widgets/venue_app_bar_widget.dart';
 import 'package:mainland/venue/venueHome/widgets/venue_validate_dialogue_widget.dart';
 
 class VenueHistoryWidget extends StatelessWidget {
-  const VenueHistoryWidget({super.key});
+  const VenueHistoryWidget({required this.cubit, required this.state, super.key});
+  final VenueCubit cubit;
+  final VenueState state;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,10 @@ class VenueHistoryWidget extends StatelessWidget {
           onTap: () {
             commonDialog(
               isDismissible: true,
-              child: VenueValidateDialogueWidget(title: AppString.history, onConfim: (value) {}),
+              child: VenueValidateDialogueWidget(
+                title: AppString.history,
+                onConfim: cubit.fetchHistory,
+              ),
               context: context,
             );
           },
@@ -35,7 +41,13 @@ class VenueHistoryWidget extends StatelessWidget {
           ),
         ).end,
         20.height,
-        Container(
+        state.isHistoryLoading
+            ? Center(
+                child: CircularProgressIndicator(padding: EdgeInsets.only(top: 80.h)),
+              )
+            : state.venueHistoryModel == null
+            ? const SizedBox.shrink()
+            : Container(
           padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite,
@@ -45,18 +57,16 @@ class VenueHistoryWidget extends StatelessWidget {
           child: Column(
             children: [
               CommonText(
-                text: '${AppString.eventCode}: 63254AB1',
+                      text: '${AppString.eventCode}: ${state.venueHistoryModel?.eventCode ?? ''}',
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 bottom: 10,
               ).start,
-              const EventTitleWidget(title: null).start,
-              ...{
-                'Premium': 10,
-                'Standard': 20,
-                'VIP': 50,
-                'Free': 30,
-              }.entries.map((e) => _ticketBuidler(title: e.key, quantity: e.value.toString())),
+                    EventTitleWidget(title: state.venueHistoryModel?.eventName ?? '').start,
+                    ...state.venueHistoryModel?.used.map(
+                          (e) => _ticketBuidler(title: e.type, quantity: e.count.toString()),
+                        ) ??
+                        [],
             ],
           ),
         ),

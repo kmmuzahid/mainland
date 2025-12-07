@@ -20,6 +20,10 @@ class $AssetsIconGen {
   /// File path: assets/icon/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/icon/icon.png');
 
+  /// File path: assets/icon/icon_circle.png
+  AssetGenImage get iconCircle =>
+      const AssetGenImage('assets/icon/icon_circle.png');
+
   /// File path: assets/icon/launcherIcon.png
   AssetGenImage get launcherIcon =>
       const AssetGenImage('assets/icon/launcherIcon.png');
@@ -29,7 +33,13 @@ class $AssetsIconGen {
       const AssetGenImage('assets/icon/venue_icon.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [appIcon, icon, launcherIcon, venueIcon];
+  List<AssetGenImage> get values => [
+    appIcon,
+    icon,
+    iconCircle,
+    launcherIcon,
+    venueIcon,
+  ];
 }
 
 class $AssetsImagesGen {

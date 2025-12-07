@@ -12,13 +12,13 @@ import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
 import 'package:mainland/user/ticket/repository/ticket_purchase_repository.dart';
 
 class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
-  TicketPurchaseCubit() : super(const TicketPurchaseState());
+  TicketPurchaseCubit({required this.eventId}) : super(TicketPurchaseState(eventId: eventId));
   final repository = getIt<TicketPurchaseRepository>();
+  final String eventId;
 
   Future<void> fetchTicketPurchase({
     TicketOwnerType? ticketOwnerType,
     TicketName? ticketType,
-    required String id,
   }) async {
     if (state.isLoading) return;
     emit(state.copyWith(isLoading: true));
@@ -26,22 +26,24 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
     final response = await repository.getTicketPurchaseState(
       ticketType: ticketType,
       ticketOwnerType: ticketOwnerType ?? TicketOwnerType.attendee,
-      id: id,
+      id: eventId,
     );
     emit(
       state.copyWith(
         isLoading: false,
         tickets: response,
         percentage: authCubit?.state.profileModel?.mainlandFee ?? 0,
-        eventId: id,
+        eventId: eventId,
       ),
     );
   }
 
   ///attendiee ticket summery
   Future<void> fetchAvailableTicketSummery() async {
-    final response = await repository.getAvailableTicket();
-    emit(state.copyWith(availableTickets: response));
+    if (state.isLoading) return;
+    emit(state.copyWith(isLoading: true));
+    final response = await repository.getAvailableTicket(eventId: eventId);
+    emit(state.copyWith(availableTickets: response.data, isLoading: false));
   }
 
   Future<void> onTicketSelection(TicketPickerModel ticketPickerModel) async {
@@ -49,10 +51,8 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
     final index = tickets.indexWhere((element) => element.id == ticketPickerModel.id);
 
     if (index == -1) {
-      // Add new ticket if not already present
       tickets.add(ticketPickerModel);
     } else {
-      // Update existing ticket
       tickets[index] = ticketPickerModel;
     }
 
@@ -60,7 +60,7 @@ class TicketPurchaseCubit extends SafeCubit<TicketPurchaseState> {
       0,
       (previousValue, element) => previousValue + (element.count * element.price),
     );
-    
+
     final discount = subTotal * (state.promoPercentage > 0 ? (state.promoPercentage / 100) : 0);
     final mainlandFee =
         (subTotal - discount) * (state.percentage > 0 ? (state.percentage / 100) : 0);

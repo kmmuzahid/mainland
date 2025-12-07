@@ -45,13 +45,23 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
   }
 
   @override
-  Future<List<AvailableTicketModel>> getAvailableTicket() async {
-    return [
-      AvailableTicketModel(ticketType: TicketName.Premium, availableUnits: 5),
-      AvailableTicketModel(ticketType: TicketName.VIP, availableUnits: 6),
-      AvailableTicketModel(ticketType: TicketName.Standard, availableUnits: 7),
-      AvailableTicketModel(ticketType: TicketName.Other, availableUnits: 8),
-    ];
+  Future<ResponseState<List<AvailableTicketModel>?>> getAvailableTicket({
+    required String eventId,
+  }) async {
+    return _dioService.request<List<AvailableTicketModel>>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.attendeeTicketAvailability(eventId),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => ((data as List)
+          .map(
+            (e) => AvailableTicketModel(
+              ticketType: TicketName.values.byName(e['type']),
+              availableUnits: e['quantity'],
+            ),
+          )
+          .toList()),
+    );
   }
 
   @override

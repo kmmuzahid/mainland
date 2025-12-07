@@ -1,19 +1,16 @@
 import 'dart:typed_data';
-import 'dart:ui';
-
+ 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; 
 import 'package:mainland/common/event/repository/event_details_repository.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
-import 'package:mainland/core/config/network/dio_service.dart';
+import 'package:mainland/core/config/network/dio_service.dart'; 
 import 'package:mainland/core/utils/common_share.dart';
 import 'package:mainland/gen/assets.gen.dart';
 import 'package:mainland/user/ticketManage/cubit/ticket_save_state.dart';
 import 'package:mainland/user/ticketManage/model/qr_code_model.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
-import 'package:image/image.dart' as img;
+import 'package:pretty_qr_code/pretty_qr_code.dart'; 
 
 class TicketSaveCubit extends SafeCubit<TicketSaveState> {
   TicketSaveCubit() : super(TicketSaveState());
@@ -56,14 +53,15 @@ class TicketSaveCubit extends SafeCubit<TicketSaveState> {
     );
   }
 
-  Future<ByteData?>? _getImageByte(QrImage qrImage) async {
+  Future<ByteData?>? _getImageByte(QrImage qrImage) async { 
     return await qrImage.toImageAsBytes(
       size: 512,
       decoration: PrettyQrDecoration(
         // shape: const PrettyQrSmoothSymbol(),
         background: const Color(0xFFFFFFFF), // Pure white background (important for scanning)
-        image: PrettyQrDecorationImage(image: AssetImage(Assets.icon.appIcon.path)),
+        image: PrettyQrDecorationImage(image: AssetImage(Assets.icon.iconCircle.path)),
       ),
     );
   }
+ 
 }

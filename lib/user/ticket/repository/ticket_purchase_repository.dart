@@ -12,7 +12,7 @@ abstract class TicketPurchaseRepository {
     required String id,
   });
 
-  Future<List<AvailableTicketModel>> getAvailableTicket();
+  Future<ResponseState<List<AvailableTicketModel>?>> getAvailableTicket({required String eventId});
 
   Future<ResponseState<int?>> getPromoCodePercnetage({
     required String promoCode,

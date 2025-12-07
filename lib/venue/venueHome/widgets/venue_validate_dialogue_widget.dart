@@ -22,7 +22,6 @@ class VenueValidateDialogueWidget extends StatelessWidget {
   }
 
   CustomForm _content() {
-    String data = '';
     return CustomForm(
       builder: (context, formKey) {
         return Column(
@@ -42,8 +41,11 @@ class VenueValidateDialogueWidget extends StatelessWidget {
                 backgroundColor: AppColors.greay50,
                 hintText: AppString.insertNewEventCode,
                 validationType: ValidationType.validateRequired,
-                onChanged: (value) {
-                  data = value;
+                onSaved: (value, controller) {
+                  if (value.isNotEmpty) {
+                    onConfim(value);
+                    appRouter.pop();
+                  }
                 },
               ),
             ),
@@ -54,8 +56,9 @@ class VenueValidateDialogueWidget extends StatelessWidget {
                 CommonButton(
                   titleText: AppString.confim,
                   onTap: () {
-                    onConfim(data);
-                    appRouter.pop();
+                    if (formKey.currentState?.validate() ?? false) {
+                      formKey.currentState?.save();
+                    }
                   },
                 ),
                 20.width,

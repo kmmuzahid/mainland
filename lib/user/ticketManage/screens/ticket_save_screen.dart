@@ -2,10 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/config/bloc/cubit_scope.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
@@ -13,6 +15,7 @@ import 'package:mainland/user/ticketManage/cubit/ticket_save_cubit.dart';
 import 'package:mainland/user/ticketManage/widgets/wallet_button.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
+final logoKey = GlobalKey();
 @RoutePage()
 class TicketSaveScreen extends StatelessWidget {
   const TicketSaveScreen({super.key, required this.ticketId});
@@ -46,13 +49,22 @@ class TicketSaveScreen extends StatelessWidget {
                 )
               : Column(
                   children: [
+
+ 
                     EventTitleWidget(title: state.eventDetailsModel?.eventName).start,
 
                     // CommonText(text: 'Standard', fontSize: 19, textColor: AppColors.greay300).center,
                     10.height,
                     Container(
-                      color: AppColors.backgroundWhite,
-                      padding: EdgeInsets.all(60.w),
+                      width: Utils.deviceSize.width - 100,
+                      height: Utils.deviceSize.width - 100,
+                      padding: const EdgeInsets.all(10),
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: state.imageByte == null
                           ? SizedBox(height: 170.w, width: 170.w)
                           : Image.memory(state.imageByte!.buffer.asUint8List()),

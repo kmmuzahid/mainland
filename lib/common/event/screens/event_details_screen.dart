@@ -199,6 +199,8 @@ class EventDetailsScreen extends StatelessWidget {
                             'Pre-Order available ${Utils.formatDateToShortMonth(eventDetails.eventDate!)}',
                         maxLine: 2,
                       ),
+                    if (Utils.getRole() == Role.ORGANIZER)
+                      _textBuilder(title: 'Event Code: ${eventDetails?.eventCode ?? ''}'),
                   ],
                 ),
               ),

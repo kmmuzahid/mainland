@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
+import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/common/setting/cubit/faq_cubit.dart';
@@ -124,7 +125,7 @@ class SettingScreen extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ).start,
                     10.height,
-                    accountSummery(),
+                    accountSummery(authState.profileModel),
                     15.height,
                     if (Utils.getRole() == Role.ORGANIZER) ...[
                       _menuItems(
@@ -161,9 +162,7 @@ class SettingScreen extends StatelessWidget {
                       context: context,
                       title: AppString.faqHelp,
                       onTap: () {
-                        appRouter.push(
-                           FaqRoute(faqType: FaqType.user),
-                        );
+                        appRouter.push(FaqRoute(faqType: FaqType.user));
                       },
                     ),
                     Utils.divider(),
@@ -387,7 +386,11 @@ class SettingScreen extends StatelessWidget {
     return GestureDetector(onTap: onTap, child: container);
   }
 
-  Widget accountSummery() {
+  Widget accountSummery(ProfileModel? profileModel) {
+    double balance = 0;
+    if (profileModel != null) {
+      balance = profileModel.sellAmount - profileModel.withDrawAmount;
+    }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
@@ -411,7 +414,7 @@ class SettingScreen extends StatelessWidget {
                 textColor: AppColors.textWhite,
               ).start,
               CommonText(
-                text: '\$625',
+                text: '\$$balance',
                 fontWeight: FontWeight.w600,
                 fontSize: 24,
                 textAlign: TextAlign.left,

@@ -27,8 +27,8 @@ class VenueHomeScreen extends StatelessWidget {
                 return IndexedStack(
                   index: context.read<VenueCubit>().state.currentIndex,
                   children: [
-                    VenueHomeWidget(venueCubit: cubit, venueState: state),
-                    const VenueHistoryWidget(),
+                    VenueHomeWidget(cubit: cubit, state: state),
+                    VenueHistoryWidget(cubit: cubit, state: state),
                     const VenueSettingWidget(),
                   ],
                 );
