@@ -33,6 +33,18 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _profileInfo = 'profile_info_key';
   Role _role = Role.ATTENDEE;
 
+  Future<void> deleteAccount({required String password, required String reason}) async {
+    final result = await _repository.deleteAccount(password: password, reason: reason);
+    if (result.isSuccess) {
+      _role = Role.ATTENDEE;
+      await _storageService.deleteAll();
+      appRouter.replaceAll([
+        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+      ]);
+      emit(const AuthState());
+    }
+  }
+
   Future<void> updateProfile({
     ProfileModel? profileModel,
     XFile? image,

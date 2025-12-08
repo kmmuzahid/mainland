@@ -23,7 +23,11 @@ class TicketSaveCubit extends SafeCubit<TicketSaveState> {
     final result = await repository.getDetails(id: id);
     if (result.isSuccess && result.data != null) {
       final qrCode = QrCodeModel.fromJson(
-        QrCodeModel(userId: userId, eventId: result.data?.id ?? '', eventCode: '').toJson(),
+        QrCodeModel(
+          userId: userId,
+          eventId: result.data?.id ?? '',
+          eventCode: result.data?.eventCode ?? '',
+        ).toJson(),
       );
       final qrImage = QrImage(
         QrCode.fromData(data: qrCode.toJson(), errorCorrectLevel: QrErrorCorrectLevel.H),

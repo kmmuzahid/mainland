@@ -14,13 +14,14 @@ import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
+import 'package:mainland/venue/venueHome/cubit/venue_cubit.dart';
 import 'package:mainland/venue/venueHome/widgets/venue_app_bar_widget.dart';
 
 import 'venue_validate_dialogue_widget.dart';
 
 class VenueSettingWidget extends StatelessWidget {
-  const VenueSettingWidget({super.key});
- 
+  const VenueSettingWidget({required this.cubit, super.key});
+  final VenueCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,9 @@ class VenueSettingWidget extends StatelessWidget {
               isDismissible: true,
               child: VenueValidateDialogueWidget(
                 title: AppString.insertNewEventCode,
-                onConfim: (value) {},
+                onConfim: (value) {
+                  if (value.isNotEmpty) cubit.changeVenueCode(eventCode: value);
+                },
               ),
               context: context,
             );

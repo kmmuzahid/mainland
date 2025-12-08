@@ -17,6 +17,7 @@ import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -200,6 +201,8 @@ class SettingScreen extends StatelessWidget {
                       context: context,
                       title: AppString.deleteAccount,
                       onTap: () {
+                        String password = '';
+                        String reason = '';
                         CommonDialogWithActions(
                           title: AppString.deleteAccount,
                           subTitle: AppString.accountDeleteMessage,
@@ -207,19 +210,28 @@ class SettingScreen extends StatelessWidget {
                             CommonTextField(
                               validationType: ValidationType.validatePassword,
                               hintText: AppString.password,
+                              onSaved: (value, c) {
+                                password = value;
+                              },
                             ),
                             10.height,
                             CommonMultilineTextField(
+                              onSaved: (value, c) {
+                                reason = value;
+                              },
                               height: 110,
                               validationType: ValidationType.validateRequired,
                               hintText: AppString.enterYourReason,
                             ),
                           ],
-                          onConfirm: () {},
+                          validationRequired: true,
+                          onConfirm: () {
+                            authCubit.deleteAccount(password: password, reason: reason);
+                          },
                           context: context,
                         );
                       },
-                    ),
+                    ), 
                     Utils.divider(),
                     _menuItems(
                       context: context,

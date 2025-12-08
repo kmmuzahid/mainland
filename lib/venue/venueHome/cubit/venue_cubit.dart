@@ -8,6 +8,7 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticketManage/model/qr_code_model.dart';
@@ -19,18 +20,44 @@ import '../model/venue_history_model.dart';
 part 'venue_state.dart';
 
 class VenueCubit extends SafeCubit<VenueState> {
-  VenueCubit() : super(const VenueState());
+  VenueCubit() : super(const VenueState(eventCode: ''));
   final EventDetailsRepository repository = getIt();
 
   final ImagePicker imagePicker = ImagePicker();
   final DioService _dioService = getIt();
 
+  void init({required String eventCode}) async {
+    emit(state.copyWith(eventCode: eventCode));
+  }
+
   void changeIndex(int index) => emit(state.copyWith(currentIndex: index));
+
+  void changeVenueCode({required String eventCode, Function? onSuccess}) async {
+    if (state.isHistoryLoading) return;
+    final result = await _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.checkEventCode(eventCode),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      showSnackBar(
+        'Only $eventCode scans will be accepted going forward.',
+        type: SnackBarType.success,
+      );
+      emit(state.copyWith(eventCode: eventCode, isEventCodeChecking: false));
+      onSuccess?.call();
+    } else {
+      showSnackBar(result.message ?? '', type: SnackBarType.error);
+      emit(state.copyWith(isEventCodeChecking: false));
+    }
+  }
 
   Future<void> pickQrCodeFromGallery({required String userId}) async {
     final status = await const PermissionHandlerHelper(permission: Permission.photos).getStatus();
     if (status) {
-      emit(const VenueState());
+      emit(VenueState(eventCode: state.eventCode));
       final image = await imagePicker.pickImage(source: ImageSource.gallery);
       emit(state.copyWith(image: image));
       if (image != null) {
@@ -62,7 +89,12 @@ class VenueCubit extends SafeCubit<VenueState> {
     emit(state.copyWith(venueHistoryModel: result.data, isHistoryLoading: false));
   }
 
-  Future<void> _getEventDetails(QrCodeModel model, String ownerId) async {
+  Future<void> _getEventDetails(QrCodeModel model, String ownerId) async { 
+    if (model.eventCode != state.eventCode) {
+      showSnackBar('Sorry, this ticket is not valid for this event.', type: SnackBarType.warning);
+      emit(state.copyWith(isEventDetailsLoading: false));
+      return;
+    }
     final result = await repository.getDetails(id: model.eventId);
     if (result.isSuccess) {
       emit(state.copyWith(eventDetailsModel: result.data, isEventDetailsLoading: false));
@@ -76,7 +108,7 @@ class VenueCubit extends SafeCubit<VenueState> {
   Future<void> scanQR() async {
     final status = await const PermissionHandlerHelper(permission: Permission.camera).getStatus();
     if (status) {
-      emit(const VenueState(openCamera: true));
+      emit(VenueState(openCamera: true, eventCode: state.eventCode));
     }
   }
 

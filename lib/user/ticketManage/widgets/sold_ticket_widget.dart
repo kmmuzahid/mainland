@@ -64,7 +64,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
           ),
           CommonButton(
             icon: Icon(viewDetails ? Icons.remove : Icons.add, color: AppColors.iconColorBlack),
-            titleText: viewDetails ? AppString.viewDetails : AppString.viewLess,
+            titleText: viewDetails ? AppString.viewLess : AppString.viewDetails,
             onTap: () {
               setState(() {
                 viewDetails = !viewDetails;

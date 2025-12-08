@@ -1900,18 +1900,49 @@ class UserTicketManageRouteArgs {
 
 /// generated route for
 /// [_i38.VenueHomeScreen]
-class VenueHomeRoute extends _i40.PageRouteInfo<void> {
-  const VenueHomeRoute({List<_i40.PageRouteInfo>? children})
-    : super(VenueHomeRoute.name, initialChildren: children);
+class VenueHomeRoute extends _i40.PageRouteInfo<VenueHomeRouteArgs> {
+  VenueHomeRoute({
+    required String eventCode,
+    _i41.Key? key,
+    List<_i40.PageRouteInfo>? children,
+  }) : super(
+         VenueHomeRoute.name,
+         args: VenueHomeRouteArgs(eventCode: eventCode, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'VenueHomeRoute';
 
   static _i40.PageInfo page = _i40.PageInfo(
     name,
     builder: (data) {
-      return const _i38.VenueHomeScreen();
+      final args = data.argsAs<VenueHomeRouteArgs>();
+      return _i38.VenueHomeScreen(eventCode: args.eventCode, key: args.key);
     },
   );
+}
+
+class VenueHomeRouteArgs {
+  const VenueHomeRouteArgs({required this.eventCode, this.key});
+
+  final String eventCode;
+
+  final _i41.Key? key;
+
+  @override
+  String toString() {
+    return 'VenueHomeRouteArgs{eventCode: $eventCode, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! VenueHomeRouteArgs) return false;
+    return eventCode == other.eventCode && key == other.key;
+  }
+
+  @override
+  int get hashCode => eventCode.hashCode ^ key.hashCode;
 }
 
 /// generated route for

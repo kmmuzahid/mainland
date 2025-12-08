@@ -59,8 +59,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<ResponseState<bool>> deleteAccount() async =>
-      ResponseState(data: true, isSuccess: true, statusCode: 201);
+  Future<ResponseState<dynamic>> deleteAccount({
+    required String password,
+    required String reason,
+  }) async {
+    return await _dioService.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.deleteAccount,
+        method: RequestMethod.DELETE,
+        jsonBody: {'deleteReason': reason, 'password': password},
+      ),
+      responseBuilder: (data) => data,
+    );
+  }
+
   @override
   Future<ResponseState<ProfileModel?>> getCurrentUser() async {
     final response = await _dioService.request<ProfileModel>(
@@ -178,29 +191,29 @@ class AuthRepositoryImpl implements AuthRepository {
     final Map<String, dynamic> body = profileModel == null
         ? {}
         : {
-                'name': profileModel.name,
+            'name': profileModel.name,
             // if (isDeleteImage && image == null) 'image': '',
-                'personalInfo': {
-                  'phone': profileModel.personalInfo.phone,
-                  if (profileModel.personalInfo.dateOfBirth != null)
-                    'dateOfBirth': profileModel.personalInfo.dateOfBirth?.millisecondsSinceEpoch,
-                },
-                'address': {
-                  // 'country': 'United States',
-                  'city': profileModel.address.city,
-                  'postalCode': profileModel.address.postalCode,
-                  'street': profileModel.address.street,
-                },
-                'notification': {
-                  'isSellTicketNotificationEnabled':
-                      profileModel.notificationPreference.isSellTicketNotificationEnabled,
-                  'isMessageNotificationEnabled':
-                      profileModel.notificationPreference.isMessageNotificationEnabled,
-                  'isPublishEventNotificationEnabled':
-                      profileModel.notificationPreference.isPublishEventNotificationEnabled,
-                  'isWithdrawMoneyNotificationEnabled':
-                      profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
-                },
+            'personalInfo': {
+              'phone': profileModel.personalInfo.phone,
+              if (profileModel.personalInfo.dateOfBirth != null)
+                'dateOfBirth': profileModel.personalInfo.dateOfBirth?.millisecondsSinceEpoch,
+            },
+            'address': {
+              // 'country': 'United States',
+              'city': profileModel.address.city,
+              'postalCode': profileModel.address.postalCode,
+              'street': profileModel.address.street,
+            },
+            'notification': {
+              'isSellTicketNotificationEnabled':
+                  profileModel.notificationPreference.isSellTicketNotificationEnabled,
+              'isMessageNotificationEnabled':
+                  profileModel.notificationPreference.isMessageNotificationEnabled,
+              'isPublishEventNotificationEnabled':
+                  profileModel.notificationPreference.isPublishEventNotificationEnabled,
+              'isWithdrawMoneyNotificationEnabled':
+                  profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
+            },
           };
 
     return _dioService.request<ProfileModel>(

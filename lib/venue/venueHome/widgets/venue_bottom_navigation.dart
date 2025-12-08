@@ -16,12 +16,12 @@ class VenueBottomNavigationBar extends StatefulWidget {
 
 class _VenueBottomNavigationBarState extends State<VenueBottomNavigationBar> {
   int _currentIndex = 0;
-  late VenueCubit _venueCubit;
+  late VenueCubit cubit;
 
   @override
   void initState() {
     super.initState();
-    _venueCubit = context.read<VenueCubit>();
+    cubit = context.read<VenueCubit>();
   }
 
   List<Widget> venueItems() => [
@@ -66,7 +66,7 @@ class _VenueBottomNavigationBarState extends State<VenueBottomNavigationBar> {
                     onTap: () {
                       setState(() {
                         _currentIndex = index;
-                        _venueCubit.changeIndex(index);
+                        cubit.changeIndex(index);
                       });
                     },
                     child: item,

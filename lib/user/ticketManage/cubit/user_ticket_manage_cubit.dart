@@ -71,7 +71,7 @@ class UserTicketManageCubit extends SafeCubit<UserTicketManageState> {
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoint.instance.withdrawTickets(id: state.eventId),
-        method: RequestMethod.GET,
+        method: RequestMethod.POST,
       ),
 
       responseBuilder: (data) => data,

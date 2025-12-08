@@ -42,7 +42,7 @@ abstract class AuthRepository {
 
   Future<ResponseState<bool>> signOut();
 
-  Future<ResponseState<bool>> deleteAccount();
+  Future<ResponseState<dynamic>> deleteAccount({required String password, required String reason});
 
   Future<ResponseState<String?>> getPrivacyPolicy();
 

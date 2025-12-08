@@ -18,6 +18,7 @@ class ApiEndPoint {
 
   //user
   final String profile = '/user/profile';
+  final String deleteAccount = '/user/remove-account';
 
   //basic
   final String privacyPolicy = '/settings/privacy_policy';
@@ -56,7 +57,7 @@ class ApiEndPoint {
   String userLiveDetails({required String id}) => '/ticket/sellHistory/$id?status=onsell';
   String userAvailableDetails({required String id}) => '/ticket/sellHistory/$id?status=available';
   String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id';
-  String withdrawTickets({required String id}) => '/ticket/withdrawTicket/$id';
+  String withdrawTickets({required String id}) => '/ticket/withdraw-pro/$id';
 
   //user purchase tickets
   String getAvailableTicketFromOrg({required String id}) =>
@@ -71,7 +72,9 @@ class ApiEndPoint {
   String purchaseFromUser({required String id}) => '/event/ticketPurchase/$id';
   String attendeeTicketAvailability(String id) => '/ticket/avaiable-type-history/$id';
 
+  //venue
   String perticipentCount(String code) => '/event/perticipent-count/$code';
   String tikcetUse({required String eventId, required String ownerId, required bool isUpdate}) =>
       '/event/bar-code-check/$eventId?ownerId=$ownerId&isUpdate=$isUpdate';
+  String checkEventCode(String eventCode) => '/ticket/check-event/$eventCode';
 }

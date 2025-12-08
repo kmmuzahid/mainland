@@ -11,7 +11,9 @@ class VenueState {
     this.venueHistoryModel,
     this.isHistoryLoading = false,
     this.isQrChecking = false,
-    this.availableTickets = const []
+    required this.eventCode,
+    this.isEventCodeChecking = false,
+    this.availableTickets = const [],
   });
 
   final int currentIndex;
@@ -23,7 +25,8 @@ class VenueState {
   final bool isQrChecking;
   final VenuHistoryModel? venueHistoryModel;
   final List<Ticket>? availableTickets;
-  
+  final String eventCode;
+  final bool isEventCodeChecking;
 
   VenueState copyWith({
     int? currentIndex,
@@ -35,6 +38,8 @@ class VenueState {
     bool? isHistoryLoading,
     bool? isQrChecking,
     List<Ticket>? availableTickets,
+    String? eventCode,
+    bool? isEventCodeChecking
   }) {
     return VenueState(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -45,7 +50,9 @@ class VenueState {
       venueHistoryModel: venueHistoryModel ?? this.venueHistoryModel,
       isHistoryLoading: isHistoryLoading ?? this.isHistoryLoading,
       isQrChecking: isQrChecking ?? this.isQrChecking,
-      availableTickets: availableTickets ?? this.availableTickets
+      availableTickets: availableTickets ?? this.availableTickets,
+      eventCode: eventCode ?? this.eventCode,
+      isEventCodeChecking: isEventCodeChecking ?? this.isEventCodeChecking
     );
   }
 
@@ -61,6 +68,8 @@ class VenueState {
         other.venueHistoryModel == venueHistoryModel &&
         other.isHistoryLoading == isHistoryLoading &&
         other.isQrChecking == isQrChecking &&
+        other.eventCode == eventCode &&
+        other.isEventCodeChecking == isEventCodeChecking &&
         other.availableTickets == availableTickets;
   }
 
@@ -74,6 +83,8 @@ class VenueState {
         venueHistoryModel.hashCode ^
         isHistoryLoading.hashCode ^
         isQrChecking.hashCode ^
+        eventCode.hashCode ^
+        isEventCodeChecking.hashCode ^
         availableTickets.hashCode;
   }
 }
