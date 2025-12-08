@@ -7,6 +7,7 @@ import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/user/ticketManage/model/ticket_details_model.dart';
+import 'package:mainland/user/ticketManage/model/ticket_history_details_model.dart';
 
 import 'user_ticket_manage_state.dart';
 
@@ -21,16 +22,42 @@ class UserTicketManageCubit extends SafeCubit<UserTicketManageState> {
       path = ApiEndPoint.instance.userLiveDetails(id: eventId);
     } else if (filter == TicketFilter.Available) {
       path = ApiEndPoint.instance.userAvailableDetails(id: eventId);
+    } else if (filter == TicketFilter.Sold) {
+      path = ApiEndPoint.instance.ticketHistoryDetails(id: eventId, isExpired: false);
+    } else if (filter == TicketFilter.Expired) {
+      path = ApiEndPoint.instance.ticketHistoryDetails(id: eventId, isExpired: true);
     }
     emit(state.copyWith(isLoading: true, eventId: eventId));
 
-    final response = await _dioService.request<List<TicketDetailsModel>>(
+
+    final isNotHistory = filter != TicketFilter.Sold && filter != TicketFilter.Expired;
+
+    final response = await _dioService.request(
+      debug: true,
       input: RequestInput(endpoint: path, method: RequestMethod.GET),
       responseBuilder: (response) {
-        return (response as List).map((e) => TicketDetailsModel.fromMap(e)).toList();
+        if (isNotHistory) {
+          return (response as List).map((e) => TicketDetailsModel.fromMap(e)).toList();
+        } else {
+          return TicketHistoryDetailsModel.fromJson(response);
+        }
       },
     );
-    emit(state.copyWith(isLoading: false, ticketDetails: response.data));
+    emit(
+      state.copyWith(
+        isLoading: false,
+        ticketDetails: response.data == null
+            ? []
+            : isNotHistory
+            ? response.data as List<TicketDetailsModel>
+            : [],
+        ticketHistoryDetailsModel: !isNotHistory
+            ? response.data == null
+                  ? null
+                  : response.data as TicketHistoryDetailsModel
+            : null,
+      ),
+    );
   }
 
   Future<void> sellNow(List<TicketDetailsModel> sellInfo) async {

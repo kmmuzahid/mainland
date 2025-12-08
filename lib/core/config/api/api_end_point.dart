@@ -58,6 +58,8 @@ class ApiEndPoint {
   String userAvailableDetails({required String id}) => '/ticket/sellHistory/$id?status=available';
   String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id';
   String withdrawTickets({required String id}) => '/ticket/withdraw-pro/$id';
+  String ticketHistoryDetails({required String id, required bool isExpired}) =>
+      '/ticket/sold-view-history/$id${isExpired ? '?expired=$isExpired' : ''}';
 
   //user purchase tickets
   String getAvailableTicketFromOrg({required String id}) =>

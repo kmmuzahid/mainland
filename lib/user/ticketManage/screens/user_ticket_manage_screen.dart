@@ -20,7 +20,7 @@ import 'package:mainland/user/ticketManage/widgets/sell_available_ticket_widget.
 import 'package:mainland/user/ticketManage/widgets/sold_ticket_widget.dart';
 
 import '../cubit/user_ticket_manage_cubit.dart';
-import '../model/sold_ticket_details_model.dart';
+import '../model/ticket_history_details_model.dart';
 
 @RoutePage()
 class UserTicketManageScreen extends StatelessWidget {
@@ -61,6 +61,10 @@ class UserTicketManageScreen extends StatelessWidget {
     );
   }
 
+  String _formatTicketDetails(List<TicketTypeCount> details) {
+    return details.map((detail) => '${detail.ticketType} - ${detail.count}x').join('\n');
+  }
+
   Widget getContent({
     required BuildContext context,
     required UserTicketManageCubit cubit,
@@ -74,36 +78,16 @@ class UserTicketManageScreen extends StatelessWidget {
       );
     }
     if (ticketFilter == TicketFilter.Sold) {
+      final model = state.ticketHistoryDetailsModel;
       return SoldTicketWidget(
-        soldTicketDetails: [
-          SoldTicketDetailsModel(
-            type: 'Standard',
-            unit: 10,
-            soldPrice: 120,
-            mainlandCommission: 12,
-            yourPayout: 108,
-          ),
-          SoldTicketDetailsModel(
-            type: 'VIP',
-            unit: 7,
-            soldPrice: 150,
-            mainlandCommission: 15,
-            yourPayout: 135,
-          ),
-          SoldTicketDetailsModel(
-            type: 'Premium',
-            unit: 8,
-            soldPrice: 150,
-            mainlandCommission: 15,
-            yourPayout: 135,
-          ),
-        ],
-        eventName: 'Juice WRLD Eko Hotel & Suites Monday, September 6',
-        summery: const {
-          'Types': 'Standard - 1x\nVIP -  2x',
-          'Total Sold Price': '\$520',
-          'Mainland Commission (10%)': '\$52',
-          'Your Payout': '\$468',
+        soldTicketDetails: model?.details ?? [],
+        eventName: model?.eventName ?? '',
+        summery: {
+          'Types': _formatTicketDetails(model?.summary.types ?? []),
+          'Total Sold Price': '\$${model?.summary.totalSellAmount ?? 0}',
+          'Total Mainland Commission': '\$${model?.summary.totalMainlandFee ?? 0}',
+          'Your Payout':
+              '\$${(model?.summary.totalSellAmount ?? 0) - (model?.summary.totalMainlandFee ?? 0)}',
         },
       );
     }
@@ -139,7 +123,7 @@ class UserTicketManageScreen extends StatelessWidget {
             ticketFilter: ticketFilter,
           );
         }),
-        
+
         20.height,
         if (ticketFilter == TicketFilter.Live)
           CommonButton(

@@ -58,7 +58,7 @@ class TicketWidget extends StatelessWidget {
                       maxLine: 2,
                       preventScalling: true,
                     ),
-                    if (ticketModel.eventDate != null)
+                    if (ticketModel.eventDate != null && ticketModel.startTime != null)
                       _textBuilder(
                         title:
                             '${Utils.formatDateToShortMonth(ticketModel.eventDate!)} ${ticketModel.startTime?.to12HourString()}',

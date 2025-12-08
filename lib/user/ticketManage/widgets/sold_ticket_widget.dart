@@ -10,18 +10,18 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/user/ticketManage/widgets/ticket_summery_view_widget.dart';
 
-import '../model/sold_ticket_details_model.dart';
+import '../model/ticket_history_details_model.dart';
 
 class SoldTicketWidget extends StatefulWidget {
   const SoldTicketWidget({
-    super.key,
     required this.eventName,
     required this.summery,
     required this.soldTicketDetails,
+    super.key,
   });
   final String eventName;
   final Map<String, String> summery;
-  final List<SoldTicketDetailsModel> soldTicketDetails;
+  final List<TicketDetail> soldTicketDetails;
 
   @override
   State<SoldTicketWidget> createState() => _SoldTicketWidgetState();
@@ -34,8 +34,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: [
-          EventTitleWidget(title: widget.eventName).start,
+        children: [ 
           10.height,
           AnimatedCrossFade(
             firstChild: _buildViewDetails(),
@@ -84,6 +83,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
       itemCount: widget.soldTicketDetails.length,
       itemBuilder: (context, index) {
         final ticket = widget.soldTicketDetails[index];
+        final mainlandFee = ticket.price * (ticket.commission / 100);
         return Container(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           decoration: BoxDecoration(
@@ -96,11 +96,11 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
           child: TicketSummeryViewWidget(
             backgroundColor: AppColors.primary50,
             summery: {
-              'Type': ticket.type,
-              'Unit': ticket.unit.toString(),
-              'Set Price': ticket.soldPrice.toString(),
-              'Mainland Commission': ticket.mainlandCommission.toString(),
-              'Your Payout': ticket.yourPayout.toString(),
+              'Type': ticket.ticketType,
+              'Unit': ticket.quantity.toString(),
+              'Set Price': ticket.price.toString(),
+              'Mainland Commission (${ticket.commission}%)': mainlandFee.toString(),
+              'Your Payout': '${ticket.price - mainlandFee}',
             },
           ),
         );
