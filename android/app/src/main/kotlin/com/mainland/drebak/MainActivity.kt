@@ -1,4 +1,4 @@
-package com.example.mainland
+package com.mainland.drebak
 
 import io.flutter.embedding.android.FlutterActivity
 
