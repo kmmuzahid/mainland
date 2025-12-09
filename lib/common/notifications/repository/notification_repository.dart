@@ -1,34 +1,23 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
-
-import '../model/notification_model.dart';
+ 
+import 'package:mainland/core/config/api/api_end_point.dart';
+import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/network/dio_service.dart';
+import 'package:mainland/core/config/network/request_input.dart';
+import 'package:mainland/core/config/network/response_state.dart';
+import 'package:mainland/core/config/socket/notification_model.dart';
+ 
 
 class NotificationRepository {
-  Future<List<RemoteMessage>> fetch({required int page}) async {
-    await SimulateMocRepo();
-    return [
-      ...generateMockList(
-        builder: (index) => RemoteMessage(
-          messageId: index.toString(),
-          messageType: NotificationType.others.name,
-          sentTime: DateTime.now(),
-          notification: RemoteNotification(
-            title: 'Dummy Notificaiton $index',
-            body: 'Its a simple notification to test UI design.',
-          ),
-        ),
+  final DioService _dioService = getIt();
+  Future<ResponseState<List<NotificationModel>?>> fetch({required int page}) async {
+    return _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.notification,
+        method: RequestMethod.GET,
+        queryParams: {'page': page, 'limit': 20}
       ),
-      ...generateMockList(
-        builder: (index) => RemoteMessage(
-          messageId: index.toString(),
-          messageType: NotificationType.others.name,
-          sentTime: DateTime.now(),
-          notification: RemoteNotification(
-            title: 'Dummy Notificaiton $index',
-            body: 'Its a simple notification to test UI design.',
-          ),
-        ),
-      ),
-    ];
+      responseBuilder: (data) =>
+          data == null ? [] : (data as List).map((e) => NotificationModel.fromMap(e)).toList(),
+    ); 
   }
 }

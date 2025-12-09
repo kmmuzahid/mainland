@@ -17,7 +17,9 @@ class AuthState extends Equatable {
       accessToken: '',
       refreshToken: '', 
       role: Role.ATTENDEE,
+      id: ''
     ),
+    
     this.isLoading = false,
     this.errMessage = '',
     this.signUpModel = const SignUpModel(

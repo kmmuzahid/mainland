@@ -26,6 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
       responseBuilder: (data) => UserLoginInfoModel(
         accessToken: data['Token'],
         refreshToken: data['RefreshToken'],
+        id: '',
         role: role,
       ),
     );

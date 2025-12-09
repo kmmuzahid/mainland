@@ -1,30 +1,50 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
+
 import 'package:mainland/common/notifications/repository/notification_repository.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/socket/notification_model.dart';
+import 'package:mainland/core/config/socket/socket_service.dart';
+import 'package:mainland/core/config/socket/stream_data_model.dart';
 
 import 'notification_state.dart';
 
 class NotificationCubit extends SafeCubit<NotificationState> {
   NotificationCubit() : super(const NotificationState());
   final NotificationRepository _repository = getIt();
+  late StreamSubscription<StreamDataModel> _subscriptions;
+
+  Future<void> init() async {
+    _subscriptions = SocketService.instance.streamController.stream.listen((data) {
+      if (data.streamType == StreamType.notification) {
+        addNotification(notification: data.data as NotificationModel);
+      }
+    });
+    fetch();
+  }
 
   int? _getPageNo(List responce) => responce.isNotEmpty ? state.pageNo + 1 : null;
 
   void cleanList() async {
-    emit(state.copyWith(notifications: [], unread: 0));
+    emit(state.copyWith(notifications: []));
   }
 
-  void addNotification({required RemoteMessage notification}) {
-    final List<RemoteMessage> updatedList = [notification, ...state.notifications ?? []];
-    emit(state.copyWith(notifications: updatedList, unread: state.unread + 1));
+  void addNotification({required NotificationModel notification}) {
+    final List<NotificationModel> updatedList = [notification, ...state.notifications ?? []];
+    emit(state.copyWith(notifications: updatedList));
   }
 
   Future<void> fetch() async {
     if (state.isLoading) return;
-    emit(state.copyWith(isLoading: true, notifications: [], pageNo: 0));
-    final responce = await _repository.fetch(page: 0);
-    emit(state.copyWith(notifications: responce, isLoading: false, pageNo: _getPageNo(responce)));
+    emit(state.copyWith(isLoading: true, notifications: [], pageNo: 1));
+    final responce = await _repository.fetch(page: state.pageNo);
+    emit(
+      state.copyWith(
+        notifications: responce.data,
+        isLoading: false,
+        pageNo: _getPageNo(responce.data ?? []),
+      ),
+    );
   }
 
   Future<void> loadMore() async {
@@ -34,9 +54,15 @@ class NotificationCubit extends SafeCubit<NotificationState> {
     emit(
       state.copyWith(
         isLoading: false,
-        notifications: [...state.notifications ?? [], ...responce],
-        pageNo: _getPageNo(responce),
+        notifications: [...state.notifications ?? [], ...responce.data ?? []],
+        pageNo: _getPageNo(responce.data ?? []),
       ),
     );
+  }
+
+  @override
+  Future<void> close() {
+    _subscriptions.cancel();
+    return super.close();
   }
 }

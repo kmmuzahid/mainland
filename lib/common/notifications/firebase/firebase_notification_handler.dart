@@ -27,7 +27,7 @@ class FirebaseNotificationHandler {
     await _flutterLocalNotificationsPlugin.initialize(initSettings);
 
     // Set foreground message handler
-    FirebaseMessaging.onMessage.listen(_onMessageReceived);
+    // FirebaseMessaging.onMessage.listen(_onMessageReceived);
 
     // Set background message handler
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -46,16 +46,16 @@ class FirebaseNotificationHandler {
   }
 
   /// Foreground message handler (App is in foreground)
-  Future<void> _onMessageReceived(RemoteMessage message) async {
-    // Parse the notification data and show it using local notifications
-    if (message.notification != null) {
-      // Insert the notification into Cubit state (if app is in foreground)
-      notificationCubit?.addNotification(notification: message);
+  // Future<void> _onMessageReceived(RemoteMessage message) async {
+  //   // Parse the notification data and show it using local notifications
+  //   if (message.notification != null) {
+  //     // Insert the notification into Cubit state (if app is in foreground)
+  //     // notificationCubit?.addNotification(notification: message);
 
-      // Show the notification in the system tray using FlutterLocalNotifications
-      _showLocalNotification(message.notification);
-    }
-  }
+  //     // Show the notification in the system tray using FlutterLocalNotifications
+  //     _showLocalNotification(message.notification);
+  //   }
+  // }
 
   /// Background message handler (App is in background or terminated)
   static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

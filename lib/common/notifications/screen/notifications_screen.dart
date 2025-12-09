@@ -16,16 +16,13 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<NotificationCubit>().fetch();
+      context.read<NotificationCubit>().init();
     });
     return BlocBuilder<NotificationCubit, NotificationState>(
       builder: (context, state) {
         final cubit = context.read<NotificationCubit>();
         return Scaffold(
-          /// App Bar Section starts here
           appBar: CommonAppBar(title: AppString.notifications, onBackPress: cubit.cleanList),
-
-          /// Body Section starts here
           body: SmartListLoader(
             itemCount: state.notifications?.length ?? 0,
             isLoading: state.isLoading,

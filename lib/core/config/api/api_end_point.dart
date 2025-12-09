@@ -27,6 +27,8 @@ class ApiEndPoint {
   final String contact_us = '/settings/contact';
   final String faqUser = '/settings/faq/user';
   final String faqVenue = '/settings/faq/vanue';
+  final String notification = '/notification';
+  final String unreadCount = '/notification/unread-count';
 
   //event
   final String createEvent = '/event';

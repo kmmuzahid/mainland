@@ -11,6 +11,7 @@ import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:mainland/common/setting/screens/setting_screen.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/screens/tickets_screen.dart';
+import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -26,8 +27,8 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   //user page list
-  List<Widget> userPagesList() => [
-    const UserHome(),
+  List<Widget> userPagesList(HomeState homeState) => [
+    UserHome(homeState: homeState),
     TicketsScreen(
       onTap: (event, ticketFilter) {
         appRouter.push(TicketSaveRoute(ticketId: event.id ?? ''));
@@ -60,8 +61,8 @@ class HomeScreen extends StatelessWidget {
   ];
 
   //organizer page list
-  List<Widget> oranizerPageList() => [
-    const OrgHome(),
+  List<Widget> oranizerPageList(HomeState homeState) => [
+    OrgHome(homeState: homeState),
     TicketsScreen(
       onTap: (event, ticketFilter) {
         if (ticketFilter == TicketFilter.Live) {
@@ -99,26 +100,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeCubit(),
-      child: AnnotatedRegion(
+    return CubitScope(
+      create: () => HomeCubit()..init(),
+      builder: (context, cubit, state) => AnnotatedRegion(
         value: const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),
         child: Scaffold(
           backgroundColor: AppColors.background,
           body: SafeArea(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                return IndexedStack(
+            child: IndexedStack(
                   index: state.currentIndex,
                   children:
                       context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
-                      ? oranizerPageList()
-                      : userPagesList(),
-                );
-              },
+                  ? oranizerPageList(state)
+                  : userPagesList(state),
             ),
           ),
-          bottomNavigationBar: const CustomBottomNavigationBar(),
+          bottomNavigationBar: CustomBottomNavigationBar(homeState: state),
         ),
       ),
     );

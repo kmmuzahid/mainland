@@ -72,5 +72,31 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+
+	<!-- Firebase-->
+	<key>API_KEY</key>
+	<string>AIzaSyBcjZVhqwhON1VAVI5j3doZk0TFOmbHMV4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>397391816206</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mainland.drebak</string>
+	<key>PROJECT_ID</key>
+	<string>the-mainland</string>
+	<key>STORAGE_BUCKET</key>
+	<string>the-mainland.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:397391816206:ios:dce91f7fd27bf0387dbe5f</string>
 </dict>
 </plist>

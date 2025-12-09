@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +18,7 @@ import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
+import 'package:mainland/core/config/socket/socket_service.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/helpers/other_helper.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
@@ -36,6 +38,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> deleteAccount({required String password, required String reason}) async {
     final result = await _repository.deleteAccount(password: password, reason: reason);
     if (result.isSuccess) {
+      SocketService.instance.disconnect();
       _role = Role.ATTENDEE;
       await _storageService.deleteAll();
       appRouter.replaceAll([
@@ -148,7 +151,6 @@ class AuthCubit extends SafeCubit<AuthState> {
     try {
       final String? data = await _storageService.read(_loginInfo);
       final String? profileData = await _storageService.read(_profileInfo);
-      AppLogger.debug(data ?? '', tag: 'Storage Service');
       if (data != null) {
         _saveUserInfo(UserLoginInfoModel.fromJson(data));
       } else {
@@ -159,6 +161,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       }
       if (state.userLoginInfoModel.accessToken.isNotEmpty) {
         appRouter.replaceAll([const HomeRoute()]);
+        SocketService.instance.connect(id: state.userLoginInfoModel.id);
         getCurrentUser();
       } else {
         Future.delayed(const Duration(seconds: 1), () {
@@ -179,12 +182,15 @@ class AuthCubit extends SafeCubit<AuthState> {
     if (state.isLoading) return;
     emit(const AuthState(isLoading: true));
     final responce = await _repository.signIn(username: username, password: password, role: _role);
-    emit(state.copyWith(isLoading: false));
     if (responce.statusCode == 200 && responce.data != null) {
       await _saveUserInfo(responce.data!);
-      getCurrentUser();
+      await getCurrentUser();
+      await _saveUserInfo(responce.data!.copyWith(id: state.profileModel?.id));
+      emit(state.copyWith(isLoading: false));
+      SocketService.instance.connect(id: state.userLoginInfoModel.id);
       appRouter.replaceAll([const HomeRoute()]);
     } else {
+      emit(state.copyWith(isLoading: false));
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
       if (responce.message?.contains('verify') ?? false) {
         _verify(username, password);
@@ -266,6 +272,7 @@ class AuthCubit extends SafeCubit<AuthState> {
 
   Future<void> logout() async {
     _role = Role.ATTENDEE;
+    SocketService.instance.disconnect();
     await _repository.signOut();
     await _storageService.deleteAll();
     appRouter.replaceAll([

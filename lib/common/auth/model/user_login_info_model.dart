@@ -8,17 +8,20 @@ class UserLoginInfoModel {
   final String refreshToken; 
   //enum
   final Role? role;
+  final String id;
   const UserLoginInfoModel({
     required this.accessToken,
     required this.refreshToken,
     required this.role,
+    required this.id,
   });
 
-  UserLoginInfoModel copyWith({String? accessToken, String? refreshToken, Role? role}) {
+  UserLoginInfoModel copyWith({String? accessToken, String? refreshToken, Role? role, String? id}) {
     return UserLoginInfoModel(
       accessToken: accessToken ?? this.accessToken,
       refreshToken: refreshToken ?? this.refreshToken,
       role: role ?? this.role,
+      id: id ?? this.id,
     );
   }
 
@@ -27,6 +30,7 @@ class UserLoginInfoModel {
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'role': role?.index,
+      'id': id,
     };
   }
 
@@ -35,6 +39,7 @@ class UserLoginInfoModel {
       accessToken: map['accessToken'] as String,
       refreshToken: map['refreshToken'] as String,
       role: map['role'] != null ? Role.values[map['role'] as int] : null,
+      id: map['id'] as String,
     );
   }
 
@@ -45,7 +50,7 @@ class UserLoginInfoModel {
 
   @override
   String toString() {
-    return 'UserLoginInfoModel( accessToken: $accessToken, refreshToken: $refreshToken, role: $role)';
+    return 'UserLoginInfoModel( accessToken: $accessToken, refreshToken: $refreshToken, role: $role, id: $id)';
   }
 
   @override
@@ -54,11 +59,12 @@ class UserLoginInfoModel {
 
     return other.accessToken == accessToken &&
         other.refreshToken == refreshToken &&
-        other.role == role;
+        other.role == role &&
+        other.id == id;
   }
 
   @override
   int get hashCode {
-    return accessToken.hashCode ^ refreshToken.hashCode ^ role.hashCode;
+    return accessToken.hashCode ^ refreshToken.hashCode ^ role.hashCode ^ id.hashCode;
   }
 }

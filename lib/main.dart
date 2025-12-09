@@ -64,8 +64,8 @@ void main() async {
 
   await init();
   await getIt.isReady<StorageService>();
-  // await Firebase.initializeApp();
-  // await FirebaseNotificationHandler.instance.init();
+  await Firebase.initializeApp();
+  await FirebaseNotificationHandler.instance.init();
   runApp(const MyApp());
 }
 

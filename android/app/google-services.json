@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "883533569855",
-    "project_id": "mainland-1bb58",
-    "storage_bucket": "mainland-1bb58.firebasestorage.app"
+    "project_number": "397391816206",
+    "project_id": "the-mainland",
+    "storage_bucket": "the-mainland.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:883533569855:android:30b7fce9bcae8601ef7d8a",
+        "mobilesdk_app_id": "1:397391816206:android:d6db524279393fbc7dbe5f",
         "android_client_info": {
-          "package_name": "com.example.mainland"
+          "package_name": "com.mainland.drebak"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCrkm19zjBCxcK0whOEQd6mFpRxkNroy_E"
+          "current_key": "AIzaSyCjntQmon02p_gNoiGDvw0UEXSZjjd5NxM"
         }
       ],
       "services": {

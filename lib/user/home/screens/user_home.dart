@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
@@ -23,7 +24,8 @@ import 'package:mainland/user/home/cubit/user_home_cubit.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class UserHome extends StatelessWidget {
-  const UserHome({super.key});
+  const UserHome({super.key, required this.homeState});
+  final HomeState homeState;
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +150,7 @@ class UserHome extends StatelessWidget {
 
   Widget _topChild() {
     return HomeTopWidget(
+      state: homeState,
       startWidget: GestureDetector(
         onTap: () {
           // navigate to account screen.

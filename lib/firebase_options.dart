@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCrkm19zjBCxcK0whOEQd6mFpRxkNroy_E',
-    appId: '1:883533569855:android:30b7fce9bcae8601ef7d8a',
-    messagingSenderId: '883533569855',
-    projectId: 'mainland-1bb58',
-    storageBucket: 'mainland-1bb58.firebasestorage.app',
+    apiKey: 'AIzaSyCjntQmon02p_gNoiGDvw0UEXSZjjd5NxM',
+    appId: '1:397391816206:android:d6db524279393fbc7dbe5f',
+    messagingSenderId: '397391816206',
+    projectId: 'the-mainland',
+    storageBucket: 'the-mainland.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD3RtYRsQvM5JA2gLC7_Uz5QHVKxutZY0Q',
-    appId: '1:883533569855:ios:70ad3c95b5dee332ef7d8a',
-    messagingSenderId: '883533569855',
-    projectId: 'mainland-1bb58',
-    storageBucket: 'mainland-1bb58.firebasestorage.app',
-    iosBundleId: 'com.example.mainland',
+    apiKey: 'AIzaSyBcjZVhqwhON1VAVI5j3doZk0TFOmbHMV4',
+    appId: '1:397391816206:ios:dce91f7fd27bf0387dbe5f',
+    messagingSenderId: '397391816206',
+    projectId: 'the-mainland',
+    storageBucket: 'the-mainland.firebasestorage.app',
+    iosBundleId: 'com.mainland.drebak',
   );
+
 }

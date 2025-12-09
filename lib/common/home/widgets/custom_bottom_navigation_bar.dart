@@ -11,7 +11,8 @@ import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+  const CustomBottomNavigationBar({super.key, required this.homeState});
+  final HomeState homeState;
 
   @override
   State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
@@ -78,6 +79,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             onTap: (index) => setState(() {
               _currentIndex = index;
               _homeCubit.changeIndex(index);
+              final bool isChat = role == Role.ORGANIZER ? index == 3 : index == 4;
+              if (isChat) {
+                _homeCubit.resetMessageCount();
+              }
             }),
             items: role == Role.ORGANIZER ? organizer() : attendee(),
           ),
@@ -111,7 +116,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     );
     return BottomNavigationBarItem(
       label: '',
-      icon: isChat ? Badge.count(count: 9, child: icon) : icon,
+      icon: isChat && widget.homeState.unreadMessage > 0
+          ? (Badge.count(count: widget.homeState.unreadMessage, child: icon))
+          : icon,
     );
   }
 }

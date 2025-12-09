@@ -2,13 +2,23 @@
 part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
-  const HomeState({required this.currentIndex});
+  const HomeState({
+    required this.currentIndex,
+    this.unreadMessage = 0,
+    this.unreadNotification = 0,
+  });
   final int currentIndex;
+  final int unreadMessage;
+  final int unreadNotification;
 
   @override
-  List<Object?> get props => [currentIndex];
+  List<Object?> get props => [currentIndex, unreadMessage, unreadNotification];
 
-  HomeState copyWith({int? currentIndex}) {
-    return HomeState(currentIndex: currentIndex ?? this.currentIndex);
+  HomeState copyWith({int? currentIndex, int? unreadMessage, int? unreadNotification}) {
+    return HomeState(
+      currentIndex: currentIndex ?? this.currentIndex,
+      unreadMessage: unreadMessage ?? this.unreadMessage,
+      unreadNotification: unreadNotification ?? this.unreadNotification,
+    );
   }
 }

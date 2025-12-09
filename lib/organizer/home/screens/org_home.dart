@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/home_top_widget.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
@@ -20,7 +21,8 @@ import 'package:mainland/organizer/home/cubit/org_home_cubit.dart';
 import 'package:mainland/organizer/home/cubit/org_home_state.dart';
 
 class OrgHome extends StatelessWidget {
-  const OrgHome({super.key});
+  const OrgHome({super.key, required this.homeState});
+  final HomeState homeState;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class OrgHome extends StatelessWidget {
               isSeperated: true,
               itemBuilder: (context, index) {
                 final event = state.events[index];
-                return TicketWidget( 
+                return TicketWidget(
                   onTap: () {
                     appRouter.push(EventDetailsRoute(eventId: event.id ?? ''));
                   },
@@ -75,6 +77,7 @@ class OrgHome extends StatelessWidget {
 
   HomeTopWidget _topChild() {
     return HomeTopWidget(
+      state: homeState,
       startWidget: GestureDetector(
         onTap: () {
           appRouter.push(const VenueSplashRoute());
