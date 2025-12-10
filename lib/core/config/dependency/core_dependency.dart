@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/chat/repository/chat_repository.dart';
 import 'package:mainland/common/notifications/repository/notification_repository.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
@@ -27,9 +29,7 @@ class CoreDependency {
 
       return DioService.create(
         onLogout: () {
-          appRouter.push(
-            SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
-          );
+          appRouter.navigatorKey.currentState?.context.read<AuthCubit>().clear();
         },
       );
     });

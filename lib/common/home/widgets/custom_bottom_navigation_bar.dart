@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/chat/cubit/chat_list/chat_list_cubit.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
@@ -82,6 +83,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               final bool isChat = role == Role.ORGANIZER ? index == 3 : index == 4;
               if (isChat) {
                 _homeCubit.resetMessageCount();
+                // context.read<ChatListCubit>().init();
               }
             }),
             items: role == Role.ORGANIZER ? organizer() : attendee(),

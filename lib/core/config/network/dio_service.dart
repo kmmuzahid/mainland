@@ -40,6 +40,7 @@ class DioService {
   bool _hasShownServerError = false;
   bool _hasShownNetworkError = false;
   static const Duration _timeout = Duration(seconds: 5);
+  DateTime? _lastServerShutodown;
 
   bool get isServerOff => _isServerOff;
   bool get isNetworkOff => _isNetworkOff;
@@ -164,20 +165,7 @@ class DioService {
           // First check network status
           await _checkAndHandleNetworkStatus();
 
-          // If we have network but got a server error
-          // if (!_isNetworkOff && (statusCode ?? 0) >= 500 && (statusCode ?? 0) < 600) {
-          //   if (!_isServerOff) {
-          //     _isServerOff = true;
-          //     if (!_hasShownServerError) {
-          //       _hasShownServerError = true;
-          //       if (appRouter.navigatorKey.currentContext != null) {
-          //         showSnackBar('Server is currently unavailable', type: SnackBarType.error);
-          //       }
-          //     }
-          //   }
-          // }
-
-          if (statusCode == 401 && path != '/auth/refresh') {
+          if (statusCode == 401 && path != ApiEndPoint.instance.refreshToken) {
             if (_refreshCompleter == null) {
               _refreshCompleter = Completer<void>();
               AppLogger.apiDebug(
@@ -236,7 +224,7 @@ class DioService {
                 }
               });
             }
-          } else if (statusCode == 401 && path == '/auth/refresh') {
+          } else if (statusCode == 401 && path == ApiEndPoint.instance.refreshToken) {
             // 401 on refresh token endpoint itself, clear tokens and logout
             AppLogger.apiError(
               '401 received from refresh token endpoint. Logging out.',
@@ -366,7 +354,6 @@ class DioService {
         }
       }
 
-
       if (_shouldRetry(e) && retryCount < maxRetry) {
         AppLogger.apiDebug('Retrying request (attempt ${retryCount + 1})...', tag: input.endpoint);
         await Future.delayed(const Duration(milliseconds: 300));
@@ -377,7 +364,12 @@ class DioService {
           retryCount: retryCount + 1,
           maxRetry: maxRetry,
         );
-      } else if (retryCount == maxRetry && !_isServerOff) {
+      } else if (retryCount == maxRetry &&
+          !_isServerOff &&
+          (_lastServerShutodown == null ||
+              _lastServerShutodown?.isBefore(DateTime.now().subtract(const Duration(minutes: 1))) ==
+                  true)) {
+        _lastServerShutodown = DateTime.now();
         // Only show error message on the last retry attempt
         if (appRouter.navigatorKey.currentContext != null) {
           showSnackBar(
@@ -462,18 +454,23 @@ class DioService {
       AppLogger.debug('No refresh token available.', tag: 'DIO service');
       return;
     }
-    try {
-      final response = await _dio.post(
-        '/auth/refresh', // Replace with your actual refresh token endpoint
-        data: {'refresh_token': refreshToken},
-        options: dio.Options(
-          extra: {'requiresToken': false},
-        ), // Refresh token request does not require token
+    try { 
+      final response = await http.post(
+        Uri.parse('${ApiEndPoint.instance.baseUrl}${ApiEndPoint.instance.refreshToken}'),
+        headers: {'refreshtoken': refreshToken},
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final access = response.data['access_token'];
-        final refresh = response.data['refresh_token'];
+
+      if (response.body.isNotEmpty && (response.statusCode == 200 || response.statusCode == 201)) {
+        final data = jsonDecode(response.body);
+        final access = data['data']['access_token'];
+        final refresh = data['data']['refresh_token'];
         await _saveTokens(access, refresh);
+      } else if (response.statusCode == 401) {
+        final data = jsonDecode(response.body);
+        showSnackBar(data['message'] ?? '', type: SnackBarType.error);
+        await clearTokens();
+        onLogout?.call();
+        return;
       } else {
         throw Exception('Refresh token failed with status: ${response.statusCode}');
       }
@@ -596,7 +593,6 @@ class DioService {
       ),
     );
   }
-
 
   dynamic _getFieldValue(dynamic value) {
     if (value is Map<String, dynamic>) {

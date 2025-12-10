@@ -50,8 +50,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => ThemeCubit()..update(), lazy: false),
           BlocProvider(create: (_) => LanguageCubit()..init(), lazy: false),
-          BlocProvider(create: (_) => AuthCubit()),
-          BlocProvider(create: (_) => NotificationCubit()),
+          BlocProvider(create: (_) => AuthCubit()), 
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, themeState) {

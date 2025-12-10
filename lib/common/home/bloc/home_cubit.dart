@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/socket/notification_model.dart';
 import 'package:mainland/core/config/socket/socket_service.dart';
 import 'package:mainland/core/config/socket/stream_data_model.dart';
 import 'package:mainland/core/utils/app_utils.dart';
@@ -25,10 +28,14 @@ class HomeCubit extends SafeCubit<HomeState> {
   void init() async {
     fetchCount();
     _subscriptions = SocketService.instance.streamController.stream.listen((data) {
-      if (data.streamType == StreamType.notification) {
-        print(appRouter.current.name);
-        if (appRouter.current.name != 'NotificationRoute')
+      if (data.streamType == StreamType.notification) { 
+        if (appRouter.current.name != 'NotificationRoute') {
+          final notifiaction = data.data as NotificationModel;
           emit(state.copyWith(unreadNotification: state.unreadNotification + 1));
+          FirebaseNotificationHandler.instance.showLocalNotification(
+            RemoteNotification(title: notifiaction.title, body: notifiaction.message),
+          );
+        }
       } else if (data.streamType == StreamType.message) {
         final bool isChatOpen = Utils.getRole() == Role.ORGANIZER
             ? state.currentIndex == 3

@@ -56,12 +56,12 @@ class ChatListItemModel {
 
   factory ChatListItemModel.fromMap(Map<String, dynamic> map) {
     return ChatListItemModel(
-      chatId: map['messageId'] as String,
-      userImage: map['userImage'] as String,
+      chatId: map['messageId'] ?? '',
+      userImage: map['userImage'] ?? '',
       userName: map['userName'] as String,
       userStatus: UserStatus.values[map['userStatus'] as int],
       lastSendMessageTime: DateTime.fromMillisecondsSinceEpoch(map['lastSendMessageTime'] as int),
-      lastMessage: map['lastMessage'] as String,
+      lastMessage: map['lastMessage'] ?? '',
       isRead: map['isRead'] as bool,
     );
   }

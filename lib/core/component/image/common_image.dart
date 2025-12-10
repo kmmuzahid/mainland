@@ -67,10 +67,11 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget _buildNetworkImage() { 
+    final path = imageSrc.startsWith('http') ? imageSrc : '${ApiEndPoint.instance.domain}$imageSrc';
     return CachedNetworkImage(
       height: size ?? height,
       width: size ?? width,
-      imageUrl: '${ApiEndPoint.instance.domain}$imageSrc',
+      imageUrl: path,
       fit: fill,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(

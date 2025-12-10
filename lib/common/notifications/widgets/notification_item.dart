@@ -1,6 +1,4 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -52,19 +50,21 @@ class NotificationItem extends StatelessWidget {
                 CommonText(
                   text: item.title ?? '',
                   fontSize: 16,
+                  maxLines: 1,
                   fontWeight: FontWeight.w600,
                   textColor: item.type == NotificationType.EVENT && item.read == false
                       ? AppColors.primaryColor
+                      : item.read
+                      ? AppColors.greay200
                       : AppColors.greay400,
                 ),
-                CommonText(
-                  autoResize: false,
+                CommonText( 
                   text: item.message ?? '',
                   maxLines: 2,
                   preventScaling: true,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  textColor: AppColors.greay400,
+                  textColor: item.read ? AppColors.greay200 : AppColors.greay400,
                 ),
                 Utils.divider(),
               ],

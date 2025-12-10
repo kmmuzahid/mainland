@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
+import 'package:mainland/common/chat/cubit/chat/chat_cubit.dart';
 import 'package:mainland/common/chat/screens/chat_list_screen.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/home/widgets/custom_bottom_navigation_bar.dart';
@@ -19,6 +20,8 @@ import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/organizer/home/screens/org_home.dart';
 import 'package:mainland/user/fanclub/screens/fan_club_screen.dart';
 import 'package:mainland/user/home/screens/user_home.dart';
+
+import '../../chat/cubit/chat_list/chat_list_cubit.dart';
 
 //  AutoRoute(page: HomeRoute.page),
 
@@ -40,7 +43,7 @@ class HomeScreen extends StatelessWidget {
     const FanClubScreen(),
 
     TicketsScreen(
-      onTap: (event, ticketFilter) { 
+      onTap: (event, ticketFilter) {
         appRouter.push(
           UserTicketManageRoute(
             ticketId: event.id ?? '',
@@ -100,24 +103,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CubitScope(
-      create: () => HomeCubit()..init(),
-      builder: (context, cubit, state) => AnnotatedRegion(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => HomeCubit()..init(), lazy: false),
+        // BlocProvider(create: (_) => ChatListCubit()),
+      ],
+      child: AnnotatedRegion(
         value: const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),
-        child: Scaffold(
-          backgroundColor: AppColors.background,
-          body: SafeArea(
-            child: IndexedStack(
-                  index: state.currentIndex,
-                  children:
-                      context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
-                  ? oranizerPageList(state)
-                  : userPagesList(state),
-            ),
-          ),
-          bottomNavigationBar: CustomBottomNavigationBar(homeState: state),
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            return Scaffold(
+              backgroundColor: AppColors.background,
+              body: SafeArea(
+                child: context.read<AuthCubit>().state.userLoginInfoModel.role == Role.ORGANIZER
+                    ? oranizerPageList(state)[state.currentIndex]
+                    : userPagesList(state)[state.currentIndex],
+              ),
+              bottomNavigationBar: CustomBottomNavigationBar(homeState: state),
+            );
+          },
         ),
       ),
     );
   }
+
+  
 }

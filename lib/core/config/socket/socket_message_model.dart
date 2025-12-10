@@ -1,141 +1,121 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'package:mainland/core/utils/app_utils.dart';
 
 class SocketMessageModel {
-  final String? message;
-  final String? messageType;
-  final String? chatId;
-  final Sender sender;
-  final String? image;
+
   SocketMessageModel({
-    this.message,
-    this.messageType,
-    this.chatId,
+    required this.id,
+    required this.chatId,
+    required this.replyTo,
+    required this.replies,
+    required this.read,
     required this.sender,
-    this.image,
+    required this.text,
+    required this.image,
+    required this.isDeleted,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
+  factory SocketMessageModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return SocketMessageModel(
+        id: '',
+        chatId: '',
+        replyTo: ReplyToModel.empty(),
+        replies: const [],
+        read: false,
+        sender: SenderModel.empty(),
+        text: '',
+        image: const [],
+        isDeleted: false,
+      );
+    }
 
-  SocketMessageModel copyWith({
-    String? message,
-    String? messageType,
-    String? chatId,
-    Sender? sender,
-    String? image,
-  }) {
     return SocketMessageModel(
-      message: message ?? this.message,
-      messageType: messageType ?? this.messageType,
-      chatId: chatId ?? this.chatId,
-      sender: sender ?? this.sender,
-      image: image ?? this.image,
+      id: json['_id'] ?? '',
+      chatId: json['chatId'] ?? '',
+      replyTo: ReplyToModel.fromJson(json['replyTo']),
+      replies: List<String>.from(json['replies'] ?? []),
+      read: json['read'] ?? false,
+      sender: SenderModel.fromJson(json['sender']),
+      text: json['text'] ?? '',
+      image: List<String>.from(json['image'] ?? []),
+      isDeleted: json['isDeleted'] ?? false,
+      deletedAt: Utils.parseDate(json['deletedAt']),
+      createdAt: Utils.parseDate(json['createdAt']),
+      updatedAt: Utils.parseDate(json['updatedAt']),
     );
   }
+  final String id;
+  final String chatId;
+  final ReplyToModel replyTo;
+  final List<String> replies;
+  final bool read;
+  final SenderModel sender;
+  final String text;
+  final List<String> image;
+  final bool isDeleted;
+  final DateTime? deletedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'message': message,
-      'messageType': messageType,
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
       'chatId': chatId,
-      'sender': sender.toMap(),
+      'replyTo': replyTo.toJson(),
+      'replies': replies,
+      'read': read,
+      'sender': sender.toJson(),
+      'text': text,
       'image': image,
+      'isDeleted': isDeleted,
+      'deletedAt': deletedAt?.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
-  }
-
-  factory SocketMessageModel.fromMap(Map<String, dynamic> map) {
-    return SocketMessageModel(
-      message: map['message'] != null ? map['message'] as String : null,
-      messageType: map['messageType'] != null ? map['messageType'] as String : null,
-      chatId: map['chatId'] != null ? map['chatId'] as String : null,
-      sender: Sender.fromMap(map['sender'] as Map<String, dynamic>),
-      image: map['image'] != null ? map['image'] as String : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory SocketMessageModel.fromJson(dynamic source) => SocketMessageModel.fromMap(
-      source is String ? json.decode(source) as Map<String, dynamic> : source);
-
-  @override
-  String toString() {
-    return 'SocketMessageModel(message: $message, messageType: $messageType, chatId: $chatId, sender: $sender, image: $image)';
-  }
-
-  @override
-  bool operator ==(covariant SocketMessageModel other) {
-    if (identical(this, other)) return true;
-  
-    return other.message == message &&
-        other.messageType == messageType &&
-        other.chatId == chatId &&
-        other.sender == sender &&
-        other.image == image;
-  }
-
-  @override
-  int get hashCode {
-    return message.hashCode ^
-        messageType.hashCode ^
-        chatId.hashCode ^
-        sender.hashCode ^
-        image.hashCode;
   }
 }
 
-class Sender {
-  final String? id;
-  final String? fullName;
-  final String? email;
-  Sender({
-    required this.id,
-    required this.fullName,
-    required this.email,
-  });
+class ReplyToModel {
 
-  Sender copyWith({
-    String? id,
-    String? fullName,
-    String? email,
-  }) {
-    return Sender(
-      id: id ?? this.id,
-      fullName: fullName ?? this.fullName,
-      email: email ?? this.email,
+  ReplyToModel({required this.id, required this.sender, required this.text});
+
+  factory ReplyToModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return ReplyToModel.empty();
+    return ReplyToModel(
+      id: json['_id'] ?? '',
+      sender: json['sender'] ?? '',
+      text: json['text'] ?? '',
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      '_id': id,
-      'fullName': fullName,
-      'email': email,
-    };
+  factory ReplyToModel.empty() => ReplyToModel(id: '', sender: '', text: '');
+  final String id;
+  final String sender;
+  final String text;
+
+  Map<String, dynamic> toJson() {
+    return {'_id': id, 'sender': sender, 'text': text};
+  }
+}
+
+class SenderModel {
+
+  SenderModel({required this.id, required this.name, required this.image});
+
+  factory SenderModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return SenderModel.empty();
+    return SenderModel(id: json['_id'] ?? '', name: json['name'] ?? '', image: json['image'] ?? '');
   }
 
-  factory Sender.fromMap(Map<String, dynamic> map) {
-    return Sender(
-      id: map['_id'] as String,
-      fullName: map['fullName'] as String,
-      email: map['email'] as String,
-    );
+  factory SenderModel.empty() => SenderModel(id: '', name: '', image: '');
+  final String id;
+  final String name;
+  final String image;
+
+  Map<String, dynamic> toJson() {
+    return {'_id': id, 'name': name, 'image': image};
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Sender.fromJson(String source) =>
-      Sender.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() => 'Sender(_id: $id, fullName: $fullName, email: $email)';
-
-  @override
-  bool operator ==(covariant Sender other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id && other.fullName == fullName && other.email == email;
-  }
-
-  @override
-  int get hashCode => id.hashCode ^ fullName.hashCode ^ email.hashCode;
 }

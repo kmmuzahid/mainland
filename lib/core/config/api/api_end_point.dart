@@ -7,6 +7,7 @@ class ApiEndPoint {
   final String soketUrl = 'http://10.10.7.102:4000/api/v1';
 
   //auth
+  final String refreshToken = '/auth/refresh-token';
   final String signUp = '/user/create';
   final String signIn = '/auth/login';
   final String verifyEmail = '/auth/verify-email';
@@ -81,4 +82,8 @@ class ApiEndPoint {
   String tikcetUse({required String eventId, required String ownerId, required bool isUpdate}) =>
       '/event/bar-code-check/$eventId?ownerId=$ownerId&isUpdate=$isUpdate';
   String checkEventCode(String eventCode) => '/ticket/check-event/$eventCode';
+
+  //chat
+  String chat = '/chat';
+  String getMessages({required String chatId}) => '/chat/$chatId';
 }

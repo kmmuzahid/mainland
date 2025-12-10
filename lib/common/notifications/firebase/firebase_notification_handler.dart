@@ -26,7 +26,7 @@ class FirebaseNotificationHandler {
 
     await _flutterLocalNotificationsPlugin.initialize(initSettings);
 
-    // Set foreground message handler
+    // Set foreground message handler 
     // FirebaseMessaging.onMessage.listen(_onMessageReceived);
 
     // Set background message handler
@@ -60,12 +60,12 @@ class FirebaseNotificationHandler {
   /// Background message handler (App is in background or terminated)
   static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     AppLogger.debug('Handling a background message: ${message.messageId}');
-    FirebaseNotificationHandler.instance._showLocalNotification(message.notification);
+    FirebaseNotificationHandler.instance.showLocalNotification(message.notification);
     // You can perform tasks when the app is in the background or terminated
   }
 
   /// Show notification in the system tray using FlutterLocalNotifications
-  Future<void> _showLocalNotification(RemoteNotification? notification) async {
+  Future<void> showLocalNotification(RemoteNotification? notification) async {
     if (notification == null) return;
 
     final androidDetails = const AndroidNotificationDetails(

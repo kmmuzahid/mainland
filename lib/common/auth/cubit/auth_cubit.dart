@@ -38,13 +38,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> deleteAccount({required String password, required String reason}) async {
     final result = await _repository.deleteAccount(password: password, reason: reason);
     if (result.isSuccess) {
-      SocketService.instance.disconnect();
-      _role = Role.ATTENDEE;
-      await _storageService.deleteAll();
-      appRouter.replaceAll([
-        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
-      ]);
-      emit(const AuthState());
+      clear();
     }
   }
 
@@ -274,6 +268,17 @@ class AuthCubit extends SafeCubit<AuthState> {
     _role = Role.ATTENDEE;
     SocketService.instance.disconnect();
     await _repository.signOut();
+    await _storageService.deleteAll();
+    appRouter.replaceAll([
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
+    ]);
+    emit(const AuthState());
+  }
+
+  Future<void> clear() async {
+    AppLogger.debug('heeeeeeeeeeeeeeeeeeeeeeeeeeee', tag: 'AuthCubit');
+    _role = Role.ATTENDEE;
+    SocketService.instance.disconnect();
     await _storageService.deleteAll();
     appRouter.replaceAll([
       SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
