@@ -14,9 +14,8 @@ abstract class ChatRepository {
   Future<ResponseState<List<ChatModel>?>> fetchChat({required int page, required String chatId});
   Future<bool> sendMessage({
     required String chatId,
-    required String message,
-    required List<XFile>? file, // documents
-    required List<XFile>? image,  
+    required String message, 
+    required List<XFile>? rowFiles,  
   });
 
 

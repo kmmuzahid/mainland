@@ -49,7 +49,7 @@ class ChatScreen extends StatelessWidget {
     body: Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: BlocProvider(
-        create: (context) => ChatCubit(chatListItemModel.chatId)..fetch(),
+        create: (context) => ChatCubit(chatListItemModel.chatId)..init(),
         child: BlocBuilder<ChatCubit, ChatState>(
           builder: (context, state) {
             final cubit = context.read<ChatCubit>();

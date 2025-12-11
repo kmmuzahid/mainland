@@ -70,26 +70,34 @@ class MockChatRepository implements ChatRepository {
         );
       }).toList(),
     );
-
   }
 
   @override
   Future<bool> sendMessage({
     required String chatId,
     required String message,
-    required List<XFile>? file, // documents
-    required List<XFile>? image,
+    required List<XFile>? rowFiles,
   }) async {
+    final image = rowFiles
+        ?.where(
+          (e) => e.path.endsWith('.png') || e.path.endsWith('.jpg') || e.path.endsWith('.jpeg'),
+        )
+        .toList();
+    final file = rowFiles
+        ?.where(
+          (e) => e.path.endsWith('.pdf') || e.path.endsWith('.doc') || e.path.endsWith('.docx'),
+        )
+        .toList(); 
     final result = await _dioService.request(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.sentMessage,
         method: RequestMethod.POST,
-
+        formFields: {'chatId': chatId, 'text': message},
         files: {
           if (image?.isNotEmpty ?? false) 'image': image,
-          // if (file?.isNotEmpty ?? false) 'document': file,
-        },
-        jsonBody: {'chatId': chatId, 'text': message},
+          if (file?.isNotEmpty ?? false) 'document': file,
+          'chatId': chatId,
+        }, 
       ),
       responseBuilder: (data) => data,
     );
