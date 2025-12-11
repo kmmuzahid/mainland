@@ -210,7 +210,7 @@ class ChatScreen extends StatelessWidget {
                             const CommonText(text: 'Voice Call'),
                           ],
                         ),
-                        if(model.)
+                       
                     ],
                   ),
                 ),
