@@ -77,9 +77,10 @@ class UserTicketManageScreen extends StatelessWidget {
         cubit: cubit,
       );
     }
-    if (ticketFilter == TicketFilter.Sold) {
-      final model = state.ticketHistoryDetailsModel;
+    if (ticketFilter == TicketFilter.Sold || ticketFilter == TicketFilter.Expired) {
+      final model = state.ticketHistoryDetailsModel; 
       return SoldTicketWidget(
+        ticketFilter: ticketFilter,
         soldTicketDetails: model?.details ?? [],
         eventName: model?.eventName ?? '',
         summery: {

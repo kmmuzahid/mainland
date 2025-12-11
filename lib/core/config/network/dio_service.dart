@@ -1,6 +1,4 @@
-// lib/services/dio_service.dart
-// ignore_for_file: avoid_annotating_with_dynamic
-
+ 
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -198,24 +196,19 @@ class DioService {
                 _refreshCompleter = null;
                 _processQueue(); // Process any queued requests
               }
-            } else {
-              // Token is already being refreshed, queue the current request
-              // This request will be re-executed once the refresh is complete
+            } else { 
               final responseCompleter = Completer<dio.Response>();
-              _queue.add(_QueuedRequest(error.requestOptions, responseCompleter));
-              // Wait for the responseCompleter to be completed (by _processQueue)
-              // and then resolve/reject the original handler with that result.
+              _queue.add(_QueuedRequest(error.requestOptions, responseCompleter)); 
               return responseCompleter.future.then(handler.resolve).catchError((
                 Object err,
                 StackTrace stackTrace,
               ) {
                 if (err is DioException) {
                   handler.reject(err);
-                } else {
-                  // If it's not a DioException, wrap it or handle as a generic error
+                } else { 
                   handler.reject(
                     DioException(
-                      requestOptions: error.requestOptions, // Use original request options
+                      requestOptions: error.requestOptions,  
                       error: err,
                       stackTrace: stackTrace,
                       message: err.toString(),
@@ -224,20 +217,18 @@ class DioService {
                 }
               });
             }
-          } else if (statusCode == 401 && path == ApiEndPoint.instance.refreshToken) {
-            // 401 on refresh token endpoint itself, clear tokens and logout
+          } else if (statusCode == 401 && path == ApiEndPoint.instance.refreshToken) { 
             AppLogger.apiError(
               '401 received from refresh token endpoint. Logging out.',
               tag: 'Auth',
             );
             await clearTokens();
             onLogout?.call();
-            handler.reject(error); // Reject with the original error
-          } else if (error.response?.statusCode == 404) {
-            // 404 responses should be passed through normally - they contain valid data
+            handler.reject(error);
+          } else if (error.response?.statusCode == 404) { 
             handler.next(error);
           } else {
-            handler.next(error); // For other errors, just pass them on
+            handler.next(error); 
           }
         },
       ),
@@ -268,16 +259,11 @@ class DioService {
     int maxRetry = 2,
     bool showMessage = false,
     bool debug = false,
-    bool isRetry = false, // Internal flag to track retry attempts
+    bool isRetry = false, 
   }) async {
-    // if (_debugMode) {
-    //   AppLogger.apiDebug(
-    //     'REQUEST[${input.method}${input.method}] => Input: ${input.toJson()}',
-    //     tag: input.endpoint,
-    //   );
-    // }
+ 
 
-    final cancelToken = CancelToken(); // Use provided token or create new
+    final cancelToken = CancelToken();  
 
     if (debug) {
       return await _requestBuilder(
@@ -309,11 +295,9 @@ class DioService {
           statusCode: e.response?.statusCode,
         );
       }
-
-      // Handle server errors with retry logic
+ 
       if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
-        if (retryCount < maxRetry) {
-          // Wait before retrying (exponential backoff)
+        if (retryCount < maxRetry) { 
           await Future.delayed(Duration(seconds: 1 * (retryCount + 1)));
 
           return request<T>(
@@ -326,8 +310,7 @@ class DioService {
           );
         }
       }
-
-      // Check if this response contains data that should be parsed
+ 
       if (e.response?.data != null) {
         try {
           final parsed = e.response?.data['data'] != null
@@ -350,7 +333,7 @@ class DioService {
           );
         } catch (parseError) {
           AppLogger.apiError('Failed to parse error response: $parseError', tag: input.endpoint);
-          // Fall through to normal error handling if parsing fails
+        
         }
       }
 
@@ -410,9 +393,7 @@ class DioService {
   }) async {
     final requestOptions = await _buildRequestOptions(input);
 
-    dio.Response response;
-    // Use _dio.request for consistency in method calls
-    // The actual method (GET, POST, etc.) is set in requestOptions.options.method
+    dio.Response response; 
     response = await _dio.request(
       requestOptions.path,
       data: requestOptions.data,
@@ -428,8 +409,7 @@ class DioService {
     }
 
     final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
-
-    // Extract message from JSON response, fallback to statusMessage if not present
+ 
     final message = response.data is Map && response.data['message'] != null
         ? response.data['message'].toString()
         : response.statusMessage;
@@ -445,8 +425,7 @@ class DioService {
       statusCode: response.statusCode,
     );
   }
-
-  // Refactored refresh logic to be called directly by the interceptor
+ 
   Future<void> _refreshTokenIfNeeded() async {
     final refreshToken = authCubit?.state.userLoginInfoModel.refreshToken;
 
@@ -483,8 +462,7 @@ class DioService {
     }
   }
 
-  void _processQueue() {
-    // Process queued requests after token refresh
+  void _processQueue() { 
     while (_queue.isNotEmpty) {
       final req = _queue.removeAt(0);
       _dio
@@ -521,13 +499,11 @@ class DioService {
         ((input.files != null && input.files!.isNotEmpty) &&
             (input.jsonBody != null || input.listBody != null))) {
       final formData = dio.FormData();
-
-      // 1. Add regular form fields (from formFields map)
+ 
       if (input.formFields != null) {
         formData.fields.addAll(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)));
       }
-
-      // 2. Add JSON body as a field (e.g. as "data" or "payload")
+ 
       if (input.jsonBody != null) {
         formData.files.add(
           MapEntry(
@@ -550,66 +526,46 @@ class DioService {
           ),
         );
       }
-
-      // 3. Add files (correctly with await!)
+ 
       if (input.files != null && input.files!.isNotEmpty) {
         for (final entry in input.files!.entries) {
           final key = entry.key;
           final file = entry.value;
 
-          final multipartFile = await file.toMultipart(); // assuming this returns MultipartFile
+          final multipartFile = await file.toMultipart();  
           formData.files.add(MapEntry(key, multipartFile));
         }
       }
 
       body = formData;
-      contentType = 'multipart/form-data'; // Dio sets this automatically from FormData
-    } else if (input.jsonBody != null) {
-      // Pure JSON request (no files)
+      contentType = 'multipart/form-data';
+    } else if (input.jsonBody != null) { 
       body = input.jsonBody;
       contentType = 'application/json';
-    } else if (input.listBody != null) {
-      // Pure JSON request (no files)
+    } else if (input.listBody != null) { 
       body = jsonEncode(input.listBody);
-      // body = dio.MultipartFile.fromString(
-      //   jsonEncode(input.listBody),
-      //   contentType: dio.DioMediaType('application', 'json'),
-      // );
-      // contentType = 'application/json';
+      
     }
 
     return _RequestOptionsData(
       path: url,
       data: body,
       queryParameters: input.queryParams,
-      options: dio.Options(
-        // Use dio.Options to avoid conflict with dart:io.Options if any
-        method: input.method.toString().split('.').last.toUpperCase(), // Set HTTP method from enum
+      options: dio.Options( 
+        method: input.method.toString().split('.').last.toUpperCase(),  
         headers: headers,
         contentType: contentType,
         sendTimeout: input.timeout,
         receiveTimeout: input.timeout,
-        extra: {'requiresToken': input.requiresToken}, // Pass requiresToken via extra
+        extra: {'requiresToken': input.requiresToken},  
       ),
     );
   }
 
-  dynamic _getFieldValue(dynamic value) {
-    if (value is Map<String, dynamic>) {
-      return dio.MultipartFile.fromString(
-        jsonEncode(value),
-        contentType: dio.DioMediaType('application', 'json'),
-      );
-    } else if (value is int || value is double) {
-      return value.toString();
-    }
-    return value.toString();
-  }
 
   String _parseError(DioException e) {
     if (e.response?.data != null && e.response!.data is Map) {
-      final data = e.response!.data as Map<String, dynamic>;
-      // Attempt to find a common error message key
+      final data = e.response!.data as Map<String, dynamic>; 
       if (data.containsKey('message')) {
         return data['message'].toString();
       } else if (data.containsKey('error')) {
@@ -621,23 +577,7 @@ class DioService {
     return e.message ?? 'An unknown error occurred.';
   }
 
-  void _logResponse(dio.Response res) {
-    if (!_debugMode) {
-      return;
-    }
-    try {
-      final str = res.data.toString();
-      AppLogger.apiDebug(
-        str.length < 500 ? 'Response: $str' : 'Response: [${str.runtimeType}, ${str.length} chars]',
-        tag: res.realUri.path,
-      );
-    } catch (e) {
-      AppLogger.error('Failed to print response due to error: $e', tag: res.realUri.path);
-    }
-  }
-}
-
-// Data class to hold options needed to execute a Dio request
+} 
 class _RequestOptionsData {
   _RequestOptionsData({
     required this.path,
@@ -649,13 +589,12 @@ class _RequestOptionsData {
   final String path;
   final dynamic data;
   final Map<String, dynamic>? queryParameters;
-  final dio.Options options; // Use dio.Options
+  final dio.Options options;  
 }
-
-// Queued request for interceptor refresh logic
+ 
 class _QueuedRequest {
   _QueuedRequest(this.requestOptions, this.completer);
 
-  final RequestOptions requestOptions; // Stores the original request options
-  final Completer<dio.Response> completer; // Completes with the result of the retried request
+  final RequestOptions requestOptions;
+  final Completer<dio.Response> completer;  
 }

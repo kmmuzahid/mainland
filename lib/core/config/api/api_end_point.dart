@@ -74,8 +74,8 @@ class ApiEndPoint {
   String checkPromoCode(String id) => '/ticket/promocode/$id';
 
   String purchaseFromOrganizer({required String id}) => '/event/payment/$id';
-  String purchaseFromUser({required String id}) => '/event/ticketPurchase/$id';
-  String attendeeTicketAvailability(String id) => '/ticket/avaiable-type-history/$id';
+  String purchaseFromUser({required String id}) => '/ticket/ticketPurchase/$id';
+  String attendeeTicketAvailability(String id) => '/ticket/available-type-history/$id';
 
   //venue
   String perticipentCount(String code) => '/event/perticipent-count/$code';

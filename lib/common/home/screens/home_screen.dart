@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
   List<Widget> userPagesList(HomeState homeState) => [
     UserHome(homeState: homeState),
     TicketsScreen(
+      key: Key('ticketScreenKey${DateTime.now().microsecondsSinceEpoch}'),
       onTap: (event, ticketFilter) {
         appRouter.push(TicketSaveRoute(ticketId: event.id ?? ''));
       },
@@ -40,9 +41,10 @@ class HomeScreen extends StatelessWidget {
       subTitle: AppString.allAvailableTickets,
     ),
 
-    const FanClubScreen(),
+    FanClubScreen(key: Key('FanClubScreen${DateTime.now().microsecondsSinceEpoch}')),
 
     TicketsScreen(
+      key: Key('ticketScreenKey${DateTime.now().microsecondsSinceEpoch}'),
       onTap: (event, ticketFilter) {
         appRouter.push(
           UserTicketManageRoute(
@@ -66,7 +68,9 @@ class HomeScreen extends StatelessWidget {
   //organizer page list
   List<Widget> oranizerPageList(HomeState homeState) => [
     OrgHome(homeState: homeState),
-    TicketsScreen(
+    TicketsScreen( 
+      key: Key('ticketScreenKey${DateTime.now().microsecondsSinceEpoch}'),
+
       onTap: (event, ticketFilter) {
         if (ticketFilter == TicketFilter.Live) {
           appRouter.push(

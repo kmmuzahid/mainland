@@ -55,7 +55,15 @@ class AttendieTicketAvailablityScreen extends StatelessWidget {
               return Column(
                 children: [
                   EventTitleWidget(title: eventName).start,
-
+                  state.availableTickets.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 100.h),
+                          child: CommonText(
+                            text: 'No tickets available',
+                            style: AppTextStyles.bodyLarge,
+                          ),
+                        )
+                      :
                   Container(
                     margin: EdgeInsets.only(top: 10.h),
                     padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 15.h, bottom: 12.h),

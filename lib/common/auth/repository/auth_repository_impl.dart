@@ -18,6 +18,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required Role role,
   }) async {
     final login = await _dioService.request<UserLoginInfoModel?>(
+      
       input: RequestInput(
         endpoint: ApiEndPoint.instance.signIn,
         jsonBody: {'email': username, 'password': password},

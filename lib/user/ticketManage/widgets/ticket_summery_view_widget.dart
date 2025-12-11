@@ -8,19 +8,21 @@ class TicketSummeryViewWidget extends StatelessWidget {
   const TicketSummeryViewWidget({
     super.key,
     required this.summery,
+    this.borderColor,
     this.backgroundColor,
     this.rightFiled,
   });
   final Map<String, dynamic> summery;
   final Color? backgroundColor;
   final Widget? rightFiled;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.primary50,
-        border: Border.all(color: AppColors.primary100, width: 1.4.w),
+        border: Border.all(color: borderColor ?? AppColors.primary100, width: 1.4.w),
         borderRadius: BorderRadius.circular(10.r),
       ),
       padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -38,13 +40,14 @@ class TicketSummeryViewWidget extends StatelessWidget {
             ),
             child: DualFieldRow(
               spaceBetween: summery.values.elementAt(index) is Widget,
+              space: 20,
               left: CommonText(
                 textColor: AppColors.greay400,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 textAlign: TextAlign.left,
                 text: summery.keys.elementAt(index),
-              ), 
+              ),
               right: summery.values.elementAt(index) is Widget
                   ? summery.values.elementAt(index)
                   : CommonText(

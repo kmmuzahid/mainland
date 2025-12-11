@@ -12,7 +12,7 @@ class TicketsCubit extends SafeCubit<TicketsState> {
   final TicketRepository _repository = getIt();
 
   void initalize(TicketFilter filter) {
-    emit(state.copyWith(selectedFilter: filter));
+    emit(TicketsState(selectedFilter: filter));
     fetch(isRefresh: true);
   }
 

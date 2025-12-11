@@ -32,8 +32,7 @@ class UserTicketManageCubit extends SafeCubit<UserTicketManageState> {
 
     final isNotHistory = filter != TicketFilter.Sold && filter != TicketFilter.Expired;
 
-    final response = await _dioService.request(
-      debug: true,
+    final response = await _dioService.request( 
       input: RequestInput(endpoint: path, method: RequestMethod.GET),
       responseBuilder: (response) {
         if (isNotHistory) {

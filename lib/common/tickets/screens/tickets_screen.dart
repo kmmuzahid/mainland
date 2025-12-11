@@ -11,6 +11,7 @@ import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
@@ -43,66 +44,59 @@ class TicketsScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: BlocProvider(
-            create: (context) => TicketsCubit()..initalize(filters.first),
-            child: BlocBuilder<TicketsCubit, TicketsState>(
-              builder: (context, state) {
-                final cubit = context.read<TicketsCubit>();
-                return Column(
-                  children: [
-                    if (appBar == null) 20.height,
-                    CommonText(
-                      text: title ?? AppString.tickets,
-                      style: AppTextStyles.headlineSmall,
-                      fontSize: titleSize,
-                      textColor: AppColors.primaryColor,
-                    ).start,
-                    if (subTitle != null)
-                      CommonText(text: subTitle!, style: AppTextStyles.bodyMedium).start,
-                    10.height,
-                    if (filters.length > 1)
-                      TicketFilterWidget(
-                        filters: filters,
-                        selectedFilter: state.selectedFilter,
-                        onTap: context.read<TicketsCubit>().filter,
-                      ),
-                    10.height,
+          child: CubitScope(
+            create: () => TicketsCubit()..initalize(filters.first),
+            builder: (context, cubit, state) => Column(
+              children: [
+                if (appBar == null) 20.height,
+                CommonText(
+                  text: title ?? AppString.tickets,
+                  style: AppTextStyles.headlineSmall,
+                  fontSize: titleSize,
+                  textColor: AppColors.primaryColor,
+                ).start,
+                if (subTitle != null)
+                  CommonText(text: subTitle!, style: AppTextStyles.bodyMedium).start,
+                10.height,
+                if (filters.length > 1)
+                  TicketFilterWidget(
+                    filters: filters,
+                    selectedFilter: state.selectedFilter,
+                    onTap: context.read<TicketsCubit>().filter,
+                  ),
+                10.height,
 
-                    Expanded(
-                      child: !state.isLoading && state.tickets.isEmpty
-                          ? const CommonText(
-                              text: 'Oops !\nNo Event Found',
-                              maxLines: 2,
-                              fontSize: 24,
-                            )
-                          : SmartStaggeredLoader(
-                              itemCount: state.tickets.length,
-                              isLoading: state.isLoading,
-                              onLoadMore: cubit.fetch,
-                              onRefresh: () {
-                                cubit.fetch(isRefresh: true);
-                              }, 
-                        aspectRatio: 0.6434,
-                        isSeperated: true,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        itemBuilder: (context, index) {
-                          final ticket = state.tickets[index];
-                          return TicketWidget(
-                            filter: state.selectedFilter,
-                                  ticketModel: ticket,
-                            onTap: () {
-                                    onTap(ticket, state.selectedFilter!);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
+                Expanded(
+                  child: !state.isLoading && state.tickets.isEmpty
+                      ? const CommonText(text: 'Oops !\nNo Event Found', maxLines: 2, fontSize: 24)
+                      : SmartStaggeredLoader(
+                          itemCount: state.tickets.length,
+                          isLoading: state.isLoading,
+                          onLoadMore: cubit.fetch,
+                          onRefresh: () {
+                            cubit.fetch(isRefresh: true);
+                          },
+                          aspectRatio: 0.6434,
+                          isSeperated: true,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          itemBuilder: (context, index) {
+                            final ticket = state.tickets[index];
+                            return TicketWidget(
+                              filter: state.selectedFilter,
+                              ticketModel: ticket,
+                              onTap: () {
+                                onTap(ticket, state.selectedFilter!);
+                              },
+                            );
+                          },
+                        ),
+                ),
+              ],
             ),
-          ),
+          )
+            
+          
         ),
       ),
     );

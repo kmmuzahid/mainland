@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/mainlad/event_title_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -17,11 +18,13 @@ class SoldTicketWidget extends StatefulWidget {
     required this.eventName,
     required this.summery,
     required this.soldTicketDetails,
+    required this.ticketFilter,
     super.key,
   });
   final String eventName;
   final Map<String, String> summery;
   final List<TicketDetail> soldTicketDetails;
+  final TicketFilter ticketFilter;
 
   @override
   State<SoldTicketWidget> createState() => _SoldTicketWidgetState();
@@ -32,35 +35,41 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isExpired = widget.ticketFilter == TicketFilter.Expired;
     return SingleChildScrollView(
       child: Column(
-        children: [ 
+        children: [
           10.height,
           AnimatedCrossFade(
-            firstChild: _buildViewDetails(),
-            secondChild: _tickets(),
-            crossFadeState: viewDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            firstChild: _buildViewDetails(isExpired),
+            secondChild: _tickets(isExpired),
+            crossFadeState: isExpired
+                ? CrossFadeState.showSecond
+                : (viewDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst),
             duration: const Duration(milliseconds: 300),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CommonText(top: 8, text: '*', textColor: AppColors.error, fontSize: 18),
-              Expanded(
-                child: CommonText(
-                  textAlign: TextAlign.left,
-                  text: AppString
-                      .whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent,
-                  fontSize: 14,
-                  autoResize: false,
-                  maxLines: 10,
-                  fontWeight: FontWeight.w300,
-                  top: 10,
-                  bottom: 10,
+          if (!isExpired)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonText(text: '*', textColor: AppColors.error, fontSize: 18),
+                Expanded(
+                  child: CommonText(
+                    textAlign: TextAlign.left,
+                    text: AppString
+                        .whenYouWithdrawYourPayoutFromWalletPayoutsAreSentToYourLinkedAccount14DaysAfterTheEvent,
+                    fontSize: 14,
+                    autoResize: false,
+                    maxLines: 10,
+                    fontWeight: FontWeight.w300,
+                    top: 10,
+                    bottom: 10,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          10.height,
+          if (!isExpired)
           CommonButton(
             icon: Icon(viewDetails ? Icons.remove : Icons.add, color: AppColors.iconColorBlack),
             titleText: viewDetails ? AppString.viewLess : AppString.viewDetails,
@@ -76,7 +85,7 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
     );
   }
 
-  Widget _tickets() {
+  Widget _tickets(bool isExpired) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -94,12 +103,15 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
             ),
           ),
           child: TicketSummeryViewWidget(
-            backgroundColor: AppColors.primary50,
+            borderColor: isExpired ? AppColors.greay50 : null,
+            backgroundColor: isExpired ? AppColors.greay50 : AppColors.primary50,
             summery: {
               'Type': ticket.ticketType,
               'Unit': ticket.quantity.toString(),
               'Set Price': ticket.price.toString(),
+              if (!isExpired)
               'Mainland Commission (${ticket.commission}%)': mainlandFee.toString(),
+              if (!isExpired)
               'Your Payout': '${ticket.price - mainlandFee}',
             },
           ),
@@ -108,14 +120,18 @@ class _SoldTicketWidgetState extends State<SoldTicketWidget> {
     );
   }
 
-  Widget _buildViewDetails() {
+  Widget _buildViewDetails(bool isExpired) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         CommonText(text: AppString.ticketDetails, style: AppTextStyles.titleMedium).start,
         10.height,
-        TicketSummeryViewWidget(backgroundColor: AppColors.primary50, summery: widget.summery),
+        TicketSummeryViewWidget(
+          borderColor: isExpired ? AppColors.greay50 : null,
+          backgroundColor: isExpired ? AppColors.greay50 : AppColors.primary50,
+          summery: widget.summery,
+        ),
       ],
     );
   }
