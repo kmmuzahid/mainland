@@ -8,20 +8,36 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/config/socket/socket_service.dart';
 import 'package:mainland/core/config/socket/stream_data_model.dart';
+import 'package:mainland/core/utils/helpers/debouncer.dart';
 
 import 'chat_list_state.dart';
 
 class ChatListCubit extends SafeCubit<ChatListState> {
-  ChatListCubit() : super(const ChatListState()); 
+  ChatListCubit() : super(const ChatListState());
   final ChatRepository _repository = getIt();
   late StreamSubscription<StreamDataModel> _subscription;
-
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
 
   int? _getPageNo(List responce) => responce.isNotEmpty ? state.pageNo + 1 : null;
 
   Future<void> init() async {
     await fetch();
     _streamInitialize();
+  }
+
+  Future<void> search(String keyword) async {
+    _debouncer.call(() async {
+      if (state.isLoading) return;
+      emit(state.copyWith(isLoading: true, chatListItems: [], pageNo: 1));
+      final responce = await _repository.searchChatList(page: 1, keywords: keyword);
+      emit(
+        state.copyWith(
+          chatListItems: responce.data,
+          isLoading: false,
+          pageNo: _getPageNo(responce.data ?? []),
+        ),
+      );
+    });
   }
 
   Future<void> fetch() async {
@@ -37,7 +53,7 @@ class ChatListCubit extends SafeCubit<ChatListState> {
     );
   }
 
-Future<void> loadMore() async {
+  Future<void> loadMore() async {
     if (state.isLoading) return;
 
     emit(state.copyWith(isLoading: true));
@@ -56,7 +72,7 @@ Future<void> loadMore() async {
         pageNo: _getPageNo(response.data ?? []),
       ),
     );
-}
+  }
 
   void _streamInitialize() {
     _subscription = SocketService.instance.streamController.stream.listen((event) {
@@ -65,6 +81,7 @@ Future<void> loadMore() async {
         final index = state.chatListItems.indexWhere((e) => e.chatId == message.chatId);
         if (index > -1) {
           final List<ChatListItemModel> list = List.from(state.chatListItems);
+          list.removeAt(index);
           final chatListItem = ChatListItemModel(
             chatId: message.chatId,
             userImage: message.sender.image,

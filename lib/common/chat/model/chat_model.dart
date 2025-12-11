@@ -9,43 +9,51 @@ import 'package:mainland/common/chat/model/chat_user_info.dart';
 enum ChatType { message, callSuccess, callFailed }
 
 class ChatModel {
-  String chatId;
+  String messageId;
   //enum
   ChatType chatType;
   String content;
   ChatUserInfo userInfo;
   DateTime createdAt;
   List<String>? files;
+  final bool isSending;
+  final bool isSendingFaild;
   ChatModel({
-    required this.chatId,
+    required this.messageId,
     required this.chatType,
     required this.content,
     required this.userInfo,
     required this.createdAt,
+    this.isSending = false,
+    this.isSendingFaild = false,
     this.files,
   });
 
   ChatModel copyWith({
-    String? chatId,
+    String? messageId,
     ChatType? chatType,
     String? content,
     ChatUserInfo? userInfo,
     DateTime? createdAt,
     List<String>? files,
+    bool? isSending,
+    bool? isSendingFaild,
   }) {
     return ChatModel(
-      chatId: chatId ?? this.chatId,
+      messageId: messageId ?? this.messageId,
       chatType: chatType ?? this.chatType,
       content: content ?? this.content,
       userInfo: userInfo ?? this.userInfo,
       createdAt: createdAt ?? this.createdAt,
       files: files ?? this.files,
+      isSending: isSending ?? this.isSending,
+      isSendingFaild: isSendingFaild ?? this.isSendingFaild,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'chatId': chatId,
+      'chatId': messageId,
       'chatType': chatType.index,
       'content': content,
       'userInfo': userInfo.toMap(),
@@ -56,7 +64,7 @@ class ChatModel {
 
   factory ChatModel.fromMap(Map<String, dynamic> map) {
     return ChatModel(
-      chatId: map['chatId'] as String,
+      messageId: map['chatId'] as String,
       chatType: ChatType.values[map['chatType'] as int],
       content: map['content'] as String,
       userInfo: ChatUserInfo.fromMap(map['userInfo'] as Map<String, dynamic>),
@@ -72,14 +80,14 @@ class ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel(chatId: $chatId, chatType: $chatType, content: $content, userInfo: $userInfo, createdAt: $createdAt, files: $files)';
+    return 'ChatModel(chatId: $messageId, chatType: $chatType, content: $content, userInfo: $userInfo, createdAt: $createdAt, files: $files)';
   }
 
   @override
   bool operator ==(covariant ChatModel other) {
     if (identical(this, other)) return true;
 
-    return other.chatId == chatId &&
+    return other.messageId == messageId &&
         other.chatType == chatType &&
         other.content == content &&
         other.userInfo == userInfo &&
@@ -89,7 +97,7 @@ class ChatModel {
 
   @override
   int get hashCode {
-    return chatId.hashCode ^
+    return messageId.hashCode ^
         chatType.hashCode ^
         content.hashCode ^
         userInfo.hashCode ^

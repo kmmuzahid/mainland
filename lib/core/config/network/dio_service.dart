@@ -1,4 +1,6 @@
- 
+// lib/services/dio_service.dart
+// ignore_for_file: avoid_annotating_with_dynamic
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -15,6 +17,7 @@ import 'package:mainland/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:io';
 import '../dependency/dependency_injection.dart';
+import 'dio_request_builder.dart';
 import 'request_input.dart'; // Import the updated RequestInput
 import 'response_state.dart';
 import 'package:http/http.dart' as http;
@@ -35,13 +38,14 @@ class DioService {
   final List<_QueuedRequest> _queue = []; // Stores requests waiting for token refresh
   bool _isServerOff = false;
   bool _isNetworkOff = false;
-  bool _hasShownServerError = false;
   bool _hasShownNetworkError = false;
-  static const Duration _timeout = Duration(seconds: 5);
   DateTime? _lastServerShutodown;
 
   bool get isServerOff => _isServerOff;
   bool get isNetworkOff => _isNetworkOff;
+
+  String? getAccessToken() => authCubit?.state.userLoginInfoModel.accessToken;
+  String? getRefreshToken() => authCubit?.state.userLoginInfoModel.refreshToken;
 
   Future<bool> _isNetworkAvailable() async {
     try {
@@ -74,7 +78,6 @@ class DioService {
     // If we have network but server was down, reset the flags
     if (_isServerOff) {
       _isServerOff = false;
-      _hasShownServerError = false;
     }
     if (_isNetworkOff) {
       _isNetworkOff = false;
@@ -196,19 +199,19 @@ class DioService {
                 _refreshCompleter = null;
                 _processQueue(); // Process any queued requests
               }
-            } else { 
+            } else {
               final responseCompleter = Completer<dio.Response>();
-              _queue.add(_QueuedRequest(error.requestOptions, responseCompleter)); 
+              _queue.add(_QueuedRequest(error.requestOptions, responseCompleter));
               return responseCompleter.future.then(handler.resolve).catchError((
                 Object err,
                 StackTrace stackTrace,
               ) {
                 if (err is DioException) {
                   handler.reject(err);
-                } else { 
+                } else {
                   handler.reject(
                     DioException(
-                      requestOptions: error.requestOptions,  
+                      requestOptions: error.requestOptions,
                       error: err,
                       stackTrace: stackTrace,
                       message: err.toString(),
@@ -217,7 +220,7 @@ class DioService {
                 }
               });
             }
-          } else if (statusCode == 401 && path == ApiEndPoint.instance.refreshToken) { 
+          } else if (statusCode == 401 && path == ApiEndPoint.instance.refreshToken) {
             AppLogger.apiError(
               '401 received from refresh token endpoint. Logging out.',
               tag: 'Auth',
@@ -225,10 +228,10 @@ class DioService {
             await clearTokens();
             onLogout?.call();
             handler.reject(error);
-          } else if (error.response?.statusCode == 404) { 
+          } else if (error.response?.statusCode == 404) {
             handler.next(error);
           } else {
-            handler.next(error); 
+            handler.next(error);
           }
         },
       ),
@@ -259,11 +262,9 @@ class DioService {
     int maxRetry = 2,
     bool showMessage = false,
     bool debug = false,
-    bool isRetry = false, 
+    bool isRetry = false,
   }) async {
- 
-
-    final cancelToken = CancelToken();  
+    final cancelToken = CancelToken();
 
     if (debug) {
       return await _requestBuilder(
@@ -295,9 +296,9 @@ class DioService {
           statusCode: e.response?.statusCode,
         );
       }
- 
+
       if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
-        if (retryCount < maxRetry) { 
+        if (retryCount < maxRetry) {
           await Future.delayed(Duration(seconds: 1 * (retryCount + 1)));
 
           return request<T>(
@@ -310,7 +311,7 @@ class DioService {
           );
         }
       }
- 
+
       if (e.response?.data != null) {
         try {
           final parsed = e.response?.data['data'] != null
@@ -333,7 +334,6 @@ class DioService {
           );
         } catch (parseError) {
           AppLogger.apiError('Failed to parse error response: $parseError', tag: input.endpoint);
-        
         }
       }
 
@@ -391,9 +391,12 @@ class DioService {
     required CancelToken cancelToken,
     required bool showMessage,
   }) async {
-    final requestOptions = await _buildRequestOptions(input);
+    final requestOptions = await DioRequestBuilder.instance.build(
+      input: input,
+      accessToken: getAccessToken(),
+    );
 
-    dio.Response response; 
+    dio.Response response;
     response = await _dio.request(
       requestOptions.path,
       data: requestOptions.data,
@@ -409,7 +412,7 @@ class DioService {
     }
 
     final parsed = response.data['data'] != null ? responseBuilder(response.data['data']) : null;
- 
+
     final message = response.data is Map && response.data['message'] != null
         ? response.data['message'].toString()
         : response.statusMessage;
@@ -425,7 +428,7 @@ class DioService {
       statusCode: response.statusCode,
     );
   }
- 
+
   Future<void> _refreshTokenIfNeeded() async {
     final refreshToken = authCubit?.state.userLoginInfoModel.refreshToken;
 
@@ -433,7 +436,7 @@ class DioService {
       AppLogger.debug('No refresh token available.', tag: 'DIO service');
       return;
     }
-    try { 
+    try {
       final response = await http.post(
         Uri.parse('${ApiEndPoint.instance.baseUrl}${ApiEndPoint.instance.refreshToken}'),
         headers: {'refreshtoken': refreshToken},
@@ -462,7 +465,7 @@ class DioService {
     }
   }
 
-  void _processQueue() { 
+  void _processQueue() {
     while (_queue.isNotEmpty) {
       final req = _queue.removeAt(0);
       _dio
@@ -478,94 +481,93 @@ class DioService {
       e.type == DioExceptionType.sendTimeout ||
       e.type == DioExceptionType.unknown;
 
-  Future<_RequestOptionsData> _buildRequestOptions(RequestInput input) async {
-    final accessToken = authCubit?.state.userLoginInfoModel.accessToken;
+  // Future<_RequestOptionsData> _buildRequestOptions(RequestInput input) async {
+  //   final accessToken = authCubit?.state.userLoginInfoModel.accessToken;
 
-    String url = input.endpoint;
-    input.pathParams?.forEach(
-      (k, v) => url = url.replaceAll('{$k}', Uri.encodeComponent(v.toString())),
-    );
+  //   String url = input.endpoint;
+  //   input.pathParams?.forEach(
+  //     (k, v) => url = url.replaceAll('{$k}', Uri.encodeComponent(v.toString())),
+  //   );
 
-    final headers = {
-      if (input.requiresToken && accessToken?.isNotEmpty == true)
-        'Authorization': 'Bearer $accessToken',
-      ...?input.headers,
-    };
+  //   final headers = {
+  //     if (input.requiresToken && accessToken?.isNotEmpty == true)
+  //       'Authorization': 'Bearer $accessToken',
+  //     ...?input.headers,
+  //   };
 
-    dynamic body;
-    String contentType = 'application/json'; // Default content type
+  //   dynamic body;
+  //   String contentType = 'application/json'; // Default content type
 
-    if ((input.files != null && input.files!.isNotEmpty || input.formFields != null) ||
-        ((input.files != null && input.files!.isNotEmpty) &&
-            (input.jsonBody != null || input.listBody != null))) {
-      final formData = dio.FormData();
- 
-      if (input.formFields != null) {
-        formData.fields.addAll(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)));
-      }
- 
-      if (input.jsonBody != null) {
-        formData.files.add(
-          MapEntry(
-            'data',
-            dio.MultipartFile.fromString(
-              jsonEncode(input.jsonBody),
-              contentType: dio.DioMediaType('application', 'json'),
-            ),
-          ),
-        );
-      }
-      if (input.listBody != null) {
-        formData.files.add(
-          MapEntry(
-            'data',
-            dio.MultipartFile.fromString(
-              jsonEncode(input.listBody),
-              contentType: dio.DioMediaType('application', 'json'),
-            ),
-          ),
-        );
-      }
- 
-      if (input.files != null && input.files!.isNotEmpty) {
-        for (final entry in input.files!.entries) {
-          final key = entry.key;
-          final file = entry.value;
+  //   if ((input.files != null && input.files!.isNotEmpty || input.formFields != null) ||
+  //       ((input.files != null && input.files!.isNotEmpty) &&
+  //           (input.jsonBody != null || input.listBody != null))) {
+  //     final formData = dio.FormData();
 
-          final multipartFile = await file.toMultipart();  
-          formData.files.add(MapEntry(key, multipartFile));
-        }
-      }
+  //     if (input.formFields != null) {
+  //       formData.fields.addAll(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)));
+  //     }
 
-      body = formData;
-      contentType = 'multipart/form-data';
-    } else if (input.jsonBody != null) { 
-      body = input.jsonBody;
-      contentType = 'application/json';
-    } else if (input.listBody != null) { 
-      body = jsonEncode(input.listBody);
-      
-    }
+  //     if (input.jsonBody != null) {
+  //       formData.files.add(
+  //         MapEntry(
+  //           'data',
+  //           dio.MultipartFile.fromString(
+  //             jsonEncode(input.jsonBody),
+  //             contentType: dio.DioMediaType('application', 'json'),
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //     if (input.listBody != null) {
+  //       formData.files.add(
+  //         MapEntry(
+  //           'data',
+  //           dio.MultipartFile.fromString(
+  //             jsonEncode(input.listBody),
+  //             contentType: dio.DioMediaType('application', 'json'),
+  //           ),
+  //         ),
+  //       );
+  //     }
 
-    return _RequestOptionsData(
-      path: url,
-      data: body,
-      queryParameters: input.queryParams,
-      options: dio.Options( 
-        method: input.method.toString().split('.').last.toUpperCase(),  
-        headers: headers,
-        contentType: contentType,
-        sendTimeout: input.timeout,
-        receiveTimeout: input.timeout,
-        extra: {'requiresToken': input.requiresToken},  
-      ),
-    );
-  }
+  //     if (input.files != null && input.files!.isNotEmpty) {
+  //       for (final entry in input.files!.entries) {
+  //         final key = entry.key;
+  //         final file = entry.value;
 
+  //         final multipartFile = await file.toMultipart();
+  //         formData.files.add(MapEntry(key, multipartFile));
+  //       }
+  //     }
+
+  //     body = formData;
+  //     contentType = 'multipart/form-data';
+  //   } else if (input.jsonBody != null) {
+  //     body = input.jsonBody;
+  //     contentType = 'application/json';
+  //   } else if (input.listBody != null) {
+  //     body = jsonEncode(input.listBody);
+
+  //   }
+
+  //   return _RequestOptionsData(
+  //     path: url,
+  //     data: body,
+  //     queryParameters: input.queryParams,
+  //     options: dio.Options(
+  //       method: input.method.toString().split('.').last.toUpperCase(),
+  //       headers: headers,
+  //       contentType: contentType,
+  //       sendTimeout: input.timeout,
+  //       receiveTimeout: input.timeout,
+  //       extra: {'requiresToken': input.requiresToken},
+  //     ),
+  //   );
+  // }
 
   String _parseError(DioException e) {
     if (e.response?.data != null && e.response!.data is Map) {
-      final data = e.response!.data as Map<String, dynamic>; 
+      final data = e.response!.data as Map<String, dynamic>;
       if (data.containsKey('message')) {
         return data['message'].toString();
       } else if (data.containsKey('error')) {
@@ -576,25 +578,11 @@ class DioService {
     }
     return e.message ?? 'An unknown error occurred.';
   }
-
-} 
-class _RequestOptionsData {
-  _RequestOptionsData({
-    required this.path,
-    required this.data,
-    required this.queryParameters,
-    required this.options,
-  });
-
-  final String path;
-  final dynamic data;
-  final Map<String, dynamic>? queryParameters;
-  final dio.Options options;  
 }
- 
+
 class _QueuedRequest {
   _QueuedRequest(this.requestOptions, this.completer);
 
   final RequestOptions requestOptions;
-  final Completer<dio.Response> completer;  
+  final Completer<dio.Response> completer;
 }

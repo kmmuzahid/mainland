@@ -7,11 +7,17 @@ import 'package:mainland/core/config/network/response_state.dart';
 
 abstract class ChatRepository {
   Future<ResponseState<List<ChatListItemModel>?>> fetchChatList({required int page});
-  Future<ResponseState<List<ChatModel>>> fetchChat({required int page, required String chatId});
-  Future<bool> sendMessage({
-    required String message,
-    required String chatId,
-    required String userId,
-    List<XFile>? file,
+  Future<ResponseState<List<ChatListItemModel>?>> searchChatList({
+    required int page,
+    required String keywords,
   });
+  Future<ResponseState<List<ChatModel>?>> fetchChat({required int page, required String chatId});
+  Future<bool> sendMessage({
+    required String chatId,
+    required String message,
+    required List<XFile>? file, // documents
+    required List<XFile>? image,  
+  });
+
+
 }

@@ -62,7 +62,7 @@ class ChatListItemModel {
       userStatus: UserStatus.values[map['userStatus'] as int],
       lastSendMessageTime: DateTime.fromMillisecondsSinceEpoch(map['lastSendMessageTime'] as int),
       lastMessage: map['lastMessage'] ?? '',
-      isRead: map['isRead'] as bool,
+      isRead: map['isRead'] ?? false,
     );
   }
 

@@ -83,19 +83,10 @@ class _SmartListLoaderState extends State<SmartListLoader> {
       reverse: widget.isReverse, // This makes the list scroll in reverse order
       itemCount: widget.itemCount + 1,
       itemBuilder: (context, index) {
-        if (widget.isReverse) {
-          // For reverse scrolling, we display the items from the last index
-          final reversedIndex = widget.itemCount - 1 - index;
-          if (reversedIndex >= 0) {
-            return widget.itemBuilder(context, reversedIndex);
-          }
-        } else {
+ 
           if (index < widget.itemCount) {
             return widget.itemBuilder(context, index);
-          }
-        }
-
-        // Load More Indicator
+        } 
         if (widget.isLoading) {
           return const Padding(
             padding: EdgeInsets.only(bottom: 80, top: 16),

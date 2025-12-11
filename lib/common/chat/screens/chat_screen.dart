@@ -53,6 +53,7 @@ class ChatScreen extends StatelessWidget {
         child: BlocBuilder<ChatCubit, ChatState>(
           builder: (context, state) {
             final cubit = context.read<ChatCubit>();
+            final userId = context.read<AuthCubit>().state.profileModel?.id;
             return Column(
               children: [
                 Expanded(
@@ -82,7 +83,7 @@ class ChatScreen extends StatelessWidget {
                               CommonTextField(
                                 hintText: AppString.typeYourMessage,
                                 backgroundColor: AppColors.greay50,
-                                suffixIcon: _suffix(cubit, formKey),
+                                suffixIcon: _suffix(cubit, formKey, userId),
                                 key: Key(state.message),
                                 validationType: ValidationType.notRequired,
                                 borderColor: AppColors.greay50,
@@ -106,7 +107,7 @@ class ChatScreen extends StatelessWidget {
     ),
   );
 
-  Row _suffix(ChatCubit cubit, GlobalKey<FormState> formKey) {
+  Row _suffix(ChatCubit cubit, GlobalKey<FormState> formKey, String? userId) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -129,7 +130,7 @@ class ChatScreen extends StatelessWidget {
           onTap: () {
             if (formKey.currentState?.validate() == true) {
               formKey.currentState?.save();
-              cubit.send();
+              cubit.send(userId: userId ?? '');
             }
           },
           child: Icon(Icons.send, color: AppColors.greay500),
@@ -143,89 +144,41 @@ class ChatScreen extends StatelessWidget {
     final bool isImageOnly = model.files?.isNotEmpty == true && model.content.isEmpty;
     final Color isMeBackground = AppColors.primaryColor;
     final Color isMeText = AppColors.textWhite;
-    final bool isMe =
-        model.userInfo.userId == context.read<AuthCubit>().state.profileModel?.id;
+    final bool isMe = model.userInfo.userId == context.read<AuthCubit>().state.profileModel?.id;
+    final bool isFaild = model.isSendingFaild;
+    final bool isSending = model.isSending;
+    LongPressStartDetails? details;
     return Column(
       children: [
         Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: chatIemWidth, minWidth: 105.w),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isImageOnly
-                    ? null
-                    : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    if (model.files?.isNotEmpty == true)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: FileThumbnailGrid(files: model.files!),
-                      ),
-                    if (model.content.isNotEmpty)
-                      GestureDetector(
-                        onLongPressDown: (details) {
-                          final String phoneNumber =
-                              RegExp(r'(?:\+?880|00880)?1[3-9]\d{8}')
-                                  .firstMatch(model.content)
-                                  ?.group(0)
-                                  ?.replaceAll(RegExp(r'[^0-9+]'), '') ??
-                              '';
-
-                          _showPopupMenu(
-                            tapPosition: details.globalPosition,
-                            context: context,
-                            items: [
-                              'Copy',
-                              if (phoneNumber.isNotEmpty) 'Call',
-                              if (phoneNumber.isNotEmpty) 'Message',
-                              if (isMe) 'Edit',
-                              if (isMe) 'Delete',
-                              'Reply',
-                            ],
-                            icons: [
-                              Icons.copy,
-                              if (phoneNumber.isNotEmpty) Icons.call,
-                              if (phoneNumber.isNotEmpty) Icons.message,
-                              if (isMe) Icons.delete,
-                              if (isMe) Icons.edit,
-                              Icons.reply,
-                            ],
-                            onItemSelected: (value) async {
-                              if (value == 'Copy') {
-                                await Clipboard.setData(ClipboardData(text: model.content));
-                              } else if (value == 'Delete') {
-                              } else if (value == 'Call') {
-                                //show phone number to phone dailer to make a call
-                                final phoneUrl = 'tel:$phoneNumber';
-                                if (await canLaunchUrl(Uri.parse(phoneUrl))) {
-                                  await launchUrl(Uri.parse(phoneUrl));
-                                } else {
-                                  showSnackBar(
-                                    'Could not launch phone app',
-                                    type: SnackBarType.error,
-                                  );
-                                }
-                              } else if (value == 'Reply') {
-                              } else if (value == 'Message') {
-                                if (await canLaunchUrl(Uri(scheme: 'sms', path: phoneNumber))) {
-                                  await launchUrl(Uri(scheme: 'sms', path: phoneNumber));
-                                } else {
-                                  showSnackBar(
-                                    'Could not launch messaging app',
-                                    type: SnackBarType.error,
-                                  );
-                                }
-                              }
-                            },
-                          );
-                        },
-                        child: CommonText(
+            child: GestureDetector(
+              onLongPressStart: (value) {
+                details = value;
+              },
+              onLongPress: () {
+                longPressActions(model, details, context, isMe);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isImageOnly
+                      ? null
+                      : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      if (model.files?.isNotEmpty == true)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: FileThumbnailGrid(files: model.files!),
+                        ),
+                      if (model.content.isNotEmpty)
+                        CommonText(
                           text: model.content,
                           textColor: isMe ? isMeText : null,
                           fontSize: 16.sp,
@@ -233,32 +186,33 @@ class ChatScreen extends StatelessWidget {
                           textAlign: TextAlign.left,
                           maxLines: 100,
                         ),
-                      ),
-                    if (model.chatType == ChatType.callFailed)
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.call_missed_rounded,
-                            color: isMe
-                                ? getTheme.textTheme.bodySmall?.color
-                                : getTheme.colorScheme.error,
-                          ),
-                          CommonText(
-                            text: 'Voice Call',
-                            textColor: isMe
-                                ? getTheme.textTheme.bodySmall?.color
-                                : getTheme.colorScheme.error,
-                          ),
-                        ],
-                      ),
-                    if (model.chatType == ChatType.callSuccess)
-                      Row(
-                        children: [
-                          Icon(isMe ? Icons.call_made : Icons.call_received),
-                          const CommonText(text: 'Voice Call'),
-                        ],
-                      ),
-                  ],
+                      if (model.chatType == ChatType.callFailed)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.call_missed_rounded,
+                              color: isMe
+                                  ? getTheme.textTheme.bodySmall?.color
+                                  : getTheme.colorScheme.error,
+                            ),
+                            CommonText(
+                              text: 'Voice Call',
+                              textColor: isMe
+                                  ? getTheme.textTheme.bodySmall?.color
+                                  : getTheme.colorScheme.error,
+                            ),
+                          ],
+                        ),
+                      if (model.chatType == ChatType.callSuccess)
+                        Row(
+                          children: [
+                            Icon(isMe ? Icons.call_made : Icons.call_received),
+                            const CommonText(text: 'Voice Call'),
+                          ],
+                        ),
+                        if(model.)
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -276,6 +230,61 @@ class ChatScreen extends StatelessWidget {
         10.height,
       ],
     );
+  }
+
+  void longPressActions(
+    ChatModel model,
+    LongPressStartDetails? details,
+    BuildContext context,
+    bool isMe,
+  ) {
+    final String phoneNumber =
+        RegExp(
+          r'(?:\+?880|00880)?1[3-9]\d{8}',
+        ).firstMatch(model.content)?.group(0)?.replaceAll(RegExp(r'[^0-9+]'), '') ??
+        '';
+    if (details != null)
+      _showPopupMenu(
+        tapPosition: details.globalPosition,
+        context: context,
+        items: [
+          'Copy',
+          if (phoneNumber.isNotEmpty) 'Call',
+          if (phoneNumber.isNotEmpty) 'Message',
+          if (isMe) 'Edit',
+          if (isMe) 'Delete',
+          'Reply',
+        ],
+        icons: [
+          Icons.copy,
+          if (phoneNumber.isNotEmpty) Icons.call,
+          if (phoneNumber.isNotEmpty) Icons.message,
+          if (isMe) Icons.delete,
+          if (isMe) Icons.edit,
+          Icons.reply,
+        ],
+        onItemSelected: (value) async {
+          if (value == 'Copy') {
+            await Clipboard.setData(ClipboardData(text: model.content));
+          } else if (value == 'Delete') {
+          } else if (value == 'Call') {
+            //show phone number to phone dailer to make a call
+            final phoneUrl = 'tel:$phoneNumber';
+            if (await canLaunchUrl(Uri.parse(phoneUrl))) {
+              await launchUrl(Uri.parse(phoneUrl));
+            } else {
+              showSnackBar('Could not launch phone app', type: SnackBarType.error);
+            }
+          } else if (value == 'Reply') {
+          } else if (value == 'Message') {
+            if (await canLaunchUrl(Uri(scheme: 'sms', path: phoneNumber))) {
+              await launchUrl(Uri(scheme: 'sms', path: phoneNumber));
+            } else {
+              showSnackBar('Could not launch messaging app', type: SnackBarType.error);
+            }
+          }
+        },
+      );
   }
 
   void _showPopupMenu({

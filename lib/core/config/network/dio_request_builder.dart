@@ -1,104 +1,109 @@
-// import 'dart:convert';
-// import 'package:dio/dio.dart';
-// import 'package:mainland/core/config/api/api_end_point.dart';
-// import 'dio_service.dart';
-// import 'request_input.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart' as dio;
+import 'package:image_picker/image_picker.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
+import 'request_input.dart';
 
-// class DioRequestBuilder {
-//   final DioService service;
+class DioRequestBuilder {
+  DioRequestBuilder._();
+  static final instance = DioRequestBuilder._();
+  // ignore: library_private_types_in_public_api
+  Future<_RequestOptionsData> build({
+    required RequestInput input,
+    required String? accessToken,
+  }) async {
+    String url = input.endpoint;
+    input.pathParams?.forEach(
+      (k, v) => url = url.replaceAll('{$k}', Uri.encodeComponent(v.toString())),
+    );
 
-//   DioRequestBuilder({required this.service});
+    final headers = {
+      if (input.requiresToken && accessToken?.isNotEmpty == true)
+        'Authorization': 'Bearer $accessToken',
+      ...?input.headers,
+    };
 
-//   /// Builds request options based on the provided input
-//   Future<RequestOptions> build(RequestInput input) async {
-//     // Get access token if required
-//     final accessToken = input.requiresToken
-//         ? service.authCubit?.state.userLoginInfoModel.accessToken
-//         : null;
+    dynamic body;
+    String contentType = 'application/json';
 
-//     // Build URL
-//     String url = _buildUrl(input);
+    final hasFiles = input.files != null && input.files!.isNotEmpty;
+    final hasFields = input.formFields != null;
+    final hasJson = input.jsonBody != null;
+    final hasList = input.listBody != null;
 
-//     // Prepare headers
-//     final headers = _buildHeaders(input, accessToken);
+    final needsMultipart = hasFiles || hasFields || (hasFiles && (hasJson || hasList));
 
-//     // Prepare request body and content type
-//     final (body, contentType) = await _buildBody(input);
+    if (needsMultipart) {
+      dio.FormData formData = dio.FormData();
+      final Map<String, dynamic> _form = {};
 
-//     // Create and return request options
-//     return RequestOptions(
-//       method: input.method.name,
-//       path: url,
-//       headers: headers,
-//       queryParameters: input.queryParams,
-//       data: body,
-//       contentType: contentType,
-//       extra: {'requiresToken': input.requiresToken, 'service': service},
-//     );
-//   }
+      if (input.formFields != null) {
+        _form.addAll(input.formFields!);
+        // _form.add(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)))
+        // formData.fields.addAll(input.formFields!.entries.map((e) => MapEntry(e.key, e.value)));
+      }
+      if (hasJson) {
+        _form['data'] = jsonEncode(input.jsonBody);
+        // formData.fields.add(MapEntry('data', jsonEncode(input.jsonBody)));
+      }
+      if (hasList) {
+        _form['data'] = jsonEncode(input.listBody);
+        // formData.fields.add(MapEntry('data', jsonEncode(input.listBody)));
+      }
 
-//   String _buildUrl(RequestInput input) {
-//     String url = input.endpoint;
-//     if (!url.startsWith('http')) {
-//       url = '${ApiEndPoint.instance.baseUrl}$url';
-//     }
+      if (hasFiles) {
+        for (final entry in input.files!.entries) {
+          final key = entry.key;
+          final value = entry.value;
+          if (value is XFile) {
+            final multipartFile = await value.toMultipart();
+            // formData.files.add(MapEntry(key, multipartFile));
+            _form[key] = multipartFile;
+          } else if (value is List<XFile>) {
+            final imageFileList = await Future.wait(
+              value.map((e) async {
+                return await e.toMultipart();
+              }).toList(),
+            );
+            _form[key] = imageFileList;
+            // for (final file in value) {
+            //   final multipartFile = await file.toMultipart();
+            //   formData.files.add(MapEntry(key, multipartFile));
+            // }
+          }
+        }
+      }
+      print(_form.toString());
+      contentType = 'multipart/form-data';
+      formData = dio.FormData.fromMap(_form);
+      body = formData;
+    } else if (hasJson) {
+      body = input.jsonBody;
+      contentType = 'application/json';
+    } else if (hasList) {
+      body = jsonEncode(input.listBody);
+      contentType = 'application/json';
+    }
 
-//     // Replace path parameters
-//     if (input.pathParams != null) {
-//       input.pathParams!.forEach((key, value) {
-//         if (value != null) {
-//           url = url.replaceAll('{$key}', Uri.encodeComponent(value.toString()));
-//         }
-//       });
-//     }
+    return _RequestOptionsData(
+      path: url,
+      data: body,
+      queryParameters: input.queryParams,
+      options: dio.Options(method: input.method.name, headers: headers, contentType: contentType),
+    );
+  }
+}
 
-//     return url;
-//   }
+class _RequestOptionsData {
+  _RequestOptionsData({
+    required this.path,
+    required this.data,
+    required this.queryParameters,
+    required this.options,
+  });
 
-//   Map<String, dynamic> _buildHeaders(RequestInput input, String? accessToken) {
-//     final headers = <String, dynamic>{
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//       if (input.requiresToken && accessToken?.isNotEmpty == true)
-//         'Authorization': 'Bearer $accessToken',
-//       ...?input.headers,
-//     };
-
-//     return headers;
-//   }
-
-//   Future<(dynamic body, String? contentType)> _buildBody(RequestInput input) async {
-//     // Handle file uploads
-//     if (input.files?.isNotEmpty == true || input.formFields != null) {
-//       final formData = FormData();
-
-//       // Add form fields
-//       if (input.formFields != null) {
-//         formData.fields.addAll(
-//           input.formFields!.entries.map((e) => MapEntry(e.key, e.value ?? '')),
-//         );
-//       }
-
-//       // Add JSON body if provided
-//       if (input.jsonBody != null) {
-//         formData.fields.add(MapEntry('data', jsonEncode(input.jsonBody)));
-//       }
-
-//       // Add files
-//       if (input.files != null) {
-//         for (final file in input.files!) {
-//           if (file != null && file.path.isNotEmpty) {
-//             formData.files.add(
-//               MapEntry(file.field, await MultipartFile.fromFile(file.path, filename: file.name)),
-//             );
-//           }
-//         }
-//       }
-
-//       return (formData, 'multipart/form-data');
-//     }
-
-//     // Handle JSON body
-//     return (input.jsonBody, 'application/json');
-//   }
-// }
+  final String path;
+  final dynamic data;
+  final Map<String, dynamic>? queryParameters;
+  final dio.Options options;
+}

@@ -32,7 +32,7 @@ class RequestInput {
   final Map<String, dynamic>? formFields;
   final Map<String, dynamic>? jsonBody;
   final List<Map<String, dynamic>>? listBody;
-  final Map<String, XFile>? files; 
+  final Map<String, dynamic>? files; 
   final Duration? timeout;
   final Function(int, int)? onSendProgress;
   final Function(int, int)? onReceiveProgress;

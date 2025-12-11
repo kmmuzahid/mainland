@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/chat/cubit/chat/chat_cubit.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 
 import 'package:mainland/core/component/image/common_image.dart';
@@ -32,37 +33,35 @@ class ChatListScreen extends StatelessWidget {
     // appBar: CommonAppBar(title: AppString.message),
     body: Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Column(
-        children: [
-          _header(context),
-          Expanded(
-            child: CubitScope(
-              create: () => ChatListCubit()..init(),
-              builder: (context, cubit, state) {
-                return SmartListLoader(
-                  itemCount: state.chatListItems.length,
-                  isLoading: state.isLoading,
-                  onLoadMore: cubit.loadMore,
-                  onRefresh: cubit.fetch,
-                  itemBuilder: (context, index) {
-                    final chatListItem = state.chatListItems[index];
-                    return GestureDetector(
-                      onTap: () {
-                        appRouter.push(ChatRoute(chatListItemModel: chatListItem));
-                      },
-                      child: Card(color: AppColors.serfeceBG, child: _chatItem(chatListItem)),
-                    );
-                  },
-                );
-              },
+      child: CubitScope(
+        create: () => ChatListCubit()..init(),
+        builder: (context, cubit, state) => Column(
+          children: [
+            _header(context, cubit),
+            Expanded(
+              child: SmartListLoader(
+                itemCount: state.chatListItems.length,
+                isLoading: state.isLoading,
+                onLoadMore: cubit.loadMore,
+                onRefresh: cubit.fetch,
+                itemBuilder: (context, index) {
+                  final chatListItem = state.chatListItems[index];
+                  return GestureDetector(
+                    onTap: () {
+                      appRouter.push(ChatRoute(chatListItemModel: chatListItem));
+                    },
+                    child: Card(color: AppColors.serfeceBG, child: _chatItem(chatListItem)),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
 
-  Widget _header(BuildContext context) {
+  Widget _header(BuildContext context, ChatListCubit cubit) {
     return Column(
       children: [
         CommonText(
@@ -80,6 +79,7 @@ class ChatListScreen extends StatelessWidget {
           backgroundColor: AppColors.backgroundWhite,
           prefixIcon: const Icon(Icons.search),
           hintText: AppString.searchMessageHere,
+          onChanged: cubit.search,
           validationType: ValidationType.notRequired,
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
@@ -8,7 +9,9 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
+import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/utils/app_utils.dart';
+import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
 import 'package:mainland/gen/assets.gen.dart';
 
@@ -29,9 +32,9 @@ class MockChatRepository implements ChatRepository {
                   userImage: e['photo'],
                   userStatus: UserStatus.online,
                   lastSendMessageTime: Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
-                  userName: e['name'],
-                  lastMessage: e['lastMessage'],
-                  isRead: e['lastMessageRead'],
+                  userName: e['name'] ?? '',
+                  lastMessage: e['lastMessage'] ?? '',
+                  isRead: e['lastMessageRead'] ?? false,
                 ),
               )
               .toList();
@@ -41,39 +44,87 @@ class MockChatRepository implements ChatRepository {
   }
 
   @override
-  Future<ResponseState<List<ChatModel>>> fetchChat({
+  Future<ResponseState<List<ChatModel>?>> fetchChat({
     required int page,
     required String chatId,
   }) async {
-    final list = generateMockList(
-      builder: (index) {
+    return _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.getMessages(chatId: chatId),
+        queryParams: {'limit': 20, 'page': page},
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) {
+        final model = SocketMessageModel.fromJson(e);
         return ChatModel(
-          chatId: 'chatId',
+          messageId: model.id,
           chatType: ChatType.message,
-          files: index == 2 ? [Assets.images.sampleItem.path, Assets.images.sampleItem2.path] : [],
-          content:
-              'Hello! I’m interested in the navy blue two-piece suit you posted. Is it still available in size 52?',
+          files: model.image,
+          content: model.text,
           userInfo: ChatUserInfo(
-            userId: index % 2 == 0 ? '' : 'userId',
-            name: 'Cameron Williamson',
-            image: Assets.images.sampleItem2.path,
+            userId: model.ownerId ?? '',
+            name: model.sender.name,
+            image: model.sender.image,
           ),
-          createdAt: DateTime.now(),
+          createdAt: model.createdAt ?? DateTime.now(),
         );
-      },
+      }).toList(),
     );
-    await SimulateMocRepo();
-    return ResponseState(data: [...list, ...list], isSuccess: true, statusCode: 200);
+
   }
 
   @override
   Future<bool> sendMessage({
-    required String message,
     required String chatId,
-    required String userId,
-    List<XFile>? file,
+    required String message,
+    required List<XFile>? file, // documents
+    required List<XFile>? image,
   }) async {
-    await SimulateMocRepo();
-    return true;
+    final result = await _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.sentMessage,
+        method: RequestMethod.POST,
+
+        files: {
+          if (image?.isNotEmpty ?? false) 'image': image,
+          // if (file?.isNotEmpty ?? false) 'document': file,
+        },
+        jsonBody: {'chatId': chatId, 'text': message},
+      ),
+      responseBuilder: (data) => data,
+    );
+
+    return result.isSuccess;
+  }
+
+  @override
+  Future<ResponseState<List<ChatListItemModel>?>> searchChatList({
+    required int page,
+    required String keywords,
+  }) {
+    return _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.chat,
+        queryParams: {'search': keywords},
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) {
+        if (data != null) {
+          return (data as List)
+              .map(
+                (e) => ChatListItemModel(
+                  chatId: e['id'],
+                  userImage: e['photo'],
+                  userStatus: UserStatus.online,
+                  lastSendMessageTime: Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
+                  userName: e['name'] ?? '',
+                  lastMessage: e['lastMessage'] ?? '',
+                  isRead: e['lastMessageRead'] ?? '',
+                ),
+              )
+              .toList();
+        }
+      },
+    );
   }
 }

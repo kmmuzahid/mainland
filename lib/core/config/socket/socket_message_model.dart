@@ -1,7 +1,6 @@
 import 'package:mainland/core/utils/app_utils.dart';
 
 class SocketMessageModel {
-
   SocketMessageModel({
     required this.id,
     required this.chatId,
@@ -12,6 +11,7 @@ class SocketMessageModel {
     required this.text,
     required this.image,
     required this.isDeleted,
+    this.ownerId,
     this.deletedAt,
     this.createdAt,
     this.updatedAt,
@@ -45,6 +45,8 @@ class SocketMessageModel {
       deletedAt: Utils.parseDate(json['deletedAt']),
       createdAt: Utils.parseDate(json['createdAt']),
       updatedAt: Utils.parseDate(json['updatedAt']),
+      ownerId: json['ownerId'] ?? '',
+
     );
   }
   final String id;
@@ -59,6 +61,7 @@ class SocketMessageModel {
   final DateTime? deletedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? ownerId;
 
   Map<String, dynamic> toJson() {
     return {
@@ -74,12 +77,12 @@ class SocketMessageModel {
       'deletedAt': deletedAt?.toIso8601String(),
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'ownerId': ownerId
     };
   }
 }
 
 class ReplyToModel {
-
   ReplyToModel({required this.id, required this.sender, required this.text});
 
   factory ReplyToModel.fromJson(Map<String, dynamic>? json) {
@@ -102,7 +105,6 @@ class ReplyToModel {
 }
 
 class SenderModel {
-
   SenderModel({required this.id, required this.name, required this.image});
 
   factory SenderModel.fromJson(Map<String, dynamic>? json) {

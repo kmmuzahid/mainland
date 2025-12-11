@@ -6,6 +6,7 @@ import 'package:mainland/core/component/other_widgets/permission_handler_helper.
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mainland/main.dart';
@@ -25,9 +26,15 @@ class ChatCubit extends SafeCubit<ChatState> {
 
   Future<void> fetch() async {
     if (state.isLoading) return;
-    emit(state.copyWith(isLoading: true, chats: [], pageNo: 0));
-    final responce = await _repository.fetchChat(page: 0, chatId: chatId);
-    emit(state.copyWith(chats: responce.data, isLoading: false, pageNo: _getPageNo(responce.data)));
+    emit(state.copyWith(isLoading: true, chats: [], pageNo: 1));
+    final responce = await _repository.fetchChat(page: 1, chatId: chatId);
+    emit(
+      state.copyWith(
+        chats: responce.data,
+        isLoading: false,
+        pageNo: _getPageNo(responce.data ?? []),
+      ),
+    );
   }
 
   Future<void> loadMore() async {
@@ -38,31 +45,39 @@ class ChatCubit extends SafeCubit<ChatState> {
     emit(
       state.copyWith(
         isLoading: false,
-        chats: [...state.chats, ...responce.data],
-        pageNo: _getPageNo(responce.data),
+        chats: [...state.chats, ...responce.data ?? []],
+        pageNo: _getPageNo(responce.data ?? []),
       ),
     );
   }
 
-  Future<void> send() async {
+  Future<void> send({required String userId}) async {
     emit(state.copyWith(isLoading: true));
-    final response = await _repository.sendMessage(
-      message: state.message,
-      chatId: chatId,
-      file: state.filePath,
-      userId: 'userId',
-    );
     final chat = ChatModel(
-      chatId: chatId,
+      messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+      isSending: true,
       chatType: ChatType.message,
       content: state.message,
       files: state.filePath.map((e) => e.path).toList(),
-      userInfo: ChatUserInfo(userId: '', name: '', image: ''),
+      userInfo: ChatUserInfo(userId: userId, name: '', image: ''),
       createdAt: DateTime.now(),
     );
     emit(
-      state.copyWith(chats: [...state.chats, chat], message: '', filePath: [], isLoading: false),
+      state.copyWith(chats: [chat, ...state.chats], message: '', filePath: [], isLoading: false),
     );
+    final result = await _repository.sendMessage(
+      message: state.message,
+      chatId: chatId,
+      file: state.filePath,
+      image: state.filePath,
+    );
+    if (result) {
+      final index = state.chats.indexWhere((e) => e.messageId == chat.messageId);
+
+      emit(state.copyWith(chats: [chat.copyWith(isSending: false), ...state.chats]));
+    } else {
+      emit(state.copyWith(chats: [chat.copyWith(isSendingFaild: true), ...state.chats]));
+    }
   }
 
   Future<void> onMessageChange({required String message}) async {
@@ -87,7 +102,6 @@ class ChatCubit extends SafeCubit<ChatState> {
       if (files.length > 9) {
         files = files.sublist(0, 9);
         showSnackBar(AppString.maximumFileSelection(9), type: SnackBarType.warning);
-
       }
       emit(state.copyWith(filePath: files));
     }

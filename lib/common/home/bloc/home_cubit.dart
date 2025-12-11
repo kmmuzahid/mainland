@@ -8,6 +8,7 @@ import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/socket/notification_model.dart';
+import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/config/socket/socket_service.dart';
 import 'package:mainland/core/config/socket/stream_data_model.dart';
 import 'package:mainland/core/utils/app_utils.dart';
@@ -28,7 +29,7 @@ class HomeCubit extends SafeCubit<HomeState> {
   void init() async {
     fetchCount();
     _subscriptions = SocketService.instance.streamController.stream.listen((data) {
-      if (data.streamType == StreamType.notification) { 
+      if (data.streamType == StreamType.notification) {
         if (appRouter.current.name != 'NotificationRoute') {
           final notifiaction = data.data as NotificationModel;
           emit(state.copyWith(unreadNotification: state.unreadNotification + 1));
@@ -40,7 +41,13 @@ class HomeCubit extends SafeCubit<HomeState> {
         final bool isChatOpen = Utils.getRole() == Role.ORGANIZER
             ? state.currentIndex == 3
             : state.currentIndex == 4;
-        if (!isChatOpen) emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
+        if (!isChatOpen) {
+          final message = data.data as SocketMessageModel;
+          emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
+          FirebaseNotificationHandler.instance.showLocalNotification(
+            RemoteNotification(title: message.sender.name, body: message.text),
+          );
+        }
       }
     });
   }
