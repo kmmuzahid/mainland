@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/auth/model/us_states_model.dart';
-import 'package:mainland/common/auth/widgets/required_icon_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/other_widgets/dotted_border_container.dart';
-import 'package:mainland/core/config/route/app_router.dart';
-import 'package:mainland/core/config/route/app_router.gr.dart';
-import 'time_input_card.dart';
-import 'package:mainland/core/component/other_widgets/dual_field_row_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
 import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
@@ -19,7 +13,8 @@ import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/utils/app_utils.dart';
+import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
@@ -81,6 +76,7 @@ class TicketFormOne extends StatelessWidget {
               onTap: () async {
                 final result = await appRouter.push(
                   PreferenceRoute(
+                    includeSelectedSubcategory: false,
                     backgroundColor: AppColors.background,
                     header: Row(
                       children: [

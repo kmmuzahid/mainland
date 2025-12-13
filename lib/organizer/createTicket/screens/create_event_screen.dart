@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
-import 'package:mainland/core/config/route/app_router.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_state.dart';
 
 import '../cubit/create_ticket_cubit.dart';

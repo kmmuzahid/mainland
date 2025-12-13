@@ -87,7 +87,8 @@ class _PaymentWebViewState extends State<PaymentWebView> {
           },
           onNavigationRequest: (NavigationRequest request) async {
             if (request.url.contains('/payment/payment-success') ||
-                request.url.contains('/payment/success')) {
+                request.url.contains('/payment/success') ||
+                request.url.contains('stripe/success')) {
               widget.onSuccess();
               // final uri = Uri.parse(request.url);
               // final responce = await dioService.request(

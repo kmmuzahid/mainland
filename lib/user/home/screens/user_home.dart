@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/home/bloc/home_cubit.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
-import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/common/home/widgets/home_top_widget.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
@@ -40,7 +39,7 @@ class UserHome extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _topChild(),
+                  _topChild(context: context),
                   10.height,
                   CommonTextField(
                     backgroundColor: AppColors.backgroundWhite,
@@ -148,7 +147,8 @@ class UserHome extends StatelessWidget {
   }
 
 
-  Widget _topChild() {
+  Widget _topChild({required BuildContext context}) {
+    final authState = context.watch<AuthCubit>().state;
     return HomeTopWidget(
       state: homeState,
       startWidget: GestureDetector(
@@ -156,7 +156,11 @@ class UserHome extends StatelessWidget {
           // navigate to account screen.
           appRouter.push(SettingRoute(showBackButton: true));
         },
-        child: CommonImage(imageSrc: Assets.images.user.path, size: 36),
+        child: CommonImage(
+          imageSrc: authState.profileModel?.image ?? Assets.images.user.path,
+          size: 36,
+          borderRadius: 8,
+        ),
       ),
       middleWidget: CommonButton(
         borderColor: AppColors.iconColorBlack.withValues(alpha: .6),

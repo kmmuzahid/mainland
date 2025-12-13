@@ -18,5 +18,17 @@ abstract class ChatRepository {
     required List<XFile>? rowFiles,  
   });
 
+  Future<bool> deleteMessage({required String messageId});
+  Future<bool> editMessage({required String messageId, required String message});
+  Future<bool> reportChat({
+    required String chatId,
+    bool? privacyConcerns,
+    bool? obscene,
+    bool? defamation,
+    bool? copyrightViolations,
+    bool? eroticContent,
+    String? others,
+  });
+
 
 }

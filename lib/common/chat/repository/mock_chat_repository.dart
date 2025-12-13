@@ -11,14 +11,69 @@ import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
 import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/utils/app_utils.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/helpers/simulate_moc_repo.dart';
-import 'package:mainland/gen/assets.gen.dart';
+ 
 
 import '../model/chat_user_info.dart';
 
 class MockChatRepository implements ChatRepository {
   final DioService _dioService = getIt();
+  
+  @override
+  Future<bool> reportChat({
+    required String chatId,
+    bool? privacyConcerns,
+    bool? obscene,
+    bool? defamation,
+    bool? copyrightViolations,
+    bool? eroticContent,
+    String? others,
+  }) async {
+    final result = await _dioService.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.reportChat(chatId: chatId),
+        method: RequestMethod.POST,
+        jsonBody: {
+          'Privacy_concerns': privacyConcerns,
+          'Others': others,
+          'Obscene': obscene,
+          'Defamation': defamation,
+          'Copyright_violations': copyrightViolations,
+          'Erotic_content': eroticContent,
+        },
+      ),
+      responseBuilder: (data) => data,
+    );
+    return result.isSuccess;
+  }
+
+  @override
+  Future<bool> editMessage({required String messageId, required String message}) async {
+    final result = await _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.editMessage(messageId: messageId),
+        method: RequestMethod.PATCH,
+        jsonBody: {'text': message},
+      ),
+      responseBuilder: (data) => data,
+    );
+
+    return result.isSuccess;
+  }
+
+  @override
+  Future<bool> deleteMessage({required String messageId}) async {
+    final result = await _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.deleteMessage(messageId: messageId),
+        method: RequestMethod.DELETE,
+      ),
+      responseBuilder: (data) => data,
+    );
+
+    return result.isSuccess;
+  }
+
   @override
   Future<ResponseState<List<ChatListItemModel>?>> fetchChatList({required int page}) async {
     return _dioService.request(
@@ -58,6 +113,7 @@ class MockChatRepository implements ChatRepository {
         final model = SocketMessageModel.fromJson(e);
         return ChatModel(
           messageId: model.id,
+          updatedAt: model.updatedAt ?? DateTime.now(),
           chatType: ChatType.message,
           files: model.image,
           content: model.text,

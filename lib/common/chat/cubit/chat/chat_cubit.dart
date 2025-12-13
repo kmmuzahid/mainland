@@ -38,6 +38,7 @@ class ChatCubit extends SafeCubit<ChatState> {
           state.copyWith(
             chats: [
               ChatModel(
+                updatedAt: model.updatedAt ?? DateTime.now(),
                 messageId: model.id,
                 chatType: ChatType.message,
                 content: model.text,
@@ -85,7 +86,7 @@ class ChatCubit extends SafeCubit<ChatState> {
     );
   }
 
-  Future<void> send({required String userId}) async {
+Future<void> send({required String userId}) async {
     final chat = ChatModel(
       messageId: DateTime.now().millisecondsSinceEpoch.toString(),
       isSending: true,
@@ -94,22 +95,25 @@ class ChatCubit extends SafeCubit<ChatState> {
       files: state.filePath.map((e) => e.path).toList(),
       userInfo: ChatUserInfo(userId: userId, name: '', image: ''),
       createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
-    final files = state.filePath;
-    final messge = state.message;
     emit(state.copyWith(chats: [chat, ...state.chats], filePath: [], message: ''));
+
     final result = await _repository.sendMessage(
-      message: messge, chatId: chatId, rowFiles: files,
+      message: chat.content,
+      chatId: chatId,
+      rowFiles: state.filePath,
     );
-    if (result) {
-      final list = List.from(state.chats);
-      final index = state.chats.indexWhere((e) => e.messageId == chat.messageId);
-      list.removeAt(index);
-      emit(state.copyWith(chats: [...list]));
-    } else {
-      emit(state.copyWith(chats: [chat.copyWith(isSendingFaild: true), ...state.chats]));
+    final updatedChats = state.chats.map((e) {
+      if (e.messageId == chat.messageId) {
+        return e.copyWith(isSending: false, isSendingFaild: !result);
     }
-  }
+      return e;
+    }).toList();
+
+    emit(state.copyWith(chats: updatedChats));
+}
+
 
   Future<void> onMessageChange({required String message}) async {
     emit(state.copyWith(message: message));
@@ -142,6 +146,110 @@ class ChatCubit extends SafeCubit<ChatState> {
     final updatedList = List.of(state.filePath);
     updatedList.removeAt(index);
     emit(state.copyWith(filePath: updatedList));
+  }
+
+  Future<void> deleteMessage({required String messageId}) async {
+    final result = await _repository.deleteMessage(messageId: messageId);
+    if (result) {
+      final list = List.from(state.chats);
+      final index = state.chats.indexWhere((e) => e.messageId == messageId);
+      list.removeAt(index);
+      emit(state.copyWith(chats: [...list]));
+    }
+  }
+
+  Future<void> editMessage({
+    required String messageId,
+    required String message,
+    required int index,
+  }) async {
+    final result = await _repository.editMessage(messageId: messageId, message: message);
+    if (result) {
+      final list = List.from(state.chats);
+      final model = list[index];
+      list[index] = list[index].copyWith(
+        content: message,
+        isEdit: false,
+        createdAt: model.createdAt,
+        updatedAt: DateTime.now(),
+      );
+      emit(state.copyWith(chats: [...list], editIndex: -1));
+    } else {
+      final list = List.from(state.chats);
+      showSnackBar('Could not edit message', type: SnackBarType.error);
+      list[index] = list[index].copyWith(isEdit: false);
+      emit(state.copyWith(chats: [...list], editIndex: -1));
+    }
+  }
+
+  Future<void> resendMessage({required String messageId}) async {
+    final chat = state.chats.firstWhere((e) => e.messageId == messageId);
+
+    emit(
+      state.copyWith(
+        chats: state.chats.map((e) {
+          return e.messageId == messageId
+              ? e.copyWith(
+                  isSending: true,
+                  isSendingFaild: false,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                )
+              : e;
+        }).toList(),
+      ),
+    );
+
+    final result = await _repository.sendMessage(
+      message: chat.content,
+      chatId: chatId,
+      rowFiles: chat.files?.map(XFile.new).toList(),
+    );
+    emit(
+      state.copyWith(
+        chats: state.chats.map((e) {
+          return e.messageId == messageId
+              ? e.copyWith(
+                  isSending: false,
+                  isSendingFaild: !result,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                )
+              : e;
+        }).toList(),
+      ),
+    );
+  }
+
+  void enableEdit(int index) {
+    final list = List.from(state.chats);
+    if (state.editIndex != -1) {
+      list[state.editIndex] = list[state.editIndex].copyWith(isEdit: false);
+    }
+    list[index] = list[index].copyWith(isEdit: true);
+    emit(state.copyWith(chats: [...list], editIndex: index));
+  }
+
+  void disableEdit(int index) {
+    final list = List.from(state.chats);
+    list[index] = list[index].copyWith(isEdit: false);
+    emit(state.copyWith(chats: [...list], editIndex: -1));
+  }
+
+  Future<void> reportChat({
+    required String chatId,
+    required List<String> selectedReasons,
+    required String others,
+  }) async {
+    _repository.reportChat(
+      chatId: chatId,
+      privacyConcerns: selectedReasons.contains(AppString.privacyConcerns),
+      eroticContent: selectedReasons.contains(AppString.eroticContent),
+      obscene: selectedReasons.contains(AppString.obscene),
+      defamation: selectedReasons.contains(AppString.defamation),
+      copyrightViolations: selectedReasons.contains(AppString.copyrightViolations),
+      others: others,
+    );
   }
 
   @override

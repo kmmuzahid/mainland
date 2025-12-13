@@ -87,4 +87,11 @@ class ApiEndPoint {
   String chat = '/chat';
   String getMessages({required String chatId}) => '/message/$chatId';
   String sentMessage = '/message';
+  String deleteMessage({required String messageId}) => '/message/delete-message/$messageId';
+  String editMessage({required String messageId}) => '/message/update-message/$messageId';
+  String reportChat({required String chatId}) => '/chat/report/$chatId';
+
+  //stripe
+  String stripeLoginLink = '/stripe-account/connected-user/login-link';
+  String stripeConnectAccount = '/stripe-account/create-connected-account';
 }

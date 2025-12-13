@@ -188,15 +188,19 @@ class ProfileModel {
 }
 
 class StripeAccountInfo {
-  StripeAccountInfo({required this.stripeCustomerId});
-  final String stripeCustomerId;
+  StripeAccountInfo({required this.stripeAccountId, required this.loginUrl});
+  final String stripeAccountId;
+  final String loginUrl;
 
   factory StripeAccountInfo.fromJson(Map<String, dynamic> json) {
-    return StripeAccountInfo(stripeCustomerId: json['stripeCustomerId'] ?? '');
+    return StripeAccountInfo(
+      stripeAccountId: json['stripeAccountId'] ?? '',
+      loginUrl: json['loginUrl'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'stripeCustomerId': stripeCustomerId};
+    return {'stripeCustomerId': stripeAccountId};
   }
 }
 

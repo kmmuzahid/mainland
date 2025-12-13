@@ -8,6 +8,7 @@ import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/profile_model.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
+import 'package:mainland/common/payment/cubit/payment_cubit.dart';
 import 'package:mainland/common/setting/cubit/faq_cubit.dart';
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
@@ -17,8 +18,8 @@ import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
-import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
@@ -39,284 +40,296 @@ class SettingScreen extends StatelessWidget {
     final authState = context.watch<AuthCubit>().state;
     return Scaffold(
       appBar: showBackButton ? const CommonAppBar() : null,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            showBackButton ? const SizedBox.shrink() : 10.height,
+      body: CubitScope(
+        create: () => PaymentCubit(authCubit),
+        builder: (context, cubit, state) => SingleChildScrollView(
+          child: Column(
+            children: [
+              showBackButton ? const SizedBox.shrink() : 10.height,
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommonText(
-                      text: AppString.myAccount,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-                    ).start,
-                    8.height,
-                    GestureDetector(
-                      onTap: () {
-                        commonDialog(
-                          child: BlocBuilder<AuthCubit, AuthState>(
-                            builder: (context, state) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  24.height,
-                                  GestureDetector(
-                                    onTap: authCubit.pickImage,
-                                    child: CommonImage(
-                                      imageSrc:
-                                          state.pickedImage?.path ??
-                                          (authCubit.state.profileModel?.image ??
-                                              Assets.images.user.path),
-                                      size: 63,
-                                    ),
-                                  ),
-                                  22.height,
-                                  CommonButton(
-                                    buttonWidth: 150.w,
-                                    isLoading: state.isLoading,
-                                    titleText: AppString.uploadImage,
-                                    onTap: () {
-                                      if (authCubit.state.pickedImage != null)
-                                        authCubit.updateProfile(image: state.pickedImage);
-                                      appRouter.pop();
-                                    },
-                                  ),
-                                  8.height,
-                                  CommonButton(
-                                    buttonWidth: 150.w,
-                                    titleText: AppString.removeImage,
-                                    onTap: () {
-                                      authCubit.updateProfile(isDeleteImage: true);
-                                    },
-                                  ),
-                                  14.height,
-                                  CommonButton(
-                                    titleText: AppString.cancel,
-                                    borderColor: AppColors.error,
-                                    titleColor: AppColors.error,
-                                    onTap: () {
-                                      authCubit.clearImage();
-                                      appRouter.pop();
-                                    },
-                                    buttonColor: AppColors.backgroundWhite,
-                                  ),
-                                  24.height,
-                                ],
-                              );
-                            },
-                          ),
-                          context: context,
-                        );
-                      },
-                      child: CommonImage(
-                        borderRadius: 4,
-                        imageSrc: authCubit.state.profileModel?.image ?? Assets.images.user.path,
-                        size: 36,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CommonText(
+                        text: AppString.myAccount,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
                       ).start,
-                    ),
-                    CommonText(
-                      top: 8,
-                      text: context.read<AuthCubit>().state.profileModel?.name ?? '',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ).start,
-                    10.height,
-                    accountSummery(authState.profileModel),
-                    15.height,
-                    if (Utils.getRole() == Role.ORGANIZER) ...[
-                      _menuItems(
-                        context: context,
-                        title: AppString.sendNotificationAboutAnEvent,
-                        showInfo: true,
+                      8.height,
+                      GestureDetector(
                         onTap: () {
-                          appRouter.push(
-                            AllEventRoute(
-                              onTap: (eventId, title) {
-                                appRouter.push(
-                                  EventNotificationEnableRoute(title: title, id: eventId),
+                          commonDialog(
+                            child: BlocBuilder<AuthCubit, AuthState>(
+                              builder: (context, state) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    24.height,
+                                    GestureDetector(
+                                      onTap: authCubit.pickImage,
+                                      child: CommonImage(
+                                        imageSrc:
+                                            state.pickedImage?.path ??
+                                            (authCubit.state.profileModel?.image ??
+                                                Assets.images.user.path),
+                                        size: 63,
+                                      ),
+                                    ),
+                                    22.height,
+                                    CommonButton(
+                                      buttonWidth: 150.w,
+                                      isLoading: state.isLoading,
+                                      titleText: AppString.uploadImage,
+                                      onTap: () {
+                                        if (authCubit.state.pickedImage != null)
+                                          authCubit.updateProfile(image: state.pickedImage);
+                                        appRouter.pop();
+                                      },
+                                    ),
+                                    8.height,
+                                    CommonButton(
+                                      buttonWidth: 150.w,
+                                      titleText: AppString.removeImage,
+                                      onTap: () {
+                                        authCubit.updateProfile(isDeleteImage: true);
+                                      },
+                                    ),
+                                    14.height,
+                                    CommonButton(
+                                      titleText: AppString.cancel,
+                                      borderColor: AppColors.error,
+                                      titleColor: AppColors.error,
+                                      onTap: () {
+                                        authCubit.clearImage();
+                                        appRouter.pop();
+                                      },
+                                      buttonColor: AppColors.backgroundWhite,
+                                    ),
+                                    24.height,
+                                  ],
                                 );
                               },
-                              title: 'Select an Event to send a Notification',
                             ),
+                            context: context,
+                          );
+                        },
+                        child: CommonImage(
+                          borderRadius: 4,
+                          imageSrc: authCubit.state.profileModel?.image ?? Assets.images.user.path,
+                          size: 36,
+                        ).start,
+                      ),
+                      CommonText(
+                        top: 8,
+                        text: context.read<AuthCubit>().state.profileModel?.name ?? '',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ).start,
+                      10.height,
+                      accountSummery(authState.profileModel),
+                      15.height,
+                      if (Utils.getRole() == Role.ORGANIZER) ...[
+                        _menuItems(
+                          context: context,
+                          title: AppString.sendNotificationAboutAnEvent,
+                          showInfo: true,
+                          onTap: () {
+                            appRouter.push(
+                              AllEventRoute(
+                                onTap: (eventId, title) {
+                                  appRouter.push(
+                                    EventNotificationEnableRoute(title: title, id: eventId),
+                                  );
+                                },
+                                title: 'Select an Event to send a Notification',
+                              ),
+                            );
+                          },
+                        ),
+                        Utils.divider(),
+                      ],
+
+                      _menuItems(
+                        context: context,
+                        title: AppString.aboutUs,
+                        onTap: () {
+                          appRouter.push(
+                            ShowInfoRoute(title: AppString.aboutUs, infoType: InfoType.about_us),
                           );
                         },
                       ),
                       Utils.divider(),
-                    ],
-
-                    _menuItems(
-                      context: context,
-                      title: AppString.aboutUs,
-                      onTap: () {
-                        appRouter.push(
-                          ShowInfoRoute(title: AppString.aboutUs, infoType: InfoType.about_us),
-                        );
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.faqHelp,
-                      onTap: () {
-                        appRouter.push(FaqRoute(faqType: FaqType.user));
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.contactUs,
-                      onTap: () {
-                        appRouter.push(const ContactUsRoute());
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.linkYourBankAccount,
-                      onTap: () {},
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.emailPreferences,
-                      onTap: () {
-                        appRouter.push(const EmailPreferenceRoute());
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.changePassword,
-                      onTap: () {
-                        appRouter.push(const ChangePasswordRoute());
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.deleteAccount,
-                      onTap: () {
-                        String password = '';
-                        String reason = '';
-                        CommonDialogWithActions(
-                          title: AppString.deleteAccount,
-                          subTitle: AppString.accountDeleteMessage,
-                          content: [
-                            CommonTextField(
-                              validationType: ValidationType.validatePassword,
-                              hintText: AppString.password,
-                              onSaved: (value, c) {
-                                password = value;
-                              },
-                            ),
-                            10.height,
-                            CommonMultilineTextField(
-                              onSaved: (value, c) {
-                                reason = value;
-                              },
-                              height: 110,
-                              validationType: ValidationType.validateRequired,
-                              hintText: AppString.enterYourReason,
-                            ),
-                          ],
-                          validationRequired: true,
-                          onConfirm: () {
-                            authCubit.deleteAccount(password: password, reason: reason);
-                          },
-                          context: context,
-                        );
-                      },
-                    ), 
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: AppString.locations,
-                      subTitle:
-                          '${authState.profileModel?.address.city ?? ''}, ${authState.profileModel?.address.street ?? ''}, ${authState.profileModel?.address.country ?? ''}',
-                      onTap: () {
-                        // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
-                        appRouter.push(const LocationRoute());
-                      },
-                    ),
-                    Utils.divider(),
-                    _menuItems(
-                      context: context,
-                      title: Utils.getRole() == Role.ORGANIZER
-                          ? 'Switch to Attendee'
-                          : 'Switch to Organizer',
-                      onTap: () {
-                        context.read<AuthCubit>().switchRole();
-                      },
-                    ),
-                    20.height,
-                    CommonButton(
-                      titleText: AppString.logOut,
-                      onTap: () {
-                        context.read<AuthCubit>().logout();
-                      },
-                    ).center,
-                    10.height,
-                    CommonText(
-                      text: '${AppString.appName} v $versionCode',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ).center,
-
-                    CommonText(
-                      text: AppString.copyright,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ).center,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            appRouter.push(
-                              ShowInfoRoute(title: AppString.termsOfuse, infoType: InfoType.terms),
-                            );
-                          },
-                          child: CommonText(
-                            text: AppString.termsOfuse,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            textColor: AppColors.primaryColor,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primaryColor,
-                          ),
-                        ),
-                        const CommonText(text: ' & ', fontSize: 12, fontWeight: FontWeight.w400),
-                        GestureDetector(
-                          onTap: () {
-                            appRouter.push(
-                              ShowInfoRoute(
-                                title: AppString.privacyNotice,
-                                infoType: InfoType.privacy,
+                      _menuItems(
+                        context: context,
+                        title: AppString.faqHelp,
+                        onTap: () {
+                          appRouter.push(FaqRoute(faqType: FaqType.user));
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: AppString.contactUs,
+                        onTap: () {
+                          appRouter.push(const ContactUsRoute());
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title:
+                            authState.profileModel?.stripeAccountInfo.stripeAccountId.isNotEmpty ??
+                                false
+                            ? 'Open your (Bank) Account'
+                            : AppString.linkYourBankAccount,
+                        onTap: () {
+                          cubit.onPaymentSettingClick();
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: AppString.emailPreferences,
+                        onTap: () {
+                          appRouter.push(const EmailPreferenceRoute());
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: AppString.changePassword,
+                        onTap: () {
+                          appRouter.push(const ChangePasswordRoute());
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: AppString.deleteAccount,
+                        onTap: () {
+                          String password = '';
+                          String reason = '';
+                          CommonDialogWithActions(
+                            title: AppString.deleteAccount,
+                            subTitle: AppString.accountDeleteMessage,
+                            content: [
+                              CommonTextField(
+                                validationType: ValidationType.validatePassword,
+                                hintText: AppString.password,
+                                onSaved: (value, c) {
+                                  password = value;
+                                },
                               ),
-                            );
-                          },
-                          child: CommonText(
-                            text: AppString.privacyNotice,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            textColor: AppColors.primaryColor,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primaryColor,
+                              10.height,
+                              CommonMultilineTextField(
+                                onSaved: (value, c) {
+                                  reason = value;
+                                },
+                                height: 110,
+                                validationType: ValidationType.validateRequired,
+                                hintText: AppString.enterYourReason,
+                              ),
+                            ],
+                            validationRequired: true,
+                            onConfirm: () {
+                              authCubit.deleteAccount(password: password, reason: reason);
+                            },
+                            context: context,
+                          );
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: AppString.locations,
+                        subTitle:
+                            '${authState.profileModel?.address.city ?? ''}, ${authState.profileModel?.address.street ?? ''}, ${authState.profileModel?.address.country ?? ''}',
+                        onTap: () {
+                          // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
+                          appRouter.push(const LocationRoute());
+                        },
+                      ),
+                      Utils.divider(),
+                      _menuItems(
+                        context: context,
+                        title: Utils.getRole() == Role.ORGANIZER
+                            ? 'Switch to Attendee'
+                            : 'Switch to Organizer',
+                        onTap: () {
+                          context.read<AuthCubit>().switchRole();
+                        },
+                      ),
+                      20.height,
+                      CommonButton(
+                        titleText: AppString.logOut,
+                        onTap: () {
+                          context.read<AuthCubit>().logout();
+                        },
+                      ).center,
+                      10.height,
+                      CommonText(
+                        text: '${AppString.appName} v $versionCode',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ).center,
+
+                      CommonText(
+                        text: AppString.copyright,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ).center,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              appRouter.push(
+                                ShowInfoRoute(
+                                  title: AppString.termsOfuse,
+                                  infoType: InfoType.terms,
+                                ),
+                              );
+                            },
+                            child: CommonText(
+                              text: AppString.termsOfuse,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              textColor: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primaryColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    30.height,
-                  ],
+                          const CommonText(text: ' & ', fontSize: 12, fontWeight: FontWeight.w400),
+                          GestureDetector(
+                            onTap: () {
+                              appRouter.push(
+                                ShowInfoRoute(
+                                  title: AppString.privacyNotice,
+                                  infoType: InfoType.privacy,
+                                ),
+                              );
+                            },
+                            child: CommonText(
+                              text: AppString.privacyNotice,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              textColor: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      30.height,
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -15,6 +15,7 @@ import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+import 'package:flutter/scheduler.dart';
 
 //git add remote client
 //git remote set-url client https://githubAccessToken@github.com/gallorobbie7-cmd/The-Leaderboard-App.git
@@ -80,27 +81,34 @@ void _diInit() {
 }
  
 
+
 void showSnackBar(String text, {required SnackBarType type}) {
-  final scaffoldMessenger = rootScaffoldMessengerKey.currentState;
+  SchedulerBinding.instance.addPostFrameCallback((_) {
+    final scaffoldMessenger = rootScaffoldMessengerKey.currentState;
+    if (scaffoldMessenger == null) return;
 
-  if (scaffoldMessenger == null) return; 
+    scaffoldMessenger.hideCurrentSnackBar();
 
-  scaffoldMessenger.hideCurrentSnackBar();
-
-  scaffoldMessenger.showSnackBar(
-    SnackBar(
-      content: Text(
-        text,
-        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          text,
+          style: const TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: _getSnackBarColor(type),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        duration: const Duration(seconds: 2),
+        elevation: 4,
       ),
-      backgroundColor: _getSnackBarColor(type),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      duration: const Duration(seconds: 2),
-      elevation: 4,
-    ),
-  );
+    );
+  });
 }
 
 
