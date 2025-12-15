@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/event/model/event_details_model.dart';
 import 'package:mainland/common/event/repository/event_details_repository.dart';
@@ -8,7 +10,6 @@ import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/ticketManage/model/qr_code_model.dart';
@@ -62,14 +63,23 @@ class VenueCubit extends SafeCubit<VenueState> {
       emit(state.copyWith(image: image));
       if (image != null) {
         final qr = await QrCodeUtils.instance.decodeQRFromGallery(image.path);
-        if (qr != null && qr.startsWith('{')) {
-          emit(state.copyWith(isEventDetailsLoading: true));
-          final model = QrCodeModel.fromJson(qr);
-          _getEventDetails(model, userId);
-        } else {
-          showSnackBar('Sorry!! wrong QR code', type: SnackBarType.warning);
-        }
+        getDetails(qr: qr, userId: userId);
       }
+    }
+  }
+
+  Future<void> getDetails({required String? qr, required String userId, Uint8List? image}) async {
+    print('===================${image?.length}');
+    if (image != null) {
+      final file = XFile.fromData(image);
+      emit(state.copyWith(image: file, openCamera: false));
+    }
+    if (qr != null && qr.startsWith('{')) {
+      emit(state.copyWith(isEventDetailsLoading: true, openCamera: false));
+      final model = QrCodeModel.fromJson(qr);
+      _getEventDetails(model, userId);
+    } else {
+      showSnackBar('Sorry!! wrong QR code', type: SnackBarType.warning);
     }
   }
 
@@ -89,7 +99,7 @@ class VenueCubit extends SafeCubit<VenueState> {
     emit(state.copyWith(venueHistoryModel: result.data, isHistoryLoading: false));
   }
 
-  Future<void> _getEventDetails(QrCodeModel model, String ownerId) async { 
+  Future<void> _getEventDetails(QrCodeModel model, String ownerId) async {
     if (model.eventCode != state.eventCode) {
       showSnackBar('Sorry, this ticket is not valid for this event.', type: SnackBarType.warning);
       emit(state.copyWith(isEventDetailsLoading: false));

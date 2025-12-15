@@ -531,7 +531,7 @@ class ChatScreen extends StatelessWidget {
           10.height,
           CommonButton(
             titleText: AppString.report,
-            onTap: () {
+            onTap: () { 
               cubit.reportChat(
                 chatId: chatListItemModel.chatId,
                 selectedReasons: selectedReasons,

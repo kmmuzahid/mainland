@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,35 +82,32 @@ void _diInit() {
 }
  
 
-
+ 
 void showSnackBar(String text, {required SnackBarType type}) {
   SchedulerBinding.instance.addPostFrameCallback((_) {
-    final scaffoldMessenger = rootScaffoldMessengerKey.currentState;
-    if (scaffoldMessenger == null) return;
+    final context = navigatorRouterKey.currentContext;
+    if (context == null) return;
 
-    scaffoldMessenger.hideCurrentSnackBar();
-
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          text,
-          style: const TextStyle(
-            color: AppColors.textWhite,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: _getSnackBarColor(type),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        duration: const Duration(seconds: 2),
-        elevation: 4,
+    Flushbar(
+      messageText: Text(
+        text,
+        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
       ),
-    );
+      backgroundColor: _getSnackBarColor(type),
+      duration: const Duration(seconds: 2),
+      margin: const EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      boxShadows: const [
+        BoxShadow(
+          blurRadius: 4,
+          color: Colors.black26, // matches SnackBar elevation ≈ 4
+        ),
+      ],
+      animationDuration: const Duration(milliseconds: 250),
+    ).show(context);
   });
 }
+
 
 
 

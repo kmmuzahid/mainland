@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/utils/app_utils.dart';
@@ -14,7 +16,7 @@ class QrScannerBox extends StatelessWidget {
   final bool isCameraOpen;
   final Widget? qrImage;
   final VoidCallback onTap;
-  final ValueChanged<String> onDetect;
+  final void Function(String, Uint8List?) onDetect;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class QrScannerBox extends StatelessWidget {
 }
 
 class _Scanner extends StatefulWidget {
-  final ValueChanged<String> onDetect;
+  final void Function(String, Uint8List?) onDetect;
   const _Scanner({required this.onDetect});
 
   @override
@@ -71,9 +73,9 @@ class _ScannerState extends State<_Scanner> {
     if (locked) return;
     final code = cap.barcodes.first.rawValue;
     if (code == null || code.isEmpty) return;
-
+    
     locked = true;
-    widget.onDetect(code);
+    widget.onDetect(code, cap.barcodes.first.rawBytes);
   }
 
   @override

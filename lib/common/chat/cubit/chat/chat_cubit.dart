@@ -10,6 +10,7 @@ import 'package:mainland/core/component/other_widgets/permission_handler_helper.
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
+import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/config/socket/socket_service.dart';
 import 'package:mainland/core/config/socket/stream_data_model.dart';
@@ -86,7 +87,7 @@ class ChatCubit extends SafeCubit<ChatState> {
     );
   }
 
-Future<void> send({required String userId}) async {
+  Future<void> send({required String userId}) async {
     final chat = ChatModel(
       messageId: DateTime.now().millisecondsSinceEpoch.toString(),
       isSending: true,
@@ -107,13 +108,12 @@ Future<void> send({required String userId}) async {
     final updatedChats = state.chats.map((e) {
       if (e.messageId == chat.messageId) {
         return e.copyWith(isSending: false, isSendingFaild: !result);
-    }
+      }
       return e;
     }).toList();
 
     emit(state.copyWith(chats: updatedChats));
-}
-
+  }
 
   Future<void> onMessageChange({required String message}) async {
     emit(state.copyWith(message: message));
@@ -241,7 +241,7 @@ Future<void> send({required String userId}) async {
     required List<String> selectedReasons,
     required String others,
   }) async {
-    _repository.reportChat(
+    await _repository.reportChat(
       chatId: chatId,
       privacyConcerns: selectedReasons.contains(AppString.privacyConcerns),
       eroticContent: selectedReasons.contains(AppString.eroticContent),
@@ -250,6 +250,7 @@ Future<void> send({required String userId}) async {
       copyrightViolations: selectedReasons.contains(AppString.copyrightViolations),
       others: others,
     );
+    appRouter.pop();
   }
 
   @override

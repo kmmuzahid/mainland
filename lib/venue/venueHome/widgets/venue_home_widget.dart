@@ -51,8 +51,12 @@ class VenueHomeWidget extends StatelessWidget {
                         )
                       : null),
             onTap: cubit.scanQR,
-            onDetect: (data) {
-              print(data);
+            onDetect: (data, image) {
+              cubit.getDetails(
+                qr: data,
+                userId: authCubit.state.profileModel?.id ?? '',
+                image: image,
+              );
             },
           ),
 

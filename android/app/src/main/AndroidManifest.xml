@@ -26,7 +26,8 @@
         android:label="The Mainland"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
-                  <meta-data
+          
+          <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key"/>
 
