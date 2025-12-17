@@ -103,6 +103,7 @@ class ApiEndPoint {
 
   //chat
   String chat = '/chat';
+  String createChat(String userId) => '/chat/$userId';
   String getMessages({required String chatId}) => '/message/$chatId';
   String sentMessage = '/message';
   String deleteMessage({required String messageId}) =>

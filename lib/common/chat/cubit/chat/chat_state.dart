@@ -12,6 +12,8 @@ class ChatState {
     this.message = '',
     this.unread = 0,
     this.editIndex = -1,
+    this.chatId = '',
+    this.userId,
   });
 
   final List<ChatModel> chats;
@@ -21,6 +23,8 @@ class ChatState {
   final List<XFile> filePath;
   final String message;
   final int editIndex;
+  final String chatId;
+  final String? userId;
 
   ChatState copyWith({
     List<ChatModel>? chats,
@@ -30,6 +34,8 @@ class ChatState {
     String? message,
     int? unread,
     int? editIndex,
+    String? chatId,
+    String? userId,
   }) {
     return ChatState(
       chats: chats ?? this.chats,
@@ -39,6 +45,8 @@ class ChatState {
       filePath: filePath ?? this.filePath,
       message: message ?? this.message,
       editIndex: editIndex ?? this.editIndex,
+      chatId: chatId ?? this.chatId,
+      userId: userId ?? this.userId,
     );
   }
 
@@ -54,7 +62,9 @@ class ChatState {
         other.unread == unread &&
         other.filePath == filePath &&
         other.message == message &&
-        other.editIndex == editIndex;
+        other.editIndex == editIndex &&
+        other.chatId == chatId &&
+        other.userId == userId;
   }
 
   @override
@@ -65,6 +75,8 @@ class ChatState {
         unread.hashCode ^
         filePath.hashCode ^
         message.hashCode ^
-        editIndex.hashCode;
+        editIndex.hashCode ^
+        chatId.hashCode ^
+        userId.hashCode;
   }
 }

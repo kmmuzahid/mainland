@@ -7,6 +7,7 @@ import 'package:mainland/user/preferense/model/sub_category_model.dart';
 class EventDetailsModel {
   final String? id;
   final String? userId;
+  final String? chatId;
   final String? eventName;
   final String? image;
   final List<Category>? category;
@@ -73,6 +74,7 @@ class EventDetailsModel {
     this.eventCode,
     this.createdAt,
     this.updatedAt,
+    this.chatId,
   });
 
   factory EventDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -80,21 +82,30 @@ class EventDetailsModel {
       id: json['_id'],
       notification: json['notification'] ?? '',
       userId: json['userId'],
+      chatId: json['chatId'],
       eventName: json['eventName'],
       image: json['image'],
-      category: (json['category'] as List?)?.map((e) => Category.fromJson(e)).toList(),
+      category: (json['category'] as List?)
+          ?.map((e) => Category.fromJson(e))
+          .toList(),
       tags: json['tags'],
       description: json['description'],
       eventDate: Utils.parseDate(json['eventDate']),
-      startTime: json['startTime'] != null ? (json['startTime'] as String).toTimeOfDay12() : null,
-      endTime: json['endTime'] != null ? (json['endTime'] as String).toTimeOfDay12() : null,
+      startTime: json['startTime'] != null
+          ? (json['startTime'] as String).toTimeOfDay12()
+          : null,
+      endTime: json['endTime'] != null
+          ? (json['endTime'] as String).toTimeOfDay12()
+          : null,
       streetAddress: json['streetAddress'],
       streetAddress2: json['streetAddress2'],
       city: json['city'],
       state: json['state'],
       country: json['country'],
       eventStatus: json['EventStatus'],
-      tickets: (json['tickets'] as List?)?.map((e) => Ticket.fromJson(e)).toList(),
+      tickets: (json['tickets'] as List?)
+          ?.map((e) => Ticket.fromJson(e))
+          .toList(),
       ticketSaleStart: Utils.parseDate(json['ticketSaleStart']),
       preSaleStart: Utils.parseDate(json['preSaleStart']),
       preSaleEnd: Utils.parseDate(json['preSaleEnd']),
@@ -121,7 +132,9 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      categoryId: json['categoryId'] != null ? CategoryIdModel.fromJson(json['categoryId']) : null,
+      categoryId: json['categoryId'] != null
+          ? CategoryIdModel.fromJson(json['categoryId'])
+          : null,
       subCategory: (json['subCategory'] as List?)
           ?.map((e) => SubCategoryModel.fromJson(e))
           .toList(),
@@ -148,7 +161,13 @@ class Ticket {
   final List<dynamic>? ticketBuyerId;
   final String? id;
 
-  Ticket({this.type, this.price, this.availableUnits, this.ticketBuyerId, this.id});
+  Ticket({
+    this.type,
+    this.price,
+    this.availableUnits,
+    this.ticketBuyerId,
+    this.id,
+  });
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
     return Ticket(

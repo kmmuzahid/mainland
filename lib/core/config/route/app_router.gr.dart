@@ -318,6 +318,7 @@ class ChatRoute extends _i40.PageRouteInfo<ChatRouteArgs> {
     required _i46.ChatListItemModel chatListItemModel,
     _i41.Key? key,
     _i41.Widget? action,
+    String? userId,
     List<_i40.PageRouteInfo>? children,
   }) : super(
          ChatRoute.name,
@@ -325,6 +326,7 @@ class ChatRoute extends _i40.PageRouteInfo<ChatRouteArgs> {
            chatListItemModel: chatListItemModel,
            key: key,
            action: action,
+           userId: userId,
          ),
          initialChildren: children,
        );
@@ -339,13 +341,19 @@ class ChatRoute extends _i40.PageRouteInfo<ChatRouteArgs> {
         chatListItemModel: args.chatListItemModel,
         key: args.key,
         action: args.action,
+        userId: args.userId,
       );
     },
   );
 }
 
 class ChatRouteArgs {
-  const ChatRouteArgs({required this.chatListItemModel, this.key, this.action});
+  const ChatRouteArgs({
+    required this.chatListItemModel,
+    this.key,
+    this.action,
+    this.userId,
+  });
 
   final _i46.ChatListItemModel chatListItemModel;
 
@@ -353,9 +361,11 @@ class ChatRouteArgs {
 
   final _i41.Widget? action;
 
+  final String? userId;
+
   @override
   String toString() {
-    return 'ChatRouteArgs{chatListItemModel: $chatListItemModel, key: $key, action: $action}';
+    return 'ChatRouteArgs{chatListItemModel: $chatListItemModel, key: $key, action: $action, userId: $userId}';
   }
 
   @override
@@ -364,12 +374,16 @@ class ChatRouteArgs {
     if (other is! ChatRouteArgs) return false;
     return chatListItemModel == other.chatListItemModel &&
         key == other.key &&
-        action == other.action;
+        action == other.action &&
+        userId == other.userId;
   }
 
   @override
   int get hashCode =>
-      chatListItemModel.hashCode ^ key.hashCode ^ action.hashCode;
+      chatListItemModel.hashCode ^
+      key.hashCode ^
+      action.hashCode ^
+      userId.hashCode;
 }
 
 /// generated route for

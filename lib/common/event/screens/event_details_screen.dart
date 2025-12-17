@@ -342,7 +342,7 @@ class EventDetailsScreen extends StatelessWidget {
             appRouter.push(
               ChatRoute(
                 chatListItemModel: ChatListItemModel(
-                  chatId: '',
+                  chatId: eventDetails?.chatId ?? '',
                   userImage: Assets.images.sampleItem3.path,
                   userName: 'Organizer XYZ',
                   userStatus: UserStatus.online,
@@ -350,6 +350,7 @@ class EventDetailsScreen extends StatelessWidget {
                   lastMessage: '',
                   isRead: false,
                 ),
+                userId: eventDetails?.userId,
               ),
             );
           },

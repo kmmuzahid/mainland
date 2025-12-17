@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/chat/cubit/chat/chat_cubit.dart';
-import 'package:mainland/common/chat/cubit/chat/chat_state.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
 import 'package:mainland/common/chat/widgets/file_thumbnail_grid.dart';
@@ -15,7 +14,6 @@ import 'package:mainland/common/chat/widgets/upload_files_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
-import 'package:mainland/core/component/other_widgets/common_draggable_bottom_sheet.dart';
 import 'package:mainland/core/component/other_widgets/muiltiple_selector.dart';
 import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
 import 'package:mainland/core/component/pop_up/common_popup_menu.dart';
@@ -26,28 +24,33 @@ import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/bloc/cubit_scope.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class ChatScreen extends StatelessWidget {
-  ChatScreen({required this.chatListItemModel, super.key, this.action})
-    : chatIemWidth = (Utils.deviceSize.width - 32) * .7;
+  ChatScreen({
+    required this.chatListItemModel,
+    super.key,
+    this.action,
+    this.userId,
+  }) : chatIemWidth = (Utils.deviceSize.width - 32) * .7;
   final Widget? action;
   final double chatIemWidth;
   final ChatListItemModel chatListItemModel;
+  final String? userId;
 
   @override
   Widget build(BuildContext context) => CubitScope(
-    create: () => ChatCubit(chatListItemModel.chatId)..init(),
+    create: () =>
+        ChatCubit()
+          ..init(chatId: chatListItemModel.chatId, oppositeUserId: userId),
     builder: (context, cubit, state) {
-      final userId = context.read<AuthCubit>().state.profileModel?.id;
+      final selfUserId = context.read<AuthCubit>().state.profileModel?.id;
       return Scaffold(
         appBar: _appBar(context, cubit),
         backgroundColor: AppColors.background,
@@ -74,13 +77,16 @@ class ChatScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             if (state.filePath.isNotEmpty) ...[
-                              UploadFilesWidget(files: state.filePath, onRemove: cubit.removeFile),
+                              UploadFilesWidget(
+                                files: state.filePath,
+                                onRemove: cubit.removeFile,
+                              ),
                               const Divider(color: Colors.white),
                             ],
                             CommonTextField(
                               hintText: AppString.typeYourMessage,
                               backgroundColor: AppColors.greay50,
-                              suffixIcon: _suffix(cubit, formKey, userId),
+                              suffixIcon: _suffix(cubit, formKey, selfUserId),
                               key: Key(state.message),
                               validationType: ValidationType.notRequired,
                               borderColor: AppColors.greay50,
@@ -126,7 +132,7 @@ class ChatScreen extends StatelessWidget {
           onTap: () {
             if (formKey.currentState?.validate() == true) {
               formKey.currentState?.save();
-              cubit.send(userId: userId ?? '');
+              cubit.send(selfId: userId ?? '');
             }
           },
           child: Icon(Icons.send, color: AppColors.greay500),
@@ -158,7 +164,11 @@ class ChatScreen extends StatelessWidget {
                   validationType: ValidationType.notRequired,
                   borderColor: AppColors.greay50,
                   onSaved: (value, controller) {
-                    cubit.editMessage(message: value, messageId: model.messageId, index: index);
+                    cubit.editMessage(
+                      message: value,
+                      messageId: model.messageId,
+                      index: index,
+                    );
                   },
                 ),
                 Row(
@@ -188,15 +198,23 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _chatItem(ChatModel model, BuildContext context, ChatCubit cubit, int index) {
-    final bool isImageOnly = model.files?.isNotEmpty == true && model.content.isEmpty;
+  Widget _chatItem(
+    ChatModel model,
+    BuildContext context,
+    ChatCubit cubit,
+    int index,
+  ) {
+    final bool isImageOnly =
+        model.files?.isNotEmpty == true && model.content.isEmpty;
     final Color isMeBackground = AppColors.primaryColor;
     final Color isMeText = AppColors.textWhite;
-    final bool isMe = model.userInfo.userId == context.read<AuthCubit>().state.profileModel?.id;
+    final bool isMe =
+        model.userInfo.userId ==
+        context.read<AuthCubit>().state.profileModel?.id;
     //return edit if edit
-    if (model.isEdit) return editMessageFiled(model, context, cubit, index, isMe);
-    final bool isFaild = model.isSendingFaild;
-    final bool isSending = model.isSending;
+    if (model.isEdit)
+      return editMessageFiled(model, context, cubit, index, isMe);
+
     final bool isEdited = model.createdAt != model.updatedAt;
     LongPressStartDetails? details;
     return Column(
@@ -204,7 +222,10 @@ class ChatScreen extends StatelessWidget {
         Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: chatIemWidth, minWidth: 105.w),
+            constraints: BoxConstraints(
+              maxWidth: chatIemWidth,
+              minWidth: 105.w,
+            ),
             child: GestureDetector(
               onLongPressStart: (value) {
                 details = value;
@@ -216,7 +237,9 @@ class ChatScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isImageOnly
                       ? null
-                      : (isMe ? isMeBackground : getTheme.dividerColor.withAlpha(20)),
+                      : (isMe
+                            ? isMeBackground
+                            : getTheme.dividerColor.withAlpha(20)),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Padding(
@@ -274,7 +297,8 @@ class ChatScreen extends StatelessWidget {
             child: CommonText(
               left: isMe ? 0 : 10.w,
               right: isMe ? 10.w : 0,
-              text: '${Utils.formatDateTime(model.createdAt)} ${isEdited ? ' [Edited]' : ''}',
+              text:
+                  '${Utils.formatDateTime(model.createdAt)} ${isEdited ? ' [Edited]' : ''}',
               textColor: AppColors.primaryText,
             ),
           ),
@@ -318,9 +342,10 @@ class ChatScreen extends StatelessWidget {
     int index,
   ) {
     final String phoneNumber =
-        RegExp(
-          r'(?:\+?880|00880)?1[3-9]\d{8}',
-        ).firstMatch(model.content)?.group(0)?.replaceAll(RegExp(r'[^0-9+]'), '') ??
+        RegExp(r'(?:\+?880|00880)?1[3-9]\d{8}')
+            .firstMatch(model.content)
+            ?.group(0)
+            ?.replaceAll(RegExp(r'[^0-9+]'), '') ??
         '';
     if (details != null)
       _showPopupMenu(
@@ -353,14 +378,20 @@ class ChatScreen extends StatelessWidget {
             if (await canLaunchUrl(Uri.parse(phoneUrl))) {
               await launchUrl(Uri.parse(phoneUrl));
             } else {
-              showSnackBar('Could not launch phone app', type: SnackBarType.error);
+              showSnackBar(
+                'Could not launch phone app',
+                type: SnackBarType.error,
+              );
             }
           } else if (value == 'Reply') {
           } else if (value == 'Message') {
             if (await canLaunchUrl(Uri(scheme: 'sms', path: phoneNumber))) {
               await launchUrl(Uri(scheme: 'sms', path: phoneNumber));
             } else {
-              showSnackBar('Could not launch messaging app', type: SnackBarType.error);
+              showSnackBar(
+                'Could not launch messaging app',
+                type: SnackBarType.error,
+              );
             }
           } else if (value == 'Edit') {
             cubit.enableEdit(index);
@@ -425,7 +456,11 @@ class ChatScreen extends StatelessWidget {
       isCenterTitle: false,
       titleWidget: Row(
         children: [
-          CommonImage(imageSrc: chatListItemModel.userImage, size: 35, borderRadius: 7),
+          CommonImage(
+            imageSrc: chatListItemModel.userImage,
+            size: 35,
+            borderRadius: 7,
+          ),
           10.width,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,7 +496,10 @@ class ChatScreen extends StatelessWidget {
                   curve: Curves.easeOut,
                   padding: EdgeInsets.only(bottom: keyboard),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: 460.h, minWidth: double.infinity),
+                    constraints: BoxConstraints(
+                      maxHeight: 460.h,
+                      minWidth: double.infinity,
+                    ),
                     child: expandedContent(cubit: cubit),
                   ),
                 );
@@ -531,7 +569,7 @@ class ChatScreen extends StatelessWidget {
           10.height,
           CommonButton(
             titleText: AppString.report,
-            onTap: () { 
+            onTap: () {
               cubit.reportChat(
                 chatId: chatListItemModel.chatId,
                 selectedReasons: selectedReasons,

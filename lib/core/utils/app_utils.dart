@@ -15,14 +15,21 @@ import 'package:permission_handler/permission_handler.dart';
 class Utils {
   static late Size deviceSize;
 
-
-
   static RepaintBoundary divider() => RepaintBoundary(
     child: Divider(color: AppColors.greay100, thickness: 1.w),
   );
 
-  static Role? getRole() =>
-      appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.userLoginInfoModel.role;
+  static Role? getRole() => appRouter.navigatorKey.currentState!.context
+      .read<AuthCubit>()
+      .state
+      .userLoginInfoModel
+      .role;
+
+  static String? getUserId() => appRouter.navigatorKey.currentState!.context
+      .read<AuthCubit>()
+      .state
+      .userLoginInfoModel
+      .id;
 
   static DateTime? parseDate(String? dateString) {
     if (dateString == null || dateString.isEmpty) {
@@ -30,7 +37,6 @@ class Utils {
     }
     return DateTime.tryParse(dateString);
   }
-
 
   static DateTime subtractYears(DateTime date, int yearsToSubtract) {
     // Handle edge case for leap year (Feb 29 to non-leap year)

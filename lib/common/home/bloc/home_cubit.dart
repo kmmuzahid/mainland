@@ -28,13 +28,20 @@ class HomeCubit extends SafeCubit<HomeState> {
 
   void init() async {
     fetchCount();
-    _subscriptions = SocketService.instance.streamController.stream.listen((data) {
+    _subscriptions = SocketService.instance.streamController.stream.listen((
+      data,
+    ) {
       if (data.streamType == StreamType.notification) {
         if (appRouter.current.name != 'NotificationRoute') {
           final notifiaction = data.data as NotificationModel;
-          emit(state.copyWith(unreadNotification: state.unreadNotification + 1));
+          emit(
+            state.copyWith(unreadNotification: state.unreadNotification + 1),
+          );
           FirebaseNotificationHandler.instance.showLocalNotification(
-            RemoteNotification(title: notifiaction.title, body: notifiaction.message),
+            RemoteNotification(
+              title: notifiaction.title,
+              body: notifiaction.message,
+            ),
           );
         }
       } else if (data.streamType == StreamType.message) {
@@ -43,10 +50,15 @@ class HomeCubit extends SafeCubit<HomeState> {
             : state.currentIndex == 4;
         if (!isChatOpen) {
           final message = data.data as SocketMessageModel;
-          emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
-          FirebaseNotificationHandler.instance.showLocalNotification(
-            RemoteNotification(title: message.sender.name, body: message.text),
-          );
+          if (message.ownerId != Utils.getUserId()) {
+            emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
+            FirebaseNotificationHandler.instance.showLocalNotification(
+              RemoteNotification(
+                title: message.sender.name,
+                body: message.text,
+              ),
+            );
+          }
         }
       }
     });

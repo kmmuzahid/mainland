@@ -11,13 +11,23 @@ import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/network/response_state.dart';
 import 'package:mainland/core/config/socket/socket_message_model.dart';
 import 'package:mainland/core/utils/app_utils.dart';
- 
 
 import '../model/chat_user_info.dart';
 
 class MockChatRepository implements ChatRepository {
   final DioService _dioService = getIt();
-  
+
+  @override
+  Future<ResponseState<String?>> createChat({required String userId}) async {
+    return _dioService.request(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.createChat(userId),
+        method: RequestMethod.POST,
+      ),
+      responseBuilder: (data) => data['_id'] ?? '',
+    );
+  }
+
   @override
   Future<bool> reportChat({
     required String chatId,
@@ -48,7 +58,10 @@ class MockChatRepository implements ChatRepository {
   }
 
   @override
-  Future<bool> editMessage({required String messageId, required String message}) async {
+  Future<bool> editMessage({
+    required String messageId,
+    required String message,
+  }) async {
     final result = await _dioService.request(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.editMessage(messageId: messageId),
@@ -75,9 +88,14 @@ class MockChatRepository implements ChatRepository {
   }
 
   @override
-  Future<ResponseState<List<ChatListItemModel>?>> fetchChatList({required int page}) async {
+  Future<ResponseState<List<ChatListItemModel>?>> fetchChatList({
+    required int page,
+  }) async {
     return _dioService.request(
-      input: RequestInput(endpoint: ApiEndPoint.instance.chat, method: RequestMethod.GET),
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.chat,
+        method: RequestMethod.GET,
+      ),
       responseBuilder: (data) {
         if (data != null) {
           return (data as List)
@@ -86,7 +104,8 @@ class MockChatRepository implements ChatRepository {
                   chatId: e['id'],
                   userImage: e['photo'],
                   userStatus: UserStatus.online,
-                  lastSendMessageTime: Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
+                  lastSendMessageTime:
+                      Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
                   userName: e['name'] ?? '',
                   lastMessage: e['lastMessage'] ?? '',
                   isRead: e['lastMessageRead'] ?? false,
@@ -136,14 +155,20 @@ class MockChatRepository implements ChatRepository {
   }) async {
     final image = rowFiles
         ?.where(
-          (e) => e.path.endsWith('.png') || e.path.endsWith('.jpg') || e.path.endsWith('.jpeg'),
+          (e) =>
+              e.path.endsWith('.png') ||
+              e.path.endsWith('.jpg') ||
+              e.path.endsWith('.jpeg'),
         )
         .toList();
     final file = rowFiles
         ?.where(
-          (e) => e.path.endsWith('.pdf') || e.path.endsWith('.doc') || e.path.endsWith('.docx'),
+          (e) =>
+              e.path.endsWith('.pdf') ||
+              e.path.endsWith('.doc') ||
+              e.path.endsWith('.docx'),
         )
-        .toList(); 
+        .toList();
     final result = await _dioService.request(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.sentMessage,
@@ -153,7 +178,7 @@ class MockChatRepository implements ChatRepository {
           if (image?.isNotEmpty ?? false) 'image': image,
           if (file?.isNotEmpty ?? false) 'document': file,
           'chatId': chatId,
-        }, 
+        },
       ),
       responseBuilder: (data) => data,
     );
@@ -180,7 +205,8 @@ class MockChatRepository implements ChatRepository {
                   chatId: e['id'],
                   userImage: e['photo'],
                   userStatus: UserStatus.online,
-                  lastSendMessageTime: Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
+                  lastSendMessageTime:
+                      Utils.parseDate(e['lastMessageTime']) ?? DateTime.now(),
                   userName: e['name'] ?? '',
                   lastMessage: e['lastMessage'] ?? '',
                   isRead: e['lastMessageRead'] ?? '',
