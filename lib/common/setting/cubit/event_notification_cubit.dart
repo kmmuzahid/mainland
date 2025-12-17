@@ -12,7 +12,13 @@ import 'package:mainland/core/config/route/app_router.dart';
 
 class EventNotificationCubit extends SafeCubit<EventNotificationState> {
   EventNotificationCubit()
-    : super(EventNotificationState(isFetching: false, notification: '', isSending: false));
+    : super(
+        EventNotificationState(
+          isFetching: false,
+          notification: '',
+          isSending: false,
+        ),
+      );
 
   final DioService _dioService = getIt();
 
@@ -27,20 +33,26 @@ class EventNotificationCubit extends SafeCubit<EventNotificationState> {
       responseBuilder: (data) => data,
     );
 
-    emit(state.copyWith(isSending: false, notification: result.data['notification'] ?? ''));
+    emit(
+      state.copyWith(
+        isSending: false,
+        notification: result.data['notification'] ?? '',
+      ),
+    );
   }
 
-  Future<void> updateWelcomeNotificaion({required String id, required String notification}) async {
+  Future<void> updateWelcomeNotificaion({
+    required String id,
+    required String notification,
+  }) async {
     if (state.isSending) return;
     emit(state.copyWith(isSending: true));
     final result = await _dioService.request<dynamic>(
       showMessage: true,
       input: RequestInput(
-        endpoint: ApiEndPoint.instance.updateEvent(id),
+        endpoint: ApiEndPoint.instance.enableNotificaion(id),
         method: RequestMethod.PATCH,
-        formFields: {
-          'data': jsonEncode({'notification': notification}),
-        },
+        formFields: {'notification': notification},
       ),
       responseBuilder: (data) => data,
     );

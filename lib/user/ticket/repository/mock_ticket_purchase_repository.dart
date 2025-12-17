@@ -20,19 +20,32 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
     required String id,
     required TicketOwnerType ticketOwnerType,
   }) async {
-    String path = ApiEndPoint.instance.getAvailableTicketFromUser(id: id);
+    String path = '';
     if (ticketOwnerType == TicketOwnerType.organizer) {
       path = ApiEndPoint.instance.getAvailableTicketFromOrg(id: id);
+    } else if (ticketType != null) {
+      path = ApiEndPoint.instance.getAvailableTicketFromUser(
+        id: id,
+        ticketType: ticketType,
+      );
+    } else {
+      return [];
     }
 
     final result = await _dioService.request<List<TicketPickerModel>>(
       input: RequestInput(endpoint: path, method: RequestMethod.GET),
-      responseBuilder: (response) => (response['tickets'] as List<dynamic>).map((e) {
+      responseBuilder: (response) => (response['tickets'] as List<dynamic>).map((
+        e,
+      ) {
         final info = e;
         return TicketPickerModel(
           id: '${DateTime.now().microsecondsSinceEpoch}_${info['price'] ?? 0}',
-          userName: ticketType != null && info['ownerName'] != null ? info['ownerName'] : '',
-          sellerId: ticketType != null && info['sellerId'] != null ? info['sellerId'] : '',
+          userName: ticketType != null && info['ownerName'] != null
+              ? info['ownerName']
+              : '',
+          sellerId: ticketType != null && info['sellerId'] != null
+              ? info['sellerId']
+              : '',
           type: info['type'] ?? '',
           price: info['price']?.toDouble() ?? 0,
           limit: info['availableUnits']?.toInt() ?? 0,
@@ -109,8 +122,10 @@ class MockTicketPurchaseRepository extends TicketPurchaseRepository {
                 (e) => {
                   'ticketType': e.type,
                   'quantity': e.count,
-                  if (ticketOwnerType == TicketOwnerType.attendee) 'amount': e.price,
-                  if (ticketOwnerType == TicketOwnerType.attendee) 'sellerId': e.sellerId,
+                  if (ticketOwnerType == TicketOwnerType.attendee)
+                    'amount': e.price,
+                  if (ticketOwnerType == TicketOwnerType.attendee)
+                    'sellerId': e.sellerId,
                 },
               )
               .toList(),

@@ -1,3 +1,5 @@
+import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
+
 class ApiEndPoint {
   ApiEndPoint._();
   static final ApiEndPoint instance = ApiEndPoint._();
@@ -41,7 +43,8 @@ class ApiEndPoint {
 
   //category + subcategory
   final String category = '/event/allCategory';
-  final String categoryWithSubCategory = '/event/allCategory?includeSelectedSubcategory';
+  final String categoryWithSubCategory =
+      '/event/allCategory?includeSelectedSubcategory';
   String subCategory(String id) => '/event/Subcategory?categoryId=$id';
 
   //event
@@ -50,7 +53,9 @@ class ApiEndPoint {
   String eventDetails({required String id}) => '/event/$id';
 
   //organization
-  String orgLiveEventDetails({required String id}) => '/event/event-ticket-history/$id';
+  String orgLiveEventDetails({required String id}) =>
+      '/event/event-ticket-history/$id';
+  String enableNotificaion(String id) => '/event/notification/$id';
 
   //user
   final String userLiveEvent = '/ticket/unique-event';
@@ -61,8 +66,10 @@ class ApiEndPoint {
   final String userPopularEvent = '/event/popular-event';
 
   //user ticket history
-  String userLiveDetails({required String id}) => '/ticket/sellHistory/$id?status=onsell';
-  String userAvailableDetails({required String id}) => '/ticket/sellHistory/$id?status=available';
+  String userLiveDetails({required String id}) =>
+      '/ticket/sellHistory/$id?status=onsell';
+  String userAvailableDetails({required String id}) =>
+      '/ticket/sellHistory/$id?status=available';
   String userOnSellTicket({required String id}) => '/ticket/resellTicket/$id';
   String withdrawTickets({required String id}) => '/ticket/withdraw-pro/$id';
   String ticketHistoryDetails({required String id, required bool isExpired}) =>
@@ -72,27 +79,36 @@ class ApiEndPoint {
   String getAvailableTicketFromOrg({required String id}) =>
       '/ticket/event-summary?sellerType=organizer&eventId=$id';
 
-  String getAvailableTicketFromUser({required String id}) =>
-      '/ticket/sell-history-onsell/$id?status=onsell';
+  String getAvailableTicketFromUser({
+    required String id,
+    required TicketName ticketType,
+  }) =>
+      '/ticket/sell-history-onsell/$id?status=onsell&ticketType=${ticketType.name}';
 
   String checkPromoCode(String id) => '/ticket/promocode/$id';
 
   String purchaseFromOrganizer({required String id}) => '/event/payment/$id';
   String purchaseFromUser({required String id}) => '/ticket/ticketPurchase/$id';
-  String attendeeTicketAvailability(String id) => '/ticket/available-type-history/$id';
+  String attendeeTicketAvailability(String id) =>
+      '/ticket/available-type-history/$id';
 
   //venue
   String perticipentCount(String code) => '/event/perticipent-count/$code';
-  String tikcetUse({required String eventId, required String ownerId, required bool isUpdate}) =>
-      '/event/bar-code-check/$eventId?ownerId=$ownerId&isUpdate=$isUpdate';
+  String tikcetUse({
+    required String eventId,
+    required String ownerId,
+    required bool isUpdate,
+  }) => '/event/bar-code-check/$eventId?ownerId=$ownerId&isUpdate=$isUpdate';
   String checkEventCode(String eventCode) => '/ticket/check-event/$eventCode';
 
   //chat
   String chat = '/chat';
   String getMessages({required String chatId}) => '/message/$chatId';
   String sentMessage = '/message';
-  String deleteMessage({required String messageId}) => '/message/delete-message/$messageId';
-  String editMessage({required String messageId}) => '/message/update-message/$messageId';
+  String deleteMessage({required String messageId}) =>
+      '/message/delete-message/$messageId';
+  String editMessage({required String messageId}) =>
+      '/message/update-message/$messageId';
   String reportChat({required String chatId}) => '/chat/report/$chatId';
 
   //stripe

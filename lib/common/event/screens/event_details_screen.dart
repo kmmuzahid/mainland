@@ -231,6 +231,8 @@ class EventDetailsScreen extends StatelessWidget {
                       _textBuilder(
                         title: 'Event Code: ${eventDetails?.eventCode ?? ''}',
                       ),
+                    if (eventDetails?.isFreeEvent == true)
+                      _textBuilder(title: 'Free event.', maxLine: 2),
                   ],
                 ),
               ),
@@ -300,35 +302,37 @@ class EventDetailsScreen extends StatelessWidget {
   Widget _buttons(EventDetailsModel? eventDetails) {
     return Column(
       children: [
-        CommonButton(
-          buttonWidth: 250,
-          titleText: AppString.getOrganizerTicket,
-          borderColor: AppColors.primaryColor,
-          onTap: () {
-            appRouter.push(
-              TicketPurchaseRoute(
-                ticketOwnerType: TicketOwnerType.organizer,
-                id: eventDetails?.id ?? '',
-                title: eventDetails?.eventName ?? '',
-                type: TicketOwnerType.organizer,
-              ),
-            );
-          },
-        ),
+        if (!(eventDetails?.isFreeEvent == true))
+          CommonButton(
+            buttonWidth: 250,
+            titleText: AppString.getOrganizerTicket,
+            borderColor: AppColors.primaryColor,
+            onTap: () {
+              appRouter.push(
+                TicketPurchaseRoute(
+                  ticketOwnerType: TicketOwnerType.organizer,
+                  id: eventDetails?.id ?? '',
+                  title: eventDetails?.eventName ?? '',
+                  type: TicketOwnerType.organizer,
+                ),
+              );
+            },
+          ),
         10.height,
-        CommonButton(
-          buttonWidth: 250,
-          titleText: AppString.viewAttendeeTickets,
-          borderColor: AppColors.primaryColor,
-          onTap: () {
-            appRouter.push(
-              AttendieTicketAvailablityRoute(
-                eventId: eventId,
-                eventName: eventDetails?.eventName ?? '',
-              ),
-            );
-          },
-        ),
+        if (!(eventDetails?.isFreeEvent == true))
+          CommonButton(
+            buttonWidth: 250,
+            titleText: AppString.viewAttendeeTickets,
+            borderColor: AppColors.primaryColor,
+            onTap: () {
+              appRouter.push(
+                AttendieTicketAvailablityRoute(
+                  eventId: eventId,
+                  eventName: eventDetails?.eventName ?? '',
+                ),
+              );
+            },
+          ),
         10.height,
         CommonButton(
           buttonWidth: 250,
