@@ -52,7 +52,7 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
 
     // For MapEntry, we need to compare keys/values instead of the entire object
-    if (widget.initalValue != null) {
+    if (widget.initalValue != null && _selectedItem != widget.initalValue) {
       if (widget.initalValue is MapEntry) {
         _selectedItem = _items.firstWhere(
           (item) =>
@@ -76,36 +76,30 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
     }
   }
 
-  @override
-  void didUpdateWidget(covariant CommonDropDown<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
+//   @override
+// void didUpdateWidget(covariant CommonDropDown<T> oldWidget) {
+//   super.didUpdateWidget(oldWidget);
+  
+//   // Update items if changed
+//   if (widget.items != oldWidget.items) {
+//     _items = widget.items;
 
-    // Handle items update
-    if (widget.items != oldWidget.items) {
-      _items = widget.items;
+//     // Keep selected item if it exists in new list, otherwise null
+//     if (_selectedItem != null &&
+//         !_items.any((item) => _itemsEqual(item, _selectedItem!))) {
+//       _selectedItem = null;
+//     }
 
-      // Try to find the selected item in the new items list
-      if (_selectedItem != null) {
-        if (_selectedItem is MapEntry) {
-          _selectedItem = _items.firstWhere(
-            (item) => item is MapEntry && (item as MapEntry).key == (_selectedItem as MapEntry).key,
-            orElse: () => _items.isNotEmpty ? _items.first : _selectedItem!,
-          );
-        } else if (!_items.contains(_selectedItem) && _items.isNotEmpty) {
-          _selectedItem = _items.first;
-        }
-      } else if (_items.isNotEmpty) {
-        _selectedItem = _items.first;
-      }
+//     // Optional: pick initial value if provided and exists in new list
+//     if (_selectedItem == null && widget.initalValue != null) {
+//       if (_items.any((item) => _itemsEqual(item, widget.initalValue!))) {
+//         _selectedItem = widget.initalValue;
+//       }
+//     }
 
-      if (_selectedItem != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onChanged(_selectedItem);
-        setState(() {});
-      });
-    }
-  }
-}
+//     setState(() {});
+//   }
+// }
 
   @override
   void dispose() {

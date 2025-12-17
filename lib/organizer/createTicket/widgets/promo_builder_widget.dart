@@ -38,7 +38,8 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
     promoCodeController = TextEditingController();
     promoCodeController.text = widget.initalValue?.code ?? '';
     promoCodeDiscountController = TextEditingController();
-    promoCodeDiscountController.text = widget.initalValue?.discountPercentage.toString() ?? '';
+    promoCodeDiscountController.text =
+        widget.initalValue?.discountPercentage.toString() ?? '';
   }
 
   @override
@@ -64,7 +65,9 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
                 widget.isReadOnly ||
                 widget.cubit.state.createEventModel.isFreeEvent ||
                 !widget.cubit.state.createEventModel.offerPreSale,
-            validationType: ValidationType.validateAlphaNumeric,
+            validationType: widget.cubit.state.createEventModel.isFreeEvent
+                ? ValidationType.notRequired
+                : ValidationType.validateAlphaNumeric,
             backgroundColor: AppColors.backgroundWhite,
           ),
         ),
@@ -73,16 +76,25 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
           child: Column(
             children: [
               CommonDateInputTextField(
-                initialValue: widget.initalValue?.expireDate?.toLocal().toString().split(' ')[0],
+                initialValue: widget.initalValue?.expireDate
+                    ?.toLocal()
+                    .toString()
+                    .split(' ')[0],
                 isReadOnly:
                     widget.isReadOnly ||
                     widget.cubit.state.createEventModel.isFreeEvent ||
                     !widget.cubit.state.createEventModel.offerPreSale,
                 hints: 'Expire Date',
                 minDate: DateTime.now(),
+                showValidationMessage: false,
+                isValidationRequired:
+                    !widget.cubit.state.createEventModel.isFreeEvent,
                 backgroundColor: AppColors.backgroundWhite,
                 onChanged: (date) {
-                  AppLogger.debug(date?.toIso8601String() ?? '', tag: 'PromoBuilderWidget');
+                  AppLogger.debug(
+                    date?.toIso8601String() ?? '',
+                    tag: 'PromoBuilderWidget',
+                  );
                   expire = date;
                 },
               ),
@@ -120,13 +132,18 @@ class _PromoBuilderWidgetState extends State<PromoBuilderWidget> {
                 widget.isReadOnly ||
                 widget.cubit.state.createEventModel.isFreeEvent ||
                 !widget.cubit.state.createEventModel.offerPreSale,
-
             onSaved: (value, controller) {
-              widget.onSaved(promoCodeController.text, int.tryParse(value.trim()) ?? 0, expire);
+              widget.onSaved(
+                promoCodeController.text,
+                int.tryParse(value.trim()) ?? 0,
+                expire,
+              );
             },
             showValidationMessage: false,
             maxLength: 2,
-            validationType: ValidationType.validateCurrency,
+            validationType: widget.cubit.state.createEventModel.isFreeEvent
+                ? ValidationType.notRequired
+                : ValidationType.validateCurrency,
             backgroundColor: AppColors.backgroundWhite,
           ),
         ),

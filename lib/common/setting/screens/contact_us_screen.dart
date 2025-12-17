@@ -29,39 +29,43 @@ class ContactUsScreen extends StatelessWidget {
         child: CustomForm(
           builder: (context, formKey) => CubitScope<ContactCubit, ContactState>(
             create: ContactCubit.new,
-            builder: (context, cubit, state) => Column(
-              children: [
-                CommonText(
-                  text: AppString.contactUs,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  style: AppTextStyles.titleMedium?.copyWith(color: AppColors.primaryColor),
-                ).start,
-                CommonText(
-                  textAlign: TextAlign.justify,
-                  fontSize: 13,
-                  maxLines: 5,
-                  text: AppString
-                      .forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail,
-                ),
-                10.height,
-                CommonMultilineTextField(
-                  height: 290,
-                  onSaved: (data, controller) {
-                    if (formKey.currentState?.validate() == true) {
-                      cubit.save(data);
-                    }
-                  },
-                  validationType: ValidationType.validateRequired,
-                ),
-                20.height,
-                CommonButton(
-                  titleText: AppString.send,
-                  onTap: () {
-                    formKey.currentState?.save();
-                  },
-                ),
-              ],
+            builder: (context, cubit, state) => SingleChildScrollView(
+              child: Column(
+                children: [
+                  CommonText(
+                    text: AppString.contactUs,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    style: AppTextStyles.titleMedium?.copyWith(
+                      color: AppColors.primaryColor,
+                    ),
+                  ).start,
+                  CommonText(
+                    textAlign: TextAlign.justify,
+                    fontSize: 13,
+                    maxLines: 5,
+                    text: AppString
+                        .forTheBestSupportExperiencePleaseDescribeYourIssueClearlyInASingleDetailedMessageOurTeamWillReviewItAndGetInTouchWithYouViaEmail,
+                  ),
+                  10.height,
+                  CommonMultilineTextField(
+                    height: 290,
+                    onSaved: (data, controller) {
+                      if (formKey.currentState?.validate() == true) {
+                        cubit.save(data);
+                      }
+                    },
+                    validationType: ValidationType.validateRequired,
+                  ),
+                  20.height,
+                  CommonButton(
+                    titleText: AppString.send,
+                    onTap: () {
+                      formKey.currentState?.save();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

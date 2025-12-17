@@ -221,6 +221,7 @@ class TicketFormOne extends StatelessWidget {
             10.height,
             FormLabel(isRequired: true, label: AppString.state),
             CommonDropDown<MapEntry<String, String>>( 
+              key: const Key('Form1State_state'),
               hint: AppString.state,
               items: usStates.entries.toList(),
               textStyle: AppTextStyles.bodyMedium,
@@ -237,7 +238,7 @@ class TicketFormOne extends StatelessWidget {
               backgroundColor: AppColors.backgroundWhite,
               isRequired: true,
               onChanged: (states) {
-                cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
+                // cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
               },
               nameBuilder: (states) {
                 return states.value;

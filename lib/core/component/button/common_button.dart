@@ -46,7 +46,8 @@ class CommonButton extends StatefulWidget {
   State<CommonButton> createState() => _CommonButtonState();
 }
 
-class _CommonButtonState extends State<CommonButton> with SingleTickerProviderStateMixin {
+class _CommonButtonState extends State<CommonButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -57,10 +58,9 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.linear));
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
+    );
 
     if (widget.isLoading) {
       _animationController.repeat();
@@ -94,15 +94,15 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
     final textPainter = TextPainter(
       text: TextSpan(
         text: widget.titleText,
+
         // Match CommonText: GoogleFonts.dmSans with scaled size and weight
-        
         style: getTheme.textTheme.bodyMedium?.copyWith(
           fontSize: widget.titleSize.sp,
           fontWeight: widget.titleWeight,
           color: widget.titleColor ?? AppColors.onPrimaryColor,
         ),
       ),
-      
+
       maxLines: 1,
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
@@ -111,7 +111,8 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
 
     // Calculate width based on the content width (text or loader),
     // including horizontal padding and icon width + spacing when applicable.
-    final double horizontalPadding = 24.0.w; // from EdgeInsets.symmetric(horizontal: 12.0)
+    final double horizontalPadding =
+        24.0.w; // from EdgeInsets.symmetric(horizontal: 12.0)
     final double contentWidth = widget.isLoading
         ? textPainter
               .size
@@ -126,8 +127,15 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
     // Border is painted inside the container; include its stroke on both sides
     final double borderStroke = (widget.borderWidth.w * 2);
     double buttonWidth =
-        contentWidth + horizontalPadding + computedIconWidth + iconSpacing + borderStroke + 5.w;
-    buttonWidth = buttonWidth < widget.buttonWidth.w ? widget.buttonWidth.w : buttonWidth;
+        contentWidth +
+        horizontalPadding +
+        computedIconWidth +
+        iconSpacing +
+        borderStroke +
+        8.w;
+    buttonWidth = buttonWidth < widget.buttonWidth.w
+        ? widget.buttonWidth.w
+        : buttonWidth;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -135,7 +143,9 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
         final double maxAllowedWidth = constraints.maxWidth.isFinite
             ? constraints.maxWidth
             : buttonWidth;
-        final double finalWidth = buttonWidth > maxAllowedWidth ? maxAllowedWidth : buttonWidth;
+        final double finalWidth = buttonWidth > maxAllowedWidth
+            ? maxAllowedWidth
+            : buttonWidth;
 
         return Transform.scale(
           scale: scale,
@@ -168,17 +178,24 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                     onTapCancel: () => _animationController.reverse(),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 6.0.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.0.w,
+                          vertical: 6.0.h,
+                        ),
                         child: Row(
                           mainAxisAlignment: widget.alignment,
                           children: [
-                            if (widget.icon != null) ...[widget.icon!, SizedBox(width: 6.w)],
+                            if (widget.icon != null) ...[
+                              widget.icon!,
+                              SizedBox(width: 6.w),
+                            ],
                             CommonText(
                               text: widget.titleText,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               fontSize: widget.titleSize.sp,
-                              textColor: widget.titleColor ?? AppColors.onPrimaryColor,
+                              textColor:
+                                  widget.titleColor ?? AppColors.onPrimaryColor,
                               fontWeight: widget.titleWeight,
                             ),
                           ],
@@ -195,7 +212,9 @@ class _CommonButtonState extends State<CommonButton> with SingleTickerProviderSt
                     animation: _animation,
                     builder: (context, child) {
                       return CustomPaint(
-                        painter: _BorderLoaderPainter(_animation.value, Colors.lightBlueAccent,
+                        painter: _BorderLoaderPainter(
+                          _animation.value,
+                          Colors.lightBlueAccent,
                         ),
                       );
                     },
@@ -217,7 +236,8 @@ class _BorderLoaderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final path = Path()..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)));
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)));
 
     final paint = Paint()
       ..color = color

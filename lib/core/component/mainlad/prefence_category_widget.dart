@@ -20,7 +20,7 @@ class PrefenceCategoryWidget extends StatelessWidget {
   final List<SubCategoryModel> selectedSubcategories;
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -34,7 +34,12 @@ class PrefenceCategoryWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            CommonImage(size: 74, imageSrc: category.coverImage),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CommonImage(imageSrc: category.coverImage),
+              ),
+            ),
             Text(
               category.title,
               style: AppTextStyles.titleMedium,

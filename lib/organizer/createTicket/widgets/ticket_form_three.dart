@@ -101,7 +101,7 @@ class TicketFormThree extends StatelessWidget {
                 },
               ).center,
 
-            if (isExpanded) _buttons(),
+            if (isExpanded) _buttons(formKey),
             30.height,
           ],
         );
@@ -109,7 +109,7 @@ class TicketFormThree extends StatelessWidget {
     );
   }
 
-  Row _buttons() {
+  Row _buttons(GlobalKey<FormState> formKey) {
     final width = 121.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -128,6 +128,8 @@ class TicketFormThree extends StatelessWidget {
           buttonWidth: width,
           titleText: 'Preview',
           onTap: () {
+            formKey.currentState?.save();
+            if (formKey.currentState?.validate() ?? false) 
             appRouter.push(
               EventDetailsRoute(
                 eventId: '1',

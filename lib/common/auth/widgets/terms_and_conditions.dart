@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
+import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text/common_rich_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
+import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
+import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
@@ -82,6 +85,14 @@ class TermsAndConditions {
                         ),
                         CommonSimpleRichTextContent(
                           text: 'Terms of Use',
+                          ontap: () {
+                            appRouter.push(
+                              ShowInfoRoute(
+                                title: AppString.termsOfuse,
+                                infoType: InfoType.terms,
+                              ),
+                            );
+                          },
                           style: TextStyle(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -100,6 +111,14 @@ class TermsAndConditions {
                             decorationColor: AppColors.primaryColor,
                             decorationThickness: 2,
                           ),
+                          ontap: () {
+                            appRouter.push(
+                              ShowInfoRoute(
+                                title: AppString.privacyNotice,
+                                infoType: InfoType.privacy,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -113,7 +132,10 @@ class TermsAndConditions {
                   if (cubit.state.isTermsAndConditonsAccepted) {
                     cubit.acceptTermsAndConditions();
                   } else {
-                    showSnackBar('Please accept terms and conditions', type: SnackBarType.error);
+                    showSnackBar(
+                      'Please accept terms and conditions',
+                      type: SnackBarType.error,
+                    );
                   }
                 },
               ),

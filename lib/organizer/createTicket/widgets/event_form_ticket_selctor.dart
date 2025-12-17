@@ -40,7 +40,9 @@ class EventFormTicketSelctor extends StatelessWidget {
         width: 2.w,
         color: (isReadOnly && value == true)
             ? AppColors.greay300
-            : ((isReadOnly ? false : (value ?? cubit.state.createEventModel.isFreeEvent))
+            : ((isReadOnly
+                      ? false
+                      : (value ?? cubit.state.createEventModel.isFreeEvent))
                   ? AppColors.primaryColor
                   : AppColors.greay300),
       ),
@@ -63,6 +65,11 @@ class EventFormTicketSelctor extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Table(
+        columnWidths: const {
+          0: FlexColumnWidth(1.2),
+          1: FlexColumnWidth(),
+          2: FlexColumnWidth(),
+        },
         children: [
           TableRow(
             children: [
@@ -89,16 +96,31 @@ class EventFormTicketSelctor extends StatelessWidget {
               ),
             ],
           ),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Premium),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.VIP),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Standard),
-          _buildTicketFormRow(isReadOnly: isReadOnly, ticketName: TicketName.Other),
+          _buildTicketFormRow(
+            isReadOnly: isReadOnly,
+            ticketName: TicketName.Premium,
+          ),
+          _buildTicketFormRow(
+            isReadOnly: isReadOnly,
+            ticketName: TicketName.VIP,
+          ),
+          _buildTicketFormRow(
+            isReadOnly: isReadOnly,
+            ticketName: TicketName.Standard,
+          ),
+          _buildTicketFormRow(
+            isReadOnly: isReadOnly,
+            ticketName: TicketName.Other,
+          ),
         ],
       ),
     );
   }
 
-  TableRow _buildTicketFormRow({required bool isReadOnly, required TicketName ticketName}) {
+  TableRow _buildTicketFormRow({
+    required bool isReadOnly,
+    required TicketName ticketName,
+  }) {
     final bool isSelected =
         cubit.state.createEventModel.ticketTypes.indexWhere((e) {
           return e.name == ticketName;
@@ -117,8 +139,11 @@ class EventFormTicketSelctor extends StatelessWidget {
               },
             ),
             CommonText(
-              text: ticketName == TicketName.VIP ? 'VIP' : ticketName.name.capitalizeEachWord(),
+              text: ticketName == TicketName.VIP
+                  ? 'VIP'
+                  : ticketName.name.capitalizeEachWord(),
               fontSize: 16,
+              maxLines: 1,
             ),
           ],
         ),
@@ -127,11 +152,15 @@ class EventFormTicketSelctor extends StatelessWidget {
           child: SizedBox(
             height: 35.h,
             child: CommonTextField(
-              initialText: ticket?.setUnitPrice != null ? ticket?.setUnitPrice.toString() : '',
+              initialText: ticket?.setUnitPrice != null
+                  ? ticket?.setUnitPrice.toString()
+                  : '',
               paddingVertical: 0,
               showValidationMessage: false,
               validationType:
-                  (cubit.state.createEventModel.isFreeEvent || isReadOnly || !isSelected)
+                  (cubit.state.createEventModel.isFreeEvent ||
+                      isReadOnly ||
+                      !isSelected)
                   ? ValidationType.notRequired
                   : ValidationType.validateCurrency,
               backgroundColor: cubit.state.createEventModel.isFreeEvent
@@ -140,7 +169,10 @@ class EventFormTicketSelctor extends StatelessWidget {
               isReadOnly: isReadOnly,
               borderColor: AppColors.backgroundWhite,
               onSaved: (value, controller) {
-                cubit.updateTicket(ticketName: ticketName, unitPrice: double.tryParse(value));
+                cubit.updateTicket(
+                  ticketName: ticketName,
+                  unitPrice: double.tryParse(value),
+                );
               },
             ),
           ),
@@ -150,11 +182,15 @@ class EventFormTicketSelctor extends StatelessWidget {
           child: SizedBox(
             height: 35.h,
             child: CommonTextField(
-              initialText: ticket?.availableUnit != null ? ticket?.availableUnit.toString() : '',
+              initialText: ticket?.availableUnit != null
+                  ? ticket?.availableUnit.toString()
+                  : '',
               showValidationMessage: false,
               paddingVertical: 0,
               validationType:
-                  (cubit.state.createEventModel.isFreeEvent || isReadOnly || !isSelected)
+                  (cubit.state.createEventModel.isFreeEvent ||
+                      isReadOnly ||
+                      !isSelected)
                   ? ValidationType.notRequired
                   : ValidationType.validateNumber,
               backgroundColor: cubit.state.createEventModel.isFreeEvent
@@ -163,7 +199,10 @@ class EventFormTicketSelctor extends StatelessWidget {
               borderColor: AppColors.backgroundWhite,
               isReadOnly: isReadOnly,
               onSaved: (value, controller) {
-                cubit.updateTicket(ticketName: ticketName, availableUnit: int.tryParse(value));
+                cubit.updateTicket(
+                  ticketName: ticketName,
+                  availableUnit: int.tryParse(value),
+                );
               },
             ),
           ),
@@ -173,7 +212,9 @@ class EventFormTicketSelctor extends StatelessWidget {
   }
 
   TicketTypeModel? _getTicket(TicketName ticketName) {
-    final index = createEventModel.ticketTypes.indexWhere((e) => e.name == ticketName);
+    final index = createEventModel.ticketTypes.indexWhere(
+      (e) => e.name == ticketName,
+    );
     return index != -1 ? createEventModel.ticketTypes[index] : null;
   }
 }

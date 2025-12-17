@@ -38,13 +38,17 @@ class TicketFormTwo extends StatelessWidget {
   final bool isExpanded;
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     // print(createEventModel.discountCodes.isEmpty);
     return CustomForm(
       builder: (context, formKey) {
         return Column(
           children: [
-            CreateTicketTitlebar(title: 'Tickets', showSaveButton: !isExpanded, formKey: formKey),
+            CreateTicketTitlebar(
+              title: 'Tickets',
+              showSaveButton: !isExpanded,
+              formKey: formKey,
+            ),
             Row(
               children: [
                 _buildCheckBox(
@@ -52,7 +56,9 @@ class TicketFormTwo extends StatelessWidget {
                   value: cubit.state.createEventModel.isFreeEvent,
                   onChanged: (value) {
                     cubit.updateField(
-                      cubit.state.createEventModel.copyWith(isFreeEvent: value ?? false),
+                      cubit.state.createEventModel.copyWith(
+                        isFreeEvent: value ?? false,
+                      ),
                     );
                   },
                 ),
@@ -63,15 +69,19 @@ class TicketFormTwo extends StatelessWidget {
             EventFormTicketSelctor(
               cubit: cubit,
               createEventModel: createEventModel,
-              isReadOnly: isReadOnly || cubit.state.createEventModel.isFreeEvent,
+              isReadOnly:
+                  isReadOnly || cubit.state.createEventModel.isFreeEvent,
             ),
 
             _ticketStartSaleLabel(context),
             CommonDateInputTextField(
-              isReadOnly: isReadOnly || cubit.state.createEventModel.isFreeEvent,
-              initialValue: createEventModel.ticketSaleStartDate?.toLocal().toString().split(
-                ' ',
-              )[0],
+              isReadOnly:
+                  isReadOnly || cubit.state.createEventModel.isFreeEvent,
+              initialValue: createEventModel.ticketSaleStartDate
+                  ?.toLocal()
+                  .toString()
+                  .split(' ')[0],
+              isValidationRequired: !cubit.state.createEventModel.isFreeEvent,
               minDate: DateTime.now(),
               onSave: (value) {
                 cubit.updateField(
@@ -84,7 +94,8 @@ class TicketFormTwo extends StatelessWidget {
             ),
             10.height,
             CommonText(
-              text: 'Pre-Sale length: Max 3 days. Must end before the Ticket sale start date',
+              text:
+                  'Pre-Sale length: Max 3 days. Must end before the Ticket sale start date',
               textColor: AppColors.greay200,
               fontSize: 16,
               textAlign: TextAlign.left,
@@ -93,8 +104,10 @@ class TicketFormTwo extends StatelessWidget {
             ),
             _enablerBuilder(
               label: 'Offer Pre-Sale',
-              onChange: (value) { 
-                cubit.updateField(cubit.state.createEventModel.copyWith(offerPreSale: value));
+              onChange: (value) {
+                cubit.updateField(
+                  cubit.state.createEventModel.copyWith(offerPreSale: value),
+                );
               },
               initalValue: createEventModel.offerPreSale,
             ),
@@ -102,15 +115,21 @@ class TicketFormTwo extends StatelessWidget {
             FormLabel(isRequired: false, label: 'Pre-Sale start date').start,
             2.height,
             CommonDateInputTextField(
-              initialValue: createEventModel.preSaleStartDate?.toLocal().toString().split(' ')[0],
+              initialValue: createEventModel.preSaleStartDate
+                  ?.toLocal()
+                  .toString()
+                  .split(' ')[0],
               minDate: DateTime.now(),
+              isValidationRequired: !cubit.state.createEventModel.isFreeEvent,
               isReadOnly:
                   isReadOnly ||
                   cubit.state.createEventModel.isFreeEvent ||
                   !cubit.state.createEventModel.offerPreSale,
               onSave: (value) {
                 cubit.updateField(
-                  cubit.state.createEventModel.copyWith(preSaleStartDate: value),
+                  cubit.state.createEventModel.copyWith(
+                    preSaleStartDate: value,
+                  ),
                 );
               },
               backgroundColor: AppColors.backgroundWhite,
@@ -118,8 +137,12 @@ class TicketFormTwo extends StatelessWidget {
             10.height,
             FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
             CommonDateInputTextField(
-              initialValue: createEventModel.preSaleEndDate?.toLocal().toString().split(' ')[0],
+              initialValue: createEventModel.preSaleEndDate
+                  ?.toLocal()
+                  .toString()
+                  .split(' ')[0],
               minDate: DateTime.now(),
+              isValidationRequired: !cubit.state.createEventModel.isFreeEvent,
               isReadOnly:
                   isReadOnly ||
                   cubit.state.createEventModel.isFreeEvent ||
@@ -136,7 +159,9 @@ class TicketFormTwo extends StatelessWidget {
               label: 'Offer Discount by Code',
               onChange: (value) {
                 cubit.updateField(
-                  cubit.state.createEventModel.copyWith(offerDiscountByCode: value),
+                  cubit.state.createEventModel.copyWith(
+                    offerDiscountByCode: value,
+                  ),
                 );
               },
               initalValue: createEventModel.discountCodes.isNotEmpty,
@@ -169,6 +194,7 @@ class TicketFormTwo extends StatelessWidget {
             PromoBuilderWidget(
               cubit: cubit,
               isReadOnly: isReadOnly,
+
               initalValue: createEventModel.discountCodes.length > 1
                   ? createEventModel.discountCodes[1]
                   : null,
@@ -204,7 +230,10 @@ class TicketFormTwo extends StatelessWidget {
               CommonButton(
                 titleText: AppString.next,
                 onTap: () {
-                  context.read<CreateTicketCubit>().nextPage();
+                  formKey.currentState?.save();
+                  if (formKey.currentState?.validate() ?? false) {
+                    context.read<CreateTicketCubit>().nextPage();
+                  }
                 },
               ).center,
               40.height,
@@ -274,7 +303,10 @@ class TicketFormTwo extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
                   10.height,
-                  CommonButton(titleText: AppString.cancel, onTap: appRouter.pop),
+                  CommonButton(
+                    titleText: AppString.cancel,
+                    onTap: appRouter.pop,
+                  ),
                   24.height,
                 ],
               ),

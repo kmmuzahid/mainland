@@ -30,7 +30,20 @@ class InfoCubit extends SafeCubit<InfoState> {
       responseBuilder: (data) => data,
     );
     if (result.isSuccess) {
-      emit(state.copyWith(isLoading: false, content: result.data['content'].toString()));
+      if (infoType != InfoType.terms)
+        emit(
+          state.copyWith(
+            isLoading: false,
+            content: result.data['content'].toString(),
+          ),
+        );
+      else
+        emit(
+          state.copyWith(
+            isLoading: false,
+            content: result.data['termsAdnCondition'].toString(),
+          ),
+        );
     } else {
       emit(state.copyWith(isLoading: false));
     }

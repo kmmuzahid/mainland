@@ -29,7 +29,7 @@ class PreferenceScreen extends StatelessWidget {
     this.diableBack = false,
     this.includeSelectedSubcategory = true,
   });
-  
+
   final bool includeSelectedSubcategory;
   final Widget? header;
   final String? buttonTitle;
@@ -43,13 +43,17 @@ class PreferenceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CommonAppBar(backgroundColor: AppColors.background, hideBack: diableBack),
+      appBar: CommonAppBar(
+        backgroundColor: AppColors.background,
+        hideBack: diableBack,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: BlocProvider<PreferenceCubit>(
-          create: (context) =>
-              PreferenceCubit()
-                ..fetchCategory(includeSelectedSubcategory: includeSelectedSubcategory),
+          create: (context) => PreferenceCubit()
+            ..fetchCategory(
+              includeSelectedSubcategory: includeSelectedSubcategory,
+            ),
           child: BlocBuilder<PreferenceCubit, PreferenceState>(
             builder: (context, state) {
               return SingleChildScrollView(
@@ -59,7 +63,10 @@ class PreferenceScreen extends StatelessWidget {
                     SizedBox(height: 20.h),
                     state.isCategoryLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : _categoryBuilder(state, context.read<PreferenceCubit>()),
+                        : _categoryBuilder(
+                            state,
+                            context.read<PreferenceCubit>(),
+                          ),
                     if (state.selectedSubcategories.isNotEmpty)
                       PreferenceActionsWidget(
                         buttonTitle: buttonTitle,

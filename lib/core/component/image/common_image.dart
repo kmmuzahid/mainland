@@ -35,6 +35,7 @@ class CommonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    try{
     if (imageSrc.isEmpty) return const SizedBox();
 
     if (!enableGrayscale) return getImage();
@@ -48,6 +49,9 @@ class CommonImage extends StatelessWidget {
       ]),
       child: getImage(),
     );
+    }catch(e){
+      return _buildErrorWidget();
+    }
   }
 
   Widget getImage() {

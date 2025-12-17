@@ -18,7 +18,6 @@ class AuthRepositoryImpl implements AuthRepository {
     required Role role,
   }) async {
     final login = await _dioService.request<UserLoginInfoModel?>(
-      
       input: RequestInput(
         endpoint: ApiEndPoint.instance.signIn,
         jsonBody: {'email': username, 'password': password},
@@ -79,7 +78,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ResponseState<ProfileModel?>> getCurrentUser() async {
     final response = await _dioService.request<ProfileModel>(
-      input: RequestInput(endpoint: ApiEndPoint.instance.profile, method: RequestMethod.GET),
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.profile,
+        method: RequestMethod.GET,
+      ),
       responseBuilder: (data) => ProfileModel.fromJson(data),
     );
     return response;
@@ -125,7 +127,9 @@ class AuthRepositoryImpl implements AuthRepository {
       ResponseState(data: true, isSuccess: true, statusCode: 201);
 
   @override
-  Future<ResponseState<dynamic>> signUp({required SignUpModel signUpModel}) async {
+  Future<ResponseState<dynamic>> signUp({
+    required SignUpModel signUpModel,
+  }) async {
     final response = await _dioService.request<dynamic>(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.signUp,
@@ -168,8 +172,11 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ResponseState<String?>> getPrivacyPolicy() async {
     return _dioService.request<String>(
-      input: RequestInput(endpoint: ApiEndPoint.instance.privacyPolicy, method: RequestMethod.GET),
-      responseBuilder: (data) => data['privacyPolicy'],
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.privacyPolicy,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => data['content'],
     );
   }
 
@@ -198,7 +205,10 @@ class AuthRepositoryImpl implements AuthRepository {
             'personalInfo': {
               'phone': profileModel.personalInfo.phone,
               if (profileModel.personalInfo.dateOfBirth != null)
-                'dateOfBirth': profileModel.personalInfo.dateOfBirth?.millisecondsSinceEpoch,
+                'dateOfBirth': profileModel
+                    .personalInfo
+                    .dateOfBirth
+                    ?.millisecondsSinceEpoch,
             },
             'address': {
               // 'country': 'United States',
@@ -207,14 +217,18 @@ class AuthRepositoryImpl implements AuthRepository {
               'street': profileModel.address.street,
             },
             'notification': {
-              'isSellTicketNotificationEnabled':
-                  profileModel.notificationPreference.isSellTicketNotificationEnabled,
-              'isMessageNotificationEnabled':
-                  profileModel.notificationPreference.isMessageNotificationEnabled,
-              'isPublishEventNotificationEnabled':
-                  profileModel.notificationPreference.isPublishEventNotificationEnabled,
-              'isWithdrawMoneyNotificationEnabled':
-                  profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
+              'isSellTicketNotificationEnabled': profileModel
+                  .notificationPreference
+                  .isSellTicketNotificationEnabled,
+              'isMessageNotificationEnabled': profileModel
+                  .notificationPreference
+                  .isMessageNotificationEnabled,
+              'isPublishEventNotificationEnabled': profileModel
+                  .notificationPreference
+                  .isPublishEventNotificationEnabled,
+              'isWithdrawMoneyNotificationEnabled': profileModel
+                  .notificationPreference
+                  .isWithdrawMoneyNotificationEnabled,
             },
           };
 

@@ -21,6 +21,8 @@ class CommonDateInputTextField extends StatefulWidget {
     this.hints,
     this.minDate,
     this.maxDate,
+    this.showValidationMessage,
+    this.isValidationRequired,
   }) : assert(
          minDate == null ||
              maxDate == null ||
@@ -47,9 +49,12 @@ class CommonDateInputTextField extends StatefulWidget {
   final bool isReadOnly;
   final String? hints;
   final String? initialValue;
+  final bool? showValidationMessage;
+  final bool? isValidationRequired;
 
   @override
-  State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
+  State<CommonDateInputTextField> createState() =>
+      _CommonDateInputTextFieldState();
 }
 
 class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
@@ -112,6 +117,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
   @override
   Widget build(BuildContext context) {
     return CommonTextField(
+      showValidationMessage: widget.showValidationMessage ?? true,
       isReadOnly: widget.isReadOnly,
       controller: _controller,
       paddingHorizontal: widget.paddingHorizontal,
@@ -133,7 +139,9 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
         },
         child: widget.suffix ?? const Icon(Icons.calendar_month_outlined),
       ),
-      validationType: ValidationType.validateDate,
+      validationType: widget.isValidationRequired == true
+          ? ValidationType.validateDate
+          : ValidationType.notRequired,
       prefixIcon: widget.prefixIcon,
       validation: widget.validation,
       borderColor: widget.borderColor,
