@@ -45,7 +45,9 @@ class EventDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showButton = showEventActions == false ? false : Utils.getRole() == Role.ATTENDEE;
+    final showButton = showEventActions == false
+        ? false
+        : Utils.getRole() == Role.ATTENDEE;
     return BlocProvider(
       create: (context) => EventDetailsCubit()..fetch(eventId: eventId),
       child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
@@ -55,7 +57,8 @@ class EventDetailsScreen extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () {
-                    if (state.eventDetails?.eventName != null && state.eventDetails?.image != null)
+                    if (state.eventDetails?.eventName != null &&
+                        state.eventDetails?.image != null)
                       CommonShare.instance.shareContent(
                         title: state.eventDetails!.eventName ?? '',
                         imageUrl: state.eventDetails!.image!,
@@ -63,7 +66,10 @@ class EventDetailsScreen extends StatelessWidget {
                             '${ApiEndPoint.instance.domain}/event/${state.eventDetails!.id}',
                       );
                   },
-                  icon: Icon(Icons.ios_share_outlined, color: AppColors.primaryColor),
+                  icon: Icon(
+                    Icons.ios_share_outlined,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ],
             ),
@@ -79,7 +85,9 @@ class EventDetailsScreen extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                context.read<EventDetailsCubit>().showDetails(false);
+                                context.read<EventDetailsCubit>().showDetails(
+                                  false,
+                                );
                               },
                               child: CommonText(
                                 top: 5,
@@ -101,8 +109,16 @@ class EventDetailsScreen extends StatelessWidget {
                               child: AnimatedCrossFade(
                                 duration: const Duration(milliseconds: 300),
                                 sizeCurve: Curves.easeInToLinear,
-                                firstChild: _firstChild(state.eventDetails, context, showButton),
-                                secondChild: _scondChild(context, state, showButton),
+                                firstChild: _firstChild(
+                                  state.eventDetails,
+                                  context,
+                                  showButton,
+                                ),
+                                secondChild: _scondChild(
+                                  context,
+                                  state,
+                                  showButton,
+                                ),
                                 crossFadeState: state.showDetails
                                     ? CrossFadeState.showSecond
                                     : CrossFadeState.showFirst,
@@ -114,12 +130,16 @@ class EventDetailsScreen extends StatelessWidget {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }
 
-  Widget _scondChild(BuildContext context, EventDetailsState state, bool showButton) {
+  Widget _scondChild(
+    BuildContext context,
+    EventDetailsState state,
+    bool showButton,
+  ) {
     return Column(
       children: [
         CommonText(
@@ -140,7 +160,11 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-  Column _firstChild(EventDetailsModel? eventDetails, BuildContext context, bool showButton) {
+  Column _firstChild(
+    EventDetailsModel? eventDetails,
+    BuildContext context,
+    bool showButton,
+  ) {
     return Column(
       children: [
         AspectRatio(
@@ -149,7 +173,9 @@ class EventDetailsScreen extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: CommonImage(
-                  imageSrc: image ?? (eventDetails?.image ?? Assets.images.sampleItem.path),
+                  imageSrc:
+                      image ??
+                      (eventDetails?.image ?? Assets.images.sampleItem.path),
                   enableGrayscale: !isEventAvailable,
                   borderRadius: 12,
                 ),
@@ -192,7 +218,9 @@ class EventDetailsScreen extends StatelessWidget {
                         preventScalling: true,
                       ),
                     if (eventDetails?.ticketSaleStart != null &&
-                        eventDetails!.ticketSaleStart!.isAfter(DateTime.now()) &&
+                        eventDetails!.ticketSaleStart!.isAfter(
+                          DateTime.now(),
+                        ) &&
                         eventDetails.eventDate != null)
                       _textBuilder(
                         title:
@@ -200,7 +228,9 @@ class EventDetailsScreen extends StatelessWidget {
                         maxLine: 2,
                       ),
                     if (Utils.getRole() == Role.ORGANIZER)
-                      _textBuilder(title: 'Event Code: ${eventDetails?.eventCode ?? ''}'),
+                      _textBuilder(
+                        title: 'Event Code: ${eventDetails?.eventCode ?? ''}',
+                      ),
                   ],
                 ),
               ),
@@ -219,7 +249,12 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               if (showButton)
-                Positioned(left: 0, right: 0, bottom: 50.h, child: _buttons(eventDetails)),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 50.h,
+                  child: _buttons(eventDetails),
+                ),
             ],
           ),
         ),
@@ -243,7 +278,11 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _textBuilder({required String title, int maxLine = 1, bool preventScalling = false}) {
+  Widget _textBuilder({
+    required String title,
+    int maxLine = 1,
+    bool preventScalling = false,
+  }) {
     return CommonText(
       left: 10,
       right: 10,

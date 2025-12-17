@@ -84,15 +84,22 @@ class CommonText extends StatelessWidget {
         : _withoutBorder(context);
   }
 
-  EdgeInsets _edgeInsetsBuilder() =>
-      EdgeInsets.only(left: left.w, right: right.w, top: top.h, bottom: bottom.h);
+  EdgeInsets _edgeInsetsBuilder() => EdgeInsets.only(
+    left: left.w,
+    right: right.w,
+    top: top.h,
+    bottom: bottom.h,
+  );
 
   Widget _withBorder(BuildContext context) => Container(
     padding: _edgeInsetsBuilder(),
     margin: EdgeInsets.all(5.w),
     decoration: BoxDecoration(
       color: backgroundColor ?? getTheme.scaffoldBackgroundColor,
-      border: Border.all(color: borderColor ?? Theme.of(context).dividerColor, width: 1.2.w),
+      border: Border.all(
+        color: borderColor ?? Theme.of(context).dividerColor,
+        width: 1.2.w,
+      ),
       borderRadius: BorderRadius.circular(borderRadious?.r ?? 4.r),
     ),
     child: _textField(context),
@@ -122,7 +129,6 @@ class CommonText extends StatelessWidget {
     });
   }
 
-
   Widget _textField(BuildContext context) {
     final effectiveTextStyle = getStyle();
     final double step = stepGranularity > 0 ? stepGranularity : 1.0;
@@ -147,7 +153,6 @@ class CommonText extends StatelessWidget {
     final formattedData = _formatNumbersInText(text);
 
     Widget buildText() {
-
       // For HTML content
       if (_isHtml(text)) {
         return Html(
@@ -182,6 +187,15 @@ class CommonText extends StatelessWidget {
               fontWeight: fontWeight,
             ),
           },
+        );
+      }
+
+      if (isDescription) {
+        return Text(
+          formattedData,
+          textAlign: textAlign,
+          textDirection: textDirection ?? TextDirection.ltr,
+          style: effectiveTextStyle,
         );
       }
 
@@ -282,12 +296,14 @@ class CommonText extends StatelessWidget {
           fontWeight: fontWeight ?? FontWeight.w400,
           color: textColor ?? getTheme.textTheme.bodyMedium?.color,
           height: height,
-          decoration: decoration, 
+          decoration: decoration,
           decorationColor: decorationColor,
         );
 
     // Calculate line height if textHeight is provided
-    final double? fontHeight = textHeight != null ? (textHeight! / effectiveFontSize) : null;
+    final double? fontHeight = textHeight != null
+        ? (textHeight! / effectiveFontSize)
+        : null;
 
     // Apply styles with proper scaling
     if (textColor != null) {
