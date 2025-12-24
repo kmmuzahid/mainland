@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_country_state/state-list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
@@ -13,6 +14,7 @@ import 'package:mainland/common/auth/widgets/state_selector.dart';
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
+import 'package:mainland/core/component/city_state/common_city_dropdown.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
@@ -35,8 +37,9 @@ import 'package:mainland/gen/assets.gen.dart';
 import 'package:mainland/main.dart';
 
 class SignUpAllField extends StatelessWidget {
-  const SignUpAllField({super.key, required this.state});
+  SignUpAllField({super.key, required this.state});
   final AuthState state;
+  final List<MapEntry<String, String>> states = USA.states.map((e) => MapEntry(e, e)).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class SignUpAllField extends StatelessWidget {
         builder: (BuildContext context, GlobalKey<FormState> formKey) => SingleChildScrollView(
           child: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
+              final authCubit = context.read<AuthCubit>();
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,19 +148,39 @@ class SignUpAllField extends StatelessWidget {
                       },
                     ),
                     10.height,
-                    const StateSelector(),
-                    10.height,
-                    CommonTextField(
-                      prefixIcon: _requiredIcon(),
+                    CommonDropDown<MapEntry<String, String>>(
+                      key: const Key('Location_united_states'),
+                      hint: AppString.state,
+                      prefix: _requiredIcon(),
+                      items: states,
+                      textStyle: AppTextStyles.bodyMedium,
                       borderColor: AppColors.disable,
+                      initalValue: authCubit.state.profileModel?.address.street != null
+                          ? selectedState(authCubit)
+                          : null,
+                      enableInitalSelection: false,
                       backgroundColor: AppColors.disable,
-                      hintText: AppString.city,
-                      validationType: ValidationType.validateFullName,
-                      onSaved: (value, controller) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(city: value));
+                      isRequired: true,
+                      onChanged: (states) {
+                        if (states != null) {
+                          authCubit.onChangeSignUpModel(
+                            state.signUpModel.copyWith(state: states.value, city: ''),
+                          );
+                        }
+                      },
+                      nameBuilder: (states) {
+                        return states.value;
                       },
                     ),
+                    10.height,
+                    CommonCityDropDown(
+                      key: Key('Location${authCubit.state.signUpModel.state}'),
+                      selectedState: authCubit.state.signUpModel.state,
+                      selectedCountry: 'United States of America',
+                      onChange: (value) {
+                        authCubit.onChangeSignUpModel(state.signUpModel.copyWith(city: value));
+                      },
+                    ), 
                     // All Text Filed here
                     10.height,
                     CommonTextField(
@@ -186,7 +210,9 @@ class SignUpAllField extends StatelessWidget {
                       onTap: () {
                         final cubit = context.read<AuthCubit>();
                         formKey.currentState?.save();
-                        cubit.signUp(cubit.state.signUpModel);
+                        if (formKey.currentState?.validate() == true) {
+                          cubit.signUp(cubit.state.signUpModel);
+                        }
                       },
                     ).center,
 
@@ -246,7 +272,10 @@ class SignUpAllField extends StatelessWidget {
     );
   }
 
-  
+  MapEntry<String, String> selectedState(AuthCubit authCubit) {
+    final state = authCubit.state.profileModel?.address.street;
+    return MapEntry(state!, state);
+  }
 
   CommonDateInputTextField _dateOfBirth(BuildContext context, AuthState state) {
     final cubit = context.read<AuthCubit>();

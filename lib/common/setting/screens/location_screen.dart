@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_country_state/state-list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/us_states_model.dart';
 import 'package:mainland/common/auth/widgets/state_selector.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/city_state/common_city_dropdown.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/text/common_text.dart';
@@ -29,6 +31,12 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   String? city;
   String? state;
+  List<MapEntry<String, String>> states = [];
+  @override
+  void initState() {
+    states = USA.states.map((e) => MapEntry(e, e)).toList();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
@@ -57,41 +65,35 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               10.height,
               CommonDropDown<MapEntry<String, String>>(
+                key: const Key('Location_united_states'),
                 hint: AppString.state,
-                items: usStates.entries.toList(),
+                prefix: _requiredIcon(),
+                items: states,
                 textStyle: AppTextStyles.bodyMedium,
                 borderColor: AppColors.disable,
                 initalValue:
-                    usStates.isNotEmpty &&
-                        authCubit.state.profileModel?.address.country != null &&
-                        authCubit.state.profileModel!.address.country.isNotEmpty
-                    ? usStates.entries.firstWhere(
-                        (element) =>
-                            element.key.toLowerCase() ==
-                            authCubit.state.profileModel!.address.country.toLowerCase(),
-                        orElse: () => usStates.entries.first,
-                      )
+                    authCubit.state.profileModel?.address.street != null
+                    ? selectedState(authCubit)
                     : null,
                 enableInitalSelection: false,
                 backgroundColor: AppColors.disable,
                 isRequired: true,
                 onChanged: (states) {
                   state = states?.value;
+                  setState(() {});
                 },
                 nameBuilder: (states) {
                   return states.value;
                 },
               ),
               10.height,
-              CommonTextField(
-                initialText: authCubit.state.profileModel?.address.city,
-                prefixIcon: _requiredIcon(),
-                borderColor: AppColors.disable,
-                backgroundColor: AppColors.disable,
-                hintText: AppString.city,
-                validationType: ValidationType.validateFullName,
-                onSaved: (value, controller) {
-                  city = value;
+              CommonCityDropDown(
+                key: Key('Location$state'),
+                selectedState: state ?? '',
+                selectedCountry: 'United States of America',
+                initalCity: authCubit.state.profileModel?.address.city,
+                onChange: (value) {
+                  city = value; 
                 },
               ),
               20.height,
@@ -115,6 +117,10 @@ class _LocationScreenState extends State<LocationScreen> {
         ),
       ),
     );
+  }
+  MapEntry<String, String> selectedState(AuthCubit authCubit) {
+    final state = authCubit.state.profileModel?.address.street;
+    return MapEntry(state!, state);
   }
 
   Widget _requiredIcon() =>

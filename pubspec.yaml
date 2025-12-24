@@ -54,6 +54,7 @@ dependencies:
   equatable: 2.0.7
   skeletonizer: 2.1.0+1
   file_picker: 10.3.3
+  flutter_country_state: ^1.0.1
 #noifications
   flutter_local_notifications: ^19.4.2
   firebase_core: ^4.1.1

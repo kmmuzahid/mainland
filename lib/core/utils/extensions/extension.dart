@@ -27,8 +27,20 @@ extension EnumDisplayName on Enum {
   }
 }
 
-extension strting on String {
-  String get newLine => '$this\n';
+extension StringExtensions on String {
+  String get newLine => '$this\n'; 
+  ///capitalize each word in the line
+  String get capitalize {
+    if (isEmpty) return this;
+    return split(' ').map((e) => e.capitalizeFirst).join(' ');
+  }
+
+  ///capitalize first letter of the string
+  String get capitalizeFirst {
+    if (isEmpty) return this;
+    return this[0].toUpperCase() + substring(1).toLowerCase();
+  }
+
 }
 
 extension View on num {
