@@ -1,11 +1,10 @@
+/// Author: Km Muzahid
+/// Date: 2025-12-29
+/// Email: km.muzahid@gmail.com
+library;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mainland/core/component/text/common_text.dart';
-import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/grid_child_postion.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
+import 'package:flutter/scheduler.dart'; 
 
 class SmartStaggeredLoader extends StatefulWidget {
   const SmartStaggeredLoader({
@@ -14,7 +13,7 @@ class SmartStaggeredLoader extends StatefulWidget {
     this.onRefresh,
     this.onLoadMore,
     this.isLoading = false,
-    this.isLoadingMore = false, // new flag for pagination loading
+    this.isLoadingMore = false,
     this.isLoadDone = false,
     this.padding,
     this.maxCrossAxisExtent = 200,
@@ -32,11 +31,11 @@ class SmartStaggeredLoader extends StatefulWidget {
 
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
-  final Function()? onRefresh;
-  final Function()? onLoadMore;
-  final bool isLoading; // initial load / refresh loading
-  final bool isLoadingMore; // pagination load more loading
-  final bool isLoadDone; // all data loaded flag
+  final void Function()? onRefresh;
+  final void Function()? onLoadMore;
+  final bool isLoading;
+  final bool isLoadingMore;
+  final bool isLoadDone;
   final EdgeInsetsGeometry? padding;
   final double maxCrossAxisExtent;
   final double mainAxisSpacing;
@@ -53,41 +52,36 @@ class SmartStaggeredLoader extends StatefulWidget {
   State<SmartStaggeredLoader> createState() => _SmartStaggeredLoaderState();
 }
 
-class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader>
-    with SingleTickerProviderStateMixin {
+class _SmartStaggeredLoaderState extends State<SmartStaggeredLoader> {
+  final GlobalKey _appBarKey = GlobalKey();
+  final GlobalKey _stickyKey = GlobalKey();
   late final ScrollController _scrollController;
-  late AnimationController _animationController;
-  bool _isAppBarVisible = true;
-  double _lastScrollOffset = 0;
-  bool isRefreshing = false;
+
+  double _appBarHeight = 0.0;
+  double _stickyHeight = 0.0;
+  double _currentOffset = 0.0;
+  double _position = 0.0;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    // Start with the app bar visible
-    _animationController.forward();
+    _scrollController.addListener(_scrollListener);
+    SchedulerBinding.instance.addPostFrameCallback((_) => _updateHeights());
   }
 
-void _onScroll() {
-    if (isRefreshing) return; 
+  void _scrollListener() {
+    _position = _scrollController.position.pixels;
+    if (!_scrollController.hasClients) return;
 
-    final position = _scrollController.position;
+    setState(() {
+      _currentOffset = _scrollController.offset;
+    });
 
-    final isScrollingDown = position.userScrollDirection == ScrollDirection.reverse;
+    final pos = _scrollController.position;
+    final isNearBottom = pos.pixels >= pos.maxScrollExtent - 200;
 
-    if (position.pixels < 100) return;
-
-    final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
- 
-    if (isScrollingDown &&
-        isNearBottom &&
+    if (isNearBottom &&
         widget.onLoadMore != null &&
         !widget.isLoading &&
         !widget.isLoadingMore &&
@@ -95,172 +89,150 @@ void _onScroll() {
         widget.itemCount > 0) {
       widget.onLoadMore!();
     }
+  }
 
-    // ------- AppBar Logic (unchanged) -------
-    if (widget.appbar != null) {
-      final currentScroll = position.pixels;
-      final maxScroll = position.maxScrollExtent;
-      final isAtBottom = currentScroll >= maxScroll;
-      final isAtTop = currentScroll <= position.minScrollExtent;
+  void _updateHeights() {
+    final appBarBox = _appBarKey.currentContext?.findRenderObject() as RenderBox?;
+    final stickyBox = _stickyKey.currentContext?.findRenderObject() as RenderBox?;
 
-      if (!isAtTop && !isAtBottom) {
-        final isScrollingDown = currentScroll > _lastScrollOffset && currentScroll > 0;
-
-        if (isScrollingDown && _isAppBarVisible) {
-          _isAppBarVisible = false;
-          setState(() {});
-          _animationController.reverse();
-        } else if (!isScrollingDown && !_isAppBarVisible) {
-          _isAppBarVisible = true;
-          setState(() {});
-          _animationController.forward();
-        }
-      } else if (isAtTop && !_isAppBarVisible) {
-        _isAppBarVisible = true;
-        setState(() {});
-        _animationController.forward();
-      }
-
-      _lastScrollOffset = currentScroll;
-    }
-}
-
-Future<void> _onRefresh() async {
-    if (isRefreshing) return;
-
-    isRefreshing = true;
-    setState(() {});
-
-    await widget.onRefresh?.call();
- 
-    isRefreshing = false;
-    setState(() {});
+    setState(() {
+      _appBarHeight = appBarBox?.size.height ?? 0.0;
+      _stickyHeight = stickyBox?.size.height ?? 0.0;
+    });
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
-    _animationController.dispose();
     super.dispose();
   }
 
-  Widget _buildGrid({ScrollController? controller, ScrollPhysics? physics}) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GridView.custom(
-          controller: controller,
-          key: ValueKey('staggered${widget.itemCount}'),
-          physics: physics ?? const AlwaysScrollableScrollPhysics(),
-          padding: widget.padding,
-          shrinkWrap: physics is NeverScrollableScrollPhysics,
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            childAspectRatio: widget.aspectRatio,
-            maxCrossAxisExtent: widget.maxCrossAxisExtent,
-            mainAxisSpacing: widget.mainAxisSpacing,
-            crossAxisSpacing: widget.isSeperated ? 0 : widget.crossAxisSpacing,
+  @override
+  Widget build(BuildContext context) {
+    final isAppBarCollapsed = _currentOffset >= _appBarHeight;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Offstage(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(key: _appBarKey, child: widget.appbar ?? const SizedBox()),
+                Container(key: _stickyKey, child: widget.onColapsAppbar ?? const SizedBox()),
+              ],
+            ),
           ),
-          childrenDelegate: SliverChildBuilderDelegate(
-            childCount: widget.itemCount + (widget.isLoadingMore ? 1 : 0),
-            (context, index) {
-              if (index < widget.itemCount) {
-                if (widget.isSeperated) {
-                  return RepaintBoundary(
-                    child: _seprated(
-                      index,
-                      widget.itemBuilder(context, index),
-                      constraints.maxWidth,
+
+          RefreshIndicator(
+            onRefresh: () async => widget.onRefresh?.call(),
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics:
+                  widget.physics ??
+                  const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              slivers: [
+                if (widget.appbar != null && _position < 10)
+                  SliverAppBar(
+                    floating: true,
+                    snap: true,
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    toolbarHeight: _appBarHeight,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    titleSpacing: 0,
+                    title: widget.appbar,
+                  ),
+
+                if (widget.onColapsAppbar != null)
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StickyHeaderDelegate(
+                      height: _stickyHeight,
+                      visible: isAppBarCollapsed,
+                      child: widget.onColapsAppbar!,
                     ),
-                  );
-                }
-                return RepaintBoundary(child: widget.itemBuilder(context, index));
-              } else if (widget.isLoadingMore) {
-                // Show load more indicator at the bottom of list
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              } else if (widget.isLoadDone) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: const Center(child: Text('All data loaded')),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
+                  ),
+
+                if (widget.topWidget != null) SliverToBoxAdapter(child: widget.topWidget),
+
+                SliverPadding(
+                  padding: widget.padding ?? EdgeInsets.zero,
+                  sliver: widget.itemCount == 0 && !widget.isLoading
+                      ? const SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Center(child: Text('No data found')),
+                        )
+                      : SliverGrid(
+                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            childAspectRatio: widget.aspectRatio,
+                            maxCrossAxisExtent: widget.maxCrossAxisExtent,
+                            mainAxisSpacing: widget.mainAxisSpacing,
+                            crossAxisSpacing: widget.isSeperated ? 0 : widget.crossAxisSpacing,
+                          ),
+                          delegate: SliverChildBuilderDelegate((context, index) {
+                            final child = widget.itemBuilder(context, index);
+                            if (widget.isSeperated) {
+                              return LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return _seprated(index, child, constraints.maxWidth);
+                                },
+                              );
+                            }
+                            return child;
+                          }, childCount: widget.itemCount),
+                        ),
+                ),
+
+                SliverToBoxAdapter(child: _buildFooter()),
+              ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
-  Widget _buildContent() {
-    // Show placeholder if no data with loading or empty text
-    if (widget.itemCount == 0) {
-      final placeholder = ListView(
-        physics: widget.physics ?? const AlwaysScrollableScrollPhysics(),
-        padding: widget.padding ?? EdgeInsets.all(16.w),
-        children: [
-          if (widget.isLoading) // only initial loading shows full screen indicator
-            const Center(child: CircularProgressIndicator())
-          else if (widget.isLoadDone)
-            const Center(child: Text('No data found'))
-          else
-            SizedBox(height: 300.h), // to enable pull-to-refresh overscroll
-        ],
+  Widget _buildFooter() {
+    if (widget.isLoading || widget.isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(child: CircularProgressIndicator()),
       );
-
-      return widget.onRefresh != null
-          ? RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: placeholder,
-            )
-          : placeholder;
     }
-  
-    
-
-    // Show staggered grid with optional pull-to-refresh
-    final grid = widget.topWidget == null
-        ? _buildGrid(physics: const AlwaysScrollableScrollPhysics(), controller: _scrollController)
-        : SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                widget.topWidget!,
-                _buildGrid(physics: const NeverScrollableScrollPhysics()),
-              ],
-            ),
-          );
-
-    return widget.onRefresh != null
-        ? RefreshIndicator(
-            onRefresh: _onRefresh,
-            child: grid,
-          )
-        : grid;
+    if (widget.isLoadDone && widget.itemCount > 0) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Text('No more data', style: TextStyle(color: Colors.grey)),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _seprated(int index, Widget child, double width) {
     final gridChildPosition = calculateGridChildInfo(
       index: index,
       totalChildren: widget.itemCount,
-      crossAxisCount: widget.maxCrossAxisExtent,
+      maxCrossAxisExtent: widget.maxCrossAxisExtent,
       width: width,
     );
 
-    final double spaceing = widget.crossAxisSpacing <= 0 ? 0 : widget.crossAxisSpacing / 2;
+    final spacing = widget.crossAxisSpacing <= 0 ? 0 : widget.crossAxisSpacing / 2;
 
     return Container(
       padding: EdgeInsets.only(
-        left: gridChildPosition.isLastInRow || gridChildPosition.isMiddleInRow ? spaceing : 0,
-        right: gridChildPosition.isFirstInRow || gridChildPosition.isMiddleInRow ? spaceing : 0,
+        left: (gridChildPosition.isLastInRow || gridChildPosition.isMiddleInRow ? spacing : 0)
+            .toDouble(),
+        right: (gridChildPosition.isFirstInRow || gridChildPosition.isMiddleInRow ? spacing : 0)
+            .toDouble(),
       ),
       decoration: BoxDecoration(
         border: Border(
           bottom: !gridChildPosition.isItInLastRow
-              ? BorderSide(color: AppColors.greay100, width: 1.4.w)
+              ? BorderSide(color: Colors.grey.withValues(alpha: .5), width: 1.4)
               : BorderSide.none,
         ),
       ),
@@ -268,74 +240,21 @@ Future<void> _onRefresh() async {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (widget.appbar != null) {
-      // Get the app bar height, default to kToolbarHeight if not a PreferredSizeWidget
-      final appBarHeight = widget.appbar is PreferredSizeWidget
-          ? (widget.appbar as PreferredSizeWidget).preferredSize.height
-          : kToolbarHeight;
-
-      return Column(
-        children: [
-          TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            tween: Tween<double>(
-              begin: _isAppBarVisible ? 0 : appBarHeight,
-              end: _isAppBarVisible ? appBarHeight : 0,
-            ),
-            builder: (context, height, child) {
-              return SizedBox(
-                height: height,
-                child: OverflowBox(
-                  maxHeight: appBarHeight,
-                  alignment: Alignment.topCenter,
-                  child: widget.appbar,
-                ),
-              );
-            },
-          ),
-          if (widget.onColapsAppbar != null)
-            Container(color: AppColors.background, child: widget.onColapsAppbar!.start),
-          Expanded(
-            child: Container(
-              color: AppColors.background,
-              child: AnimatedPadding(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                padding: EdgeInsets.only(top: _isAppBarVisible ? 0 : 0),
-                child: _buildContent(),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-    return _buildContent();
-  }
-
   GridChildInfo calculateGridChildInfo({
     required int index,
     required int totalChildren,
-    required double crossAxisCount, // use int, not double
+    required double maxCrossAxisExtent,
     required double width,
   }) {
-    final childrenInRow = (width / crossAxisCount).round();
+    final childrenInRow = (width / maxCrossAxisExtent).ceil();
+    final totalRows = (totalChildren / childrenInRow).ceil();
+    final currentRow = (index / childrenInRow).floor();
+    final positionInRow = index % childrenInRow;
 
-    // Total rows
-    final totalRows = totalChildren ~/ childrenInRow;
-
-    // Position in the row (0-based)
-    final positionInRow = index % crossAxisCount;
-
-    // First / middle / last
     final isFirstInRow = positionInRow == 0;
-    final isLastInRow = positionInRow == childrenInRow - 1;
+    final isLastInRow = positionInRow == childrenInRow - 1 || index == totalChildren - 1;
     final isMiddleInRow = !isFirstInRow && !isLastInRow;
-
-    final beforeLastRowItemsCount = (totalRows) * childrenInRow;
-    final isItInLastRow = beforeLastRowItemsCount <= index;
+    final isItInLastRow = currentRow == totalRows - 1;
 
     return GridChildInfo(
       childrenInRow: childrenInRow,
@@ -347,6 +266,29 @@ Future<void> _onRefresh() async {
   }
 }
 
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+
+  _StickyHeaderDelegate({required this.height, required this.child, required this.visible});
+  final double height;
+  final Widget child;
+  final bool visible;
+
+  @override
+  double get minExtent => visible ? height : 0.0;
+  @override
+  double get maxExtent => visible ? height : 0.0;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return visible ? child : const SizedBox.shrink();
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
+    return oldDelegate.visible != visible || oldDelegate.child != child;
+  }
+}
+
 class GridChildInfo {
   GridChildInfo({
     required this.childrenInRow,
@@ -355,7 +297,7 @@ class GridChildInfo {
     required this.isLastInRow,
     required this.isItInLastRow,
   });
-  final int childrenInRow; // number of items in this row
+  final int childrenInRow;
   final bool isFirstInRow;
   final bool isMiddleInRow;
   final bool isLastInRow;

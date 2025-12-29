@@ -9,8 +9,7 @@ import 'package:mainland/common/auth/model/us_states_model.dart';
 
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
-import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
-import 'package:mainland/common/auth/widgets/state_selector.dart';
+import 'package:mainland/common/auth/widgets/otp_verify_widget.dart'; 
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
@@ -69,10 +68,7 @@ class SignUpAllField extends StatelessWidget {
                     CommonRadioGroup(
                       options: {'attendee': AppString.attendee, 'organizer': AppString.organizer},
                       onChanged: (value) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(registrationType: value),
-                        );
+                        authCubit.onChangeSignUpModel(registrationType: value);
                       },
                       initialKey: 'attendee',
                       iconSize: 25.w,
@@ -93,10 +89,7 @@ class SignUpAllField extends StatelessWidget {
                       hintText: AppString.fullName,
                       validationType: ValidationType.validateFullName,
                       onSaved: (value, controller) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(fullName: value),
-                        );
+                        authCubit.onChangeSignUpModel(name: value);
                       },
                     ),
 
@@ -109,8 +102,7 @@ class SignUpAllField extends StatelessWidget {
                       hintText: AppString.emailAddress,
                       validationType: ValidationType.validateEmail,
                       onSaved: (value, controller) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(email: value));
+                        authCubit.onChangeSignUpModel(email: value);
                       },
                     ),
                     10.height,
@@ -121,10 +113,7 @@ class SignUpAllField extends StatelessWidget {
                       validationType: ValidationType.validatePassword,
                       hintText: AppString.password,
                       onChanged: (value) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(password: value),
-                        );
+                        authCubit.onChangeSignUpModel(password: value);
                       },
                     ),
                     10.height,
@@ -141,10 +130,7 @@ class SignUpAllField extends StatelessWidget {
                       isReadOnly: true,
                       validationType: ValidationType.notRequired,
                       onSaved: (value, controller) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(
-                          cubit.state.signUpModel.copyWith(country: 'United States'),
-                        );
+                        authCubit.onChangeSignUpModel(country: 'United States');
                       },
                     ),
                     10.height,
@@ -163,9 +149,7 @@ class SignUpAllField extends StatelessWidget {
                       isRequired: true,
                       onChanged: (states) {
                         if (states != null) {
-                          authCubit.onChangeSignUpModel(
-                            state.signUpModel.copyWith(state: states.value, city: ''),
-                          );
+                          authCubit.onChangeSignUpModel(states: states.value);
                         }
                       },
                       nameBuilder: (states) {
@@ -178,7 +162,7 @@ class SignUpAllField extends StatelessWidget {
                       selectedState: authCubit.state.signUpModel.state,
                       selectedCountry: 'United States of America',
                       onChange: (value) {
-                        authCubit.onChangeSignUpModel(state.signUpModel.copyWith(city: value));
+                        authCubit.onChangeSignUpModel(city: value);
                       },
                     ), 
                     // All Text Filed here
@@ -197,8 +181,7 @@ class SignUpAllField extends StatelessWidget {
                       hintText: 'XXX-XXX-XXXX',
                       validationType: ValidationType.validatePhone,
                       onSaved: (value, controller) {
-                        final cubit = context.read<AuthCubit>();
-                        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(phone: value));
+                        authCubit.onChangeSignUpModel(phone: value);
                       },
                     ),
                     30.height,
@@ -208,10 +191,9 @@ class SignUpAllField extends StatelessWidget {
                       titleText: AppString.signUp,
                       isLoading: state.isLoading,
                       onTap: () {
-                        final cubit = context.read<AuthCubit>();
                         formKey.currentState?.save();
                         if (formKey.currentState?.validate() == true) {
-                          cubit.signUp(cubit.state.signUpModel);
+                          authCubit.signUp(authCubit.state.signUpModel);
                         }
                       },
                     ).center,
@@ -288,7 +270,7 @@ class SignUpAllField extends StatelessWidget {
       onChanged: (date) {
         final finalDate = date ?? DateTime.now();
         AppLogger.debug(finalDate.toString());
-        cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: finalDate));
+        cubit.onChangeSignUpModel(dateOfBirth: finalDate);
         cubit.calculateAge(finalDate);
       },
       validation: (value) {
@@ -336,7 +318,7 @@ class SignUpAllField extends StatelessWidget {
         final cubit = context.read<AuthCubit>();
         final dateTime = date;
         if (dateTime != null) {
-          cubit.onChangeSignUpModel(cubit.state.signUpModel.copyWith(dateOfBirth: dateTime));
+          cubit.onChangeSignUpModel(dateOfBirth: dateTime);
           cubit.calculateAge(dateTime);
         }
       },

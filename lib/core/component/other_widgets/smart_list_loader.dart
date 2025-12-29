@@ -1,6 +1,12 @@
+/// Author: Km Muzahid
+/// Date: 2025-12-29
+/// Email: km.muzahid@gmail.com
+/// LastEditors: Km Muzahid
+/// LastEditTime: 2025-12-29 11:40:00
+library;
+
 import 'package:flutter/material.dart';
-import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/utils/helpers/debouncer.dart';
+import 'package:flutter/scheduler.dart';
 
 class SmartListLoader extends StatefulWidget {
   const SmartListLoader({
@@ -10,112 +16,186 @@ class SmartListLoader extends StatefulWidget {
     this.onLoadMore,
     this.isLoading = false,
     this.isLoadDone = false,
+    this.isReverse = false,
     this.padding,
-    this.isReverse = false, // Added reverse flag
+    this.appbar,
+    this.onColapsAppbar,
     super.key,
   });
 
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
-  final Function()? onRefresh;
-  final Function()? onLoadMore;
+  final void Function()? onRefresh;
+  final void Function()? onLoadMore;
   final bool isLoading;
   final bool isLoadDone;
+  final bool isReverse;
   final EdgeInsetsGeometry? padding;
-  final bool isReverse; // The reverse flag to toggle reverse chat behavior
+  final Widget? appbar;
+  final Widget? onColapsAppbar;
 
   @override
   State<SmartListLoader> createState() => _SmartListLoaderState();
 }
 
 class _SmartListLoaderState extends State<SmartListLoader> {
+  final GlobalKey _appBarKey = GlobalKey();
+  final GlobalKey _stickyKey = GlobalKey();
   late final ScrollController _scrollController;
-  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
+  
+  double _appBarHeight = 0.0;
+  double _stickyHeight = 0.0;
+  double _currentOffset = 0.0;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(_scrollListener);
+    SchedulerBinding.instance.addPostFrameCallback((_) => _updateHeights());
   }
 
-  void _onScroll() {
-    if (_debouncer.isRunning) return;
-    _debouncer.call(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 &&
-          widget.onLoadMore != null &&
-          !widget.isLoading &&
-          !widget.isLoadDone) {
-        widget.onLoadMore!();
-      }
+  void _scrollListener() {
+    if (!_scrollController.hasClients) return;
+
+    setState(() {
+      _currentOffset = _scrollController.offset;
     });
+
+    final pos = _scrollController.position;
+    final isAtEdge = widget.isReverse ? pos.pixels <= 100 : pos.pixels >= pos.maxScrollExtent - 200;
+
+    if (isAtEdge && widget.onLoadMore != null && !widget.isLoading && !widget.isLoadDone) {
+      widget.onLoadMore!();
+    }
   }
 
-  void scrollToFirstItem() {
-    if (widget.isReverse) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent, // Scroll to the last item (bottom in reverse)
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _scrollController.animateTo(
-        0.0, // Scroll to the first item (top)
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
+  void _updateHeights() {
+    final appBarBox = _appBarKey.currentContext?.findRenderObject() as RenderBox?;
+    final stickyBox = _stickyKey.currentContext?.findRenderObject() as RenderBox?;
+
+    setState(() {
+      _appBarHeight = appBarBox?.size.height ?? 0.0;
+      _stickyHeight = stickyBox?.size.height ?? 0.0;
+    });
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final list = ListView.builder(
-      controller: _scrollController,
-      physics: const ClampingScrollPhysics(),
-      padding: widget.padding,
-      reverse: widget.isReverse, // This makes the list scroll in reverse order
-      itemCount: widget.itemCount + 1,
-      itemBuilder: (context, index) {
- 
-          if (index < widget.itemCount) {
-            return widget.itemBuilder(context, index);
-        } 
-        if (widget.isLoading) {
-          return const Padding(
-            padding: EdgeInsets.only(bottom: 80, top: 16),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+    final isAppBarCollapsed = _currentOffset >= _appBarHeight;
 
-        // All Data Loaded Message
-        if (widget.isLoadDone) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Center(child: Text(AppString.allDataLoaded)),
-          );
-        }
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Measurement layer
+          Offstage(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(key: _appBarKey, child: widget.appbar ?? const SizedBox()),
+                Container(key: _stickyKey, child: widget.onColapsAppbar ?? const SizedBox()),
+              ],
+            ),
+          ),
 
-        return const SizedBox.shrink();
-      },
+          RefreshIndicator(
+            onRefresh: () async => widget.onRefresh?.call(),
+            child: CustomScrollView(
+              controller: _scrollController,
+              reverse: widget.isReverse,
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              slivers: [
+                if (widget.appbar != null &&
+                    _appBarHeight > 0 &&
+                    _scrollController.position.pixels < 5)
+                  SliverAppBar(
+                    floating: true,
+                    snap: true,
+                    elevation: 0,
+                    titleSpacing: widget.padding?.horizontal ?? 0,
+                    scrolledUnderElevation: 0,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    toolbarHeight: _appBarHeight,
+                    automaticallyImplyLeading: false,
+                    title: widget.appbar,
+                  ),
+                if (widget.onColapsAppbar != null)
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StickyHeaderDelegate(
+                      height: _stickyHeight,
+                      visible: isAppBarCollapsed,
+                      child: widget.onColapsAppbar!,
+                    ),
+                  ),
+
+                SliverPadding(
+                  padding: widget.padding ?? EdgeInsets.zero,
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      if (!widget.isReverse && index == widget.itemCount ||
+                          widget.isReverse && index == 0) {
+                        return _buildFooter();
+                      }
+                      final actualIndex = widget.isReverse ? index - 1 : index;
+                      if (actualIndex >= 0 && actualIndex < widget.itemCount) {
+                        return widget.itemBuilder(context, actualIndex);
+                      }
+                      return null;
+                    }, childCount: widget.itemCount + 1),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  }
 
-    // If `onRefresh` is provided, wrap in RefreshIndicator
-    if (widget.onRefresh != null) {
-      return RefreshIndicator(
-        onRefresh: () async {
-          widget.onRefresh!();
-        },
-        child: list,
+  Widget _buildFooter() {
+    if (widget.isLoading) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
+    if (widget.isLoadDone && widget.itemCount > 0) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Text('No more data', style: TextStyle(color: Colors.grey)),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+}
 
-    return list;
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _StickyHeaderDelegate({required this.height, required this.child, required this.visible});
+  final double height;
+  final Widget child;
+  final bool visible;
+
+  @override
+  double get minExtent => visible ? height : 0.0;
+  @override
+  double get maxExtent => visible ? height : 0.0;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return visible ? child : const SizedBox.shrink();
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
+    return oldDelegate.visible != visible || oldDelegate.child != child;
   }
 }

@@ -148,9 +148,34 @@ class AuthCubit extends SafeCubit<AuthState> {
     _storageService.write(_loginInfo, userInfo.toJson());
   }
 
-  Future<void> onChangeSignUpModel(SignUpModel? signUpModel) async {
-    if (signUpModel == null) return;
-    emit(state.copyWith(signUpModel: signUpModel));
+  Future<void> onChangeSignUpModel({
+    String? name,
+    String? email,
+    String? password,
+    String? phone,
+    String? city,
+    String? states,
+    String? country,
+    String? zipCode,
+    String? profileImage,
+    String? registrationType,
+    DateTime? dateOfBirth,
+  }) async {
+    emit(
+      state.copyWith(
+        signUpModel: state.signUpModel.copyWith(
+          fullName: name,
+          email: email,
+          password: password,
+          phone: phone,
+          city: city,
+          state: states,
+          country: country,
+          registrationType: registrationType,
+          dateOfBirth: dateOfBirth,
+        ),
+      ),
+    );
   }
 
   Future<void> init() async {
