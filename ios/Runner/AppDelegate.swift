@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import GoogleMaps	
 import Photos
 
 @main
@@ -13,6 +14,25 @@ import Photos
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     
+    // Google Maps API Key
+    // GMSServices.provideAPIKey("AIzaSyDk7p1Vl9WOtcDztagS6yPsgUYaVu_bCro")
+    
+    // 🍎 Register for remote notifications (APNs) - REQUIRED for FCM on iOS
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      UNUserNotificationCenter.current().requestAuthorization(
+        options: authOptions,
+        completionHandler: { _, _ in }
+      )
+    } else {
+      let settings: UIUserNotificationSettings =
+        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      application.registerUserNotificationSettings(settings)
+    }
+
+    application.registerForRemoteNotifications()
+
     // Access the FlutterViewController to create the MethodChannel
     guard let controller = window?.rootViewController as? FlutterViewController else {
       fatalError("RootViewController is not of type FlutterViewController")
@@ -31,6 +51,18 @@ import Photos
     }
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  // 🍎 APNs Token Registration Success
+  override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    print("✅ APNs Device Token: \(deviceToken.map { String(format: "%02.2hhx", $0) }.joined())")
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+
+  // 🍎 APNs Token Registration Failed
+  override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    print("❌ Failed to register for remote notifications: \(error.localizedDescription)")
+    super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
   }
 
   // Photo permission request

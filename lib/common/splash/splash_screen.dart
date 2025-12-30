@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
+import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -22,33 +24,38 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Use context safely here
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Utils.deviceSize = MediaQuery.of(context).size;
       context.read<AuthCubit>().init();
 
       // Optional: Navigate after splash
-      
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       body: Column(
         children: [
           const Spacer(),
-          CommonImage(imageSrc: Assets.icon.appIcon.path, width: 208, height: 142).center,
+          CommonImage(
+            imageSrc: Assets.icon.appIcon.path,
+            width: 208,
+            height: 142,
+          ).center,
           CommonText(
             text: AppString.appName,
-            style: getTheme.textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor),
+            style: getTheme.textTheme.headlineLarge?.copyWith(
+              color: AppColors.primaryColor,
+            ),
           ).center,
           CommonText(
             text: AppString.buySellKeepFavoriteTickets,
-            style: getTheme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+            style: getTheme.textTheme.bodyMedium?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
           ).center,
           const Spacer(),
           CommonText(

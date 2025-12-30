@@ -17,6 +17,7 @@ import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mainland/firebase_options.dart';
 
 //git add remote client
 //git remote set-url client https://githubAccessToken@github.com/gallorobbie7-cmd/The-Leaderboard-App.git
@@ -66,7 +67,8 @@ void main() async {
 
   await init();
   await getIt.isReady<StorageService>();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await FirebaseNotificationHandler.instance.init();
   runApp(const MyApp());
 }
@@ -80,9 +82,7 @@ void _diInit() {
   final DependencyInjection dI = DependencyInjection();
   dI.dependencies();
 }
- 
 
- 
 void showSnackBar(String text, {required SnackBarType type}) {
   SchedulerBinding.instance.addPostFrameCallback((_) {
     final context = navigatorRouterKey.currentContext;
@@ -91,7 +91,10 @@ void showSnackBar(String text, {required SnackBarType type}) {
     Flushbar(
       messageText: Text(
         text,
-        style: const TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: AppColors.textWhite,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       backgroundColor: _getSnackBarColor(type),
       duration: const Duration(seconds: 2),
@@ -107,9 +110,6 @@ void showSnackBar(String text, {required SnackBarType type}) {
     ).show(context);
   });
 }
-
-
-
 
 Color _getSnackBarColor(SnackBarType type) {
   switch (type) {
