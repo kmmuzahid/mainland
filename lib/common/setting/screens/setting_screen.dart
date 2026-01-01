@@ -131,7 +131,7 @@ class SettingScreen extends StatelessWidget {
                       10.height,
                       accountSummery(authState.profileModel),
                       15.height,
-                      if (Utils.getRole() == Role.ORGANIZER) ...[
+                      if (Utils.deviceRole() == Role.ORGANIZER) ...[
                         _menuItems(
                           context: context,
                           title: AppString.sendNotificationAboutAnEvent,
@@ -246,7 +246,7 @@ class SettingScreen extends StatelessWidget {
                         context: context,
                         title: AppString.locations,
                         subTitle:
-                            '${authState.profileModel?.address.city ?? ''}, ${authState.profileModel?.address.street ?? ''}, ${authState.profileModel?.address.country ?? ''}',
+                            '${authState.profileModel?.address.city.trim() ?? ''}, ${authState.profileModel?.address.street.trim() ?? ''}, ${authState.profileModel?.address.country.trim() ?? ''}',
                         onTap: () {
                           // appRouter.push(CustomMapRoute(onPositionChange: (details) {}));
                           appRouter.push(const LocationRoute());
@@ -255,10 +255,36 @@ class SettingScreen extends StatelessWidget {
                       Utils.divider(),
                       _menuItems(
                         context: context,
-                        title: Utils.getRole() == Role.ORGANIZER
+                        title: Utils.deviceRole() == Role.ORGANIZER
                             ? 'Switch to Attendee'
                             : 'Switch to Organizer',
                         onTap: () {
+                          if (Utils.userRealRole() == Role.ATTENDEE) {
+                            showSnackBar(
+                              'Sorry! This email is not asssociated with organization',
+                              type: SnackBarType.warning,
+                            );
+                            CommonDialogWithActions(
+                              title: 'Switch Role',
+                              subTitle:
+                                  'Are you sure you want to Logout to login with different email?',
+                              onConfirm: () {
+                                context.read<AuthCubit>().logout();
+                              },
+                              onCancel: () {},
+                              context: context,
+                              content: [
+                                const CommonText(
+                                  text: 'This action will take you to login screen',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                10.height,
+                              ],
+                            );
+
+                            return;
+                          }
                           context.read<AuthCubit>().switchRole();
                         },
                       ),

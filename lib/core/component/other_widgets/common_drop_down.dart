@@ -1,8 +1,8 @@
-import 'package:mainland/core/component/text/common_text.dart';
-import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mainland/core/component/text/common_text.dart';
+import 'package:mainland/core/config/theme/light_theme.dart';
+import 'package:mainland/core/utils/constants/app_colors.dart';
 
 class CommonDropDown<T> extends StatefulWidget {
   const CommonDropDown({
@@ -20,6 +20,7 @@ class CommonDropDown<T> extends StatefulWidget {
     this.initalValue,
     this.enableInitalSelection = true,
     super.key,
+    this.fontStyle,
   });
 
   final String hint;
@@ -35,6 +36,7 @@ class CommonDropDown<T> extends StatefulWidget {
   final Widget? prefix;
   final bool enableInitalSelection;
   final T? initalValue;
+  final FontStyle? fontStyle;
 
   @override
   State<CommonDropDown<T>> createState() => _CommonDropDownState<T>();
@@ -45,30 +47,14 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
   T? _selectedItem;
   late List<T> _items;
 
-@override
+  @override
   void initState() {
     super.initState();
     _items = widget.items;
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
 
-    // For MapEntry, we need to compare keys/values instead of the entire object
-    if (widget.initalValue != null && _selectedItem != widget.initalValue) {
-      if (widget.initalValue is MapEntry) {
-        _selectedItem = _items.firstWhere(
-          (item) =>
-              item is MapEntry && (item as MapEntry).key == (widget.initalValue as MapEntry).key,
-          orElse: () => _items.isNotEmpty ? _items.first : widget.initalValue!,
-        );
-      } else {
-        _selectedItem = _items.contains(widget.initalValue)
-            ? widget.initalValue
-            : (_items.isNotEmpty ? _items.first : null);
-      }
-    } else if (_items.isNotEmpty) {
-      _selectedItem = _items.first;
-    }
+    _selectedItem = _getInitialSelection();
 
-    // Notify parent if we have a selected item
     if (_selectedItem != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onChanged(_selectedItem);
@@ -76,35 +62,34 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
     }
   }
 
-//   @override
-// void didUpdateWidget(covariant CommonDropDown<T> oldWidget) {
-//   super.didUpdateWidget(oldWidget);
-  
-//   // Update items if changed
-//   if (widget.items != oldWidget.items) {
-//     _items = widget.items;
-
-//     // Keep selected item if it exists in new list, otherwise null
-//     if (_selectedItem != null &&
-//         !_items.any((item) => _itemsEqual(item, _selectedItem!))) {
-//       _selectedItem = null;
-//     }
-
-//     // Optional: pick initial value if provided and exists in new list
-//     if (_selectedItem == null && widget.initalValue != null) {
-//       if (_items.any((item) => _itemsEqual(item, widget.initalValue!))) {
-//         _selectedItem = widget.initalValue;
-//       }
-//     }
-
-//     setState(() {});
-//   }
-// }
+  T? _getInitialSelection() {
+    if (widget.initalValue != null) {
+      if (widget.initalValue is MapEntry) {
+        return _items.firstWhere(
+          (item) =>
+              item is MapEntry && (item as MapEntry).key == (widget.initalValue as MapEntry).key,
+          orElse: () => _items.isNotEmpty ? _items.first : widget.initalValue!,
+        );
+      } else {
+        return _items.contains(widget.initalValue)
+            ? widget.initalValue
+            : (_items.isNotEmpty ? _items.first : null);
+      }
+    } else if (_items.isNotEmpty) {
+      return _items.first;
+    }
+    return null;
+  }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  TextStyle _getTextStyle(BuildContext context) {
+    return widget.textStyle?.copyWith(fontFamily: fontFamily) ??
+        TextStyle(fontFamily: fontFamily, fontSize: 16.sp, color: AppColors.outlineColor);
   }
 
   @override
@@ -117,14 +102,11 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
       alignment: Alignment.center,
       children: [
         DropdownButtonFormField<T>(
-          style: widget.textStyle,
-          onSaved: (value) {
-            widget.onChanged(value);
-          },
-
+          style: _getTextStyle(context),
+          onSaved: widget.onChanged,
           validator: (value) {
             if (widget.isRequired &&
-                (value == null || !widget.items.any((item) => _itemsEqual(item, value)))) {
+                (value == null || !_items.any((item) => _itemsEqual(item, value)))) {
               return '${widget.hint} is required';
             }
             return null;
@@ -132,31 +114,12 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
           initialValue: (widget.enableInitalSelection || widget.initalValue != null)
               ? _selectedItem
               : null,
-          decoration: InputDecoration(
-            isDense: true,
-            filled: widget.backgroundColor != null,
-            fillColor: widget.backgroundColor,
-            prefixIcon: widget.prefix != null
-                ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: widget.prefix,
-                  )
-                : null,
-            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-            contentPadding: EdgeInsets.only(left: 10.w, right: 2.w, top: 14.w, bottom: 14.w),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(widget.borderRadius.r)),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 1.w),
-              borderRadius: BorderRadius.circular(widget.borderRadius.r),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 1.w),
-              borderRadius: BorderRadius.circular(widget.borderRadius.r),
-            ),
-          ),
+          decoration: _buildInputDecoration(context, borderColor),
           hint: CommonText(
-            text: widget.hint,
-            style: TextStyle(fontSize: widget.textStyle?.fontSize, color: AppColors.outlineColor),
+            text: widget.hint, 
+            style: _getTextStyle(
+              context,
+            ).copyWith(color: AppColors.outlineColor, fontStyle: widget.fontStyle),
           ),
           icon: const Icon(Icons.arrow_drop_down),
           dropdownColor: AppColors.serfeceBG,
@@ -165,14 +128,13 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
               .map(
                 (item) => DropdownMenuItem<T>(
                   value: item,
-                  child: CommonText(text: widget.nameBuilder(item), style: widget.textStyle),
+                  child: CommonText(text: widget.nameBuilder(item), style: _getTextStyle(context)),
                 ),
               )
               .toList(),
           onChanged: (T? newValue) {
             if (newValue == null) return;
 
-            // Find the matching item from the original items list
             final matchingItem = widget.items.firstWhere(
               (item) => _itemsEqual(item, newValue),
               orElse: () => newValue,
@@ -184,8 +146,6 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
             widget.onChanged(matchingItem);
           },
         ),
-
-        // Animated border while loading
         if (widget.isLoading)
           Positioned.fill(
             child: AnimatedBuilder(
@@ -205,6 +165,31 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
     );
   }
 
+  InputDecoration _buildInputDecoration(BuildContext context, Color borderColor) {
+    return InputDecoration(
+      isDense: true,
+      filled: widget.backgroundColor != null,
+      fillColor: widget.backgroundColor,
+      prefixIcon: widget.prefix != null
+          ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: widget.prefix,
+            )
+          : null,
+      prefixIconConstraints: const BoxConstraints(),
+      contentPadding: EdgeInsets.only(left: 10.w, right: 2.w, top: 14.w, bottom: 14.w),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(widget.borderRadius.r)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: borderColor, width: 1.w),
+        borderRadius: BorderRadius.circular(widget.borderRadius.r),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: borderColor, width: 1.w),
+        borderRadius: BorderRadius.circular(widget.borderRadius.r),
+      ),
+    );
+  }
+
   bool _itemsEqual(T a, T b) {
     if (a is MapEntry && b is MapEntry) {
       return a.key == b.key && a.value == b.value;
@@ -215,7 +200,7 @@ class _CommonDropDownState<T> extends State<CommonDropDown<T>> with SingleTicker
 
 class _BorderLoaderPainter extends CustomPainter {
   _BorderLoaderPainter(this.progress, this.color, this.borderRadius);
-  final double progress; // 0.0 to 1.0
+  final double progress;
   final Color color;
   final double borderRadius;
 
@@ -231,7 +216,7 @@ class _BorderLoaderPainter extends CustomPainter {
 
     final dashWidth = 50.0.w;
     final dashSpace = 1.0.w;
-    final totalLength = (dashWidth + dashSpace);
+    final totalLength = dashWidth + dashSpace;
     final pathMetrics = path.computeMetrics();
 
     for (final metric in pathMetrics) {

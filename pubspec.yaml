@@ -97,14 +97,41 @@ flutter:
 
   fonts:
     - family: Selawik
-      fonts:
-        - asset: assets/fonts/selawk.ttf
-          weight: 400
-        - asset: assets/fonts/selawksb.ttf
-          weight: 600
-        - asset: assets/fonts/selawkb.ttf
-          weight: 700
-        - asset: assets/fonts/selawkl.ttf
-          weight: 300
+      fonts: 
         - asset: assets/fonts/selawksl.ttf
-          weight: 200
+          weight: 200   # SemiLight
+
+        - asset: assets/fonts/selawkl.ttf
+          weight: 300   # Light
+
+        - asset: assets/fonts/selawk.ttf
+          weight: 400   # Regular
+
+        # Explicit mapping to prevent fake Medium interpolation
+        - asset: assets/fonts/selawk.ttf
+          weight: 500   # Medium (mapped to Regular)
+
+        - asset: assets/fonts/selawksb.ttf
+          weight: 600   # SemiBold
+
+        - asset: assets/fonts/selawkb.ttf
+          weight: 700   # Bold
+      # fonts: 
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 200   # SemiLight
+
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 300   # Light
+
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 400   # Regular
+
+      #   # Explicit mapping to prevent fake Medium interpolation
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 500   # Medium (mapped to Regular)
+
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 600   # SemiBold
+
+      #   - asset: assets/fonts/test.ttf
+      #     weight: 700   # Bold

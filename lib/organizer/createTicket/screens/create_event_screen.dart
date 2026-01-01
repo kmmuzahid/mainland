@@ -12,7 +12,7 @@ import '../widgets/ticket_form_two.dart';
 
 @RoutePage()
 class CreateEventScreen extends StatelessWidget {
-  const CreateEventScreen({Key? key, this.draftId}) : super(key: key);
+  const CreateEventScreen({super.key, this.draftId});
   final String? draftId;
 
   @override
@@ -59,6 +59,7 @@ class CreateEventScreen extends StatelessWidget {
                           isReadOnly: state.isReadOnly,
                           isExpanded: state.isExpandedView,
                           cubit: context.read(),
+                          createTicketState: state,
                         ),
                       ),
                       Future.microtask(

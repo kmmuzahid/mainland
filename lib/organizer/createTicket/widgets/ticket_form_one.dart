@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mainland/common/auth/model/us_states_model.dart';
 import 'package:mainland/core/component/button/common_button.dart';
+import 'package:mainland/core/component/city_state/common_city_dropdown.dart';
+import 'package:mainland/core/component/city_state/state_data.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/other_widgets/dotted_border_container.dart';
@@ -27,18 +28,23 @@ import 'package:mainland/organizer/createTicket/widgets/form_label.dart';
 import '../cubit/create_ticket_state.dart';
 import 'time_input_card.dart';
 
+
 class TicketFormOne extends StatelessWidget {
-  const TicketFormOne({
-    super.key,
+  TicketFormOne({
     required this.createEventModel,
     required this.isReadOnly,
     required this.cubit,
     required this.isExpanded,
+    required this.createTicketState,
+    super.key,
   });
   final CreateEventModel createEventModel;
   final bool isReadOnly;
   final CreateTicketCubit cubit;
   final bool isExpanded;
+  final CreateTicketState createTicketState;
+  final List<MapEntry<String, String>> states = USA.states.map((e) => MapEntry(e, e)).toList()
+    ..sort((a, b) => a.key.compareTo(b.key));
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +60,10 @@ class TicketFormOne extends StatelessWidget {
                     formKey: formKey,
                   )
                 : _title(formKey),
-            FormLabel(isRequired: true, label: 'Event Images'),
+            const FormLabel(isRequired: true, label: 'Event Images'),
             _imagePickerBuilder(),
             10.height,
-            FormLabel(isRequired: true, label: 'Event Title'),
+            const FormLabel(isRequired: true, label: 'Event Title'),
             _textEditor(
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(title: value));
@@ -133,7 +139,7 @@ class TicketFormOne extends StatelessWidget {
               ),
 
             10.height,
-            FormLabel(isRequired: true, label: 'Event Description'),
+            const FormLabel(isRequired: true, label: 'Event Description'),
             CommonMultilineTextField(
               isReadOnly: isReadOnly,
               height: 200,
@@ -153,9 +159,7 @@ class TicketFormOne extends StatelessWidget {
               initialValue: createEventModel.eventDate?.toLocal().toString().split(' ')[0],
               isReadOnly: isReadOnly,
               onSave: (value) {
-                cubit.updateField(
-                  cubit.state.createEventModel.copyWith(eventDate: value),
-                );
+                cubit.updateField(cubit.state.createEventModel.copyWith(eventDate: value));
               },
               backgroundColor: AppColors.backgroundWhite,
             ),
@@ -189,7 +193,7 @@ class TicketFormOne extends StatelessWidget {
             ),
 
             10.height,
-            FormLabel(isRequired: true, label: 'Street Address 1'),
+            const FormLabel(isRequired: true, label: 'Street Address 1'),
             _textEditor(
               onSaved: (value, controller) {
                 cubit.updateField(cubit.state.createEventModel.copyWith(streetAddress1: value));
@@ -197,52 +201,6 @@ class TicketFormOne extends StatelessWidget {
               hintText: 'Apt. 1A/Suite 1A/Unit 1A',
               validationType: ValidationType.validateRequired,
               initalText: createEventModel.streetAddress1,
-            ),
-            10.height,
-            FormLabel(isRequired: false, label: 'Street Address 2'),
-            _textEditor(
-              onSaved: (value, controller) {
-                cubit.updateField(cubit.state.createEventModel.copyWith(streetAddress2: value));
-              },
-              hintText: 'Apt. 1A/Suite 1A/Unit 1A',
-              validationType: ValidationType.notRequired,
-              initalText: createEventModel.streetAddress2,
-            ),
-            10.height,
-            FormLabel(isRequired: true, label: AppString.city),
-            _textEditor(
-              onSaved: (value, controller) {
-                cubit.updateField(cubit.state.createEventModel.copyWith(city: value));
-              },
-              hintText: AppString.city,
-              initalText: createEventModel.city,
-              validationType: ValidationType.validateFullName,
-            ),
-            10.height,
-            FormLabel(isRequired: true, label: AppString.state),
-            CommonDropDown<MapEntry<String, String>>( 
-              key: const Key('Form1State_state'),
-              hint: AppString.state,
-              items: usStates.entries.toList(),
-              textStyle: AppTextStyles.bodyMedium,
-              borderColor: AppColors.greay100,
-              initalValue:
-                  usStates.isNotEmpty &&
-                      createEventModel.state != null &&
-                      createEventModel.state!.isNotEmpty
-                  ? usStates.entries.firstWhere(
-                      (element) => element.value == createEventModel.state?.trim(),
-                    )
-                  : null,
-              enableInitalSelection: false,
-              backgroundColor: AppColors.backgroundWhite,
-              isRequired: true,
-              onChanged: (states) {
-                // cubit.updateField(cubit.state.createEventModel.copyWith(state: states?.value));
-              },
-              nameBuilder: (states) {
-                return states.value;
-              },
             ),
             10.height,
             const FormLabel(isRequired: true, label: 'Country'),
@@ -254,6 +212,59 @@ class TicketFormOne extends StatelessWidget {
               initalText: null,
               hintText: 'United States',
               validationType: ValidationType.notRequired,
+            ),
+            10.height,
+            FormLabel(isRequired: true, label: AppString.state),
+            10.height,
+            CommonDropDown<MapEntry<String, String>>(
+              key: const Key('Form_Location_united_states'),
+              hint: AppString.state,
+              prefix: _requiredIcon(),
+              fontStyle: FontStyle.italic,
+              backgroundColor: AppColors.backgroundWhite,
+              items: states,
+              textStyle: AppTextStyles.bodyMedium,
+              borderColor: AppColors.disable,
+              initalValue:
+                  states.isNotEmpty &&
+                      createEventModel.state != null &&
+                      createEventModel.state!.isNotEmpty
+                  ? states.firstWhere(
+                      (element) => element.value == createEventModel.state?.trim(),
+                    )
+                  : null,
+              enableInitalSelection: false,
+              isRequired: true,
+              onChanged: (states) {
+                if (states != null) {
+                  cubit.updateField(cubit.state.createEventModel.copyWith(state: states.value));
+                }
+              },
+              nameBuilder: (states) {
+                return states.value;
+              },
+            ),
+            10.height,
+            FormLabel(isRequired: true, label: AppString.city),
+            CommonCityDropDown(
+              key: Key('FromLocation${cubit.state.createEventModel.state}'),
+              selectedState: cubit.state.createEventModel.state,
+              selectedCountry: 'United States of America',
+              fontStyle: FontStyle.italic,
+              backgroundColor: AppColors.backgroundWhite,
+              onChange: (value) {
+                cubit.updateField(cubit.state.createEventModel.copyWith(city: value));
+              },
+            ),
+            10.height,
+            const FormLabel(isRequired: false, label: 'Street Address 2'),
+            _textEditor(
+              onSaved: (value, controller) {
+                cubit.updateField(cubit.state.createEventModel.copyWith(streetAddress2: value));
+              },
+              hintText: 'Apt. 1A/Suite 1A/Unit 1A',
+              validationType: ValidationType.notRequired,
+              initalText: createEventModel.streetAddress2,
             ),
             if (!isExpanded) ...[
               20.height,
@@ -273,6 +284,9 @@ class TicketFormOne extends StatelessWidget {
       },
     );
   }
+
+  Widget _requiredIcon() =>
+      const CommonText(text: '*', textColor: AppColors.warning, fontSize: 20, top: 10);
 
   Widget _imagePickerBuilder() {
     return BlocBuilder<CreateTicketCubit, CreateTicketState>(

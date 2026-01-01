@@ -1,9 +1,7 @@
 // form_cubit.dart
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/event/repository/event_details_repository.dart';
@@ -12,7 +10,6 @@ import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/main.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/user/preferense/model/sub_category_model.dart';
@@ -35,12 +32,12 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
   // Navigate to next page
   void saveDraft() async {
     if (state.isLoading) return;
-    if (state.createEventModel.startTime != null &&
-        state.createEventModel.endTime != null &&
-        state.createEventModel.startTime!.isAfter(state.createEventModel.endTime!)) {
-      showSnackBar('Event End Time should be greater than Start Time', type: SnackBarType.error);
-      return;
-    }
+    // if (state.createEventModel.startTime != null &&
+    //     state.createEventModel.endTime != null &&
+    //     state.createEventModel.startTime!.isAfter(state.createEventModel.endTime!)) {
+    //   showSnackBar('Event End Time should be greater than Start Time', type: SnackBarType.error);
+    //   return;
+    // }
     if ((state.image == null && state.draftEventModel.image == null) ||
         state.createEventModel.title == null ||
         state.createEventModel.title?.isEmpty == true ||
@@ -48,7 +45,7 @@ class CreateTicketCubit extends SafeCubit<CreateTicketState> {
         state.createEventModel.description?.isEmpty == true) {
       showSnackBar(
         'Sorry! Image, Title and Event Description is Mandatory',
-        type: SnackBarType.error,
+        type: SnackBarType.warning,
       );
       return;
     }

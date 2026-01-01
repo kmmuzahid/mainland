@@ -146,3 +146,59 @@ Mason is a Dart template engine for scaffolding features like BLoC or GetX.
   fvm flutter build appbundle --release
   ```
 - **Explanation:** Builds a release APK for your app. The `--release` flag optimizes the build for production.
+
+
+# Git Commands Reference
+
+```bash
+# Repository Setup
+git init                               # Initialize a new Git repository
+git clone <repo_url>                   # Clone an existing repository
+
+# Remote Management
+git remote -v                          # List configured remotes
+git remote add <name> <url>            # Add a new remote
+git remote set-url <name> <url>        # Change remote URL
+# Example: set remote with access token for push
+git remote add client https://githubAccessToken@github.com/kmmuzahid/mainland.git
+git remote set-url client https://githubAccessToken@github.com/kmmuzahid/mainland.git
+git remote remove <name>               # Remove a remote
+
+# Staging & Committing
+git status                             # Show the current status of files
+git add <file>                         # Stage a file for commit
+git add .                              # Stage all changes
+git commit -m "message"                # Commit staged changes with a message
+git commit -am "message"               # Stage tracked files and commit in one step
+
+# Branching
+git branch                             # List all branches
+git branch <name>                       # Create a new branch
+git checkout <branch>                   # Switch to a branch
+git checkout -b <name>                  # Create and switch to a new branch
+git merge <branch>                      # Merge another branch into current branch
+git branch -d <branch>                  # Delete a branch
+
+# Updating & Syncing
+git pull                               # Fetch and merge changes from remote
+git push                               # Push commits to remote
+git push -u <remote> <branch>          # Push branch and set upstream
+
+# History & Inspection
+git log                                # Show commit history
+git log --oneline                       # Show condensed commit history
+git diff                               # Show changes in unstaged files
+git diff --staged                        # Show changes in staged files
+git show <commit>                        # Show details of a commit
+
+# Undo & Reset
+git restore <file>                      # Discard changes in working directory
+git restore --staged <file>             # Unstage a file
+git reset <commit>                      # Reset current branch to a specific commit
+git reset --hard <commit>               # Reset branch and working directory to commit
+git revert <commit>                     # Create a new commit that undoes a previous commit
+
+# Tags
+git tag                                 # List tags
+git tag <name>                           # Create a tag
+git push <remote> <tag>                 # Push a tag to remote

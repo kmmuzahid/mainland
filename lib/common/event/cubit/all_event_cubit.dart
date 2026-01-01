@@ -1,4 +1,3 @@
-import 'package:flutter/scheduler.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/event/cubit/all_event_state.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
@@ -19,7 +18,7 @@ class AllEventCubit extends SafeCubit<AllEventState> {
   void fetch({bool isRefresh = false, TicketFilter ticketFilter = TicketFilter.Live}) async {
     if (state.isLoading) return;
     emit(state.copyWith(isLoading: true, page: isRefresh ? 1 : state.page));
-    final result = Utils.getRole() == Role.ORGANIZER
+    final result = Utils.deviceRole() == Role.ORGANIZER
         ? await _repository.getOranizerEvents(filter: ticketFilter, page: state.page)
         : await _userHome(ticketFilter);
     emit(

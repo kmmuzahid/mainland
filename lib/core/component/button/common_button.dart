@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mainland/core/config/theme/light_theme.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import '../other_widgets/common_loader.dart';
+
 import '../text/common_text.dart';
 
 class CommonButton extends StatefulWidget {
@@ -97,6 +97,7 @@ class _CommonButtonState extends State<CommonButton>
 
         // Match CommonText: GoogleFonts.dmSans with scaled size and weight
         style: getTheme.textTheme.bodyMedium?.copyWith(
+          fontFamily: fontFamily,
           fontSize: widget.titleSize.sp,
           fontWeight: widget.titleWeight,
           color: widget.titleColor ?? AppColors.onPrimaryColor,

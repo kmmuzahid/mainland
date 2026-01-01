@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
-import 'package:mainland/common/auth/cubit/auth_state.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
-import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
   static late Size deviceSize;
@@ -19,11 +14,15 @@ class Utils {
     child: Divider(color: AppColors.greay100, thickness: 1.w),
   );
 
-  static Role? getRole() => appRouter.navigatorKey.currentState!.context
+  static Role? deviceRole() =>
+      appRouter.navigatorKey.currentState!.context
       .read<AuthCubit>()
       .state
       .userLoginInfoModel
       .role;
+
+  static Role? userRealRole() =>
+      appRouter.navigatorKey.currentState!.context.read<AuthCubit>().state.profileModel?.role;
 
   static String? getUserId() => appRouter.navigatorKey.currentState!.context
       .read<AuthCubit>()
@@ -40,9 +39,9 @@ class Utils {
 
   static DateTime subtractYears(DateTime date, int yearsToSubtract) {
     // Handle edge case for leap year (Feb 29 to non-leap year)
-    int newYear = date.year - yearsToSubtract;
-    int newMonth = date.month;
-    int newDay = date.day;
+    final int newYear = date.year - yearsToSubtract;
+    final int newMonth = date.month;
+    final int newDay = date.day;
 
     // Check if the resulting date would be invalid (e.g., Feb 29 to non-leap year)
     // Dart automatically corrects this to Feb 28 if the new year is not a leap year

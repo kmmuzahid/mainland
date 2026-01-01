@@ -53,8 +53,7 @@ class CommonDateInputTextField extends StatefulWidget {
   final bool? isValidationRequired;
 
   @override
-  State<CommonDateInputTextField> createState() =>
-      _CommonDateInputTextFieldState();
+  State<CommonDateInputTextField> createState() => _CommonDateInputTextFieldState();
 }
 
 class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
@@ -139,7 +138,7 @@ class _CommonDateInputTextFieldState extends State<CommonDateInputTextField> {
         },
         child: widget.suffix ?? const Icon(Icons.calendar_month_outlined),
       ),
-      validationType: widget.isValidationRequired == true
+      validationType: widget.isValidationRequired ?? false
           ? ValidationType.validateDate
           : ValidationType.notRequired,
       prefixIcon: widget.prefixIcon,

@@ -295,10 +295,10 @@ class NotificationPreferenceModel {
   }
 
   Map<String, dynamic> toJson() => {
-    "isSellTicketNotificationEnabled": isSellTicketNotificationEnabled,
-    "isMessageNotificationEnabled": isMessageNotificationEnabled,
-    "isPublishEventNotificationEnabled": isPublishEventNotificationEnabled,
-    "isWithdrawMoneyNotificationEnabled": isWithdrawMoneyNotificationEnabled,
+    'isSellTicketNotificationEnabled': isSellTicketNotificationEnabled,
+    'isMessageNotificationEnabled': isMessageNotificationEnabled,
+    'isPublishEventNotificationEnabled': isPublishEventNotificationEnabled,
+    'isWithdrawMoneyNotificationEnabled': isWithdrawMoneyNotificationEnabled,
   };
 
   NotificationPreferenceModel copyWith({

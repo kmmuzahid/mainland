@@ -45,7 +45,7 @@ class HomeCubit extends SafeCubit<HomeState> {
           );
         }
       } else if (data.streamType == StreamType.message) {
-        final bool isChatOpen = Utils.getRole() == Role.ORGANIZER
+        final bool isChatOpen = Utils.deviceRole() == Role.ORGANIZER
             ? state.currentIndex == 3
             : state.currentIndex == 4;
         if (!isChatOpen) {

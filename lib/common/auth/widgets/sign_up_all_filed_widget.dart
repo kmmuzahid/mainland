@@ -1,26 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_country_state/state-list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/cubit/auth_state.dart';
-import 'package:mainland/common/auth/model/us_states_model.dart';
-
 import 'package:mainland/common/auth/widgets/already_accunt_rich_text.dart';
 import 'package:mainland/common/auth/widgets/common_logo.dart';
-import 'package:mainland/common/auth/widgets/otp_verify_widget.dart'; 
 import 'package:mainland/common/show_info/cubit/info_state.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
 import 'package:mainland/core/component/city_state/common_city_dropdown.dart';
 import 'package:mainland/core/component/image/common_image.dart';
-import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
-import 'package:mainland/core/component/text/common_rich_text.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
-import 'package:mainland/core/component/text_field/common_phone_number_text_filed.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -33,12 +26,15 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/gen/assets.gen.dart';
-import 'package:mainland/main.dart';
+
+import '../../../core/component/city_state/state_data.dart';
 
 class SignUpAllField extends StatelessWidget {
-  SignUpAllField({super.key, required this.state});
+  SignUpAllField({required this.state, super.key});
   final AuthState state;
-  final List<MapEntry<String, String>> states = USA.states.map((e) => MapEntry(e, e)).toList();
+  final List<MapEntry<String, String>> states = USA.states.map((e) => MapEntry(e, e)).toList()
+    ..sort((a, b) => a.key.compareTo(b.key));   
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +119,7 @@ class SignUpAllField extends StatelessWidget {
 
                     10.height,
                     CommonTextField(
-                      prefixIcon: _requiredIcon(),
+                      // prefixIcon: _requiredIcon(),
                       borderColor: AppColors.disable,
                       backgroundColor: AppColors.disable,
                       hintText: 'United States',
@@ -138,6 +134,7 @@ class SignUpAllField extends StatelessWidget {
                       key: const Key('Location_united_states'),
                       hint: AppString.state,
                       prefix: _requiredIcon(),
+                      fontStyle: FontStyle.italic,
                       items: states,
                       textStyle: AppTextStyles.bodyMedium,
                       borderColor: AppColors.disable,
@@ -161,6 +158,7 @@ class SignUpAllField extends StatelessWidget {
                       key: Key('Location${authCubit.state.signUpModel.state}'),
                       selectedState: authCubit.state.signUpModel.state,
                       selectedCountry: 'United States of America',
+                      fontStyle: FontStyle.italic,
                       onChange: (value) {
                         authCubit.onChangeSignUpModel(city: value);
                       },
@@ -267,6 +265,7 @@ class SignUpAllField extends StatelessWidget {
       prefixIcon: _requiredIcon(),
       borderColor: AppColors.disable,
       backgroundColor: AppColors.disable,
+      isValidationRequired: true,
       onChanged: (date) {
         final finalDate = date ?? DateTime.now();
         AppLogger.debug(finalDate.toString());

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/config/theme/light_theme.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../text/common_text.dart';
 
 class CommonTextField extends StatefulWidget {
@@ -78,38 +80,28 @@ class _CommonTextFieldState extends State<CommonTextField> {
   int wordCount = 0;
   int lengthCount = 0;
 
-  // bool get _hasController => widget.controller != null;
-
   @override
   void initState() {
     super.initState();
-
     _obscureText =
         widget.validationType == ValidationType.validatePassword ||
         widget.validationType == ValidationType.validateConfirmPassword;
     _controller = widget.controller ?? TextEditingController();
     _focusNode = FocusNode();
 
-    // Set initial text only if the controller was provided
     if (widget.initialText != null) {
       _controller.text = widget.initialText ?? '';
     }
 
     _focusNode.addListener(() {
-      setState(() {}); // rebuild to reflect focus changes
+      setState(() {});
     });
   }
 
   @override
   void dispose() {
-    try {
-      _focusNode.dispose();
-      // if (!_hasController) {
-      _controller.dispose();
-      // }
-    } catch (e) {
-      print(e);
-    }
+    _focusNode.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -126,22 +118,36 @@ class _CommonTextFieldState extends State<CommonTextField> {
   void _onSave(String? value) {
     if (widget.validationType == ValidationType.validateConfirmPassword)
       assert(
-        widget.originalPassword == null,
-        'Orginal Password can not be null for Confirm password filed',
+        widget.originalPassword != null,
+        'Original Password cannot be null for Confirm password field',
       );
-    if (widget.onSaved == null) return;
-    widget.onSaved!(value?.trim() ?? '', _controller);
+    if (widget.onSaved != null) widget.onSaved!(value?.trim() ?? '', _controller);
   }
 
   String _cleanText(String text) {
     if (text.trim().isEmpty) return text;
-    // Remove HTML tags
     String cleaned = text.replaceAll(RegExp(r'<[^>]*>'), '');
-    // Replace multiple spaces with a single space
     cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
     return cleaned;
   }
 
+  /// Helper: Returns TextStyle from theme with optional overrides
+  TextStyle _getStyle({
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? textColor,
+    double? height,
+    FontStyle? fontStyle,
+  }) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontWeight: fontWeight,
+      fontSize: fontSize,
+      color: textColor,
+      height: height,
+      fontStyle: fontStyle,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,27 +156,32 @@ class _CommonTextFieldState extends State<CommonTextField> {
       child: ((widget.maxLength ?? 0) > 0 || (widget.maxWords ?? 0) > 0)
           ? Column(
               children: [
-                _inp(),
+                _buildTextField(),
                 if ((widget.maxLength ?? 0) > 0 || (widget.maxWords ?? 0) > 0)
-                  Text(
-                    (widget.maxLength ?? 0) > 0
-                        ? '$lengthCount/${widget.maxLength}'
-                        : '$wordCount/${widget.maxWords}',
-                  ).end,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      (widget.maxLength ?? 0) > 0
+                          ? '$lengthCount/${widget.maxLength}'
+                          : '$wordCount/${widget.maxWords}',
+                      style: _getStyle(
+                        fontSize: 12.sp,
+                        textColor: getTheme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
               ],
             )
-          : _inp(),
+          : _buildTextField(),
     );
   }
 
-  TextFormField _inp() {
+  TextFormField _buildTextField() {
     return TextFormField(
       textAlign: widget.textAlign,
       controller: _controller,
       focusNode: _focusNode,
-      onTapOutside: (event) {
-        _focusNode.unfocus();
-      },
+      onTapOutside: (event) => _focusNode.unfocus(),
       enableInteractiveSelection: !widget.isReadOnly,
       obscureText: _obscureText,
       readOnly: widget.isReadOnly,
@@ -178,25 +189,19 @@ class _CommonTextFieldState extends State<CommonTextField> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: InputHelper.getKeyboardType(widget.validationType),
       textInputAction: widget.textInputAction,
-      onSaved: (v) {
-        _onSave(v?.trim() ?? '');
-      },
+      onSaved: (v) => _onSave(v?.trim() ?? ''),
       maxLength: widget.maxLength,
       inputFormatters: [
         ...InputHelper.getInputFormatters(widget.validationType),
         if (widget.maxWords != null || widget.maxLength != null)
           TextInputFormatter.withFunction((oldValue, newValue) {
-            // Clean the text before processing
             final cleanedText = _cleanText(newValue.text);
 
             if (widget.maxLength != null) {
               final int length = cleanedText.length;
               if (length <= widget.maxLength!) {
-                setState(() {
-                  lengthCount = length;
-                });
-                // Return the cleaned text
-                return TextEditingValue(
+                setState(() => lengthCount = length);
+                return newValue.copyWith(
                   text: newValue.text,
                   selection: TextSelection.collapsed(offset: newValue.text.length),
                 );
@@ -204,26 +209,21 @@ class _CommonTextFieldState extends State<CommonTextField> {
               return oldValue;
             }
 
-            // Count words by splitting on whitespace and filtering out empty strings
-            final words = cleanedText.split(' ').where((word) => word.isNotEmpty).length;
-
-            // Allow the change if word count is within limit or if text is being deleted
-            if (words <= widget.maxWords! || newValue.text.length < oldValue.text.length) {
-              setState(() {
-                wordCount = words;
-              });
-              // Return the cleaned text
-              return TextEditingValue(
-                text: newValue.text,
-                selection: TextSelection.collapsed(offset: newValue.text.length),
-              );
+            if (widget.maxWords != null) {
+              final words = cleanedText.split(' ').where((w) => w.isNotEmpty).length;
+              if (words <= widget.maxWords! || newValue.text.length < oldValue.text.length) {
+                setState(() => wordCount = words);
+                return newValue.copyWith(
+                  text: newValue.text,
+                  selection: TextSelection.collapsed(offset: newValue.text.length),
+                );
+              }
             }
+
             return oldValue;
           }),
       ],
-      onFieldSubmitted: (v) {
-        _onSave(v.trim());
-      },
+      onFieldSubmitted: (v) => _onSave(v.trim()),
       onTap: widget.onTap,
       validator:
           widget.validation ??
@@ -234,37 +234,28 @@ class _CommonTextFieldState extends State<CommonTextField> {
               newValue,
               originalPassword: widget.originalPassword?.call(),
             );
-          
-            // Check word count if maxWords is set
-            if (widget.maxWords != null && newValue.trim().isNotEmpty) {
-              if (wordCount - 1 > widget.maxWords!) {
-                error = 'Maximum ${widget.maxWords} words allowed';
-              }
+            if (widget.maxWords != null && newValue.isNotEmpty && wordCount > widget.maxWords!) {
+              error = 'Maximum ${widget.maxWords} words allowed';
             }
-          
-            // Return the error to show the error border, but return null for the message if showValidationMessage is false
             return widget.showValidationMessage ? error : (error != null ? '' : null);
           },
-          
-      style: getTheme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500, fontSize: 16.sp),
+      style: _getStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
       decoration: InputDecoration(
         filled: true,
         counterText: '',
-
         errorMaxLines: widget.showValidationMessage ? 2 : 1,
-        errorStyle: widget.showValidationMessage ? null : const TextStyle(fontSize: 0, height: 0),
+        errorStyle: widget.showValidationMessage
+            ? null
+            : _getStyle(fontSize: 0, fontWeight: FontWeight.w400),
         fillColor: widget.backgroundColor,
-        hintStyle: TextStyle(
+        hintStyle: _getStyle(
           fontSize: 16.sp,
-          color: AppColors.outlineColor,
           fontStyle: FontStyle.italic,
+          textColor: AppColors.outlineColor,
         ),
         prefixIcon: widget.prefixText?.isNotEmpty == true
             ? Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 5,
-                ), // add some right padding to allow hint space
+                padding: const EdgeInsets.only(left: 10, right: 5),
                 child: CommonText(text: widget.prefixText!, textColor: _iconColor()),
               )
             : Padding(
@@ -277,51 +268,33 @@ class _CommonTextFieldState extends State<CommonTextField> {
               ? widget.paddingHorizontal
               : double.infinity,
         ),
-
         prefixIconConstraints: BoxConstraints(
           maxWidth: widget.prefixIcon == null ? widget.paddingHorizontal : double.infinity,
         ),
         suffixIcon: widget.showActionButton
             ? GestureDetector(
-                onTap: () {
-                  _onSave(_controller.text.trim());
-                },
+                onTap: () => _onSave(_controller.text.trim()),
                 child: widget.actionButtonIcon ?? const Icon(Icons.search),
               )
             : widget.validationType == ValidationType.validatePassword
-            ? (_obscureText ? _buildPasswordSuffixIcon() : _buildPasswordSuffixIcon())
+            ? (_buildPasswordSuffixIcon())
             : Padding(
                 padding: EdgeInsets.only(right: 10, left: widget.paddingHorizontal),
                 child: widget.suffixIcon,
               ),
         prefixIconColor: _iconColor(),
         suffixIconColor: _iconColor(),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: getTheme.inputDecorationTheme.focusedBorder!.borderSide.copyWith(
-            color: widget.isReadOnly
-                ? (widget.borderColor ?? getTheme.dividerColor)
-                : getTheme.primaryColor,
-            width: widget.borderWidth.w,
-          ),
-          borderRadius: BorderRadius.circular(widget.borderRadius.r),
+        focusedBorder: _buildBorder(
+          color: widget.isReadOnly
+              ? (widget.borderColor ?? getTheme.dividerColor)
+              : getTheme.primaryColor,
+          width: widget.borderWidth.w,
         ),
-
-        errorBorder: OutlineInputBorder(
-          borderSide: getTheme.inputDecorationTheme.errorBorder!.borderSide.copyWith(
-            color: AppColors.error,
-            width: widget.borderWidth.w,
-          ),
-          borderRadius: BorderRadius.circular(widget.borderRadius.r),
+        enabledBorder: _buildBorder(
+          color: widget.borderColor ?? getTheme.dividerColor,
+          width: widget.borderWidth.w,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: getTheme.inputDecorationTheme.enabledBorder!.borderSide.copyWith(
-            color: widget.borderColor ?? getTheme.dividerColor,
-            width: widget.borderWidth.w,
-          ),
-
-          borderRadius: BorderRadius.circular(widget.borderRadius.r),
-        ),
+        errorBorder: _buildBorder(color: AppColors.error, width: widget.borderWidth.w),
         contentPadding: EdgeInsets.symmetric(
           horizontal: widget.paddingHorizontal.w,
           vertical: widget.paddingVertical.h,
@@ -329,7 +302,13 @@ class _CommonTextFieldState extends State<CommonTextField> {
         hintText: widget.hintText,
         labelText: widget.labelText,
       ),
-          
+    );
+  }
+
+  OutlineInputBorder _buildBorder({required Color color, double? width}) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(widget.borderRadius.r),
+      borderSide: BorderSide(color: color, width: width ?? widget.borderWidth.w),
     );
   }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mainland/core/config/theme/light_theme.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 
 class CommonText extends StatelessWidget {
   const CommonText({
@@ -84,22 +84,15 @@ class CommonText extends StatelessWidget {
         : _withoutBorder(context);
   }
 
-  EdgeInsets _edgeInsetsBuilder() => EdgeInsets.only(
-    left: left.w,
-    right: right.w,
-    top: top.h,
-    bottom: bottom.h,
-  );
+  EdgeInsets _edgeInsetsBuilder() =>
+      EdgeInsets.only(left: left.w, right: right.w, top: top.h, bottom: bottom.h);
 
   Widget _withBorder(BuildContext context) => Container(
     padding: _edgeInsetsBuilder(),
     margin: EdgeInsets.all(5.w),
     decoration: BoxDecoration(
       color: backgroundColor ?? getTheme.scaffoldBackgroundColor,
-      border: Border.all(
-        color: borderColor ?? Theme.of(context).dividerColor,
-        width: 1.2.w,
-      ),
+      border: Border.all(color: borderColor ?? Theme.of(context).dividerColor, width: 1.2.w),
       borderRadius: BorderRadius.circular(borderRadious?.r ?? 4.r),
     ),
     child: _textField(context),
@@ -158,8 +151,8 @@ class CommonText extends StatelessWidget {
         return Html(
           data: formattedData,
           style: {
-            "body": Style(
-              fontFamily: 'Selawik',
+            'body': Style(
+              fontFamily: fontFamily,
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
               textOverflow: effectiveOverflow,
@@ -168,7 +161,8 @@ class CommonText extends StatelessWidget {
               color: textColor,
               fontWeight: fontWeight,
             ),
-            "p": Style(
+            'p': Style(
+              fontFamily: fontFamily,
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
               textAlign: textAlign,
@@ -177,7 +171,8 @@ class CommonText extends StatelessWidget {
               color: textColor,
               fontWeight: fontWeight,
             ),
-            "h1,h2,h3,h4,h5,h6": Style(
+            'h1,h2,h3,h4,h5,h6': Style(
+              fontFamily: fontFamily,
               margin: Margins.zero,
               padding: HtmlPaddings.zero,
               textAlign: textAlign,
@@ -281,40 +276,32 @@ class CommonText extends StatelessWidget {
   }
 
   bool _isHtml(String input) {
-    final htmlRegex = RegExp(r"<[^>]+>", multiLine: true, caseSensitive: false);
+    final htmlRegex = RegExp(r'<[^>]+>', multiLine: true, caseSensitive: false);
     return htmlRegex.hasMatch(input);
   }
 
   TextStyle getStyle() {
-    final double effectiveFontSize = fontSize ?? 12.0;
+    final double effectiveFontSize = fontSize ?? style?.fontSize ?? 12.0;
 
-    var style =
-        this.style ??
-        TextStyle(
-          fontFamily: getTheme.textTheme.bodyMedium?.fontFamily,
-          fontSize: effectiveFontSize,
-          fontWeight: fontWeight ?? FontWeight.w400,
-          color: textColor ?? getTheme.textTheme.bodyMedium?.color,
-          height: height,
-          decoration: decoration,
-          decorationColor: decorationColor,
-        );
+    // Base style — either provided or default to theme.bodyMedium
+    TextStyle baseStyle = style ?? const TextStyle();
 
-    // Calculate line height if textHeight is provided
+    // Apply style overrides while keeping fontFamily from theme
+    baseStyle = baseStyle.copyWith(
+      fontFamily: fontFamily,
+      fontSize: effectiveFontSize,
+      fontWeight: fontWeight ?? baseStyle.fontWeight ?? FontWeight.w400,
+      color: textColor ?? baseStyle.color,
+      height: height ?? baseStyle.height,
+      decoration: decoration ?? baseStyle.decoration,
+      decorationColor: decorationColor ?? baseStyle.decorationColor,
+    );
+
+    // Optional: recalc line height if textHeight is provided
     final double? fontHeight = textHeight != null
         ? (textHeight! / effectiveFontSize)
-        : null;
+        : baseStyle.height;
 
-    // Apply styles with proper scaling
-    if (textColor != null) {
-      style = style.copyWith(color: textColor, height: fontHeight);
-    }
-    if (fontWeight != null) {
-      style = style.copyWith(fontWeight: fontWeight, height: fontHeight);
-    }
-    if (fontSize != null) {
-      style = style.copyWith(fontSize: effectiveFontSize, height: fontHeight);
-    }
-    return style;
+    return baseStyle.copyWith(height: fontHeight);
   }
 }

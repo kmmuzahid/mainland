@@ -22,7 +22,6 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
 import 'package:mainland/user/ticket/model/ticket_picker_model.dart';
-import 'package:mainland/user/ticket/screen/ticket_checkout_screen.dart';
 
 @RoutePage()
 class EventDetailsScreen extends StatelessWidget {
@@ -47,7 +46,7 @@ class EventDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final showButton = showEventActions == false
         ? false
-        : Utils.getRole() == Role.ATTENDEE;
+        : Utils.deviceRole() == Role.ATTENDEE;
     return BlocProvider(
       create: (context) => EventDetailsCubit()..fetch(eventId: eventId),
       child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
@@ -227,7 +226,7 @@ class EventDetailsScreen extends StatelessWidget {
                             'Pre-Order available ${Utils.formatDateToShortMonth(eventDetails.eventDate!)}',
                         maxLine: 2,
                       ),
-                    if (Utils.getRole() == Role.ORGANIZER)
+                    if (Utils.deviceRole() == Role.ORGANIZER)
                       _textBuilder(
                         title: 'Event Code: ${eventDetails?.eventCode ?? ''}',
                       ),

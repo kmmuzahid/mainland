@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart' show Role;
 import 'package:mainland/common/tickets/model/ticket_model.dart';
-import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -109,7 +108,7 @@ class TicketWidget extends StatelessWidget {
               appRouter.push(
                 EventDetailsRoute(
                   eventId: ticketModel.id ?? '',
-                  showEventActions: Utils.getRole() == Role.ATTENDEE,
+                  showEventActions: Utils.deviceRole() == Role.ATTENDEE,
                   isEventAvailable:
                       filter != TicketFilter.Closed &&
                       filter != TicketFilter.UnderReview &&

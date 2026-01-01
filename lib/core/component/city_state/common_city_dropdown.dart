@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_country_state/complied_cities.dart';
-import 'package:mainland/common/auth/model/us_states_model.dart';
 import 'package:mainland/core/component/other_widgets/common_drop_down.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
@@ -9,25 +8,30 @@ import 'package:mainland/core/utils/constants/app_text_styles.dart';
 
 class CommonCityDropDown extends StatelessWidget {
   const CommonCityDropDown({
+    required this.onChange,
     super.key,
     this.selectedState,
     this.selectedCountry,
     this.initalCity,
-    required this.onChange,
+    this.backgroundColor,
+    this.fontStyle,
   });
   final String? selectedState;
   final String? selectedCountry;
   final String? initalCity;
+  final FontStyle? fontStyle;
+  final Color? backgroundColor;
   final Function(String value) onChange;
   @override
   Widget build(BuildContext context) {
     final city = getTheCities(
       country: selectedCountry ?? '',
       state: selectedState ?? '',
-    ).map((e) => MapEntry(e, e)).toList();
+    ).map((e) => MapEntry(e, e)).toList()..sort((a, b) => a.key.compareTo(b.key));
     return CommonDropDown<MapEntry<String, String>>(
       hint: AppString.city,
       prefix: _requiredIcon(),
+      fontStyle: fontStyle,
       items: city,
       textStyle: AppTextStyles.bodyMedium,
       borderColor: AppColors.disable,
@@ -38,7 +42,7 @@ class CommonCityDropDown extends StatelessWidget {
             )
           : null,
       enableInitalSelection: false,
-      backgroundColor: AppColors.disable,
+      backgroundColor: backgroundColor ?? AppColors.disable,
       isRequired: true,
       onChanged: (states) {
         onChange(states?.value ?? '');
@@ -77,3 +81,4 @@ class CommonCityDropDown extends StatelessWidget {
   Widget _requiredIcon() =>
       const CommonText(text: '*', textColor: AppColors.warning, fontSize: 20, top: 10);
 }
+
