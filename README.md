@@ -147,6 +147,15 @@ Mason is a Dart template engine for scaffolding features like BLoC or GetX.
   ```
 - **Explanation:** Builds a release APK for your app. The `--release` flag optimizes the build for production.
 
+#Flutter Launcher Icon
+- **Command:**
+  ```
+  flutter_launcher_icons: ^0.14.4
+  dart run flutter_launcher_icons:generate -o
+  flutter pub get
+  dart run flutter_launcher_icons
+  ```
+- **Explanation:** Generates launcher icons for your app based on the configuration in `pubspec.yaml`.
 
 # Git Commands Reference
 
