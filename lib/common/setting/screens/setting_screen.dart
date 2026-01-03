@@ -45,7 +45,7 @@ class SettingScreen extends StatelessWidget {
         builder: (context, cubit, state) => SingleChildScrollView(
           child: Column(
             children: [
-              showBackButton ? const SizedBox.shrink() : 10.height,
+              showBackButton ? const SizedBox.shrink() : 20.height,
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),

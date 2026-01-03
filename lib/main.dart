@@ -1,22 +1,16 @@
-import 'dart:io';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/app.dart';
-import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart'
-    show FirebaseNotificationHandler;
-import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/bloc/app_bloc_observer.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/storage/storage_service.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
-import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:mainland/firebase_options.dart';
 
 //git add remote client
@@ -69,7 +63,6 @@ void main() async {
   await getIt.isReady<StorageService>();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await FirebaseNotificationHandler.instance.init();
   runApp(const MyApp());
 }
 

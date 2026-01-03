@@ -1,7 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/auth/model/profile_model.dart';
-import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/core/config/network/response_state.dart';
 
 abstract class AuthRepository {
@@ -31,9 +31,9 @@ abstract class AuthRepository {
   Future<ResponseState<ProfileModel?>> getCurrentUser();
 
   Future<ResponseState<ProfileModel?>> updateUser({
+    required bool isDeleteImage,
     ProfileModel? profileModel,
     XFile? image,
-    required bool isDeleteImage,
   });
 
   Future<String> signInWithGoogle();
@@ -47,4 +47,6 @@ abstract class AuthRepository {
   Future<ResponseState<String?>> getPrivacyPolicy();
 
   Future<ResponseState<String?>> getTermsAndConditions();
+
+  Future<ResponseState<dynamic>> updateFcmToken({required String fcmToken});
 }

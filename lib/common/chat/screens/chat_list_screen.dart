@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
-import 'package:mainland/common/chat/cubit/chat/chat_cubit.dart';
-import 'package:mainland/core/app_bar/common_app_bar.dart';
-
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/other_widgets/smart_list_loader.dart';
-import 'package:mainland/core/component/pop_up/common_popup_menu.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
@@ -20,8 +16,8 @@ import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+
 import '../cubit/chat_list/chat_list_cubit.dart';
-import '../cubit/chat_list/chat_list_state.dart';
 import '../model/chat_list_item_model.dart';
 
 @RoutePage()
@@ -37,6 +33,7 @@ class ChatListScreen extends StatelessWidget {
         create: () => ChatListCubit()..init(),
         builder: (context, cubit, state) => Column(
           children: [
+            20.height,
             _header(context, cubit),
             Expanded(
               child: SmartListLoader(

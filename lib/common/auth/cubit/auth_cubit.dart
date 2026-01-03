@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +9,7 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/common/auth/widgets/terms_and_conditions.dart';
+import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
@@ -35,14 +35,8 @@ class AuthCubit extends SafeCubit<AuthState> {
   final String _profileInfo = 'profile_info_key';
   Role _role = Role.ATTENDEE;
 
-  Future<void> deleteAccount({
-    required String password,
-    required String reason,
-  }) async {
-    final result = await _repository.deleteAccount(
-      password: password,
-      reason: reason,
-    );
+  Future<void> deleteAccount({required String password, required String reason}) async {
+    final result = await _repository.deleteAccount(password: password, reason: reason);
     if (result.isSuccess) {
       clear();
     }
@@ -64,19 +58,14 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   void switchRole() async {
-    _role = state.userLoginInfoModel.role == Role.ATTENDEE
-        ? Role.ORGANIZER
-        : Role.ATTENDEE;
+    _role = state.userLoginInfoModel.role == Role.ATTENDEE ? Role.ORGANIZER : Role.ATTENDEE;
     final model = state.userLoginInfoModel.copyWith(role: _role);
     emit(state.copyWith(userLoginInfoModel: model));
     await _saveUserInfo(model);
     appRouter.replaceAll([const SplashRoute()]);
   }
 
-  void resetPassword({
-    required String verificationToken,
-    required String newPassword,
-  }) async {
+  void resetPassword({required String verificationToken, required String newPassword}) async {
     if (state.isLoading) return;
     emit(state.copyWith(isLoading: true));
     final responce = await _repository.resetPassword(
@@ -90,8 +79,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   }
 
   void getPolicy() async {
-    if (state.termsAndConditions == null ||
-        state.termsAndConditions?.isEmpty == true) {
+    if (state.termsAndConditions == null || state.termsAndConditions?.isEmpty == true) {
       _repository.getTermsAndConditions().then((value) {
         emit(state.copyWith(termsAndConditions: value.data));
       });
@@ -145,7 +133,7 @@ class AuthCubit extends SafeCubit<AuthState> {
 
   Future<void> _saveUserInfo(UserLoginInfoModel userInfo) async {
     emit(state.copyWith(userLoginInfoModel: userInfo));
-    _storageService.write(_loginInfo, userInfo.toJson());
+    _storageService.write(_loginInfo, userInfo.toJson()); 
   }
 
   Future<void> onChangeSignUpModel({
@@ -188,15 +176,12 @@ class AuthCubit extends SafeCubit<AuthState> {
         emit(const AuthState());
       }
       if (profileData != null) {
-        emit(
-          state.copyWith(
-            profileModel: ProfileModel.fromJson(jsonDecode(profileData)),
-          ),
-        );
+        emit(state.copyWith(profileModel: ProfileModel.fromJson(jsonDecode(profileData))));
       }
       if (state.userLoginInfoModel.accessToken.isNotEmpty) {
         appRouter.replaceAll([const HomeRoute()]);
         SocketService.instance.connect(id: state.userLoginInfoModel.id);
+        FirebaseNotificationHandler.instance.init();
         getCurrentUser();
       } else {
         Future.delayed(const Duration(seconds: 1), () {
@@ -216,11 +201,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> signIn(String username, String password) async {
     if (state.isLoading) return;
     emit(const AuthState(isLoading: true));
-    final responce = await _repository.signIn(
-      username: username,
-      password: password,
-      role: _role,
-    );
+    final responce = await _repository.signIn(username: username, password: password, role: _role);
     if (responce.statusCode == 200 && responce.data != null) {
       await _saveUserInfo(responce.data!);
       await getCurrentUser();
@@ -228,6 +209,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       emit(state.copyWith(isLoading: false));
       SocketService.instance.connect(id: state.userLoginInfoModel.id);
       appRouter.replaceAll([const HomeRoute()]);
+      FirebaseNotificationHandler.instance.init();
     } else {
       emit(state.copyWith(isLoading: false));
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
@@ -271,14 +253,9 @@ class AuthCubit extends SafeCubit<AuthState> {
 
     if (response.statusCode == 200 && response.data != null) {
       emit(state.copyWith(profileModel: response.data));
-      await _storageService.write(
-        _profileInfo,
-        jsonEncode(response.data!.toJson()),
-      );
+      await _storageService.write(_profileInfo, jsonEncode(response.data!.toJson()));
       if (state.userLoginInfoModel.role == null) {
-        await _saveUserInfo(
-          state.userLoginInfoModel.copyWith(role: response.data?.role),
-        );
+        await _saveUserInfo(state.userLoginInfoModel.copyWith(role: response.data?.role));
       }
       if (state.profileModel?.termsAndCondition == false) {
         getPolicy();
@@ -289,10 +266,7 @@ class AuthCubit extends SafeCubit<AuthState> {
 
   Future<void> forgetPassword(String username, String otp) async {}
 
-  Future<void> changePassword({
-    required String newPassword,
-    required String oldPassword,
-  }) async {
+  Future<void> changePassword({required String newPassword, required String oldPassword}) async {
     if (state.isLoading) return;
     emit(state.copyWith(isLoading: true));
     final result = await _repository.changePassword(
@@ -303,10 +277,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       _role = Role.ATTENDEE;
       await _storageService.deleteAll();
       appRouter.replaceAll([
-        SignInRoute(
-          ctrUsername: TextEditingController(),
-          ctrPassword: TextEditingController(),
-        ),
+        SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
       ]);
       emit(const AuthState());
     } else {
@@ -314,28 +285,20 @@ class AuthCubit extends SafeCubit<AuthState> {
     }
   }
 
-  Future<void> updateToken({
-    required String? accessToken,
-    required String? refreshToken,
-  }) async {
+  Future<void> updateToken({required String? accessToken, required String? refreshToken}) async {
     _saveUserInfo(
-      state.userLoginInfoModel.copyWith(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      ),
+      state.userLoginInfoModel.copyWith(accessToken: accessToken, refreshToken: refreshToken),
     );
   }
 
   Future<void> logout() async {
     _role = Role.ATTENDEE;
     SocketService.instance.disconnect();
+    FirebaseNotificationHandler.instance.logout();
     await _repository.signOut();
     await _storageService.deleteAll();
     appRouter.replaceAll([
-      SignInRoute(
-        ctrUsername: TextEditingController(),
-        ctrPassword: TextEditingController(),
-      ),
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
     ]);
     emit(const AuthState());
   }
@@ -345,10 +308,7 @@ class AuthCubit extends SafeCubit<AuthState> {
     SocketService.instance.disconnect();
     await _storageService.deleteAll();
     appRouter.replaceAll([
-      SignInRoute(
-        ctrUsername: TextEditingController(),
-        ctrPassword: TextEditingController(),
-      ),
+      SignInRoute(ctrUsername: TextEditingController(), ctrPassword: TextEditingController()),
     ]);
     emit(const AuthState());
   }
@@ -361,8 +321,7 @@ class AuthCubit extends SafeCubit<AuthState> {
 
     final now = DateTime.now();
     int age = now.year - date.year;
-    if (now.month < date.month ||
-        (now.month == date.month && now.day < date.day)) {
+    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
       age--;
     }
     if (age < 0) age = 0; // Ensure age is not negative

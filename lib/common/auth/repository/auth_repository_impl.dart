@@ -1,7 +1,12 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2025-11-19 10:02:29
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:image_picker/image_picker.dart' show XFile;
 import 'package:mainland/common/auth/model/profile_model.dart';
-import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/model/sign_up_model.dart';
+import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
@@ -78,10 +83,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ResponseState<ProfileModel?>> getCurrentUser() async {
     final response = await _dioService.request<ProfileModel>(
-      input: RequestInput(
-        endpoint: ApiEndPoint.instance.profile,
-        method: RequestMethod.GET,
-      ),
+      input: RequestInput(endpoint: ApiEndPoint.instance.profile, method: RequestMethod.GET),
       responseBuilder: (data) => ProfileModel.fromJson(data),
     );
     return response;
@@ -127,9 +129,7 @@ class AuthRepositoryImpl implements AuthRepository {
       ResponseState(data: true, isSuccess: true, statusCode: 201);
 
   @override
-  Future<ResponseState<dynamic>> signUp({
-    required SignUpModel signUpModel,
-  }) async {
+  Future<ResponseState<dynamic>> signUp({required SignUpModel signUpModel}) async {
     final response = await _dioService.request<dynamic>(
       input: RequestInput(
         endpoint: ApiEndPoint.instance.signUp,
@@ -172,10 +172,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ResponseState<String?>> getPrivacyPolicy() async {
     return _dioService.request<String>(
-      input: RequestInput(
-        endpoint: ApiEndPoint.instance.privacyPolicy,
-        method: RequestMethod.GET,
-      ),
+      input: RequestInput(endpoint: ApiEndPoint.instance.privacyPolicy, method: RequestMethod.GET),
       responseBuilder: (data) => data['content'],
     );
   }
@@ -205,10 +202,7 @@ class AuthRepositoryImpl implements AuthRepository {
             'personalInfo': {
               'phone': profileModel.personalInfo.phone,
               if (profileModel.personalInfo.dateOfBirth != null)
-                'dateOfBirth': profileModel
-                    .personalInfo
-                    .dateOfBirth
-                    ?.millisecondsSinceEpoch,
+                'dateOfBirth': profileModel.personalInfo.dateOfBirth?.millisecondsSinceEpoch,
             },
             'address': {
               // 'country': 'United States',
@@ -217,18 +211,14 @@ class AuthRepositoryImpl implements AuthRepository {
               'street': profileModel.address.street,
             },
             'notification': {
-              'isSellTicketNotificationEnabled': profileModel
-                  .notificationPreference
-                  .isSellTicketNotificationEnabled,
-              'isMessageNotificationEnabled': profileModel
-                  .notificationPreference
-                  .isMessageNotificationEnabled,
-              'isPublishEventNotificationEnabled': profileModel
-                  .notificationPreference
-                  .isPublishEventNotificationEnabled,
-              'isWithdrawMoneyNotificationEnabled': profileModel
-                  .notificationPreference
-                  .isWithdrawMoneyNotificationEnabled,
+              'isSellTicketNotificationEnabled':
+                  profileModel.notificationPreference.isSellTicketNotificationEnabled,
+              'isMessageNotificationEnabled':
+                  profileModel.notificationPreference.isMessageNotificationEnabled,
+              'isPublishEventNotificationEnabled':
+                  profileModel.notificationPreference.isPublishEventNotificationEnabled,
+              'isWithdrawMoneyNotificationEnabled':
+                  profileModel.notificationPreference.isWithdrawMoneyNotificationEnabled,
             },
           };
 
@@ -242,5 +232,20 @@ class AuthRepositoryImpl implements AuthRepository {
       showMessage: true,
       responseBuilder: (data) => ProfileModel.fromJson(data),
     );
+  }
+
+  @override
+  Future<ResponseState<dynamic>> updateFcmToken({required String fcmToken}) async {
+    final response = await _dioService.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndPoint.instance.profile,
+        method: RequestMethod.PATCH,
+        files: {},
+        jsonBody: {'fcmToken': fcmToken},
+      ),
+      showMessage: true,
+      responseBuilder: (data) => data,
+    );
+    return response;
   }
 }

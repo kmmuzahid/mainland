@@ -35,7 +35,7 @@ class SocketMessageModel {
     return SocketMessageModel(
       id: json['_id'] ?? '',
       chatId: json['chatId'] ?? '',
-      replyTo: ReplyToModel.fromJson(json['replyTo']),
+      replyTo: json['replyTo'] != null ? ReplyToModel.fromJson(json['replyTo']) : null,
       replies: List<String>.from(json['replies'] ?? []),
       read: json['read'] ?? false,
       sender: SenderModel.fromJson(json['sender']),
@@ -51,7 +51,7 @@ class SocketMessageModel {
   }
   final String id;
   final String chatId;
-  final ReplyToModel replyTo;
+  final ReplyToModel? replyTo;
   final List<String> replies;
   final bool read;
   final SenderModel sender;
@@ -67,7 +67,7 @@ class SocketMessageModel {
     return {
       '_id': id,
       'chatId': chatId,
-      'replyTo': replyTo.toJson(),
+      'replyTo': replyTo?.toJson(),
       'replies': replies,
       'read': read,
       'sender': sender.toJson(),
