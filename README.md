@@ -192,6 +192,7 @@ git branch -d <branch>                  # Delete a branch
 git pull                               # Fetch and merge changes from remote
 git push                               # Push commits to remote
 git push -u <remote> <branch>          # Push branch and set upstream
+git push <remote-name> <local-branch>:<remote-branch> #Push local branch to the new remote with a different name
 
 # History & Inspection
 git log                                # Show commit history

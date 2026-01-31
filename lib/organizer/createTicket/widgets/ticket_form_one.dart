@@ -36,6 +36,7 @@ class TicketFormOne extends StatelessWidget {
     required this.cubit,
     required this.isExpanded,
     required this.createTicketState,
+    required this.formOneKey,
     super.key,
   });
   final CreateEventModel createEventModel;
@@ -46,9 +47,12 @@ class TicketFormOne extends StatelessWidget {
   final List<MapEntry<String, String>> states = USA.states.map((e) => MapEntry(e, e)).toList()
     ..sort((a, b) => a.key.compareTo(b.key));
 
+  final GlobalKey<FormState> formOneKey;
+
   @override
   Widget build(BuildContext context) {
     return CustomForm(
+      formKey: formOneKey,
       builder: (context, formKey) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

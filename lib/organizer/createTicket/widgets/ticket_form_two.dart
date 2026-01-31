@@ -7,15 +7,12 @@ import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/component/pop_up/common_popup_menu.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_date_input_text_field.dart';
-import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
-import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 import 'package:mainland/organizer/createTicket/cubit/create_ticket_cubit.dart';
 import 'package:mainland/organizer/createTicket/model/create_event_model.dart';
 import 'package:mainland/organizer/createTicket/widgets/event_form_ticket_selctor.dart';
@@ -26,21 +23,24 @@ import 'create_ticket_titlebar.dart';
 
 class TicketFormTwo extends StatelessWidget {
   const TicketFormTwo({
-    super.key,
     required this.createEventModel,
     required this.isReadOnly,
     required this.cubit,
     required this.isExpanded,
+    required this.formTwoKey,
+    super.key,
   });
   final CreateEventModel createEventModel;
   final bool isReadOnly;
   final CreateTicketCubit cubit;
-  final bool isExpanded;
+  final bool isExpanded; 
+  final GlobalKey<FormState> formTwoKey;
 
   @override
   Widget build(BuildContext context) {
     // print(createEventModel.discountCodes.isEmpty);
     return CustomForm(
+      formKey: formTwoKey,
       builder: (context, formKey) {
         return Column(
           children: [
@@ -62,7 +62,7 @@ class TicketFormTwo extends StatelessWidget {
                     );
                   },
                 ),
-                CommonText(text: 'Free Event', fontSize: 18),
+                const CommonText(text: 'Free Event', fontSize: 18),
               ],
             ),
             Utils.divider(),
@@ -112,7 +112,7 @@ class TicketFormTwo extends StatelessWidget {
               initalValue: createEventModel.offerPreSale,
             ),
 
-            FormLabel(isRequired: false, label: 'Pre-Sale start date').start,
+            const FormLabel(isRequired: false, label: 'Pre-Sale start date').start,
             2.height,
             CommonDateInputTextField(
               initialValue: createEventModel.preSaleStartDate
@@ -135,7 +135,7 @@ class TicketFormTwo extends StatelessWidget {
               backgroundColor: AppColors.backgroundWhite,
             ),
             10.height,
-            FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
+            const FormLabel(isRequired: false, label: 'Pre-Sale end date').start,
             CommonDateInputTextField(
               initialValue: createEventModel.preSaleEndDate
                   ?.toLocal()
@@ -275,7 +275,7 @@ class TicketFormTwo extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        FormLabel(isRequired: true, label: 'Ticket sale start date'),
+        const FormLabel(isRequired: true, label: 'Ticket sale start date'),
         IconButton(
           padding: EdgeInsets.zero,
           alignment: Alignment.bottomCenter,
@@ -321,8 +321,8 @@ class TicketFormTwo extends StatelessWidget {
 
   Widget _buildCheckBox({
     required bool isReadOnly,
-    bool? value,
     required Function(bool?) onChanged,
+    bool? value,
   }) {
     return Checkbox(
       side: BorderSide(

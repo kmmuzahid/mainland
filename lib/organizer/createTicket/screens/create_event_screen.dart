@@ -17,6 +17,8 @@ class CreateEventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formOneKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formTwoKey = GlobalKey<FormState>(); 
     return BlocProvider(
       create: (context) {
         final cubit = CreateTicketCubit();
@@ -60,6 +62,7 @@ class CreateEventScreen extends StatelessWidget {
                           isExpanded: state.isExpandedView,
                           cubit: context.read(),
                           createTicketState: state,
+                          formOneKey: formOneKey,
                         ),
                       ),
                       Future.microtask(
@@ -68,6 +71,7 @@ class CreateEventScreen extends StatelessWidget {
                           isReadOnly: state.isReadOnly,
                           isExpanded: state.isExpandedView,
                           cubit: context.read(),
+                          formTwoKey: formTwoKey,
                         ),
                       ),
                       Future.microtask(
@@ -76,6 +80,8 @@ class CreateEventScreen extends StatelessWidget {
                           isReadOnly: state.isReadOnly,
                           isExpanded: state.isExpandedView,
                           cubit: context.read(),
+                          formOneKey: formOneKey,
+                          formTwoKey: formTwoKey,
                         ),
                       ),
                     ]),

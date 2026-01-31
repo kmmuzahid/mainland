@@ -1,11 +1,17 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2025-11-19 10:02:29
+ * @Email: km.muzahid@gmail.com
+ */
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
-import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/firebase/notification/notification_config.dart';
+import 'package:mainland/core/config/firebase/notification/notification_enums.dart';
+import 'package:mainland/core/config/firebase/notification/notification_service.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/socket/notification_model.dart';
 import 'package:mainland/core/config/socket/socket_message_model.dart';
@@ -37,9 +43,10 @@ class HomeCubit extends SafeCubit<HomeState> {
           emit(
             state.copyWith(unreadNotification: state.unreadNotification + 1),
           );
-          FirebaseNotificationHandler.instance.showLocalNotification(
-            RemoteNotification(
+          NotificationService.instance.show(
+            NotificationConfig(
               title: notifiaction.title,
+              alertType: NotificationAlertType.mute,
               body: notifiaction.message,
             ),
           );
@@ -52,12 +59,13 @@ class HomeCubit extends SafeCubit<HomeState> {
           final message = data.data as SocketMessageModel;
           if (message.ownerId != Utils.getUserId()) {
             emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
-            FirebaseNotificationHandler.instance.showLocalNotification(
-              RemoteNotification(
+            NotificationService.instance.show(
+              NotificationConfig(
+                alertType: NotificationAlertType.mute,
                 title: message.sender.name,
                 body: message.text,
               ),
-            );
+            ); 
           }
         }
       }

@@ -9,11 +9,11 @@ import 'package:mainland/common/auth/model/user_login_info_model.dart';
 import 'package:mainland/common/auth/repository/auth_repository.dart';
 import 'package:mainland/common/auth/widgets/otp_verify_widget.dart';
 import 'package:mainland/common/auth/widgets/terms_and_conditions.dart';
-import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/component/other_widgets/common_dialog.dart';
 import 'package:mainland/core/config/api/api_end_point.dart';
 import 'package:mainland/core/config/bloc/safe_cubit.dart';
 import 'package:mainland/core/config/dependency/dependency_injection.dart';
+import 'package:mainland/core/config/firebase/firebase_handler.dart';
 import 'package:mainland/core/config/network/dio_service.dart';
 import 'package:mainland/core/config/network/request_input.dart';
 import 'package:mainland/core/config/route/app_router.dart';
@@ -133,7 +133,7 @@ class AuthCubit extends SafeCubit<AuthState> {
 
   Future<void> _saveUserInfo(UserLoginInfoModel userInfo) async {
     emit(state.copyWith(userLoginInfoModel: userInfo));
-    _storageService.write(_loginInfo, userInfo.toJson()); 
+    _storageService.write(_loginInfo, userInfo.toJson());
   }
 
   Future<void> onChangeSignUpModel({
@@ -181,7 +181,7 @@ class AuthCubit extends SafeCubit<AuthState> {
       if (state.userLoginInfoModel.accessToken.isNotEmpty) {
         appRouter.replaceAll([const HomeRoute()]);
         SocketService.instance.connect(id: state.userLoginInfoModel.id);
-        FirebaseNotificationHandler.instance.init();
+        FirebaseHandler.initialize();
         getCurrentUser();
       } else {
         Future.delayed(const Duration(seconds: 1), () {
@@ -208,8 +208,8 @@ class AuthCubit extends SafeCubit<AuthState> {
       await _saveUserInfo(responce.data!.copyWith(id: state.profileModel?.id));
       emit(state.copyWith(isLoading: false));
       SocketService.instance.connect(id: state.userLoginInfoModel.id);
+      FirebaseHandler.initialize();
       appRouter.replaceAll([const HomeRoute()]);
-      FirebaseNotificationHandler.instance.init();
     } else {
       emit(state.copyWith(isLoading: false));
       showSnackBar(responce.message ?? '', type: SnackBarType.error);
@@ -294,7 +294,7 @@ class AuthCubit extends SafeCubit<AuthState> {
   Future<void> logout() async {
     _role = Role.ATTENDEE;
     SocketService.instance.disconnect();
-    FirebaseNotificationHandler.instance.logout();
+    await FirebaseHandler.deleteToken();
     await _repository.signOut();
     await _storageService.deleteAll();
     appRouter.replaceAll([

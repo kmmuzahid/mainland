@@ -1,13 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
-import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart';
 import 'package:mainland/core/component/image/common_image.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
-import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';

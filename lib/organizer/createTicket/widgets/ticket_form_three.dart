@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/widgets/required_icon_widget.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/image/common_image.dart';
-import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_multiline_text_field.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
@@ -12,7 +10,6 @@ import 'package:mainland/core/component/text_field/input_helper.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
-import 'package:mainland/core/utils/app_utils.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
 import 'package:mainland/gen/assets.gen.dart';
@@ -24,16 +21,20 @@ import '../model/create_event_model.dart';
 
 class TicketFormThree extends StatelessWidget {
   const TicketFormThree({
-    super.key,
     required this.createEventModel,
     required this.isReadOnly,
     required this.cubit,
     required this.isExpanded,
+    required this.formOneKey,
+    required this.formTwoKey,
+    super.key,
   });
   final CreateEventModel createEventModel;
   final bool isReadOnly;
   final CreateTicketCubit cubit;
   final bool isExpanded;
+  final GlobalKey<FormState> formTwoKey;
+  final GlobalKey<FormState> formOneKey;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +141,20 @@ class TicketFormThree extends StatelessWidget {
           },
         ),
         const Spacer(),
-        CommonButton(buttonWidth: width, titleText: 'Submit', onTap: cubit.submit),
+        CommonButton(
+          buttonWidth: width,
+          titleText: 'Submit',
+          onTap: () {
+            formKey.currentState?.save();
+            formTwoKey.currentState?.save();
+            formOneKey.currentState?.save();
+            if (formKey.currentState?.validate() == true &&
+                formTwoKey.currentState?.validate() == true &&
+                formOneKey.currentState?.validate() == true) {
+              cubit.submit();
+            }
+          },
+        ),
       ],
     );
   }

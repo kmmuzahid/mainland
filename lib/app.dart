@@ -1,20 +1,20 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2025-11-19 10:02:29
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
-import 'package:mainland/common/notifications/cubit/notification_cubit.dart';
-import 'package:mainland/common/notifications/firebase/firebase_notification_handler.dart'
-    show FirebaseNotificationHandler;
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/languages/cubit/language_state.dart';
 import 'package:mainland/core/config/languages/l10n/app_localizations.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router_observer.dart';
-
 import 'package:mainland/core/config/theme/cubit/theme_cubit.dart';
 import 'package:mainland/core/config/theme/cubit/theme_state.dart';
-import 'package:mainland/core/config/theme/dark_theme.dart';
 import 'package:mainland/core/config/theme/system_theme_listener.dart';
 import 'package:mainland/main.dart';
 

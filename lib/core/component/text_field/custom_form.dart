@@ -1,9 +1,15 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2025-11-19 10:02:29
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:flutter/material.dart';
 
 class CustomForm extends StatefulWidget {
-  const CustomForm({required this.builder, super.key});
+  const CustomForm({required this.builder, super.key, this.formKey});
 
   final Widget Function(BuildContext context, GlobalKey<FormState> formKey) builder;
+  final GlobalKey<FormState>? formKey;
 
   @override
   _CustomFormState createState() => _CustomFormState();
@@ -16,7 +22,7 @@ class _CustomFormState extends State<CustomForm> {
   @override
   void initState() {
     super.initState();
-    _formKey = GlobalKey<FormState>(); // Initialize the form key
+    _formKey = widget.formKey ?? GlobalKey<FormState>(); // Initialize the form key
   }
 
   @override

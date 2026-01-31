@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/tickets/cubit/tickets_cubit.dart';
-import 'package:mainland/common/tickets/cubit/tickets_state.dart';
 import 'package:mainland/common/tickets/model/ticket_model.dart';
 import 'package:mainland/common/tickets/widgets/ticket_filter_widget.dart';
 import 'package:mainland/common/tickets/widgets/ticket_widget.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
-import 'package:mainland/core/component/mainlad/event_widget.dart';
 import 'package:mainland/core/component/other_widgets/smart_staggered_loader.dart';
 import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/config/bloc/cubit_scope.dart';
@@ -16,15 +14,13 @@ import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
-import 'package:mainland/core/utils/grid_child_postion.dart';
-import 'package:mainland/core/utils/log/app_log.dart';
 
 @RoutePage()
 class TicketsScreen extends StatelessWidget {
   const TicketsScreen({
-    super.key,
     required this.onTap,
     required this.filters,
+    super.key,
     this.subTitle,
     this.title,
     this.titleSize,
