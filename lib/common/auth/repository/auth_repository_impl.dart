@@ -198,6 +198,8 @@ class AuthRepositoryImpl implements AuthRepository {
         ? {}
         : {
             'name': profileModel.name,
+            'isSoundNotificationEnabled': profileModel.isSoundNotificationEnabled,
+            'isVibrationNotificationEnabled': profileModel.isVibrationNotificationEnabled,
             // if (isDeleteImage && image == null) 'image': '',
             'personalInfo': {
               'phone': profileModel.personalInfo.phone,

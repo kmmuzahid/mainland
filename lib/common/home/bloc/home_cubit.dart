@@ -45,6 +45,7 @@ class HomeCubit extends SafeCubit<HomeState> {
           );
           NotificationService.instance.show(
             NotificationConfig(
+              channelId: 'notificaion_channel_id_${NotificationAlertType.mute.name}',
               title: notifiaction.title,
               alertType: NotificationAlertType.mute,
               body: notifiaction.message,
@@ -61,6 +62,7 @@ class HomeCubit extends SafeCubit<HomeState> {
             emit(state.copyWith(unreadMessage: state.unreadMessage + 1));
             NotificationService.instance.show(
               NotificationConfig(
+                channelId: 'notificaion_channel_id_${NotificationAlertType.mute.name}',
                 alertType: NotificationAlertType.mute,
                 title: message.sender.name,
                 body: message.text,

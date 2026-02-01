@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/event/model/event_details_model.dart';
 import 'package:mainland/common/event/repository/event_details_repository.dart';
 import 'package:mainland/core/component/other_widgets/permission_handler_helper.dart';
@@ -18,17 +19,38 @@ import 'package:mainland/venue/venueHome/widgets/validate_dailogue_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../model/venue_history_model.dart';
+
 part 'venue_state.dart';
 
 class VenueCubit extends SafeCubit<VenueState> {
   VenueCubit() : super(const VenueState(eventCode: ''));
   final EventDetailsRepository repository = getIt();
-
+  late AuthCubit authCubit;
   final ImagePicker imagePicker = ImagePicker();
   final DioService _dioService = getIt();
+  void init({required String eventCode, required AuthCubit authCubit}) async {
+    this.authCubit = authCubit;
+    final isSoundOn = authCubit.state.profileModel?.isSoundNotificationEnabled;
+    final isVibrateOn = authCubit.state.profileModel?.isVibrationNotificationEnabled;
+    emit(
+      state.copyWith(eventCode: eventCode, isSoundOn: isSoundOn ?? true, isVibrateOn: isVibrateOn),
+    );
+  }
 
-  void init({required String eventCode}) async {
-    emit(state.copyWith(eventCode: eventCode));
+  void changeSoundState({required bool isSoundOn}) {
+    authCubit.updateProfile(
+      profileModel: authCubit.state.profileModel?.copyWith(isSoundNotificationEnabled: isSoundOn),
+    );
+    emit(state.copyWith(isSoundOn: isSoundOn));
+  }
+
+  void changeVibrateState({required bool isVibrateOn}) {
+    authCubit.updateProfile(
+      profileModel: authCubit.state.profileModel?.copyWith(
+        isVibrationNotificationEnabled: isVibrateOn,
+      ),
+    );
+    emit(state.copyWith(isVibrateOn: isVibrateOn));
   }
 
   void changeIndex(int index) => emit(state.copyWith(currentIndex: index));
@@ -69,7 +91,6 @@ class VenueCubit extends SafeCubit<VenueState> {
   }
 
   Future<void> getDetails({required String? qr, required String userId, Uint8List? image}) async {
-    print('===================${image?.length}');
     if (image != null) {
       final file = XFile.fromData(image);
       emit(state.copyWith(image: file, openCamera: false));
@@ -161,4 +182,6 @@ class VenueCubit extends SafeCubit<VenueState> {
       tickets: result.data,
     );
   }
+
+  
 }

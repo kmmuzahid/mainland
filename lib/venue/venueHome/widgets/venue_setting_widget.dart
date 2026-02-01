@@ -20,8 +20,9 @@ import 'package:mainland/venue/venueHome/widgets/venue_app_bar_widget.dart';
 import 'venue_validate_dialogue_widget.dart';
 
 class VenueSettingWidget extends StatelessWidget {
-  const VenueSettingWidget({required this.cubit, super.key});
+  const VenueSettingWidget({required this.cubit, required this.state, super.key});
   final VenueCubit cubit;
+  final VenueState state;
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +72,22 @@ class VenueSettingWidget extends StatelessWidget {
         Divider(color: AppColors.white600),
         _menuItems(
           title: AppString.vibrate,
-          trailing: CommonSwitch(isActive: true, onChanged: (value) {}),
+          trailing: CommonSwitch(
+            isActive: state.isVibrateOn,
+            onChanged: (value) {
+              cubit.changeVibrateState(isVibrateOn: value);
+            },
+          ),
         ),
         Divider(color: AppColors.white600),
         _menuItems(
           title: AppString.sound,
-          trailing: CommonSwitch(isActive: true, onChanged: (value) {}),
+          trailing: CommonSwitch(
+            isActive: state.isSoundOn,
+            onChanged: (value) {
+              cubit.changeSoundState(isSoundOn: value);
+            },
+          ),
         ),
       ],
     );

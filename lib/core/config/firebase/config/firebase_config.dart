@@ -4,23 +4,37 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mainland/core/config/firebase/firebase_setup.dart';
 import 'package:mainland/core/config/firebase/notification/notification_config.dart';
+import 'package:mainland/core/config/firebase/notification/notification_enums.dart';
 import 'package:mainland/core/config/firebase/notification/notification_service.dart';
+ 
 
 /// Background message handler (must be top-level function)
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Initialize Firebase if not already done
-  // await Firebase.initializeApp();
+ 
 
-  debugPrint('Handling background message: ${message.messageId}');
-  debugPrint('Message data: ${message.data}');
-  debugPrint('Message notification: ${message.notification?.title}');
+  final isSoundOn = message.data['isSoundNotificationEnabled'] == 'true';
+  final isVibrateOn = message.data['isVibrationNotificationEnabled'] == 'true';
+
+  NotificationAlertType alertType = NotificationAlertType.soundOnly;
+  if (isSoundOn == true && isVibrateOn == true) {
+    alertType = NotificationAlertType.vibrationAndSound;
+  } else if (isSoundOn == true && isVibrateOn == false) {
+    alertType = NotificationAlertType.soundOnly;
+  } else if (isSoundOn == false && isVibrateOn == true) {
+    alertType = NotificationAlertType.vibrationOnly;
+  } else {
+    alertType = NotificationAlertType.mute;
+  }
+ 
 
   await NotificationService.instance.show(
     NotificationConfig(
+      channelId: 'notificaion_channel_id_${alertType.name}',
       title: message.data['title'],
       body: message.data['body'],
       payload: message.data['payload'] ?? message.messageId,
+      alertType: alertType,
     ),
   );
 }

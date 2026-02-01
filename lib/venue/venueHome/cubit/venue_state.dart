@@ -3,6 +3,7 @@ part of 'venue_cubit.dart';
 
 class VenueState {
   const VenueState({
+    required this.eventCode,
     this.currentIndex = 0,
     this.eventDetailsModel,
     this.image,
@@ -11,9 +12,10 @@ class VenueState {
     this.venueHistoryModel,
     this.isHistoryLoading = false,
     this.isQrChecking = false,
-    required this.eventCode,
     this.isEventCodeChecking = false,
     this.availableTickets = const [],
+    this.isSoundOn = true,
+    this.isVibrateOn = false,
   });
 
   final int currentIndex;
@@ -27,6 +29,8 @@ class VenueState {
   final List<Ticket>? availableTickets;
   final String eventCode;
   final bool isEventCodeChecking;
+  final bool isSoundOn;
+  final bool isVibrateOn;
 
   VenueState copyWith({
     int? currentIndex,
@@ -39,7 +43,9 @@ class VenueState {
     bool? isQrChecking,
     List<Ticket>? availableTickets,
     String? eventCode,
-    bool? isEventCodeChecking
+    bool? isEventCodeChecking,
+    bool? isSoundOn,
+    bool? isVibrateOn,
   }) {
     return VenueState(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -52,7 +58,9 @@ class VenueState {
       isQrChecking: isQrChecking ?? this.isQrChecking,
       availableTickets: availableTickets ?? this.availableTickets,
       eventCode: eventCode ?? this.eventCode,
-      isEventCodeChecking: isEventCodeChecking ?? this.isEventCodeChecking
+      isEventCodeChecking: isEventCodeChecking ?? this.isEventCodeChecking,
+      isSoundOn: isSoundOn ?? this.isSoundOn,
+      isVibrateOn: isVibrateOn ?? this.isVibrateOn,
     );
   }
 
@@ -70,7 +78,9 @@ class VenueState {
         other.isQrChecking == isQrChecking &&
         other.eventCode == eventCode &&
         other.isEventCodeChecking == isEventCodeChecking &&
-        other.availableTickets == availableTickets;
+        other.availableTickets == availableTickets &&
+        other.isSoundOn == isSoundOn &&
+        other.isVibrateOn == isVibrateOn;
   }
 
   @override
@@ -85,6 +95,8 @@ class VenueState {
         isQrChecking.hashCode ^
         eventCode.hashCode ^
         isEventCodeChecking.hashCode ^
-        availableTickets.hashCode;
+        availableTickets.hashCode ^
+        isSoundOn.hashCode ^
+        isVibrateOn.hashCode;
   }
 }

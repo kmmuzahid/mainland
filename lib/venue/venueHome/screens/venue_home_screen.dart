@@ -1,9 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/core/config/bloc/cubit_scope.dart';
-import 'package:mainland/core/config/bloc/cubit_scope_value.dart';
 import 'package:mainland/venue/venueHome/cubit/venue_cubit.dart';
 import 'package:mainland/venue/venueHome/widgets/venue_setting_widget.dart';
 
@@ -18,7 +18,7 @@ class VenueHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CubitScope(
-      create: () => VenueCubit()..init(eventCode: eventCode),
+      create: () => VenueCubit()..init(eventCode: eventCode, authCubit: context.read<AuthCubit>()),
       builder: (context, cubit, state) => Scaffold(
         body: SafeArea(
           child: Padding(
@@ -28,7 +28,7 @@ class VenueHomeScreen extends StatelessWidget {
               children: [
                 VenueHomeWidget(cubit: cubit, state: state),
                 VenueHistoryWidget(cubit: cubit, state: state),
-                VenueSettingWidget(cubit: cubit),
+                VenueSettingWidget(cubit: cubit, state: state),
               ],
             ),
           ),

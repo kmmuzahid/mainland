@@ -127,7 +127,7 @@ class NotificationService {
     await _configureLocalTimeZone();
 
     // Android initialization settings
-    const androidSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // iOS/macOS initialization settings
     final iosSettings = DarwinInitializationSettings(

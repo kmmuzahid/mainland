@@ -22,6 +22,8 @@ class ProfileModel {
   final NotificationPreferenceModel notificationPreference;
   final double withDrawAmount;
   final double sellAmount;
+  final bool isSoundNotificationEnabled;
+  final bool isVibrationNotificationEnabled;
 
   ProfileModel({
     required this.id,
@@ -43,6 +45,8 @@ class ProfileModel {
     required this.notificationPreference,
     required this.withDrawAmount,
     required this.sellAmount,
+    required this.isSoundNotificationEnabled,
+    required this.isVibrationNotificationEnabled,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +72,8 @@ class ProfileModel {
       updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime(1970),
       sellAmount: json['sellAmount']?.toDouble() ?? 0,
       withDrawAmount: json['withDrawAmount']?.toDouble() ?? 0,
+      isSoundNotificationEnabled: json['isSoundNotificationEnabled'] ?? false,
+      isVibrationNotificationEnabled: json['isVibrationNotificationEnabled'] ?? false,
     );
   }
 
@@ -91,6 +97,8 @@ class ProfileModel {
       'updatedAt': updatedAt.toIso8601String(),
       'mainlandFee': mainlandFee,
       'withDrawAmount': withDrawAmount,
+      'isSoundNotificationEnabled': isSoundNotificationEnabled,
+      'isVibrationNotificationEnabled': isVibrationNotificationEnabled,
     };
   }
 
@@ -116,7 +124,9 @@ class ProfileModel {
         other.updatedAt == updatedAt &&
         other.notificationPreference == notificationPreference &&
         other.withDrawAmount == withDrawAmount &&
-        other.sellAmount == sellAmount;
+        other.sellAmount == sellAmount &&
+        other.isSoundNotificationEnabled == isSoundNotificationEnabled &&
+        other.isVibrationNotificationEnabled == isVibrationNotificationEnabled;
   }
 
   @override
@@ -139,7 +149,9 @@ class ProfileModel {
         updatedAt.hashCode ^
         notificationPreference.hashCode ^
         withDrawAmount.hashCode ^
-        sellAmount.hashCode;
+        sellAmount.hashCode ^
+        isSoundNotificationEnabled.hashCode ^
+        isVibrationNotificationEnabled.hashCode;
   }
 
   ProfileModel copyWith({
@@ -162,6 +174,8 @@ class ProfileModel {
     double? sellAmount,
     double? withDrawAmount,
     NotificationPreferenceModel? notificationPreference,
+    bool? isSoundNotificationEnabled,
+    bool? isVibrationNotificationEnabled,
   }) {
     return ProfileModel(
       mainlandFee: mainlandFee ?? this.mainlandFee,
@@ -183,6 +197,9 @@ class ProfileModel {
       notificationPreference: notificationPreference ?? this.notificationPreference,
       withDrawAmount: withDrawAmount ?? this.withDrawAmount,
       sellAmount: sellAmount ?? this.sellAmount,
+      isSoundNotificationEnabled: isSoundNotificationEnabled ?? this.isSoundNotificationEnabled,
+      isVibrationNotificationEnabled:
+          isVibrationNotificationEnabled ?? this.isVibrationNotificationEnabled,
     );
   }
 }
