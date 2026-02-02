@@ -12,6 +12,10 @@ class ApiEndPoint {
   final String baseUrl = 'https://ismail4000.binarybards.online/api/v1';
   final String soketUrl = 'https://ismail4000.binarybards.online/api/v1';
 
+//   final String domain = 'http://167.172.30.170:4000';
+  //   final String baseUrl = 'http://167.172.30.170:4000/api/v1';
+  //   final String soketUrl = 'http://167.172.30.170:4000/api/v1';
+
   //auth
   final String refreshToken = '/auth/refresh-token';
   final String signUp = '/user/create';

@@ -83,10 +83,18 @@ dev_dependencies:
   flutter_auto_size_text:
   change_app_package_name: ^1.5.0 
 
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/icon/icon.png" # your custom icon path
+# flutter_icons:
+#   android: true
+#   web: false
+#   ios: true
+#   windows: false
+#   macos: false
+
+#   android_icon:
+#     image_path: assets/icon/icon.png
+
+#   ios_icon:
+#     image_path: assets/icon/ios/icon.png
 
 flutter:
   generate: true
