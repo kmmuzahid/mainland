@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mainland/common/auth/cubit/auth_cubit.dart';
 import 'package:mainland/common/auth/model/user_login_info_model.dart';
-import 'package:mainland/common/auth/widgets/common_logo.dart';
 import 'package:mainland/core/app_bar/common_app_bar.dart';
 import 'package:mainland/core/component/button/common_button.dart';
 import 'package:mainland/core/component/button/common_radio_group.dart';
@@ -12,12 +11,14 @@ import 'package:mainland/core/component/text/common_text.dart';
 import 'package:mainland/core/component/text_field/common_text_field.dart';
 import 'package:mainland/core/component/text_field/custom_form.dart';
 import 'package:mainland/core/component/text_field/input_helper.dart';
+import 'package:mainland/core/config/bloc/cubit_scope_value.dart';
 import 'package:mainland/core/config/languages/cubit/language_cubit.dart';
 import 'package:mainland/core/config/route/app_router.dart';
 import 'package:mainland/core/config/route/app_router.gr.dart';
 import 'package:mainland/core/utils/constants/app_colors.dart';
 import 'package:mainland/core/utils/constants/app_text_styles.dart';
 import 'package:mainland/core/utils/extensions/extension.dart';
+
 import '../widgets/do_not_have_account_widget.dart';
 
 @RoutePage()
@@ -110,16 +111,22 @@ class SignInScreen extends StatelessWidget {
 
               /// Submit Button here
               Align(
-                child: CommonButton(
-                  titleText: AppString.signIn,
-                  onTap: () {
-                    // if (formKey.currentState?.validate() == true) {
-                    //   formKey.currentState?.save();
-                    // }
-                    context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
-                  },
-                  buttonWidth: 100,
-                  isLoading: false,
+                child: CubitScopeValue(
+                  cubit: context.read<AuthCubit>(),
+                  builder: (context, cubit, state) {
+                    return CommonButton(
+                      titleText: AppString.signIn,
+                      isLoading: state.isLoading,
+                      onTap: () {
+                    
+                        // if (formKey.currentState?.validate() == true) {
+                        //   formKey.currentState?.save();
+                        // }
+                        context.read<AuthCubit>().signIn(ctrUsername.text, ctrPassword.text);
+                      },
+                      buttonWidth: 100, 
+                    );
+                  }
                 ),
               ),
               24.height,

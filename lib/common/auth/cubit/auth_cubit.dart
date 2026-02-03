@@ -203,10 +203,9 @@ class AuthCubit extends SafeCubit<AuthState> {
     emit(const AuthState(isLoading: true));
     final responce = await _repository.signIn(username: username, password: password, role: _role);
     if (responce.statusCode == 200 && responce.data != null) {
-      await _saveUserInfo(responce.data!);
-      await getCurrentUser();
-      await _saveUserInfo(responce.data!.copyWith(id: state.profileModel?.id));
-      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(isLoading: false, userLoginInfoModel: responce.data));
+      StorageService.instance.write(_loginInfo, responce.data!.toJson());
+      getCurrentUser(); 
       SocketService.instance.connect(id: state.userLoginInfoModel.id);
       FirebaseHandler.initialize();
       appRouter.replaceAll([const HomeRoute()]);
