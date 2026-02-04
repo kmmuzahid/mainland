@@ -2,17 +2,15 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mainland/core/config/firebase/config/image_downloder.dart';
 import 'package:mainland/core/config/firebase/firebase_setup.dart';
 import 'package:mainland/core/config/firebase/notification/notification_config.dart';
 import 'package:mainland/core/config/firebase/notification/notification_enums.dart';
 import 'package:mainland/core/config/firebase/notification/notification_service.dart';
- 
 
 /// Background message handler (must be top-level function)
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
- 
-
   final isSoundOn = message.data['isSoundNotificationEnabled'] == 'true';
   final isVibrateOn = message.data['isVibrationNotificationEnabled'] == 'true';
 
@@ -26,14 +24,33 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   } else {
     alertType = NotificationAlertType.mute;
   }
- 
+
+  print(message.data['title']);
+  print(message.data['body']);
+  print(message.data['image']);
+  print(message.data['avatar']);
+
+  String imagePath = '';
+
+  if (message.data['image'] != null) {
+    imagePath = await ImageDownloaderService.instance.downloadImage(message.data['image']!);
+  }
+  String avatarPath = '';
+  if (message.data['avatar'] != null) {
+    avatarPath = await ImageDownloaderService.instance.downloadImage(message.data['avatar']!);
+  }
 
   await NotificationService.instance.show(
     NotificationConfig(
       channelId: 'notificaion_channel_id_${alertType.name}',
       title: message.data['title'],
-      body: message.data['body'],
-      payload: message.data['payload'] ?? message.messageId,
+      body: message.data['body'], 
+      imagePath: imagePath,
+      avatarPath: avatarPath,
+      data: message.data,
+      displayType: message.data['type'] == 'MESSAGE'
+          ? NotificationDisplayType.message
+          : NotificationDisplayType.notification,
       alertType: alertType,
     ),
   );

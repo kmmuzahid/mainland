@@ -92,6 +92,7 @@ class NotificationService {
         body: config.body,
         notificationDetails: details,
         payload: config.payload,
+        
       );
     }
   }

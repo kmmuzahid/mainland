@@ -1,8 +1,33 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-31 17:13:53
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'notification_enums.dart';
 
 /// Configuration for showing a notification
 class NotificationConfig {
+
+  const NotificationConfig({
+    this.id,
+    this.title,
+    this.body,
+    this.alertType = NotificationAlertType.vibrationAndSound,
+    this.displayType = NotificationDisplayType.notification,
+    this.soundFileName,
+    this.payload,
+    this.imagePath,
+    this.avatarPath,
+    this.imageBuilder,
+    this.data,
+    this.channelId,
+    this.channelName,
+    this.channelDescription,
+    this.scheduledDate,
+    this.androidScheduleMode = AndroidScheduleMode.exactAllowWhileIdle,
+  });
   /// Unique notification ID (auto-generated if null)
   final int? id;
 
@@ -28,6 +53,7 @@ class NotificationConfig {
   final String? imagePath;
 
   /// Builder function to extract image from custom data
+  // ignore: avoid_annotating_with_dynamic
   final String? Function(dynamic data)? imageBuilder;
 
   /// Custom data to pass to imageBuilder
@@ -48,23 +74,8 @@ class NotificationConfig {
   /// Android schedule mode for scheduled notifications
   final AndroidScheduleMode androidScheduleMode;
 
-  const NotificationConfig({
-    this.id,
-    this.title,
-    this.body,
-    this.alertType = NotificationAlertType.vibrationAndSound,
-    this.displayType = NotificationDisplayType.notification,
-    this.soundFileName,
-    this.payload,
-    this.imagePath,
-    this.imageBuilder,
-    this.data,
-    this.channelId,
-    this.channelName,
-    this.channelDescription,
-    this.scheduledDate,
-    this.androidScheduleMode = AndroidScheduleMode.exactAllowWhileIdle,
-  });
+  /// Avatar path or URL (for big picture notifications)
+  final String? avatarPath;
 
   /// Get the extracted image path
   String? get extractedImagePath {

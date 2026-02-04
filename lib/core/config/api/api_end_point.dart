@@ -4,9 +4,9 @@ class ApiEndPoint {
   ApiEndPoint._();
   static final ApiEndPoint instance = ApiEndPoint._();
 
-  // final String domain = 'http://10.10.7.102:4000';
-  // final String baseUrl = 'http://10.10.7.102:4000/api/v1';
-  // final String soketUrl = 'http://10.10.7.102:4000/api/v1';
+  // final String domain = 'http://10.10.7.104:4003';
+  // final String baseUrl = 'http://10.10.7.104:4003/api/v1';
+  // final String soketUrl = 'http://10.10.7.104:4003/api/v1';
 
   // final String domain = 'https://ismail4000.binarybards.online';
   // final String baseUrl = 'https://ismail4000.binarybards.online/api/v1';

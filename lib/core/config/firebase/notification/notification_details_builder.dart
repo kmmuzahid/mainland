@@ -69,7 +69,7 @@ class NotificationDetailsBuilder {
       playSound: playSound, // CRITICAL: Explicitly set to false for mute
       sound: sound,
       enableVibration: enableVibration, // CRITICAL: Explicitly set to false for mute/soundOnly
-      styleInformation: styleInformation,
+      styleInformation: styleInformation, 
     );
   }
 
@@ -90,6 +90,7 @@ class NotificationDetailsBuilder {
       presentBadge: true,
       presentSound: presentSound, // CRITICAL: Controls sound on iOS
       sound: sound,
+      
       // Note: iOS doesn't have separate vibration control in local notifications
       // Vibration is tied to sound settings and user's device settings
     );

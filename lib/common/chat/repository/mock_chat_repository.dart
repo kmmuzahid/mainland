@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mainland/common/chat/model/chat_list_item_model.dart';
 import 'package:mainland/common/chat/model/chat_model.dart';
@@ -173,7 +171,7 @@ class MockChatRepository implements ChatRepository {
       input: RequestInput(
         endpoint: ApiEndPoint.instance.sentMessage,
         method: RequestMethod.POST,
-        formFields: {'chatId': chatId, 'text': message},
+        jsonBody: {'chatId': chatId, 'text': message},
         files: {
           if (image?.isNotEmpty ?? false) 'image': image,
           if (file?.isNotEmpty ?? false) 'document': file,
