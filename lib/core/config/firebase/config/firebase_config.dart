@@ -10,7 +10,10 @@ import 'package:mainland/core/config/firebase/notification/notification_service.
 
 /// Background message handler (must be top-level function)
 @pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async { 
+  // debugPrint('Background message received: ${message.notification?.title}');
+  // debugPrint('Background message received: ${message.notification?.body}');
+  debugPrint('Background message received ddd: ${message.data}'); 
   final isSoundOn = message.data['isSoundNotificationEnabled'] == 'true';
   final isVibrateOn = message.data['isVibrationNotificationEnabled'] == 'true';
 
@@ -25,26 +28,28 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     alertType = NotificationAlertType.mute;
   }
 
-  print(message.data['title']);
-  print(message.data['body']);
-  print(message.data['image']);
-  print(message.data['avatar']);
+  String? imagePath;
 
-  String imagePath = '';
-
-  if (message.data['image'] != null) {
+  String? avatarPath;
+  try {
+    if (message.data['image'] != null && message.data['image'].toString().isNotEmpty) {
     imagePath = await ImageDownloaderService.instance.downloadImage(message.data['image']!);
-  }
-  String avatarPath = '';
-  if (message.data['avatar'] != null) {
+    }
+    if (message.data['avatar'] != null && message.data['avatar'].toString().isNotEmpty) {
     avatarPath = await ImageDownloaderService.instance.downloadImage(message.data['avatar']!);
   }
+  } catch (e) {
+    debugPrint('Error downloading image: $e');
+  }
 
+  final channelId = 'notificaion_channel_id_${alertType.name}';
+  final title = message.data['title'];
+  final body = message.data['body'];  
   await NotificationService.instance.show(
     NotificationConfig(
-      channelId: 'notificaion_channel_id_${alertType.name}',
-      title: message.data['title'],
-      body: message.data['body'], 
+      channelId: channelId,
+      title: title,
+      body: body, 
       imagePath: imagePath,
       avatarPath: avatarPath,
       data: message.data,
